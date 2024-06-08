@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+  th:with="lang=${#locale.language}" th:lang="${lang}">
+<body>
+
+<div th:fragment="bootstrapLib">
+	<!-- Bootstrap core JavaScript
+	    ================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<!-- JQUERY -->
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/jquery-ui.min.js}"></script>
+	<!-- BOOTSTRAP -->
+	<!-- Latest compiled and minified JavaScript -->
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	
+	<!-- CHART.js -->	
+	<script th:src="@{/js/Chart.bundle.min.js}"></script>
+	<script th:src="@{/js/Chart.min.js}"></script>
+	<script th:src="@{/js/chartjs-plugin-annotation.min.js}"></script>
+
+	   <!-- jsgantt.js -->  
+    <script th:src="@{/js/jsgantt.js}"></script>
+    <script th:src="@{/js/html2canvas.min.js}"></script>
+    
+	<!-- SHA -->
+	<script th:src="@{/js/bootstrap-datepicker.js}"></script>
+	<script th:src="@{/js/bootstrap-datepicker.ja.js}"></script>
+</div>
+
+</body>
+</html>

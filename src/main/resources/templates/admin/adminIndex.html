@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+  th:with="lang=${#locale.language}" th:lang="${lang}">
+<head th:replace="base-template :: base-head(#{admin.title},~{::link})"></head>
+<body th:replace="base-template :: base-body(#{index.title},~{::#main},~{::script}, 'admin')">
+<div id="main" class="container" role="main">
+<form id="index_form" name="index_form" role="form" method="POST" class="form-horizontal">
+    <input type="hidden" th:field="${indexForm.loginFormJson}">
+    <input type="hidden" th:field="${indexForm.mediaHeight}">
+    <input type="hidden" th:field="${indexForm.mediaWidth}">
+    <input type="hidden" th:field="${indexForm.mobileDisplay}">
+    <input type="hidden" th:field="${indexForm.envMode}">
+</form>
+<div id="body">
+</div>
+</div>
+	<!-- /script -->
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+    $(document).ready(function(){
+    	var jsInfo = /*[[${session.javaScriptSetInfo}]]*/ ;
+    	Pos.init.init(jsInfo);
+		$('#mediaHeight').val(window.innerHeight ? window.innerHeight: $(window).height());
+		$('#mediaWidth').val(window.innerWidth ? window.innerWidth: $(window).width());
+    	//alert(JSON.stringify($('#index_form').serializeArray()));
+    	Pos.constants.setInfo.loginTitle = /*[[#{admin.title}]]*/;
+    	$('#mobileDisplay').val('false');
+    	
+    	if ($('#envMode').val() === 'local') {
+    		Pos.constants.setInfo.loginTitle += "(admin)"
+    	}
+    	
+    	ShaAjax.pop.postDialogMiddleCenter(
+    			Pos.constants.setInfo.loginTitle,
+    			Pos.constants.setInfo.adminJsView.adminLogin.url_login_init, 
+    			$('#index_form').serializeArray());
+    });
+/*]]>*/
+</script>
+</body>
+</html>

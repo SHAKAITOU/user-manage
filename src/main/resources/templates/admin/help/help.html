@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:with="lang=${#locale.language}" th:lang="${lang}">
+<head th:fragment="base-head(title, links)">
+<title th:text="#{help.title}"></title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, user-scalable=no" />
+<meta name="format-detection" content="telephone=no" />
+
+<!-- Latest compiled and minified CSS -->
+
+<!-- Optional theme -->
+
+<!-- date picker -->
+<link rel="stylesheet" th:href="@{/css/bootstrap-datepicker.css}" />
+<!-- fontawesome -->
+<link rel="stylesheet" th:href="@{/css/all.css}" />
+
+<link rel="stylesheet" th:href="@{/css/bootstrap-simplex.css}" />
+<link rel="stylesheet" th:href="@{/css/base.css}" />
+<link rel="stylesheet" th:href="@{/css/icon.css}" />
+</head>
+<body th:with="viewer=${T(sha.yasuku.manage.admin.view.help.HelpViewHelper)}">
+	<div class="container" style="">
+		<form action="" id="helpForm">
+		<div th:remove="tag" th:utext="${viewer.getPage()}"></div>
+		</form>
+	</div>
+	
+	<!-- /container -->
+	<div th:replace="fragment/dialogs :: tooltip"></div>
+	<div th:replace="fragment/dialogs :: tooltipNoTitle"></div>
+	<div th:replace="fragment/dialogs :: overlay-progress"></div>
+	<div th:replace="fragment/dialogs :: progress"></div>
+	<div th:replace="fragment/dialogs :: overlay-alert"></div>
+	<div th:replace="fragment/dialogs :: alert"></div>
+	<div th:replace="fragment/dialogs :: overlay-confirm"></div>
+	<div th:replace="fragment/dialogs :: confirm"></div>
+	<div th:replace="fragment/dialogs :: overlay-success"></div>
+	<div th:replace="fragment/dialogs :: success"></div>
+	<div th:replace="fragment/dialogs :: dialog"></div>
+	<div th:replace="fragment/dialogs :: overlay-subDialog"></div>
+	<div th:replace="fragment/dialogs :: subDialog"></div>
+	<div th:replace="fragment/dialogs :: overlay-subSubDialog"></div>
+	<div th:replace="fragment/dialogs :: subSubDialog"></div>
+	<div th:replace="fragment/dialogs :: overlay-subSubSubDialog"></div>
+	<div th:replace="fragment/dialogs :: subSubSubDialog"></div>
+	<!-- include bootstrapLib  -->
+	<div th:replace="fragment/footer :: bootstrapLib"></div>
+	<script th:src="@{/js/files/pos.js}"></script>
+	<script th:src="@{/js/shaConstants.js}"></script>
+	<script th:src="@{/js/shaUtil.js}"></script>
+	<script th:src="@{/js/shaDialog.js}"></script>
+	<script th:src="@{/js/shaAjax.js}"></script>
+	<script th:src="@{/js/shaRestful.js}"></script>
+	<script th:src="@{/js/shaCheck.js}"></script>
+	<script th:src="@{/js/shaPage.js}"></script>
+	<script th:src="@{/js/shaInput.js}"></script>
+	<script th:src="@{/js/shaColor.js}"></script>
+	<script th:src="@{/js/shaChart.js}"></script>
+	<script th:src="@{/js/baseJsControllerClass.js}"></script>
+	<!-- view js -->
+	
+	<script th:src="@{/js/files/payContact.js}"></script>
+	<!-- 
+<script th:src="@{/js/allInOneApp.js}"></script>
+-->
+
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+$(document).ready(function(){
+	
+	ShaInput.tab.initTab($("#helpForm"), "partTab");
+	ShaInput.tab.activeTab($("#helpForm"), "partTab", "part1Panel");
+	$tab = $("#helpForm").find(ShaUtil.util.convertToJqueryId("partTab"));
+	$tab.find('label').each(function(i, elem) {
+		$(elem).css("font-size","12px");
+		$(elem).css("display","");
+		$(elem).css("padding","5px 3px");
+	});
+	
+	ShaInput.button.onClick($("#btnPayContact"), 
+		function(event) {
+			ShaAjax.pop.postDialogMiddleCenter(
+					/*[[${viewer.getJsProperties().get('payContact_title')}]]*/,
+					/*[[${viewer.getJsProperties().get('url_payContact_init')}]]*/, 
+					$("#helpForm").serializeArray()
+            );
+	    }
+	);
+});
+/*]]>*/
+</script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+  th:with="lang=${#locale.language}" th:lang="${lang}">
+<div th:remove="tag" th:utext="${pageContext}"></div>
+<!-- /script -->
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+    $(document).ready(function(){
+        //--------------------------------------------------------[
+        //init component
+		var dbMaintenance = new DbMaintenance();
+		dbMaintenance.init();
+    });
+/*]]>*/
+</script>
+</html>

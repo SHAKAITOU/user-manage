@@ -1,0 +1,19 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+  th:with="lang=${#locale.language}" th:lang="${lang}">
+<div th:remove="tag" th:utext="${viewData.pageContext}"></div>
+<!-- /script -->
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+    $(document).ready(function(){
+        //--------------------------------------------------------[
+        var jsClassName = /*[[${viewData.jsClassName}]]*/;
+        var dataMap = /*[[${viewData.dataMap}]]*/;
+        var instance = ShaUtil.util.getInstance(jsClassName, dataMap);
+    	//init component
+        instance.init();
+    });
+    
+/*]]>*/
+</script>
+</html>

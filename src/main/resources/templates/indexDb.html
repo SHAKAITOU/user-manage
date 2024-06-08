@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+  th:with="lang=${#locale.language}" th:lang="${lang}">
+<head th:replace="base-template :: base-head(#{common.title},~{::link})"></head>
+<body th:replace="base-template :: base-body(#{index.title},~{::#main},~{::script}, 'admin')">
+<div id="main" class="container" role="main">
+<form id="index_form" name="index_form" role="form" method="POST" class="form-horizontal">
+	<input type="hidden" name="mediaHeight" id="mediaHeight">
+</form>
+</div>
+<!-- /script -->
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+	window.GLOBAL = {};
+	window.GLOBAL.BASE_URL = "/db";
+    $(document).ready(function(){
+    	$('#mediaHeight').val(window.innerHeight ? window.innerHeight: $(window).height());
+		ShaAjax.pop.postDialogFullCenter(
+    			'JCBC MANAGE DB MAINTENANCE',
+    			window.GLOBAL.BASE_URL + '/init', 
+    			$('#index_form').serializeArray());
+    });
+/*]]>*/
+</script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+  th:with="lang=${#locale.language}" th:lang="${lang}">
+<form id="login_form" name="login_form" role="form" method="POST" class="form-horizontal">
+	<!-- hidden values -->
+	<input type="hidden" id="lang" name="lang" th:value="${lang}">
+    <input type="hidden" id="login_form_return_error_flag" th:value="${(loginForm != null && 
+            loginForm.returnType == T(sha.yasuku.common.enums.ExecuteReturnType).NG.getId())}">
+    <input type="hidden" id="login_form_return_error_msg" th:value="${loginForm.errorMsg}">
+    <div class="row">
+        <div class="col-4 text-left">
+			<button id="setLangJp" class='btn btn-outline-secondary btn_com'><img th:src="@{/img/JP_flag.png}" style="height: 30px; margin-top: -5px;"/></button>
+            <button id="setLangCn" class='btn btn-outline-secondary btn_com'><img th:src="@{/img/CN_flag.png}" style="height: 30px; margin-top: -5px;"/></button>
+        </div>
+        <div class="col-4 text-right">
+            <span id="helpBtn" class='a-a2'> 
+			<i class="fa fa-bullhorn" aria-hidden="true"></i>&nbsp; [[#{common.helpGuide}]]
+			</span>
+        </div>
+        
+        <div class="col-4 text-right">
+            <span id="registBtn" class='a-a2'>
+            <i class="fa fa-user-plus" aria-hidden="true"></i>&nbsp;
+                [[#{login.panel.btn.regist}]]
+            </span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 text-left" style="height: 20px"></div>
+    </div>
+    <fieldset>
+        <div style="margin: 0 0 10px 0;">
+            <input type="text" maxlength="40"
+                th:placeholder="#{login.panel.placeholder.user}" class="form-control input-md"
+                th:field="${loginForm.userCode}"/>
+        </div>
+        <div style="margin: 0 0 10px 0;">
+            <input id="password" name="password" type="password" 
+                th:placeholder="#{login.panel.placeholder.pw}" class="form-control input-md"
+                th:field="${loginForm.password}"/>
+        </div>
+        
+    </fieldset>
+    <div class="row">
+        <div class="col-12 text-left" style="height: 10px"></div>
+    </div>
+    <div class="row">
+    	<div class="col-3 text-left">
+            <button id="setThemesWhite" class='btn btn-outline-secondary btn_com'>
+            <i class="fa fa-sun" aria-hidden="true"></i>
+            </button>
+            <button id="setThemesBlack" class='btn btn-secondary btn_com'>
+            <i class="fa fa-moon" aria-hidden="true"></i>
+            </button>
+        </div>
+        <div class="col-9 text-right">
+        	<span id="passFindBtn" class='a-a2'>
+            <i class="fa fa-frown" aria-hidden="true"></i>&nbsp;
+                [[#{login.panel.btn.passFind}]]
+            </span>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <button id="loginBtn" type="button" name="loginBtn" 
+                class="btn btn-outline-success btn_com pull-right">
+                <i class="fa fa-sign-in-alt" aria-hidden="true"></i>&nbsp;&nbsp;
+                [[#{login.panel.btn.login}]]
+                </button>
+        </div>
+    </div>
+</form>
+<!-- /script -->
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+    $(document).ready(function(){
+        //--------------------------------------------------------[
+        //init component
+        var loginBlock = new LoginBlock(); 
+        //init bond event to btn
+    	loginBlock.init();
+    });
+/*]]>*/
+</script>
+</html>

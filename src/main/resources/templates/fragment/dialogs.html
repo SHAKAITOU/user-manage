@@ -1,0 +1,195 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+  th:with="lang=${#locale.language}" th:lang="${lang}">
+<body>
+
+<div class="modal" id="tooltipNoTitle" th:fragment="tooltipNoTitle">
+	<div id="tooltipNoTitlePanel" class="card text-white bg-success">
+		<div class="card-body m-1 p-1" id="tooltipNoTitleBody"></div>
+	</div>
+</div>
+<div class="modal" id="tooltip" th:fragment="tooltip">
+	<div id="tooltipPanel" class="card text-white bg-success">
+		<div class="card-header" id="tooltipTitle">Header</div>
+		<div class="card-body m-1 p-1" id="tooltipBody"></div>
+	</div>
+</div>
+
+<div class="div-overlay" id="overlay-progress" th:fragment="overlay-progress">
+</div>
+<div class="modal" id="progress" th:fragment="progress">
+	<div class="vertical-alignment-helper">
+		<div class="modal-dialog modal-sm vertical-align-center" role="document">
+			<div class="modal-content progressBar">
+				<div class="modal-header">
+					<h3 class="modal-title" th:text="#{dialogs.progress.title}"></h3>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close" disabled>
+						<span style="color: white;" aria-hidden="true">&nbsp;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="col-md-10 col-md-offset-1">
+						<div class="progress">
+						  <div class="progress-bar progress-bar-striped" role="progressbar" 
+						  	style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>	
+</div>
+
+<div class="div-overlay" id="overlay-success" th:fragment="overlay-success">
+</div>
+<div class="modal" style="max-width: 400px;" id="success" th:fragment="success">
+	<div class="vertical-alignment-helper">
+		<div class="modal-dialog vertical-align-center" role="document">
+			<div class="modal-content" style="max-width: 400px;">
+				<div class="modal-header successBar-boder">
+					<h3 id="successTitle" class="modal-title" th:text="#{dialogs.success.title}"></h3>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close" disabled>
+						<span style="color: white;" aria-hidden="true">&nbsp;</span>
+					</button>
+				</div>
+				<div class="modal-body" id="successBody" style="max-width: 400px;">
+				</div>
+				<div class="modal-footer" style="max-width: 400px;">
+                <button type="button" class="btn btn-outline-success btn_com " 
+                    data-dismiss="modal" th:text="#{dialogs.btn.ok}"></button>
+              </div>
+			</div>
+		</div>
+	</div>	
+</div>
+
+<div class="div-overlay" id="overlay-alert" th:fragment="overlay-alert">
+</div>
+<div class="modal" style="max-width: 400px;" id="alert" th:fragment="alert">
+	<div class="vertical-alignment-helper">
+	   <div class="modal-dialog vertical-align-center" role="document">
+		   <div class="modal-content" style="max-width: 400px;">
+		      <div class="modal-header alert-boder">
+		        <h3 class="modal-title"><i class="fa fa-exclamation-circle"></i>&nbsp;&nbsp;[[#{dialogs.alert.title}]]</h3>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close" disabled>
+		          <span style="color: white;" aria-hidden="true">&nbsp;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body" id="alertBody" style="max-width: 400px;">
+		        <p>Modal body text goes here.</p>
+		      </div>
+		      <div class="modal-footer" style="max-width: 400px;">
+		        <button id="alertBtn" type="button" class="btn btn-outline-danger btn_com  pull-right" 
+		            data-dismiss="modal" autofocus="autofocus" style="min-width: 50px;">
+		            <i class="fa fa-times-circle" aria-hidden="true"></i>&nbsp;&nbsp;[[#{dialogs.btn.ok}]]
+		        </button>
+		      </div>
+		    </div>
+	   </div>
+	</div>
+</div>
+
+<div class="div-overlay" id="overlay-confirm" th:fragment="overlay-confirm">
+</div>
+<div class="modal" style="max-width: 400px;" id="confirm" th:fragment="confirm">
+	<div class="vertical-alignment-helper">
+		<div class="modal-dialog vertical-align-center" role="document">
+	    	<div class="modal-content" style="max-width: 400px;">
+	    	  <div class="modal-header confirm-boder">
+                <h3 class="modal-title"><i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp;&nbsp;<span id="confirmTitle"></span></h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" disabled>
+                  <span style="color: white;" aria-hidden="true">&nbsp;</span>
+                </button>
+              </div>
+			  <div class="modal-body confirm-text" id="confirmBody" style="max-width: 400px;">
+			  </div>
+			  <div class="modal-footer" style="max-width: 400px;">
+					<button id="confirmBtnOk" type="button" 
+					   class="btn btn-sm btn-outline-success btn_com ">
+					<i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;&nbsp;[[#{dialogs.btn.ok}]]
+					</button>
+					<button id="confirmBtnNg" type="button" 
+					   class="btn btn-sm btn-outline-secondary btn_com " data-dismiss="modal">
+					<i class="fa fa-times-circle" aria-hidden="true"></i>&nbsp;&nbsp;[[#{dialogs.btn.ng}]]
+					</button>
+			  </div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal" id="dialog" th:fragment="dialog">
+    <div class="vertical-alignment-helper">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" >
+              <div class="modal-header dialog-boder">
+                <h3 class="modal-title" id="dialogTitle"></h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" disabled>
+                  <span style="color: white;" aria-hidden="true">&nbsp;</span>
+                </button>
+              </div>
+              <div class="modal-body confirm-text" id="dialogBody">
+              </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="div-overlay" id="overlay-subDialog" th:fragment="overlay-subDialog">
+</div>
+<div class="modal" id="subDialog" th:fragment="subDialog">
+    <div class="vertical-alignment-helper">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" >
+              <div class="modal-header subDialog-boder">
+                <h3 class="modal-title" id="subDialogTitle"></h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" disabled>
+                  <span style="color: white;" aria-hidden="true">&nbsp;</span>
+                </button>
+              </div>
+              <div class="modal-body confirm-text" id="subDialogBody">
+              </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="div-overlay" id="overlay-subSubDialog" th:fragment="overlay-subSubDialog">
+</div>
+<div class="modal" id="subSubDialog" th:fragment="subSubDialog">
+    <div class="vertical-alignment-helper">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" >
+              <div class="modal-header subSubDialog-boder">
+                <h3 class="modal-title" id="subSubDialogTitle"></h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" disabled>
+                  <span style="color: white;" aria-hidden="true">&nbsp;</span>
+                </button>
+              </div>
+              <div class="modal-body confirm-text" id="subSubDialogBody">
+              </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="div-overlay" id="overlay-subSubSubDialog" th:fragment="overlay-subSubSubDialog">
+</div>
+<div class="modal" id="subSubSubDialog" th:fragment="subSubSubDialog">
+    <div class="vertical-alignment-helper">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" >
+              <div class="modal-header subSubSubDialog-boder">
+                <h3 class="modal-title" id="subSubSubDialogTitle"></h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" disabled>
+                  <span style="color: white;" aria-hidden="true">&nbsp;</span>
+                </button>
+              </div>
+              <div class="modal-body confirm-text" id="subSubSubDialogBody">
+              </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

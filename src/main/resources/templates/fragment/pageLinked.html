@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+  th:with="lang=${#locale.language}" th:lang="${lang}">
+<body>
+
+  <div th:fragment="pageLinked(paginationHolder)"
+      th:if="${paginationHolder != null && paginationHolder.pageCount > 1}"
+          class="btn-toolbar pull-right" role="toolbar" 
+         aria-label="Toolbar with button groups">
+     <div class="btn-group mr-2" role="group" aria-label="Second group">
+       <button type="button" class="btn btn-secondary" disabled>
+       	([[#{common.page.now}]][[${paginationHolder.page+1}]]&nbsp;&nbsp;/
+       	&nbsp;&nbsp;[[${paginationHolder.pageCount}]][[#{common.page.total}]])
+       </button>
+       <button th:if="${!paginationHolder.firstPage}"
+            th:id="${paginationHolder.pageLinkIdPrefix + 'Prev'}"
+          type="button" class="btn btn-secondary text-right">[[#{common.page.ahead}]]</button>
+       <button 
+          th:each="i : ${#numbers.sequence(paginationHolder.firstLinkedPage, paginationHolder.lastLinkedPage)}"
+          th:id="${paginationHolder.pageLinkIdPrefix + (i+1)}" 
+          th:class="${(paginationHolder.page == i ? 'active' : '') +' btn btn-secondary'}" 
+          type="button">[[${i+1}]]</button>
+       <button th:if="${!paginationHolder.lastPage}"
+        th:id="${paginationHolder.pageLinkIdPrefix + 'Next'}" 
+          type="button" class="btn btn-secondary">[[#{common.page.next}]]</button>
+     <input type="hidden" th:id="${paginationHolder.pageLinkIdPrefix + 'Index'}" 
+                        th:name="${paginationHolder.pageLinkIdPrefix + 'Index'}"
+                        th:value="${paginationHolder.page}">
+     </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:with="lang=${#locale.language}" th:lang="${lang}">
+<head th:replace="base-template :: base-head(#{common.title},~{::link})">
+</head>
+<body
+	th:replace="base-template :: base-body(#{index.title},~{::#main},~{::script}, 'admin')">
+<div id="main"
+    th:with="loginInfoHelper=${T(sha.yasuku.app.util.LoginInfoHelper)},
+		    viewHelper=${T(sha.yasuku.manage.admin.view.menu.AdminMenuViewHelper)}">
+	<form id="menu_form" name="menu_form" role="form" method="POST" class="form-horizontal">
+	<input type="hidden" id="language" th:value="${lang}"> 
+    <div th:remove="tag" th:utext="${viewHelper.getPage(session)}"></div>
+    </form>
+</div>
+
+<!-- /script -->
+<script type="text/javascript" th:inline="javascript"
+ th:with="loginInfoHelper=${T(sha.yasuku.app.util.LoginInfoHelper)}">
+/*<![CDATA[*/
+	$(document).ready(function(){
+
+		var jsInfo = /*[[${session.javaScriptSetInfo}]]*/;
+		Pos.init.init(jsInfo);
+
+		//init component
+        var adminMenu = new AdminMenu();
+		
+        adminMenu.init();
+	});
+/*]]>*/
+</script>
+</body>
+</html>

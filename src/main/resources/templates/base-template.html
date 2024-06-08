@@ -1,0 +1,162 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" th:with="lang=${#locale.language}" th:lang="${lang}">
+<head th:fragment="base-head(title, links)">
+    <title th:text="${title}"></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no"/>
+    
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}"/>
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap-theme.css}"/>
+    
+    <!-- date picker -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap-datepicker3.css}"/>
+    <!-- fontawesome -->
+    <link rel="stylesheet" th:href="@{/css/all.css}"/>
+    
+    <link rel="stylesheet" th:if="${session.themesType == null}" th:href="@{/css/bootstrap-darkly.css}"/>
+    <link rel="stylesheet" th:if="${session.themesType != null && session.themesType.equals('black')}" th:href="@{/css/bootstrap-darkly.css}"/>
+    <link rel="stylesheet" th:if="${session.themesType != null && session.themesType.equals('white')}" th:href="@{/css/bootstrap-cosmo.css}"/>
+    <link rel="stylesheet" th:href="@{/css/base.css}"/>
+    <link rel="stylesheet" th:href="@{/css/icon.css}"/>
+    <link rel="stylesheet" th:href="@{/css/jsgantt.css}"/>
+    <th:block th:replace="${links} ?: ~{}" />
+</head>
+<body th:fragment="base-body(title, main, script, mainKind)">
+<div role="main">
+    <!-- common hidden attributes -->
+    <div th:replace="${main}"></div>
+</div>  
+<!-- /container -->
+<div th:replace="fragment/dialogs :: tooltip"></div>
+<div th:replace="fragment/dialogs :: tooltipNoTitle"></div>
+<div th:replace="fragment/dialogs :: overlay-progress"></div>
+<div th:replace="fragment/dialogs :: progress"></div>
+<div th:replace="fragment/dialogs :: overlay-alert"></div>
+<div th:replace="fragment/dialogs :: alert"></div>
+<div th:replace="fragment/dialogs :: overlay-confirm"></div>
+<div th:replace="fragment/dialogs :: confirm"></div>
+<div th:replace="fragment/dialogs :: overlay-success"></div>
+<div th:replace="fragment/dialogs :: success"></div>
+<div th:replace="fragment/dialogs :: dialog"></div>
+<div th:replace="fragment/dialogs :: overlay-subDialog"></div>
+<div th:replace="fragment/dialogs :: subDialog"></div>
+<div th:replace="fragment/dialogs :: overlay-subSubDialog"></div>
+<div th:replace="fragment/dialogs :: subSubDialog"></div>
+<div th:replace="fragment/dialogs :: overlay-subSubSubDialog"></div>
+<div th:replace="fragment/dialogs :: subSubSubDialog"></div>
+<!-- include bootstrapLib  -->
+<div th:replace="fragment/footer :: bootstrapLib"></div>
+<script th:src="@{/js/shaConstants.js}"></script>
+<script th:src="@{/js/shaUtil.js}"></script>
+<script th:src="@{/js/shaDialog.js}"></script>
+<script th:src="@{/js/shaAjax.js}"></script>
+<script th:src="@{/js/shaRestful.js}"></script>
+<script th:src="@{/js/shaCheck.js}"></script>
+<script th:src="@{/js/shaPage.js}"></script>
+<script th:src="@{/js/shaInput.js}"></script>
+<script th:src="@{/js/shaColor.js}"></script>
+<script th:src="@{/js/shaChart.js}"></script>
+<script th:src="@{/js/baseJsControllerClass.js}"></script>
+<!-- view js -->
+<!-- 
+<script th:src="@{/js/allInOneApp.js}"></script>
+-->
+
+<script th:src="@{/js/files/pos.js}"></script>
+
+<div th:remove="tag" th:if="${mainKind == 'app'}">
+<!-- 一般画面 -->
+	<script th:src="@{/js/files/loginBlock.js}"></script>
+	<script th:src="@{/js/files/registStep1.js}"></script>
+	<script th:src="@{/js/files/registStep2.js}"></script>
+	<script th:src="@{/js/files/registStep3.js}"></script>
+	<script th:src="@{/js/files/menu.js}"></script>
+	<script th:src="@{/js/files/imgShow.js}"></script>
+	<script th:src="@{/js/files/mapShow.js}"></script>
+	
+	<script th:src="@{/js/files/bidTableList.js}"></script>
+	<script th:src="@{/js/files/bidCardList.js}"></script>
+	<script th:src="@{/js/files/bidAdd.js}"></script>
+	
+	<script th:src="@{/js/files/ctgryTableList.js}"></script>
+	<script th:src="@{/js/files/ctgryCardList.js}"></script>
+	<script th:src="@{/js/files/ctgryAdd.js}"></script>
+	
+	<script th:src="@{/js/files/kindTableList.js}"></script>
+	<script th:src="@{/js/files/kindCardList.js}"></script>
+	<script th:src="@{/js/files/kindAdd.js}"></script>
+	
+	<script th:src="@{/js/files/buyProduct.js}"></script>
+	<script th:src="@{/js/files/buyProductListDiv.js}"></script>
+	<script th:src="@{/js/files/cartAdd.js}"></script>
+	<script th:src="@{/js/files/cartListDiv.js}"></script>
+	
+	
+	<script th:src="@{/js/files/productManage.js}"></script>
+	<script th:src="@{/js/files/productManageListDiv.js}"></script>
+	<script th:src="@{/js/files/productAdd.js}"></script>
+	<script th:src="@{/js/files/productStoreSetting.js}"></script>
+	
+	
+	<script th:src="@{/js/files/storeManage.js}"></script>
+	<script th:src="@{/js/files/storeAdd.js}"></script>
+	<script th:src="@{/js/files/storePrice.js}"></script>
+	
+	<script th:src="@{/js/files/messageList.js}"></script>
+	<script th:src="@{/js/files/messageShow.js}"></script>
+	
+	<script th:src="@{/js/files/buyPriceHistoryList.js}"></script>
+	<script th:src="@{/js/files/buyPriceHistoryShow.js}"></script>
+	
+	<script th:src="@{/js/files/storeAnalysis.js}"></script>
+	<script th:src="@{/js/files/buyProductAnalysis.js}"></script>
+	
+	<script th:src="@{/js/files/account.js}"></script>
+	
+	<script th:src="@{/js/files/familyBudgetManage.js}"></script>
+	<script th:src="@{/js/files/familyBudgetAdd.js}"></script>
+	
+	<script th:src="@{/js/files/familyBudgetBillManage.js}"></script>
+	<script th:src="@{/js/files/familyBudgetBillDetail.js}"></script>
+	<script th:src="@{/js/files/familyBudgetBillAdd.js}"></script>
+	<script th:src="@{/js/files/familyBudgetBillDetailAdd.js}"></script>
+		
+	<script th:src="@{/js/files/receiptImgUpload.js}"></script>
+	<script th:src="@{/js/files/receiptImgAnalysisList.js}"></script>
+	<script th:src="@{/js/files/receiptDetailEdit.js}"></script>
+	<script th:src="@{/js/files/receiptAnalysisRegist.js}"></script>
+	
+</div>
+
+<div th:remove="tag" th:if="${mainKind == 'admin'}">
+<!-- ADMIN画面 -->
+	<script th:src="@{/js/files/dbMaintenance.js}"></script>
+	<script th:src="@{/js/files/detailTable.js}"></script>
+
+	<script th:src="@{/js/files/adminMenu.js}"></script>
+	<script th:src="@{/js/files/adminLoginBlock.js}"></script>
+	<script th:src="@{/js/files/adminUserManage.js}"></script>
+	<script th:src="@{/js/files/adminPayContactManage.js}"></script>
+	<script th:src="@{/js/files/adminPayContactConfirm.js}"></script>
+	<script th:src="@{/js/files/adminAccountSetting.js}"></script>
+	
+	
+	
+</div>
+
+
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+$(document).ready(function(){
+
+});
+/*]]>*/
+</script>
+<div th:replace="${script}"></div>
+</body>
+</html>

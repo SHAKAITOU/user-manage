@@ -1,0 +1,105 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+  th:with="lang=${#locale.language}" th:lang="${lang}">
+<head>
+	<title th:text="${title}"></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no"/>
+    
+	<style type="text/css">
+	body {
+	    font-family: 'Sazanami Mincho';
+	
+	    -fs-pdf-font-embed: embed;
+	    -fs-pdf-font-encoding: Identity-H;
+	}
+	.data-table {
+		border: 1px solid #595959;
+		border-collapse: collapse;
+		font-size: 12px;
+	}
+	.data-td {
+		border: 1px solid #595959;
+		border-collapse: collapse;
+		padding: 3px;
+	}
+	.data-th {
+		border: 1px solid #595959;
+		border-collapse: collapse;
+		background: #f0e6cc;
+	}
+	.even {
+		background: #fbf8f0;
+	}
+	.odd {
+		background: #ededed;
+	}
+	
+	.end {
+		background: #edeadc;
+	}
+	</style>
+</head>
+<body th:with="stringUtility=${T(sha.yasuku.common.util.StringUtility)}">
+<table style="width: 670px;">
+	<tbody>
+		<tr>
+			<td colspan="2" height="80" align="center" style="font-size: 35px;"><b>買物履歴</b></td>
+		</tr>
+		<tr>
+			<td colspan="2" height="30" align="left"><b>日付：</b>[[${createDt}]]</td>
+		</tr>
+		<tr>
+			<td colspan="2" height="30" align="left"><b>店舗：</b>[[${fileData.store.name}]]</td>
+		</tr>
+	</tbody>	
+</table>
+<table class="data-table" style="width: 670px;">
+	<thead>
+		<tr>
+			<th class="data-th" height="30" width="60%" align="center">商品名</th>
+			<th class="data-th" width="20%" align="center">数量</th>
+			<th class="data-th" width="20%" align="center">税込価格</th>
+		</tr>
+	</thead>
+    <tbody>
+        <tr th:each="detail, stats : ${fileData.buyPriceDetailHistoryList}"
+            th:class="odd">
+            <td class="data-td" align="left" th:text="${detail.productResult.product.name}"></td>
+            <td class="data-td" align="right" th:text="${stringUtility.formatNumber(detail.buyPriceDetailHistory.qty)}"></td>
+            <td class="data-td" align="right" th:text="${'￥' + stringUtility.formatNumber(detail.buyPriceDetailHistory.priceIn)}"></td>
+        </tr>
+    </tbody>
+</table>
+<table style="width: 640px;">
+	<tbody>
+		<tr>
+			<td colspan="1" height="10" width="25%" align="right"></td>
+			<td colspan="1" width="25%" align="right"></td>
+			<td colspan="1" width="25%" align="right"></td>
+			<td colspan="1" width="25%" align="right"></td>
+		</tr>
+		<tr>
+			<td colspan="1" height="30" align="right"><b>合計税抜金額：</b></td>
+			<td colspan="1" align="right">￥[[${stringUtility.formatNumber(fileData.buyPriceHeadHistory.totalPriceEx)}]]</td>
+			<td colspan="1" align="right"><b>出張費：</b></td>
+			<td colspan="1" align="right">￥[[${stringUtility.formatNumber(fileData.buyPriceHeadHistory.trip)}]]</td>
+		</tr>
+		<tr>
+			<td colspan="1" height="30" align="right"><b>合計消費税：</b></td>
+			<td colspan="1" align="right">￥[[${stringUtility.formatNumber(fileData.buyPriceHeadHistory.totalTax)}]]</td>
+			<td colspan="1" align="right"></td>
+			<td colspan="1" align="right"></td>
+		</tr>
+		<tr>
+			<td colspan="1" height="30" align="right"><b>合計税込金額：</b></td>
+			<td colspan="1" align="right">￥[[${stringUtility.formatNumber(fileData.buyPriceHeadHistory.totalPriceIn)}]]</td>
+			<td colspan="1" align="right"><b>合計所要費用：</b></td>
+			<td colspan="1" align="right">￥[[${stringUtility.formatNumber(fileData.buyPriceHeadHistory.trip.add(fileData.buyPriceHeadHistory.totalPriceIn))}]]</td>
+		</tr>
+	</tbody>	
+</table>
+</body>
+</html>

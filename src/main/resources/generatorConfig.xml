@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration
+ PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+ "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+  <classPathEntry 
+    location="C:\Users\paigu\.m2\repository\mysql\mysql-connector-java\8.0.29\mysql-connector-java-8.0.29.jar"/>
+	<!-- 
+  <classPathEntry 
+    location="C:\Users\ning.ma\.m2\repository\org\postgresql\postgresql\42.2.11\postgresql-42.2.11.jar"/>
+     -->
+  <context id="context1">
+    <!--
+      生成するクラスオブジェクトにタイムスタンプを付与するかどうかを設定します。
+      value="true" の場合は生成しません。
+
+      詳細は公式リファレンス参照
+      http://mybatis.github.io/generator/configreference/commentGenerator.html
+    -->
+    <commentGenerator>
+        <property name="suppressDate" value="true" />
+    </commentGenerator>
+
+    <!-- JDBCの設定 -->
+     <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+        connectionURL="jdbc:mysql://localhost/shatest" 
+        userId="root" password="admin" >
+        <property name="nullCatalogMeansCurrent" value="true" />
+     </jdbcConnection>   
+    <!-- 
+    <jdbcConnection driverClass="org.postgresql.Driver"
+        connectionURL="jdbc:postgresql://localhost:5432/yasuku" 
+        userId="postgres" password="postgres" />
+ 	-->
+    <!--
+       Java Model(Entity)クラスの生成先を指定します。
+       targetPackage : 生成先パッケージ
+       targetProject : プロジェクトディレクトリから生成先パッケージの親ディレクトリまでのパス
+
+       詳細は公式リファレンス参照
+       http://mybatis.github.io/generator/configreference/javaModelGenerator.html
+     -->
+    <javaModelGenerator targetPackage="cn.caam.gs.domain.db.base.entity"
+                        targetProject="src/main/java" >
+    </javaModelGenerator>
+
+    <!--
+       SQL Mapperファイルの生成先を指定します。
+       targetPackage : 生成先パッケージ
+       targetProject : プロジェクトディレクトリから生成先パッケージの親ディレクトリまでのパス
+
+       詳細は公式リファレンス参照
+       http://mybatis.github.io/generator/configreference/sqlMapGenerator.html
+     -->
+    <sqlMapGenerator targetPackage="cn.caam.gs.domain.db.base.sql"
+                        targetProject="src/main/java" />
+
+    <!--
+       Java Clientクラスの生成先を指定します。
+       Java ClientはSQL Mapperファイルを呼び出すためのインターフェースクラスです。
+       targetPackage : 生成先パッケージ
+       targetProject : プロジェクトディレクトリから生成先パッケージの親ディレクトリまでのパス
+
+       詳細は公式リファレンス参照
+       http://mybatis.github.io/generator/configreference/javaClientGenerator.html
+
+       type :
+         type="ANNOTATEDMAPPER"
+            アノテーションを定義したMapperインターフェースクラスとアノテーションの実装を定義したSqlProviderクラスを生成する。
+            Mapperファイルは生成しない。
+            Mapperファイルを使用せずにアノテーションでクエリを発行したい人向け
+
+         type="MIXEDMAPPER"
+            アノテーションを定義したMapperインターフェースクラスとMapperファイルを生成する。
+            SqlProviderクラスは生成しない。
+            Mapperファイルとアノテーションでのクエリ発行を両立したい人向け。
+
+         type="XMLMAPPER"
+            MapperインターフェースクラスとMapperファイルのみ生成する。
+            SQLを全部Mapperファイルで管理したい人向け。
+     -->
+    <javaClientGenerator targetPackage="cn.caam.gs.domain.db.base.mapper"
+                        targetProject="src/main/java" type="XMLMAPPER" />
+
+    <!--
+     自動生成対象のテーブル名を[tableName]に指定する。
+     ※テーブル名の指定はワイルドカードが利用できます
+
+     詳しい設定値については公式サイトのリファレンスを参照してください。
+     http://mybatis.github.io/generator/configreference/table.html
+
+     modelType :
+       modelType="flat"
+          ドメインクラスのみ作成。
+       modelType="hierarchical"
+          自動生成するMapperのパラメータの為にPrimary Keyエンティティを生成します。
+          MapperでPKを指定したクエリ(selectByPrimaryKey等)のパラメータがデフォルトでPrimary Keyエンティティになります。
+     -->
+    <table schema="shatest" tableName="%"
+            enableInsert="true"
+            enableSelectByPrimaryKey="true"
+            enableSelectByExample="false"
+            enableUpdateByPrimaryKey="true"
+            enableUpdateByExample="false"
+            enableDeleteByPrimaryKey="true"
+            enableDeleteByExample="false"
+            enableCountByExample="false"
+            selectByExampleQueryId="false"
+            modelType="flat">
+    </table>
+  </context>
+</generatorConfiguration>

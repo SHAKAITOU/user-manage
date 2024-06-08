@@ -1,0 +1,147 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+  th:with="lang=${#locale.language}" th:lang="${lang}">
+<head>
+	<title th:text="${title}"></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no"/>
+    
+	<style type="text/css">
+	body {
+	    font-family: 'Sazanami Mincho';
+		--font-family-sans-serif: "Segoe UI", "Source Sans Pro", Calibri, Candara, Arial, sans-serif;
+		--font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;	
+	    -fs-pdf-font-embed: embed;
+	    -fs-pdf-font-encoding: Identity-H;
+	}
+	.data-table {
+		border: 1px solid #595959;
+		border-collapse: collapse;
+		font-size: 12px;
+	}
+	.data-td {
+		border: 1px solid #595959;
+		border-collapse: collapse;
+		padding: 3px;
+	}
+	.data-th {
+		border: 1px solid #595959;
+		border-collapse: collapse;
+		background: #f0e6cc;
+	}
+	.even {
+		background: #fbf8f0;
+	}
+	.odd {
+		background: #ededed;
+	}
+	
+	.end {
+		background: #edeadc;
+	}
+	</style>
+	<script src="../../js/Chart.bundle.min.js"></script>
+	<script src="../../js/Chart.min.js"></script>
+	<script src="../../js/chartjs-plugin-annotation.min.js"></script>
+	<script src="../../js/shaColor.js"></script>
+	<script src="../../js/jquery.min.js"></script>
+	<script src="../../js/jquery-ui.min.js"></script>
+</head>
+<body th:with="stringUtility=${T(sha.yasuku.common.util.StringUtility)}">
+	<canvas id="storeAnalysisGraph_div" height="800" 
+		style="background-color: rgb(220, 211, 178); display: block; height: 400px; width: 592px;" 
+		width="1184" 
+		class="chartjs-render-monitor">
+	</canvas>
+</body>
+<!-- /script -->
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+    $(document).ready(function(){
+        //--------------------------------------------------------[
+        //init component
+    	var storeName = ["ベルクス美浜店", "ヤオコー ミノリア稲毛海岸店", "ロピア美浜ニューポート店", "店舗4", "店舗5"];
+    	var amountL = [20456, 12345, 24523, 45355, 34256];
+    	var amountR = [5, 10];
+    	//keep self instance for call back
+    	var self = this;
+    	var leftBgColors = [];
+    	var leftBColors = [];
+    	var rightBgColors = [];
+    	var rightBColors = [];
+    	for(n=0; n<storeName.length; n++) {
+    		leftBgColors.push(ShaColor.htmlColor.categorys[n].rgbA);
+    		leftBColors.push(ShaColor.htmlColor.categorys[n].rgbB);
+    		rightBgColors.push(ShaColor.htmlColor.categorys[n].rgbA);
+    		rightBColors.push(ShaColor.htmlColor.categorys[n].rgbB);
+    	}
+    	var horizontalBarChartData = {
+    		labels: storeName,
+    		datasets: [{
+    			label: "総金額",
+    			backgroundColor: leftBgColors,
+    			borderColor: leftBColors,
+    			borderWidth: 1,
+    			data: amountL
+    		}]
+
+    	};
+    	
+
+    	var ctx = document.getElementById("storeAnalysisGraph_div").getContext('2d');
+    	var chart = new Chart(ctx, {
+    		type: 'horizontalBar',
+    		data: horizontalBarChartData,
+    		width:600,
+    		options: {
+    			title: {
+    				display: true,
+    				text: "店舗データ分析"
+    			},
+    			tooltips: {
+    				mode: 'index',
+    				intersect: false
+    			},
+    			responsive: true,
+    			legend: {
+    		        position: 'right',
+    		        display: false
+    		    },
+    			maintainAspectRatio: false,
+    			scales: {
+    				xAxes: [{
+    					gridLines: {
+    	        			display: true,
+    	        			color: ShaColor.htmlColor.grids[0].rgbB,
+    	                    borderDash: [1, 5],
+    	        		},
+    	        		ticks: {
+    	                    beginAtZero:true,
+    	                    min: 0,
+    	                    max: 50000,
+    	                    stepSize: 5,
+    	                },
+    	        		scaleLabel: {
+    	        			display: true,
+    	        			labelString: "総金額",
+    	        			//fontColor: "red"
+    	        		}
+    				}],
+    				yAxes: [{
+    					stacked: true,
+    					scaleLabel: {
+    	        			display: false,
+    	        			labelString: "店舗",
+    	        			//fontColor: "red"
+    	        		}
+    				}]
+    			}
+    		}
+    	});
+        
+    });
+/*]]>*/
+</script>
+</html>

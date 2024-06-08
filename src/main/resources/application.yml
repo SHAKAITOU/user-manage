@@ -1,0 +1,79 @@
+####################################################################################################
+# Current platform's information.
+####################################################################################################
+
+####################################################################################################
+# Context path of the application.
+####################################################################################################
+server:
+  servlet:
+    session:
+      timeout: 86400
+#### SPRING ####
+spring:
+  application:
+    name: userManage
+  
+  profiles: 
+    active: dev
+  
+  messages:
+    basename: i18n/message
+    cache-duration: -1
+    encoding: UTF-8
+    
+  datasource:
+    mode: local-MySQL
+    local-MySQL:
+      driver-class-name: com.mysql.jdbc.Driver
+      jdbc-url: jdbc:mysql://localhost/shatest
+      username: root
+      password: admin
+    cloud-MySQL:
+      driver-class-name: com.mysql.jdbc.Driver
+      jdbc-url: jdbc:mysql://localhost/shatest
+      username: root
+      password: admin
+    
+  session:
+    store-type: none
+
+  mail:
+    host: mail.jcbc.jp
+    port: 587
+    username: syakt@jcbc.jp
+    password: Tuf1xrrzyb2p3DBB7JOnjg==
+    properties:
+      smtp:
+       auth: true
+       starttls:
+         enable: true
+    
+#### LOGGING ####
+logging:
+  level:
+    root: DEBUG
+    org.springframework.web: DEBUG
+    cn.caam.gs: DEBUG
+    cn.caam.gs.domain.db: DEBUG
+
+app:
+  domain: http://192.168.2.130:8080
+
+#### MYBATIS ####
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true 
+
+#### mail attachment FILE PATH ####   
+#### CRON ####
+# 秒/分/時/日/月/曜日
+cron:
+  #LOTO7 毎週土曜日のAM 00:00に実行（金抽）
+  loto7Cron: 0 0 0 * * 6
+  #LOTO6 毎週火、金曜日のAM 00:00に実行（月、木抽）
+  loto6Cron: 0 0 0 * * 2,5
+  #LOTO6 毎週水曜日のAM 00:00に実行（火抽）
+  miniLotoCron: 0 0 0 * * 3
+################
+

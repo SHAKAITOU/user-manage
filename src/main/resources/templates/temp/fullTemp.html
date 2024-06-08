@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+  th:with="lang=${#locale.language}" th:lang="${lang}">
+<form id="bid_add_form" name="bid_add_form" role="form" method="POST" class="form-horizontal">
+<div class="container"
+    th:with="">
+    <div class="row">
+        <div class="col-md-12">
+            
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-right">
+            
+            &nbsp;&nbsp;
+            <button id="btnBidAddClose" type="button" data-dismiss="modal" aria-label="Close"
+              class="btn btn-danger btn_com">[[#{common.page.btn.close}]]</button>
+        </div>
+    </div>
+</div>
+</form>
+<!-- /script -->
+<script type="text/javascript" th:inline="javascript"
+ 	th:with="">
+/*<![CDATA[*/
+    $(document).ready(function(){
+        //--------------------------------------------------------[
+        //init component
+        
+    });
+/*]]>*/
+</script>
+</html>

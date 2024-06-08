@@ -1,0 +1,71 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.caam.gs.domain.db.custom.mapper.OptionalDbTableInfoMapper">
+	<!-- RESULT MAP -->
+    <resultMap id="ColumnInfoForm" 
+                type="cn.caam.gs.manage.dbmaintenance.form.ColumnInfoForm">
+        <id property="name" column="column_name"/>
+        <result property="pkFlg" column="pk"/>
+        <result property="type" column="data_type"/>
+        <result property="characterMaxLength" column="character_maximum_length"/>
+        <result property="numericPrecision" column="numeric_precision"/>
+        <result property="numericScale" column="numeric_scale"/>
+        <result property="nullable" column="nullable"/>
+        <result property="defaultValue" column="column_default"/>
+    </resultMap>
+    <resultMap id="IndexInfoForm" 
+                type="cn.caam.gs.manage.dbmaintenance.form.IndexInfoForm">
+        <id property="indexName" column="index_name"/>
+        <collection property="columnNames" column="column_name" ofType="java.lang.String" javaType="list" />
+    </resultMap>
+	<!-- SQL CHIP -->
+	<select id="showTables" resultType="string">
+        SELECT
+		    table_name as show_tables
+		FROM
+		    information_schema.tables
+		WHERE
+		    table_type = 'BASE TABLE'
+		AND
+		    table_schema NOT IN ('sys', 'mysql', 'information_schema', 'performance_schema');
+    </select>
+    
+    <select id="showColumns" resultMap="ColumnInfoForm">
+		SELECT 
+		 c.column_name,
+         case when k.COLUMN_NAME is not null then true else false end pk,
+         c.ordinal_position,
+         case when c.data_type = 'varchar' then 'character varying' 
+		  when c.data_type = 'decimal' then 'numeric' 
+		  else c.data_type end
+		  AS data_type,
+         c.character_maximum_length,
+		 c.numeric_precision,
+		 c.numeric_scale,
+		 case when c.is_nullable = 'YES' then true else false end nullable,
+		 c.column_default
+		FROM INFORMATION_SCHEMA.COLUMNS c
+        left join
+		INFORMATION_SCHEMA.KEY_COLUMN_USAGE k
+        ON K.TABLE_NAME = C.TABLE_NAME
+		AND K.COLUMN_NAME = C.COLUMN_NAME
+		WHERE C.table_name   = '${tableName}'
+		ORDER BY C.ordinal_position
+    </select>
+    
+    <select id="showIndexs" resultMap="IndexInfoForm">
+    	select 
+		index_name,
+		column_name 
+		from 
+		INFORMATION_SCHEMA.STATISTICS 
+		where TABLE_NAME='${tableName}' and INDEX_NAME <![CDATA[<>]]> 'PRIMARY'
+    </select>
+    
+    <select id="existsTable" resultType="boolean">
+        SELECT EXISTS (
+	       SELECT 1
+		   FROM   information_schema.tables 
+		   WHERE  table_name = '${tableName}'
+	   )
+    </select>
+</mapper>
