@@ -1,45 +1,44 @@
 package cn.caam.gs.common.util;
 
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 
 public class MessageSourceUtil {
-	
-	@Autowired 
-	private MessageSource msg;
-	
+
     @Autowired
     HttpServletRequest request;
     
-//	private static MessageUtil instance;
-//	@PostConstruct
-//    public void registerInstance() {
-//        instance = this;
-//    }
-	public String getContext(String key) {		
-		return msg.getMessage(key, null, getLocale());
-	}
-	
-	public String getContext(String key, String... args) {		
-		return msg.getMessage(key, args, getLocale());
-	}
-	
-	public String getContext(Locale location, String key, String... args) {	
-	    if (location.equals(Locale.CHINESE)) {
-	        return msg.getMessage(key, args, location);
-	    } else {
-	        return msg.getMessage(key, args, getLocale());
-	    }
-	}
-	
-	private Locale getLocale() {
-        Locale locale = Locale.CHINESE;
+    
+    private Map<Locale, ResourceBundle> bundleMap = new HashMap<Locale, ResourceBundle>();
+
+    public String getContext(String code, String... args) {
+        String context = getResourceBundle().getString(code);
+        MessageFormat format = new MessageFormat(context);
+        return format.format(args);
+    }
+    
+    public String getContext(String code) {
+        return getResourceBundle().getString(code);
+    }
+    
+    public List<String> getKeys() {
+        Enumeration<String> keys = getResourceBundle().getKeys();
+        return Collections.list(keys);
+    }
+    
+    private ResourceBundle getResourceBundle() {
+        Locale locale = Locale.JAPAN;
         if (request.getHeader("accept-language") != null) {
             String[] lang = request.getHeader("accept-language").split(",");
             if (lang[0].startsWith("zh")) {
@@ -48,7 +47,10 @@ public class MessageSourceUtil {
                 locale = Locale.US;
             }
         }
-        return locale;
+        if (!bundleMap.containsKey(locale)) {
+            bundleMap.put(locale, ResourceBundle.getBundle("i18n/message", locale));
+        } 
+        return bundleMap.get(locale);
     }
 }
 

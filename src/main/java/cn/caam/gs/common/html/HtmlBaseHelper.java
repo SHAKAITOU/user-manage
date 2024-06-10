@@ -6,7 +6,6 @@ import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
@@ -39,7 +38,7 @@ public class HtmlBaseHelper {
     }
     
     public static String getContext(String key) {
-        return messageSourceUtil.getContext(LocaleContextHolder.getLocale(), key);
+        return messageSourceUtil.getContext(key);
     }
 
     public static String nonNull(boolean value) {

@@ -5,57 +5,37 @@
 	<!-- hidden values -->
 	<input type="hidden" id="lang" name="lang" th:value="${lang}">
     <input type="hidden" id="login_form_return_error_flag" th:value="${(loginForm != null && 
-            loginForm.returnType == T(sha.yasuku.common.enums.ExecuteReturnType).NG.getId())}">
+            loginForm.returnType == T(cn.caam.gs.common.enums.ExecuteReturnType).NG.getId())}">
     <input type="hidden" id="login_form_return_error_msg" th:value="${loginForm.errorMsg}">
-    <div class="row">
-        <div class="col-4 text-left">
-			<button id="setLangJp" class='btn btn-outline-secondary btn_com'><img th:src="@{/img/JP_flag.png}" style="height: 30px; margin-top: -5px;"/></button>
-            <button id="setLangCn" class='btn btn-outline-secondary btn_com'><img th:src="@{/img/CN_flag.png}" style="height: 30px; margin-top: -5px;"/></button>
-        </div>
-        <div class="col-4 text-right">
-
-        </div>
-        
-        <div class="col-4 text-right">
-
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12 text-left" style="height: 20px"></div>
-    </div>
     <fieldset>
-        <div style="margin: 0 0 10px 0;">
-            <input type="text" maxlength="40"
-                th:placeholder="#{login.panel.placeholder.user}" class="form-control input-md"
+		<div style="margin: 20px 20px 20px 20px;">
+            <div class="col-12 text-center" style="height: 30px">
+				<h2>[[#{login.panel.btn.adminLlogin}]]</h2>
+			</div>
+        </div>
+        <div style="margin: 20px 20px 20px 20px;">
+            <input type="text" maxlength="20"
+                th:placeholder="#{login.panel.placeholder.user}" class="form-control"
                 th:field="${loginForm.userCode}"/>
         </div>
-        <div style="margin: 0 0 10px 0;">
+        <div style="margin: 20px 20px 20px 20px;">
+                <!-- 
             <input id="password" name="password" type="password" 
                 th:placeholder="#{login.panel.placeholder.pw}" class="form-control input-md"
                 th:field="${loginForm.password}"/>
+				 -->
+			 <input id="password" name="password" type="password" 
+                th:placeholder="#{login.panel.placeholder.pw}" class="form-control"
+                value="1"/>
         </div>
-        
-    </fieldset>
-    <div class="row">
-        <div class="col-12 text-left" style="height: 10px"></div>
-    </div>
-    <div class="row">
-    	<div class="col-3 text-left">
-            <button id="setThemesWhite" class='btn btn-outline-secondary btn_com'>
-            <i class="fa fa-sun" aria-hidden="true"></i>
-            </button>
-            <button id="setThemesBlack" class='btn btn-secondary btn_com'>
-            <i class="fa fa-moon" aria-hidden="true"></i>
-            </button>
-        </div>
-        <div class="col-9 text-right">
+        <div class="text-right" style="margin: 20px 20px 20px 20px;height: 40px">
             <button id="loginBtn" type="button" name="loginBtn" 
                 class="btn btn-outline-success btn_com pull-right">
                 <i class="fa fa-sign-in-alt" aria-hidden="true"></i>&nbsp;&nbsp;
-                [[#{login.panel.btn.login}]]
+                [[#{login.panel.btn.adminLlogin}]]
                 </button>
         </div>
-    </div>
+    </fieldset>
 </form>
 <!-- /script -->
 <script type="text/javascript" th:inline="javascript">

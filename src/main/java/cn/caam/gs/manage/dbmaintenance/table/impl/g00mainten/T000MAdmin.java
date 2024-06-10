@@ -14,13 +14,15 @@ public class T000MAdmin extends BaseTableDef implements BaseDdl{
     private static final String COL_ID              = "id";
     private static final String COL_NAME            = "name";
     private static final String COL_USER_TYPE       = "user_type";
+    private static final String COL_PASSWORD        = "password";
     
     public Object[][] columnInfos() {
         Object[][] cols = new Object[][] {
             // name | pk | type | charMaxLength | numPrecision | numScale | nullable | default | comment
             {COL_ID,           true,     MySqlType.CHARACTER_VARYING, 20, null, null, false, "", getContext(TABLE_NAME, COL_ID)},
             {COL_NAME,         false,    MySqlType.CHARACTER_VARYING, 70, null, null, false, "", getContext(TABLE_NAME, COL_NAME)},
-            {COL_USER_TYPE,    false,    MySqlType.CHARACTER_VARYING, 3 , null, null, false, "", getContext(TABLE_NAME, COL_USER_TYPE)}
+            {COL_USER_TYPE,    false,    MySqlType.CHARACTER_VARYING, 3 , null, null, false, "", getContext(TABLE_NAME, COL_USER_TYPE)},
+            {COL_PASSWORD,     false,    MySqlType.CHARACTER_VARYING,200, null, null, false, "", getContext(TABLE_NAME, COL_PASSWORD)}
         };
         
         return cols;

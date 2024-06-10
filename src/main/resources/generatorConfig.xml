@@ -22,7 +22,7 @@
     </commentGenerator>
 
     <!-- JDBCの設定 -->
-     <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+     <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
         connectionURL="jdbc:mysql://localhost/shatest" 
         userId="root" password="admin" >
         <property name="nullCatalogMeansCurrent" value="true" />

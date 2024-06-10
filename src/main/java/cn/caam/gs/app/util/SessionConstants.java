@@ -27,6 +27,8 @@ public enum SessionConstants {
 	USER_REGIST("userRegist", true),
 	
 	RECEIPT_IMG_ANALYSIS_RESULT("receiptImgAnalysisResult", true),
+	
+	FIXED_VALUE("fixedValue", true)
 	;
 	
 	private String value;

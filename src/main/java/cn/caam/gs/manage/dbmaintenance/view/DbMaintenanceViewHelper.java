@@ -12,6 +12,7 @@ import cn.caam.gs.common.enums.AvailabilityType;
 import cn.caam.gs.common.enums.CellWidthType;
 import cn.caam.gs.common.enums.CssAlignType;
 import cn.caam.gs.common.enums.CssClassType;
+import cn.caam.gs.common.enums.CssGridsType;
 import cn.caam.gs.common.html.HtmlViewBaseHelper;
 import cn.caam.gs.common.html.element.IconSet.IconSetType;
 import cn.caam.gs.common.html.element.TrSet;
@@ -89,13 +90,20 @@ public class DbMaintenanceViewHelper extends HtmlViewBaseHelper {
 	}
 	
 	private static String getTableDataPanel(DbMaintenanceForm dbMaintenanceForm) {
-		return borderCard().withTitleNoScroll("", CssClassType.INFO, "", 
+		return borderCard().withTitleWithScroll("", CssClassType.INFO, "", 
 				"TABLE LIST",  
 				getTableData(dbMaintenanceForm));
 	}
 	
 	private static String getTableData(DbMaintenanceForm dbMaintenanceForm) {
-		int[] grids = new int[] {1, 1, 2, 3, 3, 1, 1};
+	    CssGridsType[] grids = new CssGridsType[] {
+	            CssGridsType.G1, 
+	            CssGridsType.G1, 
+	            CssGridsType.G2, 
+	            CssGridsType.G3, 
+	            CssGridsType.G3, 
+	            CssGridsType.G1, 
+	            CssGridsType.G1};
 		int index = 0;
 		//head
 		TrSet headTr = tr().head(CssClassType.INFO);

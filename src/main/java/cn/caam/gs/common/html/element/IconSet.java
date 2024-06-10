@@ -201,7 +201,7 @@ public class IconSet {
         NOMAL_14        ("nomal14"),
         NOMAL_12        ("nomal12"),
         NOMAL_10        ("nomal10"),
-        NOMAL_8            ("nomal8"),
+        NOMAL_8         ("nomal8"),
         ;
         
         /** type. */

@@ -8,6 +8,7 @@ CREATE TABLE m_admin
     id               VARCHAR(20)  NOT NULL COMMENT '管理员号(AYYMMDDHHmmSSR2)',
     name             VARCHAR(70)  NOT NULL COMMENT '管理员名称(max64)',
     user_type        VARCHAR(3)   NOT NULL COMMENT '管理员类型(F0000)',
+    password         VARCHAR(200) NOT NULL COMMENT '密码',
     PRIMARY KEY (id)
 ) COMMENT='管理员信息' ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -35,9 +36,8 @@ INSERT INTO m_fixed_value VALUES ('F0002', '0101', '普通会员',       1);
 INSERT INTO m_fixed_value VALUES ('F0002', '0102', '普通会员(学生)', 2);
 INSERT INTO m_fixed_value VALUES ('F0002', '0103', '外籍会员',       3);
 INSERT INTO m_fixed_value VALUES ('F0002', '0104', '会士会员',       4);
-INSERT INTO m_fixed_value VALUES ('F0002', '0105', '会士会员',       5);
 INSERT INTO m_fixed_value VALUES ('F0002', '02', '团体会员单位',   2);
-INSERT INTO m_fixed_value VALUES ('F0002', '0201', '团体会员单位',   2);
+INSERT INTO m_fixed_value VALUES ('F0002', '0201', '团体会员单位',   1);
 
 --政治面貌
 INSERT INTO m_fixed_value VALUES ('F0003', '01', '中共党员',       1);
@@ -468,7 +468,8 @@ CREATE TABLE m_user
 ( 
     id               VARCHAR(20)  NOT NULL COMMENT '会员号(M/TYYMMDDHHmmSSR2)',
     name             VARCHAR(70)  NOT NULL COMMENT '会员名称(max64)',
-    user_type        VARCHAR(3)   NOT NULL COMMENT '会员类型(F0002)',
+    user_type        VARCHAR(6)   NOT NULL COMMENT '会员类型(F0002)',
+    password         VARCHAR(200) NOT NULL COMMENT '密码',
     membership_path  VARCHAR(3)   NOT NULL COMMENT '入会途径(F0012)',
     focus_on         VARCHAR(255)          COMMENT '关注(F0012)',
     sex              VARCHAR(3)   NOT NULL COMMENT '性别(F0001)',
@@ -533,9 +534,10 @@ CREATE TABLE m_order
     pay_amount       DECIMAL(13, 3) NOT NULL COMMENT '实收金额',
     pay_date         VARCHAR(20)    NOT NULL COMMENT '缴费时间(yyyy-MM-dd HH:mm:ss)',
     check_date       VARCHAR(20)           COMMENT '审核时间(yyyy-MM-dd)',
-    check_status     VARCHAR(20)           COMMENT '审核状态(F0013)',
+    check_status     VARCHAR(3)            COMMENT '审核状态(F0013)',
     refund_date      VARCHAR(20)           COMMENT '退款时间(yyyy-MM-dd HH:mm:ss)',
-    refund_status    VARCHAR(20)           COMMENT '退款状态(F0016)',
+    refund_status    VARCHAR(3)            COMMENT '退款状态(F0016)',
+    bill_status      VARCHAR(3)            COMMENT '开票状态(F0018)',
     memo             VARCHAR(255)          COMMENT '备注(max250)',
     PRIMARY KEY (id),
     FOREIGN KEY user_id_foreign_key (user_id) references m_user (id)
@@ -548,11 +550,13 @@ CREATE TABLE m_bill
     id               VARCHAR(30)    NOT NULL COMMENT '订单号(yyyyMMddHHmmssSSSR7)',
     user_id          VARCHAR(20)    NOT NULL COMMENT '会员号(M/TYYMMDDHHmmSSR2)',
     bill_code        VARCHAR(50)             COMMENT '发票代码',
+    bill_type        VARCHAR(3)              COMMENT '发票类型(F0017)',
     bill_amount      DECIMAL(13, 3) NOT NULL COMMENT '开票金额',
     bill_title       VARCHAR(20)    NOT NULL COMMENT '发票抬头',
     credit_code      VARCHAR(20)             COMMENT '统一社会信用代码',
     bill_date        VARCHAR(20)             COMMENT '开票时间(yyyy-MM-dd HH:mm:ss)',
-    bill_status      VARCHAR(20)             COMMENT '审核状态(F0013)',
+    check_status     VARCHAR(3)              COMMENT '审核状态(F0013)',
+    vote_method      VARCHAR(3)              COMMENT '取票方式(F0019)',
     memo             VARCHAR(255)            COMMENT '备注(max250)',
     PRIMARY KEY (id),
     FOREIGN KEY user_id_foreign_key (user_id) references m_user (id)

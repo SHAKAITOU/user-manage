@@ -14,15 +14,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternUtils;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
 @Configuration
-@MapperScan(basePackages = {DBConfig.JCBC_BASE_MAPPER_PACKAGE, 
-						DBConfig.JCBC_OPTIONAL_MAPPER_PACKAGE}, 
-			sqlSessionTemplateRef = DBConfig.JCBC_SQLSESSION_BEAN_NAME)
+//@MapperScan(basePackages = {DBConfig.JCBC_BASE_MAPPER_PACKAGE, 
+//						DBConfig.JCBC_OPTIONAL_MAPPER_PACKAGE}, 
+//			sqlSessionTemplateRef = DBConfig.JCBC_SQLSESSION_BEAN_NAME)
 public class JcbcDataSourceConfiguration {
 	
 	@Autowired
@@ -44,8 +45,8 @@ public class JcbcDataSourceConfiguration {
 		ResourcePatternResolver resolver = ResourcePatternUtils.getResourcePatternResolver(
                 new DefaultResourceLoader());
 
-		bean.setMapperLocations(resolver.getResources(DBConfig.JCBC_BASE_MAPPER_XML_PATH));
-		bean.setMapperLocations(resolver.getResources(DBConfig.JCBC_OPTIONAL_MAPPER_XML_PATH));
+		bean.setMapperLocations(new PathMatchingResourcePatternResolver()
+	            .getResources(posProperties.dbConfig.getXmlPath()));
 		return new SqlSessionTemplate(bean.getObject());
 	}
  

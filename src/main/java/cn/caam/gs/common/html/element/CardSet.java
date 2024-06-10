@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.NoArgsConstructor;
+import cn.caam.gs.GlobalConstants;
 import cn.caam.gs.common.enums.CssClassType;
 
 @Builder
@@ -58,14 +59,14 @@ public class CardSet {
         if (width > 0) {
             sb.append(" style='min-width: "+width+"px;max-width: "+width+"px;");
         } else {
-            sb.append(" style='");
+            sb.append(" style='min-width:100%;max-width:100%;");
         }
         if(scrollable) {
             sb.append(" max-height:"+height+"px; min-height:"+height+"px;'>");
         }else {
             sb.append(" max-height:100%; min-height:100%;'>");
         }
-        sb.append("<div class='card-header'>"+title+"</div>");
+        sb.append("<div class='card-header " + GlobalConstants.FONT_SIZE.getKey() + "'>"+title+"</div>");
         sb.append("<div ");
         if(!StringUtils.isEmpty(bodyId)) {
             sb.append(" id='"+bodyId+"' ");

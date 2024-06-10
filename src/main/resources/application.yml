@@ -23,9 +23,10 @@ spring:
     encoding: UTF-8
     
   datasource:
+    sqlPath: classpath*:cn/caam/gs/domain/db/**/sql/*.xml
     mode: local-MySQL
     local-MySQL:
-      driver-class-name: com.mysql.jdbc.Driver
+      driver-class-name: com.mysql.cj.jdbc.Driver
       jdbc-url: jdbc:mysql://localhost/shatest
       username: root
       password: admin
@@ -52,7 +53,7 @@ spring:
 #### LOGGING ####
 logging:
   level:
-    root: DEBUG
+    root: INFO
     org.springframework.web: DEBUG
     cn.caam.gs: DEBUG
     cn.caam.gs.domain.db: DEBUG

@@ -5,15 +5,14 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
 import cn.caam.gs.common.enums.CssAlignType;
 import cn.caam.gs.common.enums.CssFontSizeType;
 import cn.caam.gs.common.html.HtmlBaseHelper;
-import cn.caam.gs.common.html.HtmlViewBaseHelper;
 import cn.caam.gs.common.util.StringUtility;
 import cn.caam.gs.common.util.UtilConstants;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 @Builder
 @AllArgsConstructor
@@ -21,7 +20,8 @@ import cn.caam.gs.common.util.UtilConstants;
 public class TdSet {
     
     private int grids;
-    private int height;
+    private int height = 30;
+    private int width = 0;
     private String context;
     private CssFontSizeType fontSize;
     private CssAlignType align;
@@ -51,11 +51,17 @@ public class TdSet {
         StringBuffer sb = new StringBuffer();
         sb.append("<td scope='col' ");
         if (height > 0) {
-            sb.append(" height='"+height+"'");
+            sb.append(" height='"+height+"' ");
         }
         sb.append("class='");
         sb.append((Objects.nonNull(fontSize) ? align.getKey(): CssFontSizeType.LABEL_12.getKey()));
-        sb.append(" text-center col-xs-"+grids+"'>"+setMiddleForCell(context, CssAlignType.CENTER)+"</td>");
+        sb.append(" text-center ");
+        if (width > 0) {
+            sb.append("' width='" + width + "'"); 
+        } else {
+            sb.append(" col-xs-"+grids+"'"); 
+        }
+        sb.append(">"+setMiddleForCell(context, CssAlignType.CENTER)+"</td>");
         return sb.toString();
     }
     
@@ -64,7 +70,11 @@ public class TdSet {
         sb.append("<td class='");
         sb.append((Objects.nonNull(fontSize) ? align.getKey(): CssFontSizeType.LABEL_12.getKey()));
         sb.append(" text-" + (Objects.nonNull(align) ? align.getKey(): CssAlignType.LEFT.getKey()));
-        sb.append(" col-xs-"+grids+"'");
+        if (width > 0) {
+            sb.append("' width='" + width + "'"); 
+        } else {
+            sb.append(" col-xs-"+grids+"'");
+        }
         if (height > 0) {
             sb.append(" height='"+height+"'");
         }
@@ -83,7 +93,11 @@ public class TdSet {
         sb.append("<td class=' ");
         sb.append((Objects.nonNull(fontSize) ? align.getKey(): CssFontSizeType.LABEL_12.getKey()));
         sb.append(" text-" + (Objects.nonNull(align) ? align.getKey(): CssAlignType.LEFT.getKey()));
-        sb.append(" col-xs-"+grids+"'");
+        if (width > 0) {
+            sb.append("' width='" + width + "'"); 
+        } else {
+            sb.append(" col-xs-"+grids+"'");
+        }
         sb.append(" data-toggle='tooltip' data-toolip='"+HtmlBaseHelper.filterSpecialCharacters(tooltipContext)+"'");
         if (height > 0) {
             sb.append(" height='"+height+"'");
@@ -105,7 +119,11 @@ public class TdSet {
         sb.append("<td class=' ");
         sb.append((Objects.nonNull(fontSize) ? align.getKey(): CssFontSizeType.LABEL_12.getKey()));
         sb.append(" text-" + (Objects.nonNull(align) ? align.getKey(): CssAlignType.LEFT.getKey()));
-        sb.append(" col-xs-"+grids+"'");
+        if (width > 0) {
+            sb.append("' width='" + width + "'"); 
+        } else {
+            sb.append(" col-xs-"+grids+"'");
+        }
         if(customizeTooltip || byteLength > maxLength) {
             sb.append(" data-toggle='tooltip' data-toolip='"+HtmlBaseHelper.filterSpecialCharacters(customizeTooltip ? tooltipContext : context)+"'");
         }
@@ -129,7 +147,11 @@ public class TdSet {
         sb.append("<td class=' ");
         sb.append((Objects.nonNull(fontSize) ? align.getKey(): CssFontSizeType.LABEL_12.getKey()));
         sb.append(" text-" + (Objects.nonNull(align) ? align.getKey(): CssAlignType.LEFT.getKey()));
-        sb.append(" col-xs-"+grids+"'");
+        if (width > 0) {
+            sb.append("' width='" + width + "'"); 
+        } else {
+            sb.append(" col-xs-"+grids+"'");
+        }
         if(customizeTooltip || byteLength > maxLength) {
             sb.append(" data-toggle='tooltip' data-toolip='"+HtmlBaseHelper.filterSpecialCharacters(customizeTooltip ? tooltipContext : context)+"'");
         }

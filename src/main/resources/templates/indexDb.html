@@ -2,7 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org"
   th:with="lang=${#locale.language}" th:lang="${lang}">
 <head th:replace="base-template :: base-head(#{common.title},~{::link})"></head>
-<body th:replace="base-template :: base-body(#{index.title},~{::#main},~{::script}, 'admin')">
+<body th:replace="base-template :: base-body(#{index.title},~{::#navi},~{::#main},~{::script}, 'admin')">
+<div id="navi"></div> 
 <div id="main" class="container" role="main">
 <form id="index_form" name="index_form" role="form" method="POST" class="form-horizontal">
 	<input type="hidden" name="mediaHeight" id="mediaHeight">

@@ -1,58 +1,26 @@
 package cn.caam.gs.common.enums;
 
-public enum UserType implements EnumImpl {
+public enum UserType {
 
-	FREE			(EnumIndex.startIndex(1), 	"free", 		true, "UserType.FREE", CssClassType.DANGER),
-	NORMAL			(EnumIndex.getNext(), 		"normal", 		true, "UserType.NORMAL", CssClassType.INFO),
-	PREMIUM			(EnumIndex.getNext(), 		"premium", 		true, "UserType.PREMIUM", CssClassType.PRIMARY);
+    /** 个人会员 */
+    PERSON		("01"),
+	/** 团体会员单位 */
+    GROUP		("02"),
+	;
 	
     /** type. */
-    private int id;
     private String key;
-    private String msg;
-    private boolean normalShow;
-    private CssClassType classType;
 
-    private UserType(int id, String key, boolean normalShow, String msg, CssClassType classType) {
-        this.id = id;
+    private UserType(String key) {
         this.key = key;
-        this.normalShow = normalShow;
-        this.msg = msg;
-        this.classType = classType;
     }
-    
-    public int getId() {
-        return id;
-    }
-    
+
     public String getKey() {
         return key;
     }
-    
-    public String getMsg() {
-        return msg;
-    }
 
-    public boolean getNormalShow() {
-        return normalShow;
-    }
-
-    public CssClassType getClassType() {
-        return classType;
-    }
-    
     public UserType[] list() {
     	return UserType.values();
-    }
-    
-    public static UserType valueOf(int id) {
-    	for(UserType type : UserType.values()) {
-    		if(id == type.getId()) {
-    			return type;
-    		}
-    	}
-    	
-    	return null;
     }
     
     public static UserType keyOf(String key) {

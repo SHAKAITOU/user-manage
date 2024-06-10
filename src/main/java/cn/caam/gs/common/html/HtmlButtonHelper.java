@@ -96,7 +96,8 @@ public class HtmlButtonHelper {
                 .build().html();
     }
     
-    public String forTableBorderNameLeft(IconSetType icon, CssClassType classType, String id, String buttonName, String keyValue, String classDistinctName) {
+    public String forTableBorderNameLeft(IconSetType icon, CssClassType classType, 
+            String id, String buttonName, String keyValue, String classDistinctName) {
         return ButtonSet.builder().outPutType(ButtonSetType.TABLE)
                 .isBorderOnly(true)
                 .classType(classType).id(id).keyValue(keyValue)

@@ -26,6 +26,21 @@ public class HtmlTableHelper extends HtmlBaseHelper {
                 .build().html();
     }
     
+    public String get(String id, int tablewidth, int tableHeight, TrSet headTr, List<TrSet> bodyList) {
+        return TableSet.builder().outPutType(TableSetType.NORMAL)
+                .id(id).bodyWidth(tablewidth).bodyHeight(tableHeight)
+                .headTr(headTr).bodyList(bodyList)
+                .build().html();
+    }
+    
+    public String get(String id, int tablewidth, int tableHeight, 
+            TrSet headTr, List<TrSet> bodyList, String pageLinkedHtml) {
+        return TableSet.builder().outPutType(TableSetType.NORMAL)
+                .id(id).bodyWidth(tablewidth).bodyHeight(tableHeight)
+                .headTr(headTr).bodyList(bodyList)
+                .build().html()+pageLinkedHtml;
+    }
+    
     public String get(String id, int tableHeight, 
             TrSet headTr, List<TrSet> bodyList, String pageLinkedHtml) {
         return TableSet.builder().outPutType(TableSetType.NORMAL)

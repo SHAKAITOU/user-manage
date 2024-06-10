@@ -432,7 +432,8 @@ html {
 
 .btn_com_tb:disabled {
     box-shadow: none;
-    background: #c0c0c0;
+    border:1px solid grey;;
+    background:  #c0c0c0;
     text-decoration: none;
 }
 
@@ -1039,6 +1040,7 @@ html {
 .table-fixed tbody > tr > td {
 	float: left;
 	border-top-width: 0;
+	font-size: 14px;
 	box-sizing: border-box;
 	padding: 2px;
 	vertical-align: middle;
@@ -1046,6 +1048,7 @@ html {
 .table-fixed thead > tr > th {
 	float: left;
 	border-top-width: 1px;
+	font-size: 14px;
 	box-sizing: border-box;
 	padding: 2px;
 }

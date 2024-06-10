@@ -5,9 +5,6 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
 import cn.caam.gs.common.enums.CssAlignType;
 import cn.caam.gs.common.enums.CssFontSizeType;
 import cn.caam.gs.common.html.HtmlBaseHelper;
@@ -16,6 +13,9 @@ import cn.caam.gs.common.html.element.IconSet.IconSetCss;
 import cn.caam.gs.common.html.element.IconSet.IconSetType;
 import cn.caam.gs.common.util.StringUtility;
 import cn.caam.gs.common.util.UtilConstants;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 @Builder
 @AllArgsConstructor
@@ -24,6 +24,7 @@ public class ThSet {
     
     private int grids;
     private int height;
+    private int width = 0;
     private String context;
     private CssFontSizeType fontSize;
     private CssAlignType align;
@@ -46,8 +47,13 @@ public class ThSet {
         StringBuffer sb = new StringBuffer();
         sb.append("<th scope='col' class=' ");
         sb.append(IconSetCss.NOMAL_14.getKey());
-        sb.append(" text-center col-xs-"+grids+"'");
-        sb.append(" height='"+(height == 0 ? HtmlViewBaseHelper.TH_DEFAULT_HEIGHT : height)+"'");
+        sb.append(" text-center ");
+        if (width > 0) {
+            sb.append("' width='"+width+"' ");
+        } else {
+            sb.append(" col-xs-"+grids+"' ");
+        }
+        sb.append(" height='"+(height == 0 ? HtmlViewBaseHelper.TH_DEFAULT_HEIGHT : height)+"'");        
         sb.append(">");
         sb.append(setMiddleForCell(
                 IconSet.builder().type(IconSetType.INDEX_MARK).css(IconSetCss.NOMAL_14).build().html(), CssAlignType.CENTER));
@@ -60,7 +66,11 @@ public class ThSet {
         sb.append("<th class=' ");
         sb.append((Objects.nonNull(fontSize) ? fontSize.getKey(): CssFontSizeType.LABEL_12B.getKey()));
         sb.append(" text-" + (Objects.nonNull(align) ? align.getKey(): CssAlignType.LEFT.getKey()));
-        sb.append(" col-xs-"+grids+"'");
+        if (width > 0) {
+            sb.append("' width='"+width+"' ");
+        } else {
+            sb.append(" col-xs-"+grids+"' ");
+        }
         sb.append(" height='"+(height == 0 ? HtmlViewBaseHelper.TH_DEFAULT_HEIGHT : height)+"'");
         sb.append(">");
         sb.append(setMiddleForCell(StringUtils.isNotBlank(context) ? context : UtilConstants.HTML_SPACE));
@@ -75,7 +85,11 @@ public class ThSet {
         sb.append("<th class=' ");
         sb.append((Objects.nonNull(fontSize) ? fontSize.getKey(): CssFontSizeType.LABEL_12B.getKey()));
         sb.append(" text-" + (Objects.nonNull(align) ? align.getKey(): CssAlignType.LEFT.getKey()));
-        sb.append(" col-xs-"+grids+"'");
+        if (width > 0) {
+            sb.append("' width='"+width+"' ");
+        } else {
+            sb.append(" col-xs-"+grids+"' ");
+        }
         if(byteLength > maxLength) {
             sb.append(" data-toggle='tooltip' data-toolip='"+HtmlBaseHelper.filterSpecialCharacters(customizeTooltip ? tooltipContext : context)+"'");
         }

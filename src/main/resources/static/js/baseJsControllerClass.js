@@ -22,6 +22,15 @@ BaseJsController.prototype.getForm = function(){
 BaseJsController.prototype.getObject = function(id){
 	return this.getForm().find(ShaUtil.util.convertToJqueryId(id));
 };
+BaseJsController.prototype.getObjectList = function(className){
+	return this.getForm().find("." + className);
+};
+BaseJsController.prototype.getObjectInForm = function(form, id){
+	return form.find(ShaUtil.util.convertToJqueryId(id));
+};
+BaseJsController.prototype.getObjectListInForm = function(form, className){
+	return form.find("." + className);
+};
 
 BaseJsController.prototype.getJsContext = function(){
 	return this.jsContext;

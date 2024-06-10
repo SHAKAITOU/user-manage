@@ -18,16 +18,18 @@
     <!-- fontawesome -->
     <link rel="stylesheet" th:href="@{/css/all.css}"/>
     
-    <link rel="stylesheet" th:if="${session.themesType == null}" th:href="@{/css/bootstrap-darkly.css}"/>
-    <link rel="stylesheet" th:if="${session.themesType != null && session.themesType.equals('black')}" th:href="@{/css/bootstrap-darkly.css}"/>
-    <link rel="stylesheet" th:if="${session.themesType != null && session.themesType.equals('white')}" th:href="@{/css/bootstrap-cosmo.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap-yeti.css}"/>
     <link rel="stylesheet" th:href="@{/css/base.css}"/>
     <link rel="stylesheet" th:href="@{/css/icon.css}"/>
     <link rel="stylesheet" th:href="@{/css/jsgantt.css}"/>
     <th:block th:replace="${links} ?: ~{}" />
 </head>
-<body th:fragment="base-body(title, main, script, mainKind)">
-<div role="main">
+<body th:fragment="base-body(title, navi, main, script, mainKind)">
+<div role="navi">
+    <!-- navi -->
+    <div th:replace="${navi}"></div>
+</div> 
+<div role="main" style="min-width:98%;max-width:98%; margin: 0 auto;">
     <!-- common hidden attributes -->
     <div th:replace="${main}"></div>
 </div>  
@@ -71,6 +73,7 @@
 
 <div th:remove="tag" th:if="${mainKind == 'app'}">
 <!-- 一般画面 -->
+<!-- 
 	<script th:src="@{/js/files/loginBlock.js}"></script>
 	<script th:src="@{/js/files/registStep1.js}"></script>
 	<script th:src="@{/js/files/registStep2.js}"></script>
@@ -78,74 +81,18 @@
 	<script th:src="@{/js/files/menu.js}"></script>
 	<script th:src="@{/js/files/imgShow.js}"></script>
 	<script th:src="@{/js/files/mapShow.js}"></script>
-	
-	<script th:src="@{/js/files/bidTableList.js}"></script>
-	<script th:src="@{/js/files/bidCardList.js}"></script>
-	<script th:src="@{/js/files/bidAdd.js}"></script>
-	
-	<script th:src="@{/js/files/ctgryTableList.js}"></script>
-	<script th:src="@{/js/files/ctgryCardList.js}"></script>
-	<script th:src="@{/js/files/ctgryAdd.js}"></script>
-	
-	<script th:src="@{/js/files/kindTableList.js}"></script>
-	<script th:src="@{/js/files/kindCardList.js}"></script>
-	<script th:src="@{/js/files/kindAdd.js}"></script>
-	
-	<script th:src="@{/js/files/buyProduct.js}"></script>
-	<script th:src="@{/js/files/buyProductListDiv.js}"></script>
-	<script th:src="@{/js/files/cartAdd.js}"></script>
-	<script th:src="@{/js/files/cartListDiv.js}"></script>
-	
-	
-	<script th:src="@{/js/files/productManage.js}"></script>
-	<script th:src="@{/js/files/productManageListDiv.js}"></script>
-	<script th:src="@{/js/files/productAdd.js}"></script>
-	<script th:src="@{/js/files/productStoreSetting.js}"></script>
-	
-	
-	<script th:src="@{/js/files/storeManage.js}"></script>
-	<script th:src="@{/js/files/storeAdd.js}"></script>
-	<script th:src="@{/js/files/storePrice.js}"></script>
-	
-	<script th:src="@{/js/files/messageList.js}"></script>
-	<script th:src="@{/js/files/messageShow.js}"></script>
-	
-	<script th:src="@{/js/files/buyPriceHistoryList.js}"></script>
-	<script th:src="@{/js/files/buyPriceHistoryShow.js}"></script>
-	
-	<script th:src="@{/js/files/storeAnalysis.js}"></script>
-	<script th:src="@{/js/files/buyProductAnalysis.js}"></script>
-	
-	<script th:src="@{/js/files/account.js}"></script>
-	
-	<script th:src="@{/js/files/familyBudgetManage.js}"></script>
-	<script th:src="@{/js/files/familyBudgetAdd.js}"></script>
-	
-	<script th:src="@{/js/files/familyBudgetBillManage.js}"></script>
-	<script th:src="@{/js/files/familyBudgetBillDetail.js}"></script>
-	<script th:src="@{/js/files/familyBudgetBillAdd.js}"></script>
-	<script th:src="@{/js/files/familyBudgetBillDetailAdd.js}"></script>
-		
-	<script th:src="@{/js/files/receiptImgUpload.js}"></script>
-	<script th:src="@{/js/files/receiptImgAnalysisList.js}"></script>
-	<script th:src="@{/js/files/receiptDetailEdit.js}"></script>
-	<script th:src="@{/js/files/receiptAnalysisRegist.js}"></script>
+-->	
 	
 </div>
 
 <div th:remove="tag" th:if="${mainKind == 'admin'}">
 <!-- ADMIN画面 -->
-	<script th:src="@{/js/files/dbMaintenance.js}"></script>
-	<script th:src="@{/js/files/detailTable.js}"></script>
+	<script th:src="@{/js/mainten/dbMaintenance.js}"></script>
+	<script th:src="@{/js/mainten/detailTable.js}"></script>
 
-	<script th:src="@{/js/files/adminMenu.js}"></script>
-	<script th:src="@{/js/files/adminLoginBlock.js}"></script>
-	<script th:src="@{/js/files/adminUserManage.js}"></script>
-	<script th:src="@{/js/files/adminPayContactManage.js}"></script>
-	<script th:src="@{/js/files/adminPayContactConfirm.js}"></script>
-	<script th:src="@{/js/files/adminAccountSetting.js}"></script>
-	
-	
+	<script th:src="@{/js/manage/adminLoginBlock.js}"></script>
+	<script th:src="@{/js/manage/adminMenu.js}"></script>
+	<script th:src="@{/js/manage/adminUserManageList.js}"></script>
 	
 </div>
 

@@ -2,6 +2,7 @@ package cn.caam.gs;
 
 import java.util.concurrent.Executor;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -23,6 +24,7 @@ import cn.caam.gs.common.util.StringCommonUtil;
 
 @SpringBootApplication
 @ComponentScan({"cn.caam.gs.*"})
+@MapperScan("cn.caam.gs.domain.db.*")
 @ServletComponentScan({"cn.caam.gs.*"})
 public class ApplicationRun {
     

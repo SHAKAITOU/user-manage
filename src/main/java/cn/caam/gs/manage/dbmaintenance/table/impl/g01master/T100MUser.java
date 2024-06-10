@@ -14,6 +14,7 @@ public class T100MUser extends BaseTableDef implements BaseDdl{
     private static final String COL_ID               = "id";
     private static final String COL_NAME             = "name";
     private static final String COL_USER_TYPE        = "user_type";
+    private static final String COL_PASSWORD         = "password";
     private static final String COL_MEMBERSHIP_PATH  = "membership_path";
     private static final String COL_FOCUS_ON         = "focus_on";
     private static final String COL_SEX              = "sex";
@@ -46,6 +47,7 @@ public class T100MUser extends BaseTableDef implements BaseDdl{
             {COL_ID,               true,     MySqlType.CHARACTER_VARYING, 20 , null, null, false, "", getContext(TABLE_NAME, COL_ID)},
             {COL_NAME,             false,    MySqlType.CHARACTER_VARYING, 70 , null, null, false, "", getContext(TABLE_NAME, COL_NAME)},
             {COL_USER_TYPE,        false,    MySqlType.CHARACTER_VARYING, 3  , null, null, false, "", getContext(TABLE_NAME, COL_USER_TYPE)},
+            {COL_PASSWORD,         false,    MySqlType.CHARACTER_VARYING, 200, null, null, false, "", getContext(TABLE_NAME, COL_PASSWORD)},
             {COL_MEMBERSHIP_PATH,  false,    MySqlType.CHARACTER_VARYING, 3  , null, null, false, "", getContext(TABLE_NAME, COL_MEMBERSHIP_PATH)},
             {COL_FOCUS_ON,         false,    MySqlType.CHARACTER_VARYING, 255, null, null, true , "", getContext(TABLE_NAME, COL_FOCUS_ON)},
             {COL_SEX,              false,    MySqlType.CHARACTER_VARYING, 3  , null, null, false, "", getContext(TABLE_NAME, COL_SEX)},
@@ -94,7 +96,7 @@ public class T100MUser extends BaseTableDef implements BaseDdl{
     }
     
     public SequenceInfoForm getSequenceInfo() {
-        return SequenceInfoForm.builder().seqName(TABLE_NAME+"_serial").start(100).build();
+        return null;
     }
     
     public String getTableSeq() {

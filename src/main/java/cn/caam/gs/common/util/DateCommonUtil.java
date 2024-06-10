@@ -162,7 +162,7 @@ public class DateCommonUtil {
         if(format.equals(DATE_FORMAT_YYYYSMMSDD_YOUBI)) {
             str = format(date, DATE_FORMAT_YYYYSMMSDD);    
             DayOfWeek day = getDayOfWeek(date);
-            str += "("+msg.getContext(loc, day.getName())+")";
+            str += "("+msg.getContext(day.getName())+")";
         }else {
             str = format(date, format);    
         }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import cn.caam.gs.common.enums.CellWidthType;
 import cn.caam.gs.common.enums.CssAlignType;
 import cn.caam.gs.common.enums.CssClassType;
+import cn.caam.gs.common.enums.CssGridsType;
 import cn.caam.gs.common.html.HtmlViewBaseHelper;
 import cn.caam.gs.common.html.element.TrSet;
 import cn.caam.gs.manage.dbmaintenance.form.ColumnInfoForm;
@@ -34,6 +35,8 @@ public class TableDetailViewHelper extends HtmlViewBaseHelper {
 	public static final String INDEXS_TABLE_CARD_BODY_ID = "indexsTable";
 	public static final int INDEXS_TABLE_CARD_HEIGHT = 180;
 	public static final int INDEXS_TABLE_BODY_HEIGHT = INDEXS_TABLE_CARD_HEIGHT - 90;
+	
+	public static int TABLE_TD_HEIGHT = 30;
 
 	public static String getPage(DbTableType dbTableType) {
 		StringBuffer sb = new StringBuffer();
@@ -79,13 +82,13 @@ public class TableDetailViewHelper extends HtmlViewBaseHelper {
 	}
 	
 	private static String getColumnsDataPanel(List<ColumnInfoForm> columnInfoList) {
-		return borderCard().withTitleNoScroll("", CssClassType.INFO, "", 
+		return borderCard().withTitleWithScroll("", CssClassType.INFO, "", 
 				"COLUMN LIST",  
 				getColumnsData(columnInfoList));
 	}
 	
 	private static String getIndexsDataPanel(List<IndexInfoForm> indexInfoList) {
-		return borderCard().withTitleNoScroll("", CssClassType.WARNING, "", 
+		return borderCard().withTitleWithScroll("", CssClassType.WARNING, "", 
 				"INDEX LIST",  
 				getIndexsData(indexInfoList));
 	}
@@ -111,7 +114,9 @@ public class TableDetailViewHelper extends HtmlViewBaseHelper {
 	}
 
 	private static String getColumnsData(List<ColumnInfoForm> columnInfoList) {
-		int[] grids = new int[] {1, 3, 2, 1, 3, 1, 1};
+	    CssGridsType[] grids = new CssGridsType[] {
+	            CssGridsType.G1, CssGridsType.G3, CssGridsType.G2, 
+	            CssGridsType.G1, CssGridsType.G3, CssGridsType.G1, CssGridsType.G1};
 		int index = 0;
 		//head
 		TrSet headTr = tr().head(CssClassType.INFO);
@@ -148,25 +153,25 @@ public class TableDetailViewHelper extends HtmlViewBaseHelper {
 			TrSet tr = cols.getPkFlg() ? tr().row(properties, CssClassType.DANGER) : tr().row(properties);
 			// --col1--
 			context = String.valueOf((i+1));
-			tr.addTd(td().index(grids[index++], context));
+			tr.addTd(td().index(TABLE_TD_HEIGHT, grids[index++], context));
 			// --col2--
 			context = cols.getName();
-			tr.addTd(td().get(grids[index++], context, CssAlignType.LEFT));
+			tr.addTd(td().get  (TABLE_TD_HEIGHT, grids[index++], context, CssAlignType.LEFT));
 			// --col3--
 			context = cols.getComment();
-			tr.addTd(td().subWithTrim(grids[index++], context, CssAlignType.LEFT));
+			tr.addTd(td().subWithTrim(TABLE_TD_HEIGHT, grids[index++], context, CssAlignType.LEFT));
 			// --col4--
 			context = cols.getPkFlg() ? "YES" : "";
-			tr.addTd(td().get(grids[index++], context, CssAlignType.CENTER));
+			tr.addTd(td().get  (TABLE_TD_HEIGHT, grids[index++], context, CssAlignType.CENTER));
 			// --col5--
 			context = DbTableUtil.getTypeSql(cols);
-			tr.addTd(td().get(grids[index++], context, CssAlignType.LEFT));
+			tr.addTd(td().get  (TABLE_TD_HEIGHT, grids[index++], context, CssAlignType.LEFT));
 			// --col6--
 			context = cols.getNullable() ? "YES" : "";
-			tr.addTd(td().get(grids[index++], context, CssAlignType.CENTER));
+			tr.addTd(td().get  (TABLE_TD_HEIGHT, grids[index++], context, CssAlignType.CENTER));
 			// --col7--
 			context = cols.getDefaultValue();
-			tr.addTd(td().get(grids[index++], context, CssAlignType.LEFT));
+			tr.addTd(td().get  (TABLE_TD_HEIGHT, grids[index++], context, CssAlignType.LEFT));
 			
 			bodyList.add(tr);
 		}
@@ -176,7 +181,7 @@ public class TableDetailViewHelper extends HtmlViewBaseHelper {
 	}
 	
 	private static String getIndexsData(List<IndexInfoForm> indexInfoList) {
-		int[] grids = new int[] {1, 5, 6};
+	    CssGridsType[] grids = new CssGridsType[] {CssGridsType.G1, CssGridsType.G5, CssGridsType.G6};
 		int index = 0;
 		//head
 		TrSet headTr = tr().head(CssClassType.WARNING);
@@ -200,13 +205,13 @@ public class TableDetailViewHelper extends HtmlViewBaseHelper {
 			TrSet tr = tr().row(properties);
 			// --col1--
 			context = String.valueOf((i+1));
-			tr.addTd(td().index(grids[index++], context));
+			tr.addTd(td().index(TABLE_TD_HEIGHT, grids[index++], context));
 			// --col2--
 			context = indexInfo.getIndexName();
-			tr.addTd(td().get(grids[index++], context, CssAlignType.LEFT));
+			tr.addTd(td().get(TABLE_TD_HEIGHT,   grids[index++], context, CssAlignType.LEFT));
 			// --col3--
 			context = String.join(",", indexInfo.getColumnNames());
-			tr.addTd(td().get(grids[index++], context, CssAlignType.LEFT));
+			tr.addTd(td().get(TABLE_TD_HEIGHT,   grids[index++], context, CssAlignType.LEFT));
 			
 			bodyList.add(tr);
 		}

@@ -20,6 +20,11 @@ public class HtmlBorderCardHelper extends HtmlBaseHelper {
         .classType(type).id(id).bodyId(bodyId).title(title)
         .contexts(contexts).build().html();
     }
+    public String withTitleWithScroll(String id, CssClassType type, String bodyId, String title, String... contexts) {
+        return CardSet.builder().outPutType(CardSetType.BORDER_TITLE_SCROLL)
+        .classType(type).id(id).bodyId(bodyId).title(title)
+        .contexts(contexts).build().html();
+    }
     public String withTitleWithScroll(String id, CssClassType type, String bodyId, String title, int cardHeight, String... contexts) {
         return CardSet.builder().outPutType(CardSetType.BORDER_TITLE_SCROLL)
         .classType(type).id(id).bodyId(bodyId).height(cardHeight).title(title)

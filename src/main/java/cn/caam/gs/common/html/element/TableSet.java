@@ -14,6 +14,7 @@ public class TableSet {
 
     private String id;
     private int bodyHeight;
+    private int bodyWidth;
     
     private TrSet headTr;
     private List<TrSet> bodyList;
@@ -42,10 +43,14 @@ public class TableSet {
         sb.append(headTr.html());
         sb.append("</thead>");
         sb.append("<tbody ");
+        sb.append(" style='");
         if (bodyHeight > 0) {
-            sb.append(" style='height:"+bodyHeight+"px;'");
+            sb.append(" height:"+bodyHeight+"px;");
         }
-        sb.append(">");
+        if (bodyWidth > 0) {
+            sb.append(" width:"+bodyWidth+"px;");
+        }
+        sb.append("'>");
         if(Objects.nonNull(bodyList)){
             for(TrSet trSet : bodyList) {
                 sb.append(trSet.html());

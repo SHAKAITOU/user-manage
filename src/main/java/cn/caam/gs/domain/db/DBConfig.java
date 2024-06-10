@@ -21,11 +21,12 @@ public class DBConfig {
     public static final String JCBC_YML_C_MYSQL_DB_PASS = "${spring.datasource.cloud-MySQL.password}";
 
 	public static final String JCBC_SOURCE_BEAN_NAME = "jcbcDataSource";
-	public static final String JCBC_BASE_MAPPER_PACKAGE = "cn.caam.gs.domain.db.base.mapper";
-	public static final String JCBC_OPTIONAL_MAPPER_PACKAGE = "cn.caam.gs.domain.db.custom.mapper";
+	public static final String JCBC_BASE_MAPPER_XML_PATH = "${spring.datasource.sqlPath}";
+	//public static final String JCBC_BASE_MAPPER_PACKAGE = "cn.caam.gs.domain.db.base.mapper";
+	//public static final String JCBC_OPTIONAL_MAPPER_PACKAGE = "cn.caam.gs.domain.db.custom.mapper";
 	public static final String JCBC_SQLSESSION_BEAN_NAME = "jcbcSqlSessionTemplate";
-	public static final String JCBC_BASE_MAPPER_XML_PATH = "classpath:cn/caam/gs/domain/db/base/sql/*.xml";
-	public static final String JCBC_OPTIONAL_MAPPER_XML_PATH = "classpath:cn/caam/gs/domain/db/custom/sql/*.xml";
+	//public static final String JCBC_BASE_MAPPER_XML_PATH = "classpath:cn/caam/gs/domain/db/base/sql/*.xml";
+	//public static final String JCBC_OPTIONAL_MAPPER_XML_PATH = "classpath:cn/caam/gs/domain/db/custom/sql/*.xml";
 	
 	
 	@Value(DBConfig.JCBC_MODE)
@@ -56,6 +57,10 @@ public class DBConfig {
 	
 	@Value(DBConfig.JCBC_YML_L_MYSQL_DB_URL)
 	private String L_DB_URL;
+	
+	@Value(DBConfig.JCBC_BASE_MAPPER_XML_PATH)
+    private String xmlPath;
+    
 	
 	public String getDbMode() {
 		return MODE;
@@ -90,5 +95,8 @@ public class DBConfig {
 		} else {
 			return DB_PASS;
 		}
+	}
+	public String getXmlPath() {
+	    return xmlPath;
 	}
 }
