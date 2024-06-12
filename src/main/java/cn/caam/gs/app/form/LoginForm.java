@@ -20,4 +20,8 @@ public class LoginForm {
 	private String errorMsg;
 	
 	private String lang;
+	
+	private String authImg;
+	
+	private String authImgNumber;
 }

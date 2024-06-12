@@ -73,12 +73,13 @@
 
 <div th:remove="tag" th:if="${mainKind == 'app'}">
 <!-- 一般画面 -->
+	<script th:src="@{/js/app/loginBlock.js}"></script>
+	<script th:src="@{/js/app/menu.js}"></script>
+	<script th:src="@{/js/app/user/registStep1.js}"></script>
+	<script th:src="@{/js/app/user/registStep1Confirm.js}"></script>
 <!-- 
-	<script th:src="@{/js/files/loginBlock.js}"></script>
-	<script th:src="@{/js/files/registStep1.js}"></script>
-	<script th:src="@{/js/files/registStep2.js}"></script>
-	<script th:src="@{/js/files/registStep3.js}"></script>
-	<script th:src="@{/js/files/menu.js}"></script>
+	<script th:src="@{/js/app/registStep2.js}"></script>
+	<script th:src="@{/js/app/registStep3.js}"></script>
 	<script th:src="@{/js/files/imgShow.js}"></script>
 	<script th:src="@{/js/files/mapShow.js}"></script>
 -->	

@@ -476,6 +476,26 @@ public class LocalDateUtility {
         LocalDate trgDt = (new Date(orgDtTime)).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         return formatDate(trgDt, pattern);
     }
+    
+    /**
+     * 日付算出 (分数数)<br>
+     * 基準年月日と加算したい日数を引数で受け取り、年月日に日数を加算した日付を算出して返却する.
+     *
+     * @param orgDtStr 日付元
+     * @param pattern 指定された日付フォーマット形式
+     * @param days 加算日数
+     * @return 日付先
+     */
+    public static String addMin(final String orgDtStr, final DateTimePattern pattern, final long mins) {
+
+        if (StringUtils.isEmpty(orgDtStr)) {
+            return null;
+        }
+
+        LocalDateTime orgDt = parseLocalDateTime(orgDtStr, pattern);
+        // 日付先 ＝ 日付元 + 加算分数
+        return formatDateTime(orgDt.plusMinutes(mins), pattern);
+    }
 
     /**
      * 指定された日付コンテキストより後にあるかどうかをチェックする.

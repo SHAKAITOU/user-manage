@@ -561,3 +561,17 @@ CREATE TABLE m_bill
     PRIMARY KEY (id),
     FOREIGN KEY user_id_foreign_key (user_id) references m_user (id)
 ) COMMENT='会员发票信息' ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 注册认证验证码 --
+DROP TABLE IF EXISTS m_auth_code;
+CREATE TABLE m_auth_code
+( 
+    id               VARCHAR(50)    NOT NULL COMMENT 'UUID',
+    auth_method      VARCHAR(6)     NOT NULL COMMENT '验证方式01手机，02邮箱',
+    recieved_by      VARCHAR(64)    NOT NULL COMMENT '手机号，邮箱地址',
+    auth_code        VARCHAR(6)     NOT NULL COMMENT '验证码',
+    invalid_date     VARCHAR(20)    NOT NULL COMMENT '过期时间(yyyyMMddHHmmss)',
+    PRIMARY KEY (id)
+) COMMENT='注册认证验证码' ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE INDEX m_auth_code_idx1 ON m_auth_code (recieved_by);
+CREATE INDEX m_auth_code_idx2 ON m_auth_code (invalid_date);

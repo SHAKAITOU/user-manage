@@ -95,6 +95,10 @@ public class HtmlBaseHelper {
         return trimStringByByte(context, getMaxLengthByGrids(grids), addDot);
     }
     
+    public static String trimFitForTdByWidth(int width, String context, boolean addDot) {
+        return trimStringByByte(context, getMaxLengthByWidth(width), addDot);
+    }
+    
     public static String trimFitForSubTd(int grids, String context, boolean addDot) {
         return trimStringByByte(context, getMaxLengthBySubGrids(grids), addDot);
     }
@@ -105,6 +109,10 @@ public class HtmlBaseHelper {
         } else {
             return grids*10;
         }
+    }
+    
+    public static int getMaxLengthByWidth(int width) {
+        return width/10;
     }
     
     public static int getMaxLengthBySubGrids(int grids) {

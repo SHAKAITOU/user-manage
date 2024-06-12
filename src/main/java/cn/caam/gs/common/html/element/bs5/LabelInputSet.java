@@ -22,6 +22,8 @@ public class LabelInputSet {
     private String name;
     private String buttonName;
     private String buttonId;
+    private boolean notBlank = false;
+    private int maxlength = 0;
     public String html() {
         return get();
     }
@@ -31,7 +33,11 @@ public class LabelInputSet {
         sb.append("<div class='input-group mb-3'>");
         sb.append("<span class='input-group-text " 
                 + (Objects.nonNull(fontSize) ? fontSize.getKey() : "label-14" ) 
-                + "'>" + labelName + "</span>");
+                + "'>" + labelName);
+        if (notBlank) {
+            sb.append("<span class='label-14b-red'>*</span>");
+        }
+        sb.append("</span>");
         sb.append("<input type='text' style='background-color:" + GlobalConstants.INPUT_BG_COLOER + "' class='form-control " 
                 + (Objects.nonNull(fontSize) ? fontSize.getKey() : "label-14" ) + "'");
         if (Objects.nonNull(placeholder)) {
@@ -43,6 +49,9 @@ public class LabelInputSet {
         
         if (Objects.nonNull(name)) {
             sb.append(" name='"+ name + "'");
+        }
+        if (maxlength > 0) {
+            sb.append(" maxlength='"+ maxlength + "'");
         }
         sb.append(">");
         if (Objects.nonNull(buttonId)) {

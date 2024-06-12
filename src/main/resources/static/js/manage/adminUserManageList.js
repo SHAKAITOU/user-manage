@@ -21,7 +21,10 @@ AdminUserManageList.prototype.ID = {
     REGIST_DATE_FROM_INPT    : "user_list_form_regist_date_from",
     REGIST_DATE_TO_INPT      : "user_list_form_regist_date_to",
     VALID_END_DATE_FROM_INPT : "user_list_form_valid_end_date_from",
-    VALID_END_DATE_TO_INPT   : "user_list_form_valid_end_date_to"
+    VALID_END_DATE_TO_INPT   : "user_list_form_valid_end_date_to",
+    SEARCH_BTN_ID            : "searchBtn",
+    //div
+    DIV_REFRESH_BODY         : "userListRefreshBody",
 
 };
 //------------------------------------------]
@@ -32,7 +35,7 @@ AdminUserManageList.prototype.init = function(){
     //keep self instance for call back
     var self = this;
     
-    $('[data-toggle="tooltip"]').tooltip({ boundary: 'window' });
+    $('[data-toggle="tooltip"]').tooltip();
     
     //init bond event to btn
     self.initEvent();
@@ -71,6 +74,19 @@ AdminUserManageList.prototype.initEvent = function(){
         language : self.language,
         clearBtn : self.clearBtn
     });
+    
+    ShaInput.button.onClick(self.getObject(self.ID.SEARCH_BTN_ID),
+    	function(event) {
+			ShaAjax.ajax.post(
+                self.jsContext.adminJsView.adminUserSearch.url_user_list, 
+                self.getForm().serializeArray(), 
+                function(data){
+                    self.getObjectInForm(self.getForm(), self.ID.DIV_REFRESH_BODY).html(data);
+                    $('[data-toggle="tooltip"]').tooltip();
+                }
+            ); 
+		}
+    );
     
 };
 //----------------------------------------------------------------------------]

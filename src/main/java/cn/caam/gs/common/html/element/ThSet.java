@@ -24,7 +24,7 @@ public class ThSet {
     
     private int grids;
     private int height;
-    private int width = 0;
+    private int width;
     private String context;
     private CssFontSizeType fontSize;
     private CssAlignType align;
@@ -81,7 +81,7 @@ public class ThSet {
     private String getWithTrim(boolean customizeTooltip) {
         StringBuffer sb = new StringBuffer();
         int byteLength = StringUtility.byteLength(context);
-        int maxLength = HtmlBaseHelper.getMaxLengthByGrids(grids);
+        int maxLength = width > 0 ? HtmlBaseHelper.getMaxLengthByWidth(width) : HtmlBaseHelper.getMaxLengthByGrids(grids);
         sb.append("<th class=' ");
         sb.append((Objects.nonNull(fontSize) ? fontSize.getKey(): CssFontSizeType.LABEL_12B.getKey()));
         sb.append(" text-" + (Objects.nonNull(align) ? align.getKey(): CssAlignType.LEFT.getKey()));

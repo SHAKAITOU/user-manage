@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 
+import cn.caam.gs.GlobalConstants;
 import cn.caam.gs.common.enums.CssAlignType;
 import cn.caam.gs.common.enums.CssFontSizeType;
 import cn.caam.gs.common.html.HtmlBaseHelper;
@@ -52,6 +53,8 @@ public class TdSet {
         sb.append("<td scope='col' ");
         if (height > 0) {
             sb.append(" height='"+height+"' ");
+        } else {
+            sb.append(" height='"+GlobalConstants.TABLE_TD_HEIGHT+"' ");
         }
         sb.append("class='");
         sb.append((Objects.nonNull(fontSize) ? align.getKey(): CssFontSizeType.LABEL_12.getKey()));
@@ -77,6 +80,8 @@ public class TdSet {
         }
         if (height > 0) {
             sb.append(" height='"+height+"'");
+        } else {
+            sb.append(" height='"+GlobalConstants.TABLE_TD_HEIGHT+"' ");
         }
         sb.append(">");
         String contextFull = StringUtils.isNotBlank(context) ? context : UtilConstants.HTML_SPACE;
@@ -98,9 +103,11 @@ public class TdSet {
         } else {
             sb.append(" col-xs-"+grids+"'");
         }
-        sb.append(" data-toggle='tooltip' data-toolip='"+HtmlBaseHelper.filterSpecialCharacters(tooltipContext)+"'");
+        sb.append(" title='"+HtmlBaseHelper.filterSpecialCharacters(tooltipContext)+"'");
         if (height > 0) {
             sb.append(" height='"+height+"'");
+        } else {
+            sb.append(" height='"+GlobalConstants.TABLE_TD_HEIGHT+"' ");
         }
         sb.append(">");
         String contextFull = StringUtils.isNotBlank(context) ? context : UtilConstants.HTML_SPACE;
@@ -115,7 +122,7 @@ public class TdSet {
     private String getWithTrim(boolean customizeTooltip) {
         StringBuffer sb = new StringBuffer();
         int byteLength = StringUtility.byteLength(context);
-        int maxLength = HtmlBaseHelper.getMaxLengthByGrids(grids);
+        int maxLength = width > 0 ? HtmlBaseHelper.getMaxLengthByWidth(width) : HtmlBaseHelper.getMaxLengthByGrids(grids);
         sb.append("<td class=' ");
         sb.append((Objects.nonNull(fontSize) ? align.getKey(): CssFontSizeType.LABEL_12.getKey()));
         sb.append(" text-" + (Objects.nonNull(align) ? align.getKey(): CssAlignType.LEFT.getKey()));
@@ -125,13 +132,16 @@ public class TdSet {
             sb.append(" col-xs-"+grids+"'");
         }
         if(customizeTooltip || byteLength > maxLength) {
-            sb.append(" data-toggle='tooltip' data-toolip='"+HtmlBaseHelper.filterSpecialCharacters(customizeTooltip ? tooltipContext : context)+"'");
+            sb.append(" title='"+HtmlBaseHelper.filterSpecialCharacters(customizeTooltip ? tooltipContext : context)+"'");
         }
         if (height > 0) {
             sb.append(" height='"+height+"'");
+        } else {
+            sb.append(" height='"+GlobalConstants.TABLE_TD_HEIGHT+"' ");
         }
         sb.append(">");
-        String contextFull = HtmlBaseHelper.trimFitForTd(grids, context, false);
+        String contextFull = width > 0 ? HtmlBaseHelper.trimFitForTdByWidth(width, context, true) :
+                HtmlBaseHelper.trimFitForTd(grids, context, false);
         if(Objects.nonNull(footContext)) {
             contextFull = contextFull + footContext;
         }
@@ -153,10 +163,12 @@ public class TdSet {
             sb.append(" col-xs-"+grids+"'");
         }
         if(customizeTooltip || byteLength > maxLength) {
-            sb.append(" data-toggle='tooltip' data-toolip='"+HtmlBaseHelper.filterSpecialCharacters(customizeTooltip ? tooltipContext : context)+"'");
+            sb.append(" title='"+HtmlBaseHelper.filterSpecialCharacters(customizeTooltip ? tooltipContext : context)+"'");
         }
         if (height > 0) {
             sb.append(" height='"+height+"'");
+        } else {
+            sb.append(" height='"+GlobalConstants.TABLE_TD_HEIGHT+"' ");
         }
         sb.append(">");
         String contextFull = HtmlBaseHelper.trimFitForSubTd(grids, context, false);

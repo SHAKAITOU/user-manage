@@ -5,12 +5,11 @@
 	<!-- hidden values -->
 	<input type="hidden" id="lang" name="lang" th:value="${lang}">
     <input type="hidden" id="login_form_return_error_flag" th:value="${(loginForm != null && 
-            loginForm.returnType == T(sha.yasuku.common.enums.ExecuteReturnType).NG.getId())}">
+            loginForm.returnType == T(cn.caam.gs.common.enums.ExecuteReturnType).NG.getId())}">
     <input type="hidden" id="login_form_return_error_msg" th:value="${loginForm.errorMsg}">
     <div class="row">
         <div class="col-4 text-left">
-			<button id="setLangJp" class='btn btn-outline-secondary btn_com'><img th:src="@{/img/JP_flag.png}" style="height: 30px; margin-top: -5px;"/></button>
-            <button id="setLangCn" class='btn btn-outline-secondary btn_com'><img th:src="@{/img/CN_flag.png}" style="height: 30px; margin-top: -5px;"/></button>
+
         </div>
         <div class="col-4 text-right">
             <span id="helpBtn" class='a-a2'> 
@@ -45,15 +44,26 @@
         <div class="col-12 text-left" style="height: 10px"></div>
     </div>
     <div class="row">
-    	<div class="col-3 text-left">
-            <button id="setThemesWhite" class='btn btn-outline-secondary btn_com'>
-            <i class="fa fa-sun" aria-hidden="true"></i>
-            </button>
-            <button id="setThemesBlack" class='btn btn-secondary btn_com'>
-            <i class="fa fa-moon" aria-hidden="true"></i>
-            </button>
+    	<div class="col-4 text-left">
+        	<input id="authImgNumber" name="authImgNumber" type="text" 
+                th:placeholder="输入验证码" class="form-control input-md"
+                th:field="${loginForm.authImgNumber}"/>
         </div>
-        <div class="col-9 text-right">
+        <div class="col-4 text-left">
+			<img style='width:150px;height:40px' th:src="${loginForm.authImg}"> 
+        </div>
+        <div class="col-4 text-left">
+			<span id="refreshImgBtn" class='a-a2'>
+            <i class="fa fa-retweet" aria-hidden="true"></i>&nbsp;
+                看不清
+            </span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 text-left" style="height: 20px"></div>
+    </div>
+    <div class="row">
+        <div class="col-12 text-right">
         	<span id="passFindBtn" class='a-a2'>
             <i class="fa fa-frown" aria-hidden="true"></i>&nbsp;
                 [[#{login.panel.btn.passFind}]]

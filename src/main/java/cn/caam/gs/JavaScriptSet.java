@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.env.Environment;
 
+import cn.caam.gs.app.user.view.LoginViewHelper;
 import cn.caam.gs.common.enums.ExecuteReturnType;
 import cn.caam.gs.common.util.JsonUtility;
 import cn.caam.gs.common.util.MessageSourceUtil;
@@ -128,7 +129,8 @@ public class JavaScriptSet {
 
 	private Map<String, Object> initJsView() {
 		Map<String, Object> jsView = new HashMap<String, Object>();
-		
+	      // login
+		jsView.put("login",                LoginViewHelper.getJsProperties());
 		return jsView;
 	}
 	
@@ -153,8 +155,7 @@ public class JavaScriptSet {
 	}
 
 	private void setJsView(JavaScriptSetInfo setInfo) {
-		// login
-		//setInfo.getJsView().put("login", 				LoginViewHelper.getJsProperties());
+
 		// menu
 		//setInfo.getJsView().put("menu", 				MenuViewHelper.getJsProperties());
 		

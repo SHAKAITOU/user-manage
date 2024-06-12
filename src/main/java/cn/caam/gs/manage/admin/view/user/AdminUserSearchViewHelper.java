@@ -49,12 +49,16 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
 	public static final String URL_BASE = UrlConstants.ADMIN + UrlConstants.USER_LIST;
 	//init url
 	public static final String URL_C_INIT = UrlConstants.INIT;
+	//init url
+    public static final String URL_C_SEARCH = UrlConstants.SEARCH;
 	
     public static final String MAIN_JS_CLASS                = "AdminUserManageList";
     public static final String USER_LIST_FORM_NAME          = "user_list_form";
     public static final String USER_LIST_CHECK_ALL_ID       = "user_list_check_all";
     public static final String USER_CHECK_PREF_ID           = "user_check_";
     public static final String USER_LIST_TABLE_ID           = "userListTable";
+    public static final String USER_LIST_REFRESH_BODY_ID    = "userListRefreshBody";
+    public static final String SEARCH_BTN_ID                = "searchBtn";
 	
 	   /**
      * main画面用
@@ -75,20 +79,41 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         return viewData;
     }
     
+    public static ViewData refeshTable(HttpServletRequest request, 
+            List<UserInfo> userList) {
+        Map<String, Object> dataMap = new HashMap<>();
+        ViewData viewData = ViewData.builder()
+                .pageContext(setCardForTable(request, userList))
+                .jsClassName(MAIN_JS_CLASS)
+                .dataMap(dataMap)
+                .build();
+        return viewData;
+    }
+
+    private static String setCardForTable(
+            HttpServletRequest request, 
+            List<UserInfo> userList) {
+        StringBuffer sbBody = new StringBuffer();
+        sbBody.append(borderCard().withTitleWithScroll("", CssClassType.INFO, "", 
+                getContext("admin.userList.table.title"),
+                divRow().cellBlank(5),
+                setUserListTable(request, userList)));
+        
+        return sbBody.toString();
+    }
+    
     private static String getMainPageContext(HttpServletRequest request, 
             List<UserInfo> userList) {
         StringBuffer sb = new StringBuffer();
         sb.append(divRow().cellBlank(5));
         sb.append(setBreadCrumb());
         sb.append(setSearchPanel(request));
-        StringBuffer sbBody = new StringBuffer();
-        sbBody.append(divRow().cellBlank(5));
-        sbBody.append(setUserListTable(request, userList));
-        sb.append(borderCard().withTitleWithScroll("", CssClassType.INFO, "", 
-                getContext("admin.userList.table.title"),
-                sbBody.toString()));
+        sb.append("<div id='" + USER_LIST_REFRESH_BODY_ID + "'>");
+        sb.append(setCardForTable(request, userList));
+        sb.append("</div>");
         return getForm(USER_LIST_FORM_NAME, sb.toString());
     }
+    
     
     private static String setBreadCrumb() {
         String[] names = new String[] {getContext("menu.group5"), getContext("menu.group5.button4")};
@@ -220,10 +245,9 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
                 .fontSize(font).grids(CssGridsType.G4).outPutType(LabelDateRangeInputSetType.WITH_LABEL_FOOT).build().html());
         
         //search btn
-        name = "searchBtn";
         labelName = getContext("common.page.search");
         contextList.add(ButtonSet.builder()
-                .id(convertNameDotForId(name)).buttonName(labelName)
+                .id(SEARCH_BTN_ID).buttonName(labelName)
                 .grids(CssGridsType.G1).outPutType(ButtonSetType.GRID_STYLE).gridFlexType(GridFlexType.CENTER)
                 .iconSet(IconSet.builder().type(IconSetType.SEARCH).css(IconSetCss.NOMAL_10).build())
                 .build().html());
@@ -238,13 +262,13 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         int [] widths = new int[] {
             40,  //check
             150, //会员ID
-            100, //会员名称
-            150, //会员类型
-            150, //手机号
+            140, //会员名称
+            100, //会员类型
+            120, //手机号
             150, //电子邮箱
             150, //工作单位
-            120, //入会时间
-            120, //有效结束日期
+            200, //入会时间
+            200, //有效结束日期
             200  //操作
         };
         int index = 0;
@@ -299,34 +323,35 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
                 tr.addTd(td().get(widths[index++], context, CssAlignType.CENTER));
                 // --col2--
                 context = nonNull(userInfo.getId());
-                tr.addTd(td().get(widths[index++], context, CssAlignType.LEFT));
+                tr.addTd(td().withTrimWidth(widths[index++], context, CssAlignType.CENTER));
                 // --col3--
                 context = nonNull(userInfo.getUser().getName());
-                tr.addTd(td().get(widths[index++], context, CssAlignType.LEFT));
+                tr.addTd(td().withTrimWidth(widths[index++], context, CssAlignType.CENTER));
                 // --col4--
                 context = nonNull(userInfo.getUserTypeName());
-                tr.addTd(td().get(widths[index++], context, CssAlignType.LEFT));
+                tr.addTd(td().withTrimWidth(widths[index++], context, CssAlignType.CENTER));
                 // --col5--
                 context = nonNull(userInfo.getUser().getPhone());
-                tr.addTd(td().get(widths[index++], context, CssAlignType.LEFT));
+                tr.addTd(td().withTrimWidth(widths[index++], context, CssAlignType.CENTER));
                 // --col6--
                 context = nonNull(userInfo.getUser().getMail());
-                tr.addTd(td().get(widths[index++], context, CssAlignType.LEFT));
+                tr.addTd(td().withTrimWidth(widths[index++], context, CssAlignType.LEFT));
                 // --col7--
                 context = nonNull(userInfo.getUser().getEmployer());
-                tr.addTd(td().get(widths[index++], context, CssAlignType.LEFT));
+                tr.addTd(td().withTrimWidth(widths[index++], context, CssAlignType.LEFT));
                 // --col8--
                 context = nonNull(userInfo.getUser().getRegistDate());
-                tr.addTd(td().get(widths[index++], context, CssAlignType.LEFT));
+                tr.addTd(td().withTrimWidth(widths[index++], context, CssAlignType.CENTER));
                 // --col9--
                 context = nonNull(userInfo.getUser().getValidEndDate());
-                tr.addTd(td().get(widths[index++], context, CssAlignType.LEFT));
+                tr.addTd(td().withTrimWidth(widths[index++], context, CssAlignType.CENTER));
                 // --col9--
                 context = button().forTableBorderNameLeft(IconSetType.REFRESH, CssClassType.INFO, 
                         "", getContext("admin.userList.btn.resetPw"), userInfo.getId(), "restPw");
+                context += "&nbsp;&nbsp;";
                 context += button().forTableBorderNameLeft(IconSetType.DETAIL, CssClassType.INFO, 
                         "", getContext("admin.userList.btn.detail"), userInfo.getId(), "detail");
-                tr.addTd(td().get(widths[index++], context, CssAlignType.LEFT));
+                tr.addTd(td().get(widths[index++], context, CssAlignType.CENTER));
                 
                 bodyList.add(tr);
             }
@@ -351,7 +376,7 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
 		Map<String, String> js = new HashMap<String, String>();
 		// url
 		js.put("url_init",      URL_BASE + URL_C_INIT);
-		js.put("url_user_list", URL_BASE);		
+		js.put("url_user_list", URL_BASE + URL_C_SEARCH);		
 		
 		return js;
 	}

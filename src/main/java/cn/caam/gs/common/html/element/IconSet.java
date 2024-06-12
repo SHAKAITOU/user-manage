@@ -114,6 +114,9 @@ public class IconSet {
         TO_RIGHT            ("fa fa-arrow-right"),
         /** ← */
         TO_LEFT                ("fa fa-arrow-left"),
+        
+        TO_UP                 ("fa fa-arrow-up"),
+        TO_DOWN                 ("fa fa-arrow-down"),
         /** delete */
         DELETE                ("fa fa-trash"),
         

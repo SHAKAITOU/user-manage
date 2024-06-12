@@ -21,6 +21,8 @@ public class UrlConstants {
     public static final String DB                         = "/db";
     //INDEX
     public static final String INDEX                      = "/login";
+    //USER LOGIN
+    public static final String USER_LOGIN                 = "/userLogin";
     //ADMIN LOGIN
     public static final String LOGOUT                     = "/logout";
     
@@ -29,6 +31,7 @@ public class UrlConstants {
     public static final String USER_LIST                  = "/userList";
     public static final String PAGE                       = "/pageLink";
     public static final String INIT                       = "/init";
+    public static final String SEARCH                     = "/search";
     //ACCESS DENIED
     public static final String ACCESS_DENIED              = "/access-denied";
     

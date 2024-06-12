@@ -32,6 +32,14 @@ public class HtmlTdHelper extends HtmlBaseHelper {
                 .height(height).grids(grids.getKey()).align(alignType).context(context).build();
     }
     
+    public TdSet withTrimWidth(int width, int height, String context, CssAlignType alignType) {
+        return TdSet.builder().outPutType(TdSetType.WITH_TRIM).width(width).height(height).align(alignType).context(context).build();
+    }
+    
+    public TdSet withTrimWidth(int width, String context, CssAlignType alignType) {
+        return TdSet.builder().outPutType(TdSetType.WITH_TRIM).width(width).align(alignType).context(context).build();
+    }
+    
     public TdSet withTrim(CssGridsType grids, String context, CssAlignType alignType) {
         return TdSet.builder().outPutType(TdSetType.WITH_TRIM).grids(grids.getKey()).align(alignType).context(context).build();
     }

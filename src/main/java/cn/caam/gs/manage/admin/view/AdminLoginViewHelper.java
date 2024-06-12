@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
-import cn.caam.gs.app.util.UrlConstants;
+import cn.caam.gs.manage.util.UrlConstants;
 import cn.caam.gs.common.html.HtmlViewBaseHelper;
 
 

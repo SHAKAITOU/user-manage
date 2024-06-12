@@ -68,7 +68,9 @@ public class UrlConstants {
 	public static final String CARD			= "/card";	
 	public static final String MANAGE		= "/manage";	
 	public static final String CART			= "/cart";	
-	public static final String SETTING		= "/setting";	
+	public static final String SETTING		= "/setting";
+	public static final String COMMIT       = "/commit";
+    public static final String CONFIRM      = "/confirm";
 	//BATCH
 	public static final String BATCH 			= "/batch";
 	/* ===================ADMIN ROLE URL========================= */
