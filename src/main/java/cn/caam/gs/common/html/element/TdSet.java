@@ -96,7 +96,7 @@ public class TdSet {
     private String getWithTooltip() {
         StringBuffer sb = new StringBuffer();
         sb.append("<td class=' ");
-        sb.append((Objects.nonNull(fontSize) ? align.getKey(): CssFontSizeType.LABEL_12.getKey()));
+        sb.append((Objects.nonNull(fontSize) ? align.getKey(): GlobalConstants.TABLE_BODY_FONT_SIZE.getKey()));
         sb.append(" text-" + (Objects.nonNull(align) ? align.getKey(): CssAlignType.LEFT.getKey()));
         if (width > 0) {
             sb.append("' width='" + width + "'"); 
@@ -124,7 +124,7 @@ public class TdSet {
         int byteLength = StringUtility.byteLength(context);
         int maxLength = width > 0 ? HtmlBaseHelper.getMaxLengthByWidth(width) : HtmlBaseHelper.getMaxLengthByGrids(grids);
         sb.append("<td class=' ");
-        sb.append((Objects.nonNull(fontSize) ? align.getKey(): CssFontSizeType.LABEL_12.getKey()));
+        sb.append((Objects.nonNull(fontSize) ? align.getKey(): GlobalConstants.TABLE_BODY_FONT_SIZE.getKey()));
         sb.append(" text-" + (Objects.nonNull(align) ? align.getKey(): CssAlignType.LEFT.getKey()));
         if (width > 0) {
             sb.append("' width='" + width + "'"); 
@@ -155,7 +155,7 @@ public class TdSet {
         int byteLength = StringUtility.byteLength(context);
         int maxLength = HtmlBaseHelper.getMaxLengthBySubGrids(grids);
         sb.append("<td class=' ");
-        sb.append((Objects.nonNull(fontSize) ? align.getKey(): CssFontSizeType.LABEL_12.getKey()));
+        sb.append((Objects.nonNull(fontSize) ? align.getKey(): GlobalConstants.TABLE_BODY_FONT_SIZE.getKey()));
         sb.append(" text-" + (Objects.nonNull(align) ? align.getKey(): CssAlignType.LEFT.getKey()));
         if (width > 0) {
             sb.append("' width='" + width + "'"); 

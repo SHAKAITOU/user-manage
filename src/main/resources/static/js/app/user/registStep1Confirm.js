@@ -20,8 +20,10 @@ RegistStep1Confirm.prototype.ID = {
 	BTN_BACK							: 'btnBack',
 
 	//item
-	ITEM_ERROR_MSG						: 'errorMsg',
-	ITEM_AUTH_CODE				    	: 'registForm_authCode',
+	ITEM_ERROR_MSG						: 'errorMsg',		
+	ITEM_STEP_STS                       : 'stepStatus',
+	
+	ITEM_AUTH_CODE				    	: 'authCode',
 
 };
 //------------------------------------------]
@@ -50,6 +52,8 @@ RegistStep1Confirm.prototype.initEvent = function(){
 	//init event to BTN_BACK
 	ShaInput.button.onClick(self.getObject(self.ID.BTN_CANCEL), 
 		function(event) {
+			
+			self.getObject(self.ID.ITEM_STEP_STS).val("STEP1_OUT");  //go out
     		ShaAjax.pop.postDialogMiddleCenter(
     			Pos.constants.setInfo.loginTitle,
     			Pos.constants.setInfo.jsView.login.url_login_init, 
@@ -60,6 +64,7 @@ RegistStep1Confirm.prototype.initEvent = function(){
 	//init event to BTN_BACK
 	ShaInput.button.onClick(self.getObject(self.ID.BTN_BACK), 
 		function(event) {
+			self.getObject(self.ID.ITEM_STEP_STS).val("STEP1_NG");  //go back
     		ShaAjax.pop.postDialogMiddleCenter(
 				Pos.constants.setInfo.jsView.login.userRegist_title,
 				Pos.constants.setInfo.jsView.login.url_userRegist, 
@@ -73,11 +78,27 @@ RegistStep1Confirm.prototype.initEvent = function(){
 			if(self.check()) {
 	            return;
 	        }
+	        
+	        self.getObject(self.ID.ITEM_STEP_STS).val("STEP2");  //go step2
+	        ShaAjax.ajax.post(
+				Pos.constants.setInfo.jsView.login.url_userRegist_confirm,
+				self.getForm().serializeArray(),
+				function(data){
+					if (data === "STEP1_NG") {
+						//認証ERROR
+						var errorMsgC = self.i18n["login.regist.step1.confirm.wrongAuthCode"];
+						ShaCheck.check.checkItem(self.getObject(self.ID.ITEM_AUTH_CODE), true, errorMsgC)
+					} else {
+						// go to step2
+						ShaAjax.pop.postDialogMiddleCenter(
+			    			Pos.constants.setInfo.jsView.login.userRegist2_title,
+			    			Pos.constants.setInfo.jsView.login.url_userRegist2, 
+			    			self.getForm().serializeArray()); 
+					}
+				}
+			)
 			
-    		ShaAjax.pop.postDialogMiddleCenter(
-    			Pos.constants.setInfo.jsView.login.userRegist2_title,
-    			Pos.constants.setInfo.jsView.login.url_userRegist_confirm, 
-    			self.getForm().serializeArray()); 
+    		
 	    }
 	);
 	
@@ -101,7 +122,7 @@ RegistStep1Confirm.prototype.check = function(){
 RegistStep1Confirm.prototype.initFocus = function(){
 	//keep self instance for call back
 	var self = this;
-	ShaUtil.other.setFocus(self.getObject(self.ID.ITEM_USER_CODE));
+	ShaUtil.other.setFocus(self.getObject(self.ID.ITEM_AUTH_CODE));
 };
 
 //----------------------------------------------------------------------------]

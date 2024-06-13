@@ -29,12 +29,12 @@
     </div>
     <fieldset>
         <div style="margin: 0 0 10px 0;">
-            <input type="text" maxlength="40"
+            <input type="text" maxlength="40" style="background-color: #FFFAF0;"
                 th:placeholder="#{login.panel.placeholder.user}" class="form-control input-md"
                 th:field="${loginForm.userCode}"/>
         </div>
         <div style="margin: 0 0 10px 0;">
-            <input id="password" name="password" type="password" 
+            <input id="password" name="password" type="password" style="background-color: #FFFAF0;"
                 th:placeholder="#{login.panel.placeholder.pw}" class="form-control input-md"
                 th:field="${loginForm.password}"/>
         </div>
@@ -45,14 +45,14 @@
     </div>
     <div class="row">
     	<div class="col-4 text-left">
-        	<input id="authImgNumber" name="authImgNumber" type="text" 
+        	<input id="authImgNumber" name="authImgNumber" type="text" style="background-color: #FFFAF0;"
                 th:placeholder="输入验证码" class="form-control input-md"
                 th:field="${loginForm.authImgNumber}"/>
         </div>
-        <div class="col-4 text-left">
-			<img style='width:150px;height:40px' th:src="${loginForm.authImg}"> 
+        <div class="col-5 text-left">
+			<img style="width:150px;height:40px" th:src="${loginForm.authImg}"> 
         </div>
-        <div class="col-4 text-left">
+        <div class="col-3 text-left">
 			<span id="refreshImgBtn" class='a-a2'>
             <i class="fa fa-retweet" aria-hidden="true"></i>&nbsp;
                 看不清

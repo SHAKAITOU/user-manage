@@ -1,5 +1,6 @@
 package cn.caam.gs.manage.admin.view.user;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import cn.caam.gs.GlobalConstants;
@@ -20,6 +22,7 @@ import cn.caam.gs.common.enums.CssFontSizeType;
 import cn.caam.gs.common.enums.CssGridsType;
 import cn.caam.gs.common.enums.FixedValueType;
 import cn.caam.gs.common.enums.GridFlexType;
+import cn.caam.gs.common.enums.UserExpiredType;
 import cn.caam.gs.common.enums.UserType;
 import cn.caam.gs.common.html.element.CheckBoxSet;
 import cn.caam.gs.common.html.element.CheckBoxSet.CheckBoxSetType;
@@ -31,11 +34,14 @@ import cn.caam.gs.common.html.element.TrSet;
 import cn.caam.gs.common.html.element.bs5.BreadCrumbSet;
 import cn.caam.gs.common.html.element.bs5.ButtonSet;
 import cn.caam.gs.common.html.element.bs5.ButtonSet.ButtonSetType;
-import cn.caam.gs.common.html.element.bs5.LabelDateRangeInputSet;
-import cn.caam.gs.common.html.element.bs5.LabelDateRangeInputSet.LabelDateRangeInputSetType;
+import cn.caam.gs.common.html.element.bs5.DivChevronSet;
+import cn.caam.gs.common.html.element.bs5.LabelDateInputSet;
+import cn.caam.gs.common.html.element.bs5.LabelDateInputSet.LabelDateInputSetType;
 import cn.caam.gs.common.html.element.bs5.LabelInputSet;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet.LabelSelectSetType;
+import cn.caam.gs.common.util.LocalDateUtility;
+import cn.caam.gs.common.util.LocalDateUtility.DateTimePattern;
 import cn.caam.gs.domain.db.base.entity.MFixedValue;
 import cn.caam.gs.domain.db.custom.entity.FixValueInfo;
 import cn.caam.gs.domain.db.custom.entity.UserInfo;
@@ -59,6 +65,11 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
     public static final String USER_LIST_TABLE_ID           = "userListTable";
     public static final String USER_LIST_REFRESH_BODY_ID    = "userListRefreshBody";
     public static final String SEARCH_BTN_ID                = "searchBtn";
+    public static final String SEARCH_PANEL_ID              = "searchPanel";
+    public static final String SHOW_SEARCH_PANEL_BTN_ID     = "showSearchPanelBtn";
+    public static final String HIDE_SEARCH_PANEL_BTN_ID     = "hideSearchPanelBtn";
+    public static final String TABLE_HEIGHT_WHEN_HIDE_SEARCH     = "tableHeightWhenHideSearch";
+    public static final String TABLE_HEIGHT_WHEN_SHOW_SEARCH     = "tableHeightWhenShowSearch";
 	
 	   /**
      * main画面用
@@ -68,8 +79,8 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
     public static ViewData getMainPage(HttpServletRequest request, 
             List<UserInfo> userList) {
         Map<String, Object> dataMap = new HashMap<>();
-        dataMap.put(SessionConstants.MAIN_FORM_ID.getValue(), 
-                request.getSession().getAttribute(SessionConstants.MAIN_FORM_ID.getValue()));
+        dataMap.put(TABLE_HEIGHT_WHEN_HIDE_SEARCH, calcTableHeightWhenHideSearch(request));
+        dataMap.put(TABLE_HEIGHT_WHEN_SHOW_SEARCH, calcTableHeightWhenShowSearch(request));
 
         ViewData viewData = ViewData.builder()
                 .pageContext(getMainPageContext(request, userList))
@@ -82,6 +93,8 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
     public static ViewData refeshTable(HttpServletRequest request, 
             List<UserInfo> userList) {
         Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put(TABLE_HEIGHT_WHEN_HIDE_SEARCH, calcTableHeightWhenHideSearch(request));
+        dataMap.put(TABLE_HEIGHT_WHEN_SHOW_SEARCH, calcTableHeightWhenShowSearch(request));
         ViewData viewData = ViewData.builder()
                 .pageContext(setCardForTable(request, userList))
                 .jsClassName(MAIN_JS_CLASS)
@@ -89,53 +102,60 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
                 .build();
         return viewData;
     }
-
-    private static String setCardForTable(
-            HttpServletRequest request, 
-            List<UserInfo> userList) {
-        StringBuffer sbBody = new StringBuffer();
-        sbBody.append(borderCard().withTitleWithScroll("", CssClassType.INFO, "", 
-                getContext("admin.userList.table.title"),
-                divRow().cellBlank(5),
-                setUserListTable(request, userList)));
-        
-        return sbBody.toString();
-    }
     
     private static String getMainPageContext(HttpServletRequest request, 
             List<UserInfo> userList) {
         StringBuffer sb = new StringBuffer();
         sb.append(divRow().cellBlank(5));
         sb.append(setBreadCrumb());
-        sb.append(setSearchPanel(request));
+        sb.append("<div id='" + SEARCH_PANEL_ID + "'>");
+        sb.append(setCardForSearchPanel(request));
+        sb.append("</div>");
+        sb.append(DivChevronSet.builder().idUp(HIDE_SEARCH_PANEL_BTN_ID).idDown(SHOW_SEARCH_PANEL_BTN_ID).build().html());
         sb.append("<div id='" + USER_LIST_REFRESH_BODY_ID + "'>");
         sb.append(setCardForTable(request, userList));
         sb.append("</div>");
         return getForm(USER_LIST_FORM_NAME, sb.toString());
     }
     
-    
+    //--------------------header BreadCrumb -----------------
     private static String setBreadCrumb() {
         String[] names = new String[] {getContext("menu.group5"), getContext("menu.group5.button4")};
         return BreadCrumbSet.builder().labelNames(names).build().html();
     }
+
+    //--------------------header SearchPanel -----------------
     
+    private static String setCardForSearchPanel(HttpServletRequest request) {
+        StringBuffer sbBody = new StringBuffer();
+        sbBody.append(borderCard().noTitleNoScroll("", CssClassType.SUCCESS, "", 
+                "",
+                setSearchPanel(request)));
+        
+        return sbBody.toString();
+    }
     private static String setSearchPanel(HttpServletRequest request) {
         @SuppressWarnings("unchecked")
         Map<FixedValueType, List<FixValueInfo>> fixedValueMap = 
                 (Map<FixedValueType, List<FixValueInfo>>)request.getSession().getAttribute(SessionConstants.FIXED_VALUE.getValue());
-        List<String> contextList = new ArrayList<String>();
         StringBuffer sbBody = new StringBuffer();
         String prefix_name = USER_LIST_FORM_NAME + ".";
         String prefix_label = T100MUser.TABLE_NAME + ".";
-        CssFontSizeType font = GlobalConstants.FONT_SIZE;
+        CssFontSizeType font = GlobalConstants.INPUT_FONT_SIZE;
+        List<HtmlRadio> radios = new ArrayList<>();
+        String selectedValue = "00";
+        
+        //-----row 1-------------[
+        List<String> contextList = new ArrayList<String>();
+
+        
         //name入力値
         String property  = "name";
         String name      = prefix_name + property;
         String labelName = getContext(prefix_label + property);
         contextList.add(LabelInputSet.builder()
                 .id(convertNameDotForId(name)).name(name).labelName(labelName)
-                .fontSize(font).grids(CssGridsType.G2).build().html());
+                .fontSize(font).grids(CssGridsType.G3).build().html());
         
         //phone選択
         property  = "phone";
@@ -143,10 +163,7 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         labelName = getContext(prefix_label + property);
         contextList.add(LabelInputSet.builder()
                 .id(convertNameDotForId(name)).name(name).labelName(labelName)
-                .fontSize(font).grids(CssGridsType.G2).build().html());
-
-        List<HtmlRadio> radios = new ArrayList<>();
-        String selectedValue = "00";
+                .fontSize(font).grids(CssGridsType.G3).build().html());
         
         //employer入力値
         property  = "employer";
@@ -155,23 +172,67 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         contextList.add(LabelInputSet.builder()
                 .id(convertNameDotForId(name)).name(name).labelName(labelName)
                 .fontSize(font).grids(CssGridsType.G3).build().html());
+        
+        
+        //有效状态入力値
+        property  = "validStatus";
+        name      = property;
+        labelName = getContext("admin.userList.validStatus");
+        radios = new ArrayList<>();
+        for (UserExpiredType userExpiredType : UserExpiredType.values()) {
+            radios.add(new HtmlRadio(userExpiredType.getKey(), getContext(userExpiredType.getMsg())));
+        }
+        contextList.add(LabelSelectSet.builder()
+                .id(convertNameDotForId(name)).name(name).labelName(labelName)
+                .radios(radios).selectedValue(selectedValue)
+                .fontSize(font).grids(CssGridsType.G3).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
+        
+        sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+
+        //-----row 1-------------]
+        
+        
+        //-----row 2-------------[
+        contextList = new ArrayList<String>();
 
         //regist_date選択
         property  = "regist_date";
         String propertyFrom  = property + "_from";
-        String propertyTo    = property + "_to";
         String nameFrom      = prefix_name + propertyFrom;
-        String nameTo        = prefix_name + propertyTo;
-        labelName = getContext(prefix_label + property);
-        contextList.add(LabelDateRangeInputSet.builder()
-                .idFrom(convertNameDotForId(nameFrom)).nameFrom(nameFrom)
-                .idTo(convertNameDotForId(nameTo)).nameTo(nameTo).labelName(labelName)
-                .fontSize(font).grids(CssGridsType.G4).outPutType(LabelDateRangeInputSetType.WITH_LABEL_FOOT).build().html());
-
-        //row 1
-        sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+        labelName = getContext(prefix_label + property) + getContext("common.page.start");
+        contextList.add(LabelDateInputSet.builder()
+                .id(convertNameDotForId(nameFrom)).name(nameFrom).labelName(labelName)
+                .fontSize(font).grids(CssGridsType.G3).outPutType(LabelDateInputSetType.WITH_LABEL_FOOT).build().html());
         
+        String propertyTo    = property + "_to";
+        String nameTo        = prefix_name + propertyTo;
+        labelName = getContext(prefix_label + property) + getContext("common.page.end");
+        contextList.add(LabelDateInputSet.builder()
+                .id(convertNameDotForId(nameTo)).name(nameTo).labelName(labelName)
+                .fontSize(font).grids(CssGridsType.G3).outPutType(LabelDateInputSetType.WITH_LABEL_FOOT).build().html());
+        
+        //valid_end_date選択
+        property  = "valid_end_date";
+        propertyFrom  = property + "_from";
+        nameFrom      = prefix_name + propertyFrom;
+        labelName = getContext(prefix_label + property) + getContext("common.page.start");
+        contextList.add(LabelDateInputSet.builder()
+                .id(convertNameDotForId(nameFrom)).name(nameFrom).labelName(labelName)
+                .fontSize(font).grids(CssGridsType.G3).outPutType(LabelDateInputSetType.WITH_LABEL_FOOT).build().html());
+        
+        propertyTo    = property + "_to";
+        nameTo        = prefix_name + propertyTo;
+        labelName = getContext(prefix_label + property) + getContext("common.page.end");
+        contextList.add(LabelDateInputSet.builder()
+                .id(convertNameDotForId(nameTo)).name(nameTo).labelName(labelName)
+                .fontSize(font).grids(CssGridsType.G3).outPutType(LabelDateInputSetType.WITH_LABEL_FOOT).build().html());
+
+        sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+        //-----row 2-------------]
+
+        //-----row 3-------------[
         contextList = new ArrayList<String>();
+        
         //id選択
         property  = "id";
         name      = prefix_name + property;
@@ -199,7 +260,7 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         contextList.add(LabelSelectSet.builder()
                 .id(convertNameDotForId(name)).name(name).labelName(labelName)
                 .radios(radios).selectedValue(selectedValue)
-                .fontSize(font).grids(CssGridsType.G2).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
+                .fontSize(font).grids(CssGridsType.G3).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
  
         //edu_degree選択
         property  = "edu_degree";
@@ -215,7 +276,7 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         contextList.add(LabelSelectSet.builder()
                 .id(convertNameDotForId(name)).name(name).labelName(labelName)
                 .radios(radios).selectedValue(selectedValue)
-                .fontSize(font).grids(CssGridsType.G1).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
+                .fontSize(font).grids(CssGridsType.G3).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
 
         //political選択
         property  = "political";
@@ -230,29 +291,31 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         contextList.add(LabelSelectSet.builder()
                 .id(convertNameDotForId(name)).name(name).labelName(labelName)
                 .radios(radios).selectedValue(selectedValue)
-                .fontSize(font).grids(CssGridsType.G2).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
-        
-        //valid_end_date選択
-        property  = "valid_end_date";
-        propertyFrom  = property + "_from";
-        propertyTo    = property + "_to";
-        nameFrom      = prefix_name + propertyFrom;
-        nameTo        = prefix_name + propertyTo;
-        labelName = getContext(prefix_label + property);
-        contextList.add(LabelDateRangeInputSet.builder()
-                .idFrom(convertNameDotForId(nameFrom)).nameFrom(nameFrom)
-                .idTo(convertNameDotForId(nameTo)).nameTo(nameTo).labelName(labelName)
-                .fontSize(font).grids(CssGridsType.G4).outPutType(LabelDateRangeInputSetType.WITH_LABEL_FOOT).build().html());
+                .fontSize(font).grids(CssGridsType.G3).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
         
         //search btn
         labelName = getContext("common.page.search");
         contextList.add(ButtonSet.builder()
                 .id(SEARCH_BTN_ID).buttonName(labelName)
-                .grids(CssGridsType.G1).outPutType(ButtonSetType.GRID_STYLE).gridFlexType(GridFlexType.CENTER)
+                .grids(CssGridsType.G1).outPutType(ButtonSetType.GRID_STYLE).gridFlexType(GridFlexType.RIGHT)
                 .iconSet(IconSet.builder().type(IconSetType.SEARCH).css(IconSetCss.NOMAL_10).build())
                 .build().html());
-        //row 2
+
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+        //-----row 3-------------]
+        
+        return sbBody.toString();
+    }
+    
+    //--------------------body card table -----------------
+    private static String setCardForTable(
+            HttpServletRequest request, 
+            List<UserInfo> userList) {
+        StringBuffer sbBody = new StringBuffer();
+        sbBody.append(borderCard().withTitleWithScroll("", CssClassType.INFO, "", 
+                getContext("admin.userList.table.title"),
+                divRow().cellBlank(5),
+                setUserListTable(request, userList)));
         
         return sbBody.toString();
     }
@@ -266,14 +329,15 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
             100, //会员类型
             120, //手机号
             150, //电子邮箱
-            150, //工作单位
+            250, //工作单位
             200, //入会时间
             200, //有效结束日期
+            120, //有效状态
             200  //操作
         };
         int index = 0;
         //head
-        TrSet headTr = tr().head(CssClassType.LIGHT);
+        TrSet headTr = tr().head(CssClassType.INFO);
         // --[
         // --col1--
         String context = CheckBoxSet.builder().id(USER_LIST_CHECK_ALL_ID)
@@ -304,6 +368,9 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         context         = getContext("m_user.valid_end_date");
         headTr.addTh(th().get(widths[index++], context, CssAlignType.CENTER));
         // --col10--
+        context         = getContext("admin.userList.validStatus");
+        headTr.addTh(th().get(widths[index++], context, CssAlignType.CENTER));
+        // --col11--
         context         = getContext("common.page.do");
         headTr.addTh(th().get(widths[index++], context, CssAlignType.CENTER));
         // --]
@@ -345,7 +412,10 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
                 // --col9--
                 context = nonNull(userInfo.getUser().getValidEndDate());
                 tr.addTd(td().withTrimWidth(widths[index++], context, CssAlignType.CENTER));
-                // --col9--
+                // --col10--
+                context = nonNull(getValidStatus(userInfo.getUser().getValidEndDate()));
+                tr.addTd(td().get(widths[index++], context, CssAlignType.CENTER));
+                // --col11--
                 context = button().forTableBorderNameLeft(IconSetType.REFRESH, CssClassType.INFO, 
                         "", getContext("admin.userList.btn.resetPw"), userInfo.getId(), "restPw");
                 context += "&nbsp;&nbsp;";
@@ -357,11 +427,36 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
             }
         }
         
-        return table().get(USER_LIST_TABLE_ID, calcTableWidth(widths), calcTableHeight(request), headTr, bodyList);
+        return table().get(USER_LIST_TABLE_ID, calcTableWidth(widths), calcTableHeightWhenShowSearch(request), headTr, bodyList);
     }
     
-    private static int calcTableHeight(HttpServletRequest request) {
-        return LoginInfoHelper.getMediaHeight(request) - 200;
+    private static String getValidStatus(String validEndDateStr) {
+        UserExpiredType sts = UserExpiredType.VALID;
+        if (!StringUtils.isEmpty(validEndDateStr)) {
+            LocalDateTime validEndDate = LocalDateUtility.parseLocalDateTime(validEndDateStr, DateTimePattern.UUUUHMMHDDHHQMIQSS);
+            LocalDateTime currentDt = LocalDateTime.now();
+            if (validEndDate.isAfter(currentDt)) {
+                if (LocalDateUtility.getDateDifference(validEndDate.toLocalDate(), currentDt.toLocalDate()) <= 5) {
+                    sts = UserExpiredType.EXPIRED_SOON;
+                }
+            } else {
+                if (LocalDateUtility.getDateDifference(currentDt.toLocalDate(), validEndDate.toLocalDate()) >= 60) {
+                    sts = UserExpiredType.VARY_EXPIRED;
+                } else {
+                    sts = UserExpiredType.EXPIRED;
+                }
+            }
+        }
+        return "<p class='text-" + sts.getClassType().getKey() + "'>" + 
+                getContext(sts.getMsg()) + "</p>";
+    }
+    
+    private static int calcTableHeightWhenShowSearch(HttpServletRequest request) {
+        return LoginInfoHelper.getMediaHeight(request) - 450;
+    }
+    
+    private static int calcTableHeightWhenHideSearch(HttpServletRequest request) {
+        return LoginInfoHelper.getMediaHeight(request) - 270;
     }
     
     private static int calcTableWidth(int [] widths) {
@@ -369,7 +464,7 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         for (int width : widths) {
             totalWidth += width;
         }
-        return totalWidth + 20;
+        return totalWidth;
     }
 	
 	public static Map<String, String> getJsProperties() {

@@ -22,7 +22,9 @@ public class RegistForm {
 	private String        authMethod;
 	private MAuthCode     mauthCode;
 	private boolean       fromRedirect;
+	private String        stepStatus;
 	private MUser         user;
 	private MUserExtend   userExtend;
+	
 	
 }

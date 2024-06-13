@@ -23,8 +23,14 @@ AdminUserManageList.prototype.ID = {
     VALID_END_DATE_FROM_INPT : "user_list_form_valid_end_date_from",
     VALID_END_DATE_TO_INPT   : "user_list_form_valid_end_date_to",
     SEARCH_BTN_ID            : "searchBtn",
+    SHOW_SEARCH_PANEL_BTN_ID : "showSearchPanelBtn",
+    HIDE_SEARCH_PANEL_BTN_ID : "hideSearchPanelBtn",
+    
     //div
     DIV_REFRESH_BODY         : "userListRefreshBody",
+    SEARCH_PANEL_ID          : "searchPanel",
+    USER_LIST_TABLE_ID       : "userListTable",
+    
 
 };
 //------------------------------------------]
@@ -74,6 +80,21 @@ AdminUserManageList.prototype.initEvent = function(){
         language : self.language,
         clearBtn : self.clearBtn
     });
+    
+    ShaInput.button.onClick(self.getObject(self.ID.SHOW_SEARCH_PANEL_BTN_ID),
+    	function(event) {
+			self.getObject(self.ID.SEARCH_PANEL_ID).show();
+			self.getObject(self.ID.USER_LIST_TABLE_ID).find("tbody").height(self.dataMap.tableHeightWhenShowSearch + "px");
+			
+		}
+    );
+    
+    ShaInput.button.onClick(self.getObject(self.ID.HIDE_SEARCH_PANEL_BTN_ID),
+    	function(event) {
+			self.getObject(self.ID.SEARCH_PANEL_ID).hide();
+			self.getObject(self.ID.USER_LIST_TABLE_ID).find("tbody").height(self.dataMap.tableHeightWhenHideSearch + "px");
+		}
+    );
     
     ShaInput.button.onClick(self.getObject(self.ID.SEARCH_BTN_ID),
     	function(event) {

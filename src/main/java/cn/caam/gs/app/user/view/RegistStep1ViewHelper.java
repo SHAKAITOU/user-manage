@@ -30,17 +30,16 @@ import cn.caam.gs.manage.dbmaintenance.table.impl.g01master.T100MUser;
 @Component
 public class RegistStep1ViewHelper extends HtmlViewBaseHelper {
 
-    public static final String REGIST_FORM_NAME = "registForm";
     public static final String REGIST_JS_CLASS          = "RegistStep1";
     public static final String REGIST_CONFIRM_JS_CLASS  = "RegistStep1Confirm";
     public static final String GET_AUTH_CODE_BY_PHONE = "01";
     public static final String GET_AUTH_CODE_BY_MAIL  = "02";
     
-    public static final CssFontSizeType font = GlobalConstants.FONT_SIZE;
+    public static final CssFontSizeType font = GlobalConstants.INPUT_FONT_SIZE;
 
     public static ViewData getRegist1Page(RegistForm registForm) {
         Map<String, Object> dataMap = new HashMap<>();
-        dataMap.put(REGIST_FORM_NAME, REGIST_FORM_NAME);
+        dataMap.put(LoginViewHelper.REGIST_FORM_NAME, LoginViewHelper.REGIST_FORM_NAME);
         ViewData viewData = ViewData.builder().pageContext(getRegist1Context(registForm)).jsClassName(REGIST_JS_CLASS)
                 .dataMap(dataMap).build();
         return viewData;
@@ -48,7 +47,7 @@ public class RegistStep1ViewHelper extends HtmlViewBaseHelper {
     
     public static ViewData getRegist1ConfirmPage(RegistForm registForm) {
         Map<String, Object> dataMap = new HashMap<>();
-        dataMap.put(REGIST_FORM_NAME, REGIST_FORM_NAME);
+        dataMap.put(LoginViewHelper.REGIST_FORM_NAME, LoginViewHelper.REGIST_FORM_NAME);
         ViewData viewData = ViewData.builder().pageContext(getRegist1ConfirmContext(registForm)).jsClassName(REGIST_CONFIRM_JS_CLASS)
                 .dataMap(dataMap).build();
         return viewData;
@@ -59,6 +58,8 @@ public class RegistStep1ViewHelper extends HtmlViewBaseHelper {
         String name = "errorMsg";
         String value = Objects.nonNull(registForm) ? registForm.getErrorMsg() : "";
         sb.append(hidden().get(name, value));
+        name = "stepStatus";
+        sb.append(hidden().get(name, registForm.getStepStatus()));
         return sb.toString();
     }
 
@@ -74,7 +75,7 @@ public class RegistStep1ViewHelper extends HtmlViewBaseHelper {
         body.append(buildFooter());
         body.append(divRow().cellBlank(5));
 
-        return getForm(REGIST_FORM_NAME, body.toString());
+        return getForm(LoginViewHelper.REGIST_FORM_NAME, body.toString());
     }
     
     private static String buildInputBody(RegistForm registForm) {
@@ -96,8 +97,9 @@ public class RegistStep1ViewHelper extends HtmlViewBaseHelper {
         String name      = prefix_name + property;
         String labelName = getContext(prefix_label + property);
         String placeholder = getContext(prefix_label + property + subfix_placeholder);
+        String value      = Objects.nonNull(registForm.getUser()) ? registForm.getUser().getPhone() : "";
         contextList.add(LabelInputSet.builder()
-                .id(convertNameDotForId(name)).name(name).labelName(labelName)
+                .id(convertNameDotForId(name)).name(name).labelName(labelName).value(value)
                 .notBlank(true).maxlength(GlobalConstants.PHONE_MAX_L).placeholder(placeholder)
                 .fontSize(font).grids(CssGridsType.G12).build().html());
         
@@ -109,8 +111,9 @@ public class RegistStep1ViewHelper extends HtmlViewBaseHelper {
         name      = prefix_name + property;
         labelName = getContext(prefix_label + property);
         placeholder = getContext(prefix_label + property + subfix_placeholder);
+        value       = Objects.nonNull(registForm.getUser()) ? registForm.getUser().getPhone() : "";
         contextList.add(LabelInputSet.builder()
-                .id(convertNameDotForId(name)).name(name).labelName(labelName)
+                .id(convertNameDotForId(name)).name(name).labelName(labelName).value(value)
                 .notBlank(true).maxlength(GlobalConstants.MAIL_MAX_L).placeholder(placeholder)
                 .fontSize(font).grids(CssGridsType.G12).build().html());
         
@@ -139,7 +142,7 @@ public class RegistStep1ViewHelper extends HtmlViewBaseHelper {
         List<CssAlignType> aligs = new ArrayList<>();
         // bottom button
 
-        String id = "btnBack";
+        String id = "btnOut";
         String context = getContext("login.regist.step1.btn.cancel");
         String comp1 = button().getBorder(IconSetType.TO_LEFT, CssClassType.DANGER, id, context);
 
@@ -166,7 +169,7 @@ public class RegistStep1ViewHelper extends HtmlViewBaseHelper {
         body.append(buildConfirmFooter());
         body.append(divRow().cellBlank(5));
 
-        return getForm(REGIST_FORM_NAME, body.toString());
+        return getForm(LoginViewHelper.REGIST_FORM_NAME, body.toString());
     }
     
     private static String buildConfirmBody(RegistForm registForm) {

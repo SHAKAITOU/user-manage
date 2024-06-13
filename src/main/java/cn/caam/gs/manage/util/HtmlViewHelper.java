@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import cn.caam.gs.app.bean.BreadCrumbData;
+import cn.caam.gs.app.util.LoginInfoHelper;
 import cn.caam.gs.common.html.HtmlSelectHelper;
 import cn.caam.gs.common.html.HtmlViewBaseHelper;
 import cn.caam.gs.common.html.element.TableListCard;
@@ -147,4 +149,15 @@ public class HtmlViewHelper extends HtmlViewBaseHelper {
 
 		return sb.toString();
 	}
+	
+    
+	public static int calcMaxCardWidth(HttpServletRequest request) {
+	    int outWidth = LoginInfoHelper.getMediaWidth(request);
+	    if (outWidth > 1200) {
+	        return LoginInfoHelper.getMediaWidth(request) - 50;
+	    } else {
+	        return LoginInfoHelper.getMediaWidth(request) - 10;
+	    }
+        
+    }
 }

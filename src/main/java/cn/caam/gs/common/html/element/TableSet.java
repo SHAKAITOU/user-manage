@@ -29,7 +29,6 @@ public class TableSet {
     }
     private String get() {
         StringBuffer sb = new StringBuffer();
-
         sb.append("<table id='"+id+"' class='table table-striped table-bordered table-hover table-sm table-fixed' ");
         /*
         if(Objects.nonNull(minWidthType)) {
@@ -58,6 +57,7 @@ public class TableSet {
         }
         sb.append("</tbody>");
         sb.append("</table>");
+        sb.append("</div>");
         return sb.toString();
     }
     

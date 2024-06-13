@@ -2,10 +2,15 @@
  * HTML CSS
  * --------------------------
  */
+@font-face {
+	font-family: 'NotoSansSC-Regular';
+	src: url('../ttl/仿宋_GB2312.ttf')  format('truetype');
+}
 html {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
+
 }
 *, *:before, *:after {
 	-webkit-box-sizing: inherit;
@@ -637,17 +642,26 @@ html {
  */
 
 .a-a1{
-	color: white;
-	height: 40px;
+	color: #1e50a2;
+	font-size: 14px;
 	cursor:hand;
+	text-decoration: underline;
+}
+.a-a1:hover{
+	color: #F4803D;
+	cursor:hand;
+	text-decoration: underline;
+}
+.a-a1:active {
+	color: #dccb18;
+	cursor:hand;
+	text-decoration: underline;
 }
 
 .a-a2{
 	color: #1e50a2;
 	cursor:hand;
 	text-decoration: underline;
-	line-height: 2.0em;
-	font-size: 14px;
 }
 .a-a2:hover{
 	color: #F4803D;
@@ -824,28 +838,28 @@ html {
 }
 
  .dialog-boder{
-    background: #DF691A;
+    background: #008BBB;
     color: #FFFFFF;
     font-weight: bold;
     font-size: 14px;
 }
 
  .subDialog-boder{
-    background: #e27830;
+    background: #008BBB;
     color: #FFFFFF;
     font-weight: bold;
     font-size: 14px;
 }
 
  .subSubDialog-boder{
-    background: #e58747;
+    background: #008BBB;
     color: #FFFFFF;
     font-weight: bold;
     font-size: 14px;
 }
 
  .subSubSubDialog-boder{
-    background: #e8965e;
+    background: #008BBB;
     color: #FFFFFF;
     font-weight: bold;
     font-size: 14px;

@@ -28,8 +28,6 @@ public class LabelSelectSet {
     private LabelSelectSetType outPutType;
     private CssFontSizeType fontSize;
     private CssGridsType grids;
-    private String buttonName;
-    private String buttonId;
     
     public String html() {
         if(outPutType == LabelSelectSetType.WITH_LABEL) {
@@ -50,17 +48,6 @@ public class LabelSelectSet {
                 + (Objects.nonNull(fontSize) ? fontSize.getKey() : "label-14" ) 
                 + "'>" + labelName + "</span>");
         sb.append(withMulti ? getMulti() : get());
-        if (Objects.nonNull(buttonId)) {
-            sb.append("<button class='btn btn-primary " 
-                    + (Objects.nonNull(fontSize) ? fontSize.getKey() : "label-14" ) + "' type='button' id='" + buttonId +"'>");
-            sb.append("<i class='fas fa-search'></i>&nbsp;&nbsp;" + buttonName + "&nbsp;&nbsp;");
-            sb.append("</button>");
-        } else {
-            sb.append("<button class='btn_com_tb" 
-                    + (Objects.nonNull(fontSize) ? fontSize.getKey() : "label-14" ) + "' type='button' disabled>");
-            sb.append("<i class='fas fa-chevron-down'></i>");
-            sb.append("</button>");
-        }
         sb.append("</div>");
         return getContext(sb.toString());
     }

@@ -1,5 +1,7 @@
 package cn.caam.gs.common.html.element;
 
+import java.util.Objects;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -11,6 +13,7 @@ public class IconSet {
 
     private IconSetType type;
     private IconSetCss css;
+    private String id;
     
     public String html() {
         if (css == null) {
@@ -23,7 +26,9 @@ public class IconSet {
     private String getIcon(String iconName) {
         StringBuffer sb = new StringBuffer();
         
-        sb.append("<i class='"+iconName+"'>");
+        sb.append("<i "
+                + (Objects.nonNull(id) ? "id='" + id + "'" : "" )
+                + "class='"+iconName+"'>");
         sb.append("</i>");
         
         return sb.toString();
@@ -33,7 +38,9 @@ public class IconSet {
         StringBuffer sb = new StringBuffer();
         
         sb.append("<span class='"+cssName+"'>");
-        sb.append("<i class='"+iconName+"'>");
+        sb.append("<i "
+                + (Objects.nonNull(id) ? "id='" + id + "'" : "" )
+                + " class='"+iconName+"'>");
         sb.append("</i>");
         sb.append("</span>");
         
@@ -131,6 +138,8 @@ public class IconSet {
         
         EYE                    ("fa fa-eye"),
         
+        EYE_SLASH              ("fa fa-eye-slash"),
+        
         LINK                ("fa fa-link"),
         
         MAIL                ("fa fa-envelope"),
@@ -166,6 +175,10 @@ public class IconSet {
         BOOK            ("fa fa-book"),
         
         CAMERA            ("fa fa-camera"),
+        //向上箭头
+        CHEVRON_UP        ("fa fa-chevron-up"),
+        //向下箭头
+        CHEVRON_DOWN        ("fa fa-chevron-down"),
         ;
         
         /** type. */

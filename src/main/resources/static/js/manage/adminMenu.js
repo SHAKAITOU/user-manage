@@ -76,6 +76,7 @@ AdminMenu.prototype.initEvent = function(){
     	self.ajustNavi();
 	};
     
+    $buttonList[0].click();
     
 };
 

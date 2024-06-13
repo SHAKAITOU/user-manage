@@ -8,6 +8,7 @@ import cn.caam.gs.common.enums.CssGridsType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import lombok.Builder.Default;
 
 @Builder
 @AllArgsConstructor
@@ -20,9 +21,12 @@ public class LabelInputSet {
     private String placeholder;
     private String id;
     private String name;
+    private String value;
     private String buttonName;
     private String buttonId;
+    @Default
     private boolean notBlank = false;
+    @Default
     private int maxlength = 0;
     public String html() {
         return get();
@@ -52,6 +56,10 @@ public class LabelInputSet {
         }
         if (maxlength > 0) {
             sb.append(" maxlength='"+ maxlength + "'");
+        }
+        
+        if (Objects.nonNull(value)) {
+            sb.append(" value='"+ value + "'");
         }
         sb.append(">");
         if (Objects.nonNull(buttonId)) {

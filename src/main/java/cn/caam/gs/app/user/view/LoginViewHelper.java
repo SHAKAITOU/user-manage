@@ -58,6 +58,12 @@ public class LoginViewHelper extends HtmlViewBaseHelper {
     public static final String REGIST_JS_CLASS = "RegistStep1";
     public static final String REGIST2_JS_CLASS = "RegistStep2";
     public static final String REGIST3_JS_CLASS = "RegistStep3";
+    
+    public static final String STEP_STS_STEP1_INIT   = "STEP1";
+    public static final String STEP_STS_STEP1_COMMIT = "STEP1_COMMIT";
+    public static final String STEP_STS_STEP1_OUT    = "STEP1_OUT";
+    public static final String STEP_STS_STEP1_NG     = "STEP1_NG";
+    public static final String STEP_STS_STEP2_INIT   = "STEP2";
 
     public static final int MAIL_LENGTH = 40;
     public static final int AUTH_CODE_LENGTH = 6;
@@ -109,7 +115,7 @@ public class LoginViewHelper extends HtmlViewBaseHelper {
 
         String prefix_name = REGIST_FORM_NAME + ".";
         String prefix_label = T100MUser.TABLE_NAME + ".";
-        CssFontSizeType font = GlobalConstants.FONT_SIZE;
+        CssFontSizeType font = GlobalConstants.INPUT_FONT_SIZE;
         // ----------hidden------[
         sb.append(setRegist1Hidden(registForm));
         // ----------hidden------]

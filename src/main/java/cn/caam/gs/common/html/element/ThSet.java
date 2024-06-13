@@ -5,10 +5,10 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 
+import cn.caam.gs.GlobalConstants;
 import cn.caam.gs.common.enums.CssAlignType;
 import cn.caam.gs.common.enums.CssFontSizeType;
 import cn.caam.gs.common.html.HtmlBaseHelper;
-import cn.caam.gs.common.html.HtmlViewBaseHelper;
 import cn.caam.gs.common.html.element.IconSet.IconSetCss;
 import cn.caam.gs.common.html.element.IconSet.IconSetType;
 import cn.caam.gs.common.util.StringUtility;
@@ -53,7 +53,7 @@ public class ThSet {
         } else {
             sb.append(" col-xs-"+grids+"' ");
         }
-        sb.append(" height='"+(height == 0 ? HtmlViewBaseHelper.TH_DEFAULT_HEIGHT : height)+"'");        
+        sb.append(" height='"+(height == 0 ? GlobalConstants.TH_DEFAULT_HEIGHT : height)+"'");        
         sb.append(">");
         sb.append(setMiddleForCell(
                 IconSet.builder().type(IconSetType.INDEX_MARK).css(IconSetCss.NOMAL_14).build().html(), CssAlignType.CENTER));
@@ -71,7 +71,7 @@ public class ThSet {
         } else {
             sb.append(" col-xs-"+grids+"' ");
         }
-        sb.append(" height='"+(height == 0 ? HtmlViewBaseHelper.TH_DEFAULT_HEIGHT : height)+"'");
+        sb.append(" height='"+(height == 0 ? GlobalConstants.TH_DEFAULT_HEIGHT : height)+"'");
         sb.append(">");
         sb.append(setMiddleForCell(StringUtils.isNotBlank(context) ? context : UtilConstants.HTML_SPACE));
         sb.append("</th>");
@@ -83,7 +83,7 @@ public class ThSet {
         int byteLength = StringUtility.byteLength(context);
         int maxLength = width > 0 ? HtmlBaseHelper.getMaxLengthByWidth(width) : HtmlBaseHelper.getMaxLengthByGrids(grids);
         sb.append("<th class=' ");
-        sb.append((Objects.nonNull(fontSize) ? fontSize.getKey(): CssFontSizeType.LABEL_12B.getKey()));
+        sb.append((Objects.nonNull(fontSize) ? fontSize.getKey(): GlobalConstants.TABLE_HEAD_FONT_SIZE.getKey()));
         sb.append(" text-" + (Objects.nonNull(align) ? align.getKey(): CssAlignType.LEFT.getKey()));
         if (width > 0) {
             sb.append("' width='"+width+"' ");
@@ -93,7 +93,7 @@ public class ThSet {
         if(byteLength > maxLength) {
             sb.append(" data-toggle='tooltip' data-toolip='"+HtmlBaseHelper.filterSpecialCharacters(customizeTooltip ? tooltipContext : context)+"'");
         }
-        sb.append(" height='"+(height == 0 ? HtmlViewBaseHelper.TH_DEFAULT_HEIGHT : height)+"'");
+        sb.append(" height='"+(height == 0 ? GlobalConstants.TH_DEFAULT_HEIGHT : height)+"'");
         sb.append(">");
         sb.append(setMiddleForCell(HtmlBaseHelper.trimFitForTd(grids, context, false)));
         sb.append("</th>");

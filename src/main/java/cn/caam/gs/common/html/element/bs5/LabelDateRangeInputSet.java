@@ -27,6 +27,8 @@ public class LabelDateRangeInputSet {
     private String nameTo;
     private String valueTo;
     private String footHtml;
+    private String placeholder;
+    private boolean notBlank = false;
     private LabelDateRangeInputSetType outPutType;
     private CssFontSizeType fontSize;
     private CssGridsType grids;
@@ -48,9 +50,13 @@ public class LabelDateRangeInputSet {
         sb.append("<div class='input-group mb-3'>");
         sb.append("<span class='input-group-text " 
                 + (Objects.nonNull(fontSize) ? fontSize.getKey() : "label-14" ) 
-                + "'>" + labelName + "</span>");
+                + "'>" + labelName);
+        if (notBlank) {
+            sb.append("<span class='label-14b-red'>*</span>");
+        }
+        sb.append("</span>");
         sb.append(getFrom());
-        sb.append("<div class='input-group-append' style='margin-top:5px'>");
+        sb.append("<div class='input-group-append' style='margin-top:5px' height='30'>");
         sb.append("<span class='text-center " + (Objects.nonNull(fontSize) ? fontSize.getKey() : "label-14") + "' width='30px'>");
         sb.append("&nbsp;&nbsp;-&nbsp;&nbsp;");
         sb.append("</span>");
@@ -69,7 +75,7 @@ public class LabelDateRangeInputSet {
     
     private String getWithLabelFoot() {
         StringBuffer sb = new StringBuffer();
-        sb.append("<div class='input-group mb-3'>");
+        sb.append("<div class='input-group mb-3' height='30'>");
         sb.append("<span class='input-group-text " 
                 + (Objects.nonNull(fontSize) ? fontSize.getKey() : "label-14" ) 
                 + "'>" + labelName + "</span>");
@@ -169,6 +175,9 @@ public class LabelDateRangeInputSet {
         sb.append("<input type='text'");
         sb.append(" class='form-control " + (Objects.nonNull(fontSize) ? fontSize.getKey() : "label-14" ) + "'");
         sb.append(" style='background-color:" + GlobalConstants.INPUT_BG_COLOER + "'");
+        if (Objects.nonNull(placeholder)) {
+            sb.append(" placeholder='" + placeholder + "'");
+        }
         sb.append(" id='" + idFrom + "' name='" + nameFrom + "' value='" + (Objects.nonNull(valueFrom) ? valueFrom : "") + "' readonly/>");
         return sb.toString();
     }
@@ -178,6 +187,9 @@ public class LabelDateRangeInputSet {
         sb.append("<input type='text'");
         sb.append(" class='form-control " + (Objects.nonNull(fontSize) ? fontSize.getKey() : "label-14" ) + "'");
         sb.append(" style='background-color:" + GlobalConstants.INPUT_BG_COLOER + "'");
+        if (Objects.nonNull(placeholder)) {
+            sb.append(" placeholder='" + placeholder + "'");
+        }
         sb.append(" id='" + idTo + "' name='" + nameTo + "' value='" + (Objects.nonNull(valueTo) ? valueTo : "") + "' readonly/>");
         return sb.toString();
     }

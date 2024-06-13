@@ -2,7 +2,7 @@ package cn.caam.gs.common.enums;
 
 public enum GridFlexType {
 
-	LEFT		("d-flex justify-content-end"),
+	LEFT		("d-flex justify-content-start"),
 	RIGHT	    ("d-flex justify-content-end"),
 	CENTER      ("d-flex justify-content-center"),
 	BETWEEN     ("d-flex justify-content-between"),

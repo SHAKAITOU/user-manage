@@ -161,31 +161,6 @@ public class LoginController extends ScreenBaseController{
 		return mav;
 	}
 
-    @PostMapping(path=LoginViewHelper.URL_C_USER_REGIST_STEP2)
-    public ModelAndView registStep2(
-            RegistForm pageForm,
-            HttpServletRequest request,
-            HttpServletResponse response) throws GeneralSecurityException  {
-        LoginResult existLogin = null;
-        //LoginResult existLogin = loginService.getLoginInfo(registForm.getUsers().getMail());
-        if(!Objects.isNull(existLogin)) {
-            pageForm.setErrorMsg(messageSourceUtil.getContext("login.regist.existError"));
-            return ControllerHelper.getModelAndView(LoginViewHelper.getRegist1Page(pageForm));
-        } else {
-            pageForm.setErrorMsg("");
-            pageForm.setOrgAuthCode(LoginInfoHelper.getRandomAuthCode());
-            pageForm.setExpiredDt(LocalDateTime.now().plusMinutes(30));
-            //MailSendResultType mailSendResultType = mailSendService.sendAuthMail(pageForm);
-            //if (mailSendResultType != MailSendResultType.OK) {
-            //    pageForm.setErrorMsg(messageSourceUtil.getContext("login.regist.mailError"));
-            //    return ControllerHelper.getModelAndView(LoginViewHelper.getRegist1Page(pageForm));
-            //}
-            
-            request.getSession().setAttribute(SessionConstants.USER_REGIST.getValue(), pageForm);
-            return ControllerHelper.getModelAndView(LoginViewHelper.getRegist2Page(pageForm));
-        }
-        
-    }
     
     @PostMapping(path=LoginViewHelper.URL_C_USER_REGIST_STEP3)
     public ModelAndView registStep3(
@@ -215,7 +190,7 @@ public class LoginController extends ScreenBaseController{
         
     }
 
-	@RequestMapping(path=LoginViewHelper.URL_C_LOGOUT, method=RequestMethod.GET)
+    @GetMapping(path=LoginViewHelper.URL_C_LOGOUT)
 	public ModelAndView logout(Locale loc, 
 			HttpServletRequest request,
 			HttpServletResponse response) {

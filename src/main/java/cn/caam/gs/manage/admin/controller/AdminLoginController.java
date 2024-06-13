@@ -1,14 +1,21 @@
 package cn.caam.gs.manage.admin.controller;
 
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Properties;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
@@ -18,6 +25,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.google.code.kaptcha.impl.DefaultKaptcha;
+import com.google.code.kaptcha.util.Config;
 
 import cn.caam.gs.JavaScriptSet;
 import cn.caam.gs.app.form.IndexForm;
@@ -82,7 +92,7 @@ public class AdminLoginController extends ScreenBaseController{
 	@PostMapping(path=AdminLoginViewHelper.URL_C_LOGIN_INIT)
 	public ModelAndView initLogin(IndexForm indexForm,
 			HttpServletRequest request,
-			HttpServletResponse response)  {
+			HttpServletResponse response) throws IOException {
 		request.getSession().setAttribute(SessionConstants.MEDIA_HEIGHT.getValue(), indexForm.getMediaHeight());
 		request.getSession().setAttribute(SessionConstants.MEDIA_WIDTH.getValue(), indexForm.getMediaWidth());
 		request.getSession().setAttribute(SessionConstants.IS_MOBILE.getValue(), indexForm.getMobileDisplay());
@@ -90,6 +100,7 @@ public class AdminLoginController extends ScreenBaseController{
 		LoginForm loginForm = new LoginForm();
 		loginForm.setUserCode("admin");
 		loginForm.setPassword("1");
+		loginForm.setAuthImg("data:image/;base64," + getAuthImgStr(request));
 		if(!StringUtils.isEmpty(indexForm.getLoginFormJson())) {
 			loginForm = JsonUtility.toObject(indexForm.getLoginFormJson(), LoginForm.class);
 		}
@@ -190,4 +201,24 @@ public class AdminLoginController extends ScreenBaseController{
 			}
 		}
 	}
+	
+	private String getAuthImgStr(HttpServletRequest request) throws IOException {
+        
+        Properties properties = new Properties();
+        properties.setProperty("kaptcha.image.width", "150");
+        properties.setProperty("kaptcha.image.height", "50");
+        properties.setProperty("kaptcha.textproducer.char.string", "0123456789");
+        properties.setProperty("kaptcha.textproducer.char.length", "4");
+        Config config = new Config(properties);
+        DefaultKaptcha defaultKaptcha = new DefaultKaptcha();
+        defaultKaptcha.setConfig(config);
+        String text = defaultKaptcha.createText();
+        HttpSession session = request.getSession();
+        session.setAttribute("verify_code", text);
+        BufferedImage image = defaultKaptcha.createImage(text);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        
+        ImageIO.write(image, "jpg", baos);
+        return Base64.encodeBase64String(baos.toByteArray());
+    }
 }

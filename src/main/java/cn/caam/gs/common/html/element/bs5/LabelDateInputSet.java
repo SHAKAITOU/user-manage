@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import lombok.Builder.Default;
 import cn.caam.gs.GlobalConstants;
 import cn.caam.gs.common.enums.CssFontSizeType;
 import cn.caam.gs.common.enums.CssGridsType;
@@ -24,6 +25,9 @@ public class LabelDateInputSet {
     private String name;
     private String value;
     private String footHtml;
+    private String placeholder;
+    @Default
+    private boolean notBlank = false;
     private LabelDateInputSetType outPutType;
     private CssFontSizeType fontSize;
     private CssGridsType grids;
@@ -45,7 +49,11 @@ public class LabelDateInputSet {
         sb.append("<div class='input-group mb-3'>");
         sb.append("<span class='input-group-text " 
                 + (Objects.nonNull(fontSize) ? fontSize.getKey() : "label-14" ) 
-                + "'>" + labelName + "</span>");
+                + "'>" + labelName);
+        if (notBlank) {
+            sb.append("<span class='label-14b-red'>*</span>");
+        }
+        sb.append("</span>");
         sb.append(get());
         if(StringUtils.isNotEmpty(footHtml)) {
             sb.append("<div class='input-group-append'>");
@@ -61,7 +69,11 @@ public class LabelDateInputSet {
         sb.append("<div class='input-group mb-3'>");
         sb.append("<span class='input-group-text " 
                 + (Objects.nonNull(fontSize) ? fontSize.getKey() : "label-14" ) 
-                + "'>" + labelName + "</span>");
+                + "'>" + labelName);
+        if (notBlank) {
+            sb.append("<span class='label-14b-red'>*</span>");
+        }
+        sb.append("</span>");
         sb.append(get());
         sb.append("<div class='input-group-append'>");
         sb.append("<span class=' input-group-text text-center'>");
@@ -117,6 +129,9 @@ public class LabelDateInputSet {
         sb.append("<input type='text'");
         sb.append(" class='form-control " + (Objects.nonNull(fontSize) ? fontSize.getKey() : "label-14" ) + "'");
         sb.append(" style='background-color:" + GlobalConstants.INPUT_BG_COLOER + "'");
+        if (Objects.nonNull(placeholder)) {
+            sb.append(" placeholder='" + placeholder + "'");
+        }
         sb.append(" id='" + id + "' name='" + name + "' value='" + (Objects.nonNull(value) ? value : "") + "' readonly/>");
         return sb.toString();
     }

@@ -18,7 +18,8 @@ public class CardSet {
     private String bodyId;
     @Default
     private Integer width = 0;
-    private Integer height;
+    @Default
+    private Integer height = 0;
     private String title;
     private String[] contexts;
     private CssClassType classType; 
@@ -61,12 +62,12 @@ public class CardSet {
         } else {
             sb.append(" style='min-width:100%;max-width:100%;");
         }
-        if(scrollable) {
+        if(scrollable && height > 0 ) {
             sb.append(" max-height:"+height+"px; min-height:"+height+"px;'>");
         }else {
             sb.append(" max-height:100%; min-height:100%;'>");
         }
-        sb.append("<div class='card-header " + GlobalConstants.FONT_SIZE.getKey() + "'>"+title+"</div>");
+        sb.append("<div class='card-header " + GlobalConstants.INPUT_FONT_SIZE.getKey() + "'>"+title+"</div>");
         sb.append("<div ");
         if(!StringUtils.isEmpty(bodyId)) {
             sb.append(" id='"+bodyId+"' ");
@@ -76,8 +77,14 @@ public class CardSet {
             sb.append("div-scrollable ");
         }
         sb.append("'>");
+        if(scrollable) {
+            sb.append("<div class='overflow-auto'>");
+        }
         for(String context : contexts) {
             sb.append(context);
+        }
+        if(scrollable) {
+            sb.append("</div>");
         }
         sb.append("</div>");
         sb.append("</div>");
@@ -97,7 +104,7 @@ public class CardSet {
         } else {
             sb.append(" style='");
         }
-        if(scrollable) {
+        if(scrollable && height > 0) {
             sb.append(" max-height:"+height+"px; min-height:"+height+"px;'>");
         }else {
             sb.append(" max-height:100%; min-height:100%;'>");
@@ -111,8 +118,14 @@ public class CardSet {
             sb.append("div-scrollable ");
         }
         sb.append("'>");
+        if(scrollable) {
+            sb.append("<div class='overflow-auto'>");
+        }
         for(String context : contexts) {
             sb.append(context);
+        }
+        if(scrollable) {
+            sb.append("</div>");
         }
         sb.append("</div>");
         sb.append("</div>");
@@ -132,7 +145,7 @@ public class CardSet {
         } else {
             sb.append(" style='");
         }
-        if(scrollable) {
+        if(scrollable && height > 0) {
             sb.append(" max-height:"+height+"px; min-height:"+height+"px;'>");
         }else {
             sb.append(" max-height:100%; min-height:100%;'>");
@@ -146,8 +159,14 @@ public class CardSet {
             sb.append("div-scrollable ");
         }
         sb.append("'>");
+        if(scrollable) {
+            sb.append("<div class='overflow-auto'>");
+        }
         for(String context : contexts) {
             sb.append(context);
+        }
+        if(scrollable) {
+            sb.append("</div>");
         }
         sb.append("</div>");
         sb.append("</div>");

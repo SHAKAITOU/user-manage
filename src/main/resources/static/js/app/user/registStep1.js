@@ -16,10 +16,12 @@ ShaUtil.other.inherits(RegistStep1, BaseJsController);
 RegistStep1.prototype.ID = {
 	//btn
 	BTN_NEXT							: 'btnNext',
-	BTN_BACK							: 'btnBack',
+	BTN_OUT			     				: 'btnOut',
 
 	//item
-	ITEM_ERROR_MSG						: 'errorMsg',
+	ITEM_ERROR_MSG						: 'errorMsg',	
+	ITEM_STEP_STS                       : 'stepStatus',
+	
 	ITEM_PHONE					    	: 'user_phone',
 	ITEM_MAIL						    : 'user_mail',
 
@@ -47,9 +49,12 @@ RegistStep1.prototype.initEvent = function(){
 	//keep self instance for call back
 	var self = this;
 	
-	//init event to BTN_BACK
-	ShaInput.button.onClick(self.getObject(self.ID.BTN_BACK), 
+	//init event to BTN_OUT
+	ShaInput.button.onClick(self.getObject(self.ID.BTN_OUT), 
 		function(event) {
+			
+			self.getObject(self.ID.ITEM_STEP_STS).val("STEP1_OUT");  //go out
+			
     		ShaAjax.pop.postDialogMiddleCenter(
     			Pos.constants.setInfo.loginTitle,
     			Pos.constants.setInfo.jsView.login.url_login_init, 
@@ -63,6 +68,9 @@ RegistStep1.prototype.initEvent = function(){
 			if(self.check()) {
 	            return;
 	        }
+	        
+	        //
+	        self.getObject(self.ID.ITEM_STEP_STS).val("STEP1_COMMIT"); //go confirm
 			
     		ShaAjax.pop.postDialogMiddleCenter(
     			Pos.constants.setInfo.jsView.login.userRegist_confirm_title,
@@ -92,7 +100,7 @@ RegistStep1.prototype.check = function(){
 RegistStep1.prototype.initFocus = function(){
 	//keep self instance for call back
 	var self = this;
-	ShaUtil.other.setFocus(self.getObject(self.ID.ITEM_USER_CODE));
+	ShaUtil.other.setFocus(self.getObject(self.ID.ITEM_PHONE));
 };
 
 //----------------------------------------------------------------------------]
