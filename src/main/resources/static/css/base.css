@@ -644,50 +644,50 @@ html {
 .a-a1{
 	color: #1e50a2;
 	font-size: 14px;
-	cursor:hand;
+	cursor:pointer;
 	text-decoration: underline;
 }
 .a-a1:hover{
 	color: #F4803D;
-	cursor:hand;
+	cursor:pointer;
 	text-decoration: underline;
 }
 .a-a1:active {
 	color: #dccb18;
-	cursor:hand;
+	cursor:pointer;
 	text-decoration: underline;
 }
 
 .a-a2{
 	color: #1e50a2;
-	cursor:hand;
+	cursor:pointer;
 	text-decoration: underline;
 }
 .a-a2:hover{
 	color: #F4803D;
-	cursor:hand;
+	cursor:pointer;
 	text-decoration: underline;
 }
 .a-a2:active {
 	color: #dccb18;
-	cursor:hand;
+	cursor:pointer;
 	text-decoration: underline;
 }
 
 .a-a3:link{
-	cursor:hand;
+	cursor:pointer;
 	text-decoration: none;
 }
 .a-a3:visited {
-	cursor:hand;
+	cursor:pointer;
 	text-decoration: none;
 }
 .a-a3:hover{
-	cursor:hand;
+	cursor:pointer;
 	text-decoration: none;
 }
 .a-a3:active {
-	cursor:hand;
+	cursor:pointer;
 	text-decoration: none;
 }
 
@@ -837,33 +837,6 @@ html {
     font-size: 14px;
 }
 
- .dialog-boder{
-    background: #008BBB;
-    color: #FFFFFF;
-    font-weight: bold;
-    font-size: 14px;
-}
-
- .subDialog-boder{
-    background: #008BBB;
-    color: #FFFFFF;
-    font-weight: bold;
-    font-size: 14px;
-}
-
- .subSubDialog-boder{
-    background: #008BBB;
-    color: #FFFFFF;
-    font-weight: bold;
-    font-size: 14px;
-}
-
- .subSubSubDialog-boder{
-    background: #008BBB;
-    color: #FFFFFF;
-    font-weight: bold;
-    font-size: 14px;
-}
 /*!--------------------------
  * D3 CSS
  * --------------------------

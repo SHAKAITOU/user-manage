@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org"
   th:with="lang=${#locale.language}" th:lang="${lang}">
-<head th:replace="base-template :: base-head(#{admin.title},~{::link})"></head>
+<head th:replace="base-template :: base-head(#{admin.title},~{::link}, 'admin')"></head>
 <body th:replace="base-template :: base-body(#{admin.title},~{::#navi},~{::#main},~{::script}, 'admin')">
 <div id="navi"></div> 
 <div id="main" class="container" role="main">

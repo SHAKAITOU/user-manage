@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org" th:with="lang=${#locale.language}" th:lang="${lang}">
-<head th:fragment="base-head(title, links)">
+<head th:fragment="base-head(title, links, mainKind)">
     <title th:text="${title}"></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -18,8 +18,71 @@
     <!-- fontawesome -->
     <link rel="stylesheet" th:href="@{/css/all.css}"/>
     
-    <link rel="stylesheet" th:href="@{/css/bootstrap-cerulean.css}"/>
-    <link rel="stylesheet" th:href="@{/css/base.css}"/>
+    <th:block th:if="${mainKind == 'admin'}">
+    	<link rel="stylesheet" th:href="@{/css/bootstrap-cerulean.css}"/>
+    	<style>
+		 .dialog-boder{
+		    background: #008BBB;
+		    color: #FFFFFF;
+		    font-weight: bold;
+		    font-size: 14px;
+		}
+		
+		 .subDialog-boder{
+		    background: #008BBB;
+		    color: #FFFFFF;
+		    font-weight: bold;
+		    font-size: 14px;
+		}
+		
+		 .subSubDialog-boder{
+		    background: #008BBB;
+		    color: #FFFFFF;
+		    font-weight: bold;
+		    font-size: 14px;
+		}
+		
+		 .subSubSubDialog-boder{
+		    background: #008BBB;
+		    color: #FFFFFF;
+		    font-weight: bold;
+		    font-size: 14px;
+		}
+		</style>
+    </th:block>
+    <th:block th:if="${mainKind == 'app'}">
+    	<link rel="stylesheet" th:href="@{/css/bootstrapJournal.css}"/>
+		<style>
+		 .dialog-boder{
+		    background: #eb6864;
+		    color: #FFFFFF;
+		    font-weight: bold;
+		    font-size: 14px;
+		}
+		
+		 .subDialog-boder{
+		    background: #eb6864;
+		    color: #FFFFFF;
+		    font-weight: bold;
+		    font-size: 14px;
+		}
+		
+		 .subSubDialog-boder{
+		    background: #eb6864;
+		    color: #FFFFFF;
+		    font-weight: bold;
+		    font-size: 14px;
+		}
+		
+		 .subSubSubDialog-boder{
+		    background: #eb6864;
+		    color: #FFFFFF;
+		    font-weight: bold;
+		    font-size: 14px;
+		}
+		</style>
+    </th:block>
+	<link rel="stylesheet" th:href="@{/css/base.css}"/>
     <link rel="stylesheet" th:href="@{/css/icon.css}"/>
     <link rel="stylesheet" th:href="@{/css/jsgantt.css}"/>
     <th:block th:replace="${links} ?: ~{}" />

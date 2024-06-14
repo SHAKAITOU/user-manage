@@ -4,9 +4,10 @@
 
 //------------constructor define------------[
 Menu = function(dataMap){
-	this.jsContext = Pos.constants.setInfo;
-	this.form = $('#'+this.jsContext.jsView.menu.form);
-	this.dataMap = dataMap;
+    this.form = $('#menu_form');
+    this.mainForm = $('#main_form');
+    this.jsContext = Pos.constants.setInfo;
+    this.i18n = JSON.parse(this.jsContext.i18n);
 };
 ShaUtil.other.inherits(Menu, BaseJsController);
 //------------------------------------------]
@@ -17,13 +18,8 @@ Menu.prototype.ID = {
 	BTN_PRODUCT						: 'menu2',
 	BTN_LOGOUT						: 'menu7',
 	
-	BODY_ID							: 'body',
-	
-	ITEM_SELECT						: 'menuSelect',
-
-	ITEM_LANGUAGE					: 'language',
-	//div
-	DIV_MENUBODY					: 'menuBody',
+    NAVI_FOR_PC                     : "bigScreenNav",
+    NAVI_FOR_PHONE                  : "smallScreenNav",
 
 };
 //------------------------------------------]
@@ -36,6 +32,10 @@ Menu.prototype.init = function(){
 	
 	//init bond event to btn
 	self.initEvent();
+	
+    window.onresize = function(event) {
+    	self.ajustNavi();
+	};
 
 };
 
@@ -45,6 +45,7 @@ Menu.prototype.initEvent = function(){
 	//keep self instance for call back
 	var self = this;
 
+	self.ajustNavi();
 	
 	ShaInput.button.onClick(self.getObject(self.ID.BTN_PRODUCT), 
 		function(event) {
@@ -69,5 +70,20 @@ Menu.prototype.initEvent = function(){
 		    );
 		}
 	);
+};
+
+Menu.prototype.ajustNavi = function(){
+    
+    //keep self instance for call back
+    var self = this;
+      
+    if (window.outerWidth < 800) {
+		self.getObject(self.ID.NAVI_FOR_PC).hide();
+		self.getObject(self.ID.NAVI_FOR_PHONE).show();
+	} else {
+		self.getObject(self.ID.NAVI_FOR_PC).show();
+		self.getObject(self.ID.NAVI_FOR_PHONE).hide();
+	}
+    
 };
 //----------------------------------------------------------------------------]
