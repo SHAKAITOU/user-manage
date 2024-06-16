@@ -83,7 +83,6 @@ public class CommonViewHelper extends HtmlViewBaseHelper {
                         divContainer().get(sb.toString())).toString();
     }
     
-    
     private static String buildFooter() {
         StringBuffer sb = new StringBuffer();
         List<CssAlignType> aligs = new ArrayList<>();

@@ -37,4 +37,7 @@ public class GlobalConstants {
     public static final int POST_CODE_MAX_L            = 10;
     public static final int ADDRESS_MAX_L              = 128;
     public static final int INTRODUCER1_MAX_L          = 32;
+    public static final int RESEARCH_DIR_MAX_L         = 64;
+    public static final int MAJOR_MAX_L                = 36;
+    public static final int LEARN_EXPERIENCE_MAX_L     = 250;
 }

@@ -23,16 +23,29 @@
             resultMap="cn.caam.gs.domain.db.base.mapper.MUserMapper.BaseResultMap">
             <id column="id" property="id" />
         </association>
-        <association property="userExtend" 
-            resultMap="cn.caam.gs.domain.db.base.mapper.MUserExtendMapper.BaseResultMap">
-            <id column="id" property="id" />
+        <association property="userExtend" resultMap="UserExtendForm">
+            <id column="id" property="id" jdbcType="VARCHAR" />
         </association>
     </resultMap>
     
-    <resultMap id="PhotoInfoForm" type="cn.caam.gs.domain.db.base.entity.MUserExtend">
-    	<id property="id" column="id"/>
-    	<result column="photo" property="photo" jdbcType="BLOB"/>
-    	<result column="photo_ext" property="photoExt" jdbcType="VARCHAR" />
+    <resultMap id="UserExtendForm" type="cn.caam.gs.domain.db.base.entity.MUserExtend">
+    	<id column="id" property="id" jdbcType="VARCHAR" />
+	    <result column="introducer1" property="introducer1" jdbcType="VARCHAR" />
+	    <result column="introducer2" property="introducer2" jdbcType="VARCHAR" />
+	    <result column="photo_ext" property="photoExt" jdbcType="VARCHAR" />
+	    <result column="major" property="major" jdbcType="VARCHAR" />
+	    <result column="educational_at_ext" property="educationalAtExt" jdbcType="VARCHAR" />
+	    <result column="bachelor_at_ext" property="bachelorAtExt" jdbcType="VARCHAR" />
+	    <result column="vocational_at_ext" property="vocationalAtExt" jdbcType="VARCHAR" />
+	    <result column="research_dir" property="researchDir" jdbcType="VARCHAR" />
+	    <result column="learn_experience" property="learnExperience" jdbcType="VARCHAR" />
+	    <result column="work_experience" property="workExperience" jdbcType="VARCHAR" />
+	    <result column="papers" property="papers" jdbcType="VARCHAR" />
+	    <result column="honors" property="honors" jdbcType="VARCHAR" />
+        <result column="photo" property="photo" jdbcType="BLOB" />
+	    <result column="educational_at" property="educationalAt" jdbcType="BLOB" />
+	    <result column="bachelor_at" property="bachelorAt" jdbcType="BLOB" />
+	    <result column="vocational_at" property="vocationalAt" jdbcType="BLOB" />
     </resultMap>
     <sql id="baseSelect">
 	    mu.*,
@@ -107,7 +120,15 @@
 			mue.learn_experience,
 			mue.work_experience,
 			mue.papers,   
-			mue.honors					    
+			mue.honors,
+			mue.photo,
+			mue.photo_ext,
+			mue.educational_at,
+			mue.educational_at_ext,
+			mue.bachelor_at,
+			mue.bachelor_at_ext,
+			mue.vocational_at,
+			mue.vocational_at_ext					    
 		FROM
 		    m_user mu 
 		    LEFT JOIN m_user_extend mue ON mu.id = mue.id
@@ -116,7 +137,7 @@
 			mu.id = #{userId, jdbcType=NVARCHAR}
     </select>
     
-    <select id="getUserPhoto" resultMap="PhotoInfoForm">
+    <select id="getUserPhoto" resultMap="UserExtendForm">
         SELECT
 		    mue.id,
 		    mue.photo,

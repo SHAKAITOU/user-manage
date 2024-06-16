@@ -5,9 +5,11 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
 import cn.caam.gs.GlobalConstants;
@@ -25,6 +27,7 @@ import cn.caam.gs.common.html.element.HtmlRadio;
 import cn.caam.gs.common.html.element.IconSet.IconSetType;
 import cn.caam.gs.common.html.element.bs5.BreadCrumbSet;
 import cn.caam.gs.common.html.element.bs5.ButtonSet;
+import cn.caam.gs.common.html.element.bs5.DivChevronSet;
 import cn.caam.gs.common.html.element.bs5.LabelDateInputSet;
 import cn.caam.gs.common.html.element.bs5.LabelInputSet;
 import cn.caam.gs.common.html.element.bs5.LabelRadioGroupSet;
@@ -32,8 +35,11 @@ import cn.caam.gs.common.html.element.bs5.LabelSelectGroupSet;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet;
 import cn.caam.gs.common.html.element.bs5.LabelDateInputSet.LabelDateInputSetType;
 import cn.caam.gs.common.html.element.bs5.LabelFileSet;
+import cn.caam.gs.common.html.element.bs5.LabelImageSet;
 import cn.caam.gs.common.html.element.bs5.LabelSelectGroupSet.LabelSelectGroupSetType;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet.LabelSelectSetType;
+import cn.caam.gs.common.html.element.bs5.LabelTextAreaSet;
+import cn.caam.gs.common.html.element.bs5.LabelTextAreaSet.LabelTextAreaSetType;
 import cn.caam.gs.domain.db.base.entity.MFixedValue;
 import cn.caam.gs.domain.db.custom.entity.FixValueInfo;
 import cn.caam.gs.domain.db.custom.entity.UserInfo;
@@ -63,6 +69,13 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
     public static final String BTN_OPEN_EDIT_EXTEND          = "btnOpenEditExtend";
     public static final String BTN_CLOSE_EDIT_EXTEND         = "btnCloseEditExtend";
     public static final String BTN_OPEN_PHOTO                = "btnOpenPhoto";
+    public static final String SHOW_BASE_PANEL_BTN_ID        = "showBasePanelBtn";
+    public static final String HIDE_BASE_PANEL_BTN_ID        = "hideBasePanelBtn";
+    public static final String SHOW_SELF_PANEL_BTN_ID        = "showSelfPanelBtn";
+    public static final String HIDE_SELF_PANEL_BTN_ID        = "hideSelfPanelBtn";
+    
+    public static final String BASE_PANEL_CARD_ID            = "basePanelCard";
+    public static final String SELF_PANEL_CARD_ID            = "selfPanelCard";
     
     public static final CssFontSizeType font = GlobalConstants.INPUT_FONT_SIZE;
 
@@ -92,7 +105,9 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         // body
         // ----------body------[
         body.append(buildBaseDetailBody(fixedValueMap, userInfo));
+        body.append(DivChevronSet.builder().idUp(HIDE_BASE_PANEL_BTN_ID).idDown(SHOW_BASE_PANEL_BTN_ID).build().html());
         body.append(buildSelfDetailBody(fixedValueMap, userInfo));
+        body.append(DivChevronSet.builder().idUp(HIDE_SELF_PANEL_BTN_ID).idDown(SHOW_SELF_PANEL_BTN_ID).build().html());
         body.append(buildExtendDetailBody(fixedValueMap, userInfo));
         // ----------body------]
         
@@ -126,7 +141,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         sb.append(divRow().cellBlank(5));
         
         sb.append(buildBaseDetail(fixedValueMap, userInfo));
-        return borderCard().withTitleNoScroll("", CssClassType.WARNING, "", 
+        return borderCard().withTitleNoScroll(BASE_PANEL_CARD_ID, CssClassType.WARNING, "", 
                 getContext("userDetail.card1"),
                 divContainer().get(sb.toString()));
     }
@@ -205,7 +220,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         
         sb.append(buildSelfDetail(fixedValueMap, userInfo));
         
-        return borderCard().withTitleNoScroll("", CssClassType.SUCCESS, "", 
+        return borderCard().withTitleNoScroll(SELF_PANEL_CARD_ID, CssClassType.SUCCESS, "", 
                 getContext("userDetail.card2"),
                 divContainer().get(sb.toString()));
     }
@@ -641,22 +656,313 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         contextList = new ArrayList<String>();
         clmForm     = T101MUserExtend.getColumnInfo(T101MUserExtend.COL_PHOTO);
         name        = clmForm.getPageName(PREFIX_EXTEND_NAME) + "File";
-        id          = convertNameDotForId(name);
+        String idFile      = convertNameDotForId(name);
+        String idFileOpen  = idFile + "Open";
+        String idLbl       = idFile + "Lbl";
+        String idFileName  = idFile + "Name";
+        String idOldFile   = idFile + "Old";
+        
+        value       = "";
         labelName   = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value       = userInfo.getUserExtend().getIntroducer2();
-        contextList.add(LabelFileSet.builder()
-                .id(id).name(name).labelName(labelName).placeholder(placeholder)
+        contextList.add(LabelInputSet.builder()
+                .id(idFileName).labelName(labelName).placeholder(placeholder)
                 .fontSize(font).grids(CssGridsType.G6).build().html());
         
-        id = BTN_OPEN_PHOTO;
-        context = clmForm.getLabelName();
-        comp1 = button().getBorder(IconSetType.CHECK, CssClassType.INFO, CssGridsType.G6, id, context);
+        labelName   = getContext("common.page.File");
+        value       = "";
+        contextList.add(LabelFileSet.builder()
+                .id(idFile).idLablel(idLbl).name(name).labelName(labelName).placeholder(placeholder)
+                .fontSize(font).grids(CssGridsType.G4).build().html());
+
+        
+        context = getContext("common.page.showImg");
+        comp1 = button().getBorder(IconSetType.CHECK, CssClassType.INFO, CssGridsType.G2, idFileOpen, context);
         contextList.add(comp1);
     
         sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
         
         //------row2----------]
+        //------row3----------[
+        
+        contextList = new ArrayList<String>();
+        String src = Base64.encodeBase64String(userInfo.getUserExtend().getPhoto());
+        String ext = userInfo.getUserExtend().getPhotoExt();
+        context = LabelImageSet.builder()
+                .id(idOldFile)
+                .imgWidth(200).imgHeight(150)
+                .grids(CssGridsType.G6)
+                .base64String(src).extent(ext).build().html();
+        contextList.add(context);
+        
+        sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+        sb.append(divRow().cellBlank(5));
+        //------row3----------]
+        //------row4----------[
+        
+        contextList = new ArrayList<String>();
+        clmForm     = T101MUserExtend.getColumnInfo(T101MUserExtend.COL_EDUCATIONAL_AT);
+        name        = clmForm.getPageName(PREFIX_EXTEND_NAME) + "File";
+        idFile      = convertNameDotForId(name);
+        idFileOpen  = idFile + "Open";
+        idLbl       = idFile + "Lbl";
+        idFileName  = idFile + "Name";
+        idOldFile   = idFile + "Old";
+        
+        value       = "";
+        labelName   = clmForm.getLabelName();
+        placeholder = clmForm.getPlaceholder();
+        contextList.add(LabelInputSet.builder()
+                .id(idFileName).labelName(labelName).placeholder(placeholder)
+                .fontSize(font).grids(CssGridsType.G6).build().html());
+        
+        labelName   = getContext("common.page.File");
+        value       = "";
+        contextList.add(LabelFileSet.builder()
+                .id(idFile).idLablel(idLbl).name(name).labelName(labelName).placeholder(placeholder)
+                .fontSize(font).grids(CssGridsType.G4).build().html());
+
+        
+        context = getContext("common.page.showImg");
+        comp1 = button().getBorder(IconSetType.CHECK, CssClassType.INFO, CssGridsType.G2, idFileOpen, context);
+        contextList.add(comp1);
+    
+        sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+        
+        //------row4----------]
+
+        //------row5----------[
+
+        contextList = new ArrayList<String>();
+        src = Base64.encodeBase64String(userInfo.getUserExtend().getEducationalAt());
+        ext = userInfo.getUserExtend().getEducationalAtExt();
+        if (src == null) {
+            src = getNoImgDataString();
+            ext = "jpeg";
+        }
+        context = LabelImageSet.builder()
+                .id(idOldFile)
+                .imgWidth(200).imgHeight(150)
+                .grids(CssGridsType.G6)
+                .base64String(src).extent(ext).build().html();
+        contextList.add(context);
+        
+        sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+        sb.append(divRow().cellBlank(5));
+        //------row5----------]
+        
+        //------row6----------[
+        
+        contextList = new ArrayList<String>();
+        clmForm     = T101MUserExtend.getColumnInfo(T101MUserExtend.COL_BACHELOR_AT);
+        name        = clmForm.getPageName(PREFIX_EXTEND_NAME) + "File";
+        idFile      = convertNameDotForId(name);
+        idFileOpen  = idFile + "Open";
+        idLbl       = idFile + "Lbl";
+        idFileName  = idFile + "Name";
+        idOldFile   = idFile + "Old";
+        
+        value       = "";
+        labelName   = clmForm.getLabelName();
+        placeholder = clmForm.getPlaceholder();
+        contextList.add(LabelInputSet.builder()
+                .id(idFileName).labelName(labelName).placeholder(placeholder)
+                .fontSize(font).grids(CssGridsType.G6).build().html());
+        
+        labelName   = getContext("common.page.File");
+        value       = "";
+        contextList.add(LabelFileSet.builder()
+                .id(idFile).idLablel(idLbl).name(name).labelName(labelName).placeholder(placeholder)
+                .fontSize(font).grids(CssGridsType.G4).build().html());
+
+        
+        context = getContext("common.page.showImg");
+        comp1 = button().getBorder(IconSetType.CHECK, CssClassType.INFO, CssGridsType.G2, idFileOpen, context);
+        contextList.add(comp1);
+    
+        sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+        
+        //------row6----------]
+        //------row7----------[
+
+        contextList = new ArrayList<String>();
+        src = Base64.encodeBase64String(userInfo.getUserExtend().getBachelorAt());
+        ext = userInfo.getUserExtend().getBachelorAtExt();
+        if (src == null) {
+            src = getNoImgDataString();
+            ext = "jpeg";
+        }
+        context = LabelImageSet.builder()
+                .id(idOldFile)
+                .imgWidth(200).imgHeight(150)
+                .grids(CssGridsType.G6)
+                .base64String(src).extent(ext).build().html();
+        contextList.add(context);
+        
+        sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+        sb.append(divRow().cellBlank(5));
+        //------row7----------]
+        
+        //------row8----------[
+        
+        contextList = new ArrayList<String>();
+        clmForm     = T101MUserExtend.getColumnInfo(T101MUserExtend.COL_VOCATIONAL_AT);
+        name        = clmForm.getPageName(PREFIX_EXTEND_NAME) + "File";
+        idFile      = convertNameDotForId(name);
+        idFileOpen  = idFile + "Open";
+        idLbl       = idFile + "Lbl";
+        idFileName  = idFile + "Name";
+        idOldFile   = idFile + "Old";
+        
+        value       = "";
+        labelName   = clmForm.getLabelName();
+        placeholder = clmForm.getPlaceholder();
+        contextList.add(LabelInputSet.builder()
+                .id(idFileName).labelName(labelName).placeholder(placeholder)
+                .fontSize(font).grids(CssGridsType.G6).build().html());
+        
+        labelName   = getContext("common.page.File");
+        value       = "";
+        contextList.add(LabelFileSet.builder()
+                .id(idFile).idLablel(idLbl).name(name).labelName(labelName).placeholder(placeholder)
+                .fontSize(font).grids(CssGridsType.G4).build().html());
+
+        
+        context = getContext("common.page.showImg");
+        comp1 = button().getBorder(IconSetType.CHECK, CssClassType.INFO, CssGridsType.G2, idFileOpen, context);
+        contextList.add(comp1);
+    
+        sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+        
+        //------row8----------]
+        //------row9----------[
+
+        contextList = new ArrayList<String>();
+        src = Base64.encodeBase64String(userInfo.getUserExtend().getVocationalAt());
+        ext = userInfo.getUserExtend().getVocationalAtExt();
+        if (src == null) {
+            src = getNoImgDataString();
+            ext = "jpeg";
+        }
+        context = LabelImageSet.builder()
+                .id(idOldFile)
+                .imgWidth(200).imgHeight(150)
+                .grids(CssGridsType.G6)
+                .base64String(src).extent(ext).build().html();
+        contextList.add(context);
+        
+        sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+        sb.append(divRow().cellBlank(5));
+        //------row9----------]
+        
+        //------row10----------[
+
+        contextList = new ArrayList<String>();
+        
+        //专业(max64)
+        clmForm     = T101MUserExtend.getColumnInfo(T101MUserExtend.COL_MAJOR);
+        name        = clmForm.getPageName(PREFIX_EXTEND_NAME);
+        id          = convertNameDotForId(name);
+        labelName   = clmForm.getLabelName();
+        placeholder = clmForm.getPlaceholder();
+        value       = userInfo.getUserExtend().getMajor();
+        contextList.add(LabelInputSet.builder()
+                .id(id).name(name).labelName(labelName).value(value).notBlank(true)
+                .maxlength(GlobalConstants.MAJOR_MAX_L).placeholder(placeholder)
+                .fontSize(font).grids(CssGridsType.G6).build().html());
+        
+        //研究方向(max36)
+        clmForm     = T101MUserExtend.getColumnInfo(T101MUserExtend.COL_RESEARCH_DIR);
+        name        = clmForm.getPageName(PREFIX_EXTEND_NAME);
+        id          = convertNameDotForId(name);
+        labelName   = clmForm.getLabelName();
+        placeholder = clmForm.getPlaceholder();
+        value       = userInfo.getUserExtend().getResearchDir();
+        contextList.add(LabelInputSet.builder()
+                .id(id).name(name).labelName(labelName).value(value)
+                .maxlength(GlobalConstants.RESEARCH_DIR_MAX_L).placeholder(placeholder)
+                .fontSize(font).grids(CssGridsType.G6).build().html());
+        
+        sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+        //------row10----------]
+        
+        //------row11----------[
+
+        contextList = new ArrayList<String>();
+
+        //主要学习经历(max250)
+        clmForm     = T101MUserExtend.getColumnInfo(T101MUserExtend.COL_LEARN_EXPERIENCE);
+        name        = clmForm.getPageName(PREFIX_EXTEND_NAME);
+        id          = convertNameDotForId(name);
+        labelName   = clmForm.getLabelName();
+        placeholder = clmForm.getPlaceholder();
+        value       = userInfo.getUserExtend().getLearnExperience();
+        contextList.add(LabelTextAreaSet.builder()
+                .id(id).name(name).labelName(labelName).value(value).notBlank(true)
+                .maxlength(GlobalConstants.LEARN_EXPERIENCE_MAX_L)
+                .placeholder(placeholder).outPutType(LabelTextAreaSetType.WITH_LABEL)
+                .fontSize(font).rows(4).grids(CssGridsType.G12).build().html());
+        
+        sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+        //------row11----------]
+        //------row12----------[
+        contextList = new ArrayList<String>();
+        
+        
+        //主要工作经历(max250)
+        clmForm     = T101MUserExtend.getColumnInfo(T101MUserExtend.COL_WORK_EXPERIENCE);
+        name        = clmForm.getPageName(PREFIX_EXTEND_NAME);
+        id          = convertNameDotForId(name);
+        labelName   = clmForm.getLabelName();
+        placeholder = clmForm.getPlaceholder();
+        value       = userInfo.getUserExtend().getWorkExperience();
+        contextList.add(LabelTextAreaSet.builder()
+                .id(id).name(name).labelName(labelName).value(value).notBlank(true)
+                .maxlength(GlobalConstants.LEARN_EXPERIENCE_MAX_L)
+                .placeholder(placeholder).outPutType(LabelTextAreaSetType.WITH_LABEL)
+                .fontSize(font).rows(4).grids(CssGridsType.G12).build().html());
+        
+        sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+        //------row12----------]
+
+        //------row13----------[
+        contextList = new ArrayList<String>();
+        
+        
+        //代表性论文及著作(max250)
+        clmForm     = T101MUserExtend.getColumnInfo(T101MUserExtend.COL_PAPERS);
+        name        = clmForm.getPageName(PREFIX_EXTEND_NAME);
+        id          = convertNameDotForId(name);
+        labelName   = clmForm.getLabelName();
+        placeholder = clmForm.getPlaceholder();
+        value       = Objects.nonNull(userInfo.getUserExtend().getPapers()) ? userInfo.getUserExtend().getPapers() : "";
+        contextList.add(LabelTextAreaSet.builder()
+                .id(id).name(name).labelName(labelName).value(value)
+                .maxlength(GlobalConstants.LEARN_EXPERIENCE_MAX_L)
+                .placeholder(placeholder).outPutType(LabelTextAreaSetType.WITH_LABEL)
+                .fontSize(font).rows(4).grids(CssGridsType.G12).build().html());
+        
+        sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+        //------row13----------]
+        
+        //------row14----------[
+        contextList = new ArrayList<String>();
+        //获得科技奖励及荣誉情况(max250)
+        clmForm     = T101MUserExtend.getColumnInfo(T101MUserExtend.COL_HONORS);
+        name        = clmForm.getPageName(PREFIX_EXTEND_NAME);
+        id          = convertNameDotForId(name);
+        labelName   = clmForm.getLabelName();
+        placeholder = clmForm.getPlaceholder();
+        value       = Objects.nonNull(userInfo.getUserExtend().getHonors()) ? userInfo.getUserExtend().getHonors() : "";
+        contextList.add(LabelTextAreaSet.builder()
+                .id(id).name(name).labelName(labelName).value(value)
+                .maxlength(GlobalConstants.LEARN_EXPERIENCE_MAX_L)
+                .placeholder(placeholder).outPutType(LabelTextAreaSetType.WITH_LABEL)
+                .fontSize(font).rows(4).grids(CssGridsType.G12).build().html());
+        
+        sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+        //------row14----------]
+        
         
         return sb.toString();
     }
@@ -665,16 +971,12 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         List<CssAlignType> aligs = new ArrayList<>();
         // bottom button
 
-        String id = "btnOut";
-        String context = getContext("login.regist.step1.btn.cancel");
-        String comp1 = button().getBorder(IconSetType.TO_LEFT, CssClassType.DANGER, id, context);
-
-        id = "btnNext";
-        context = getContext("login.regist.step1.btn.next");
-        String comp2 = button().getBorder(IconSetType.TO_RIGHT, CssClassType.SUCCESS, id, context);
+        String id = "btnOk";
+        String context = getContext("common.page.ok");
+        String comp1 = button().getBorder(IconSetType.SEND, CssClassType.SUCCESS, id, context);
 
         aligs.add(CssAlignType.RIGHT);
-        sb.append(divRow().get(CellWidthType.ONE, aligs, concactWithSpace(comp1, comp2)));
+        sb.append(divRow().get(CellWidthType.ONE, aligs, comp1));
         
         return sb.toString();
     }

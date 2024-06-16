@@ -25,6 +25,7 @@ public class LabelFileSet {
     private CssGridsType grids;
     private String placeholder;
     private String id;
+    private String idLablel;
     private String name;
     private String value;
     @Default
@@ -71,9 +72,11 @@ public class LabelFileSet {
         }
         sb.append("style='background-color:" + GlobalConstants.INPUT_BG_COLOER + "' >");
         sb.append("<label class='custom-file-label "
-                + (Objects.nonNull(fontSize) ? fontSize.getKey() : "label-14" ) 
-                + "' for='" + id + "'>");
-        sb.append("<i class='fas fa-search'></i>&nbsp;&nbsp;");
+                + ((Objects.nonNull(fontSize) ? fontSize.getKey() : "label-14") + "' ") 
+                + "style='background-color:" + GlobalConstants.INPUT_BG_COLOER + "' "
+                + "id='" + idLablel + "' "
+                + " for='" + id + "'>");
+        sb.append("<i class='fa fa-upload'></i>&nbsp;&nbsp;");
         sb.append("</label>");
         sb.append("</div>");
 
