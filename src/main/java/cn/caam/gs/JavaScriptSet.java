@@ -10,9 +10,12 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.env.Environment;
 
 import cn.caam.gs.app.user.view.LoginViewHelper;
+import cn.caam.gs.app.user.view.UserDetailViewHelper;
+import cn.caam.gs.app.user.view.menu.MenuViewHelper;
 import cn.caam.gs.common.enums.ExecuteReturnType;
 import cn.caam.gs.common.util.JsonUtility;
 import cn.caam.gs.common.util.MessageSourceUtil;
+import cn.caam.gs.common.view.CommonViewHelper;
 import cn.caam.gs.manage.admin.view.AdminLoginViewHelper;
 import cn.caam.gs.manage.admin.view.menu.AdminMenuViewHelper;
 import cn.caam.gs.manage.admin.view.user.AdminUserSearchViewHelper;
@@ -129,8 +132,11 @@ public class JavaScriptSet {
 
 	private Map<String, Object> initJsView() {
 		Map<String, Object> jsView = new HashMap<String, Object>();
-	      // login
+	    // login
 		jsView.put("login",                LoginViewHelper.getJsProperties());
+		jsView.put("userDetail",           UserDetailViewHelper.getJsProperties());
+		jsView.put("common",               CommonViewHelper.getJsProperties());
+		
 		return jsView;
 	}
 	

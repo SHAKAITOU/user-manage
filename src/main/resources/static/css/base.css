@@ -1115,3 +1115,28 @@ html {
   width: 100%;
   /* The width is the width of the web page */
 }
+
+
+@media (min-width: 576px) {
+  .modal-md {
+    max-middle: 500px;
+  }
+}
+
+@media (min-width: 900px) {
+  .modal-lg {
+    max-width: 800px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .modal-full {
+    max-width: 1024px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .modal-full {
+    max-width: 1200px;
+  }
+}

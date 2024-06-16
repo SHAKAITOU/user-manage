@@ -71,6 +71,8 @@ public class IconSet {
         /** 詳細 */
         DETAIL                ("fa fa-bars"),
         
+        FILE                  ("fa fa-file"),
+        
         /** 用户头 */
         USER                ("far fa-user"),
         /** group */
@@ -84,7 +86,9 @@ public class IconSet {
         /** 时钟 */
         CLOCK                ("fa fa-clock"),
         /**  */
-        EDIT                ("fa fa-database"),
+        DATABASE                ("fa fa-database"),
+        
+        EDIT                 ("fa fa-pencil"),
         /** 日历 */
         CALENDAR            ("far fa-calendar-alt"),
         /** 喇叭 */
@@ -105,6 +109,7 @@ public class IconSet {
         INFO                ("fa fa-info-circle"),
         /** 错号关闭 */
         CLOSE                ("fa fa-times-circle"),
+
         /** 对号 */
         CHECK                ("fa fa-check-circle"),
         /** 设定 */

@@ -158,7 +158,7 @@ public class TableDetailViewHelper extends HtmlViewBaseHelper {
 			context = cols.getName();
 			tr.addTd(td().get  (TABLE_TD_HEIGHT, grids[index++], context, CssAlignType.LEFT));
 			// --col3--
-			context = cols.getComment();
+			context = cols.getLabelName();
 			tr.addTd(td().subWithTrim(TABLE_TD_HEIGHT, grids[index++], context, CssAlignType.LEFT));
 			// --col4--
 			context = cols.getPkFlg() ? "YES" : "";

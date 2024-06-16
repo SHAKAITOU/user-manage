@@ -49,7 +49,9 @@ import cn.caam.gs.common.util.EncryptorUtil;
 import cn.caam.gs.common.util.JsonUtility;
 import cn.caam.gs.common.util.MessageSourceUtil;
 import cn.caam.gs.domain.db.custom.entity.LoginResult;
+import cn.caam.gs.domain.db.custom.entity.UserInfo;
 import cn.caam.gs.service.impl.FixedValueService;
+import cn.caam.gs.service.impl.UserService;
 
 /**
  * S002 Thymeleaf 
@@ -68,6 +70,9 @@ public class LoginController extends ScreenBaseController{
 	
 	@Autowired
 	FixedValueService fixedValueService;
+	
+	@Autowired
+    UserService userService;
 
 	@GetMapping("")
 	public ModelAndView index(
@@ -103,7 +108,7 @@ public class LoginController extends ScreenBaseController{
 		request.getSession().setAttribute(SessionConstants.IS_MOBILE.getValue(), indexForm.getMobileDisplay());
 		ModelAndView mav = new ModelAndView();
 		LoginForm loginForm = new LoginForm();
-		loginForm.setUserCode("admin");
+		loginForm.setUserCode("M24060914330223");
 		loginForm.setPassword("1");
 		loginForm.setAuthImg("data:image/;base64," + getAuthImgStr(request));
 		if(!StringUtils.isEmpty(indexForm.getLoginFormJson())) {
@@ -122,16 +127,19 @@ public class LoginController extends ScreenBaseController{
 		
 		boolean okFlag = false;
 		boolean noSession = false;
+		
+		UserInfo userInfo = userService.getLoginUserInfo(loginForm.getUserCode());
+		
 		String ePw = EncryptorUtil.encrypt(loginForm.getPassword());
-		//if(!ePw.equals("VD2cOmWS0ly0K2NWXLszLQ==")) {
-		//	loginForm.setErrorMsg(messageSourceUtil.getContext("login.fail.msg.wrongPw"));
-		//} else if(Objects.isNull(request.getSession().getAttribute(SessionConstants.THEMES_TYPE.getValue()))) {
-		//	okFlag = false;
-		//	noSession = true;
-		//}
-		//else {
+		if (userInfo == null) {
+		    loginForm.setErrorMsg(messageSourceUtil.getContext("login.fail.msg.notexist"));
+		    okFlag = false;
+		} else if(!userInfo.getUser().getPassword().equals(ePw)) {
+		    loginForm.setErrorMsg(messageSourceUtil.getContext("login.fail.msg.wrongPw"));
+		    okFlag = false;
+		} else {
 			okFlag = true;
-		//}
+		}
 		
 		ModelAndView mav = new ModelAndView();
 		if(noSession) {
@@ -146,9 +154,7 @@ public class LoginController extends ScreenBaseController{
 			mav.setViewName(LoginViewHelper.HTML_INDEX);
 		} else {
 			loginForm.setReturnType(ExecuteReturnType.OK.getId());
-			LoginResult loginResult = new LoginResult();
-			request.getSession().setAttribute(SessionConstants.LOGIN_INFO.getValue(), 
-					JsonUtility.toJson(loginResult));
+			request.getSession().setAttribute(SessionConstants.LOGIN_INFO.getValue(), userInfo);
 			JavaScriptSet javaScriptSetInfo = new JavaScriptSet(request, environment, messageSourceUtil);
 			request.getSession().setAttribute(SessionConstants.JAVASCRIPT_SET_INFO.getValue(), 
 					javaScriptSetInfo.loginAdminSet());

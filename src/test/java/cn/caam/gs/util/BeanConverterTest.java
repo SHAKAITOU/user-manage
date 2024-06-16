@@ -3,12 +3,18 @@ package cn.caam.gs.util;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.imageio.ImageIO;
+
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -77,6 +83,17 @@ public class BeanConverterTest {
         
         List<String> oldRoleList = Arrays.asList("".split(","));
         LOGGER.info(String.join(",", oldRoleList));
+    }
+    
+    @Test
+    @Order(8)
+    void test08_listToString() throws Exception {
+        File file = new File("C:\\shaWork\\work\\DNVE7XYCDP8D1669677758841.jpg");
+        BufferedImage image = ImageIO.read(file);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        
+        ImageIO.write(image, "jpg", baos);
+        LOGGER.info(Base64.encodeBase64String(baos.toByteArray()));
     }
     
     @Getter

@@ -1,5 +1,6 @@
 package cn.caam.gs.manage.dbmaintenance.table.impl.g02order;
 
+import cn.caam.gs.manage.dbmaintenance.form.ColumnInfoForm;
 import cn.caam.gs.manage.dbmaintenance.form.SequenceInfoForm;
 import cn.caam.gs.manage.dbmaintenance.table.BaseDdl;
 import cn.caam.gs.manage.dbmaintenance.table.MySqlType;
@@ -9,42 +10,42 @@ public class T200MOrder extends BaseTableDef implements BaseDdl{
     
     public static final String  TABLE_NAME        = "m_order";
     public static final String  TABLE_NAME_OMT    = "T200";
-    private static final String TABLE_SEQ         = TABLE_NAME_OMT;
-    private static final String TABLE_GROUP       = GROUP_ORDER;
-    private static final String COL_ID              = "id";
-    private static final String COL_USER_ID         = "user_id";
-    private static final String COL_PAY_PATH        = "pay_path";
-    private static final String COL_ORDER_METHOD    = "order_method";
-    private static final String COL_ORDER_TYPE      = "order_type";
-    private static final String COL_PAY_TYPE        = "pay_type";
-    private static final String COL_ORDER_AMOUNT    = "order_amount";
-    private static final String COL_PAY_AMOUNT      = "pay_amount";
-    private static final String COL_PAY_DATE        = "pay_date";
-    private static final String COL_CHECK_DATE      = "check_date";
-    private static final String COL_CHECK_STATUS    = "check_status";
-    private static final String COL_REFUND_DATE     = "refund_date";
-    private static final String COL_REFUND_STATUS   = "refund_status";
-    private static final String COL_MEMO            = "memo";
+    public static final String TABLE_SEQ         = TABLE_NAME_OMT;
+    public static final String TABLE_GROUP       = GROUP_ORDER;
+    public static final String COL_ID              = "id";
+    public static final String COL_USER_ID         = "user_id";
+    public static final String COL_PAY_PATH        = "pay_path";
+    public static final String COL_ORDER_METHOD    = "order_method";
+    public static final String COL_ORDER_TYPE      = "order_type";
+    public static final String COL_PAY_TYPE        = "pay_type";
+    public static final String COL_ORDER_AMOUNT    = "order_amount";
+    public static final String COL_PAY_AMOUNT      = "pay_amount";
+    public static final String COL_PAY_DATE        = "pay_date";
+    public static final String COL_CHECK_DATE      = "check_date";
+    public static final String COL_CHECK_STATUS    = "check_status";
+    public static final String COL_REFUND_DATE     = "refund_date";
+    public static final String COL_REFUND_STATUS   = "refund_status";
+    public static final String COL_MEMO            = "memo";
     
-    public Object[][] columnInfos() {
-        Object[][] cols = new Object[][] {
+    public static final ColumnInfoForm[] cols = new ColumnInfoForm[] {
             // name | pk | type | charMaxLength | numPrecision | numScale | nullable | default | comment
-            {COL_ID,           true,     MySqlType.CHARACTER_VARYING, 30, null, null, false, "", getContext(TABLE_NAME, COL_ID)},
-            {COL_USER_ID,      false,    MySqlType.CHARACTER_VARYING, 20, null, null, false, "", getContext(TABLE_NAME, COL_USER_ID)},
-            {COL_PAY_PATH,     false,    MySqlType.CHARACTER_VARYING, 3 , null, null, false, "", getContext(TABLE_NAME, COL_PAY_PATH)},
-            {COL_ORDER_METHOD, false,    MySqlType.CHARACTER_VARYING, 3 , null, null, false, "", getContext(TABLE_NAME, COL_ORDER_METHOD)},
-            {COL_ORDER_TYPE,   false,    MySqlType.CHARACTER_VARYING, 3 , null, null, false, "", getContext(TABLE_NAME, COL_ORDER_TYPE)},
-            {COL_PAY_TYPE,     false,    MySqlType.CHARACTER_VARYING, 3 , null, null, false, "", getContext(TABLE_NAME, COL_PAY_TYPE)},
-            {COL_ORDER_AMOUNT, false,    MySqlType.NUMERIC,        null , 13,   3   , false, "", getContext(TABLE_NAME, COL_ORDER_AMOUNT)},
-            {COL_PAY_AMOUNT,   false,    MySqlType.NUMERIC,        null , 13,   3   , false, "", getContext(TABLE_NAME, COL_PAY_AMOUNT)},
-            {COL_PAY_DATE,     false,    MySqlType.CHARACTER_VARYING, 20, null, null, false, "", getContext(TABLE_NAME, COL_PAY_DATE)},
-            {COL_CHECK_DATE,   false,    MySqlType.CHARACTER_VARYING, 20, null, null, true , "", getContext(TABLE_NAME, COL_CHECK_DATE)},
-            {COL_CHECK_STATUS, false,    MySqlType.CHARACTER_VARYING, 20, null, null, true , "", getContext(TABLE_NAME, COL_CHECK_STATUS)},
-            {COL_REFUND_DATE,  false,    MySqlType.CHARACTER_VARYING, 20, null, null, true , "", getContext(TABLE_NAME, COL_REFUND_DATE)},
-            {COL_REFUND_STATUS,false,    MySqlType.CHARACTER_VARYING, 20, null, null, true , "", getContext(TABLE_NAME, COL_REFUND_STATUS)},
-            {COL_MEMO,         false,    MySqlType.CHARACTER_VARYING,255, null, null, true , "", getContext(TABLE_NAME, COL_MEMO)},
+            new ColumnInfoForm(COL_ID,           true,     MySqlType.CHARACTER_VARYING.getType(), 30, null, null, false, "", getLabelName(TABLE_NAME, COL_ID),              getPlaceholder(TABLE_NAME, COL_ID)),
+            new ColumnInfoForm(COL_USER_ID,      false,    MySqlType.CHARACTER_VARYING.getType(), 20, null, null, false, "", getLabelName(TABLE_NAME, COL_USER_ID),         getPlaceholder(TABLE_NAME, COL_USER_ID)),
+            new ColumnInfoForm(COL_PAY_PATH,     false,    MySqlType.CHARACTER_VARYING.getType(), 3 , null, null, false, "", getLabelName(TABLE_NAME, COL_PAY_PATH),        getPlaceholder(TABLE_NAME, COL_PAY_PATH)),
+            new ColumnInfoForm(COL_ORDER_METHOD, false,    MySqlType.CHARACTER_VARYING.getType(), 3 , null, null, false, "", getLabelName(TABLE_NAME, COL_ORDER_METHOD),    getPlaceholder(TABLE_NAME, COL_ORDER_METHOD)),
+            new ColumnInfoForm(COL_ORDER_TYPE,   false,    MySqlType.CHARACTER_VARYING.getType(), 3 , null, null, false, "", getLabelName(TABLE_NAME, COL_ORDER_TYPE),      getPlaceholder(TABLE_NAME, COL_ORDER_TYPE)),
+            new ColumnInfoForm(COL_PAY_TYPE,     false,    MySqlType.CHARACTER_VARYING.getType(), 3 , null, null, false, "", getLabelName(TABLE_NAME, COL_PAY_TYPE),        getPlaceholder(TABLE_NAME, COL_PAY_TYPE)),
+            new ColumnInfoForm(COL_ORDER_AMOUNT, false,    MySqlType.NUMERIC.getType(),        null , 13,   3   , false, "", getLabelName(TABLE_NAME, COL_ORDER_AMOUNT),    getPlaceholder(TABLE_NAME, COL_ORDER_AMOUNT)),
+            new ColumnInfoForm(COL_PAY_AMOUNT,   false,    MySqlType.NUMERIC.getType(),        null , 13,   3   , false, "", getLabelName(TABLE_NAME, COL_PAY_AMOUNT),      getPlaceholder(TABLE_NAME, COL_PAY_AMOUNT)),
+            new ColumnInfoForm(COL_PAY_DATE,     false,    MySqlType.CHARACTER_VARYING.getType(), 20, null, null, false, "", getLabelName(TABLE_NAME, COL_PAY_DATE),        getPlaceholder(TABLE_NAME, COL_PAY_DATE)),
+            new ColumnInfoForm(COL_CHECK_DATE,   false,    MySqlType.CHARACTER_VARYING.getType(), 20, null, null, true , "", getLabelName(TABLE_NAME, COL_CHECK_DATE),      getPlaceholder(TABLE_NAME, COL_CHECK_DATE)),
+            new ColumnInfoForm(COL_CHECK_STATUS, false,    MySqlType.CHARACTER_VARYING.getType(), 20, null, null, true , "", getLabelName(TABLE_NAME, COL_CHECK_STATUS),    getPlaceholder(TABLE_NAME, COL_CHECK_STATUS)),
+            new ColumnInfoForm(COL_REFUND_DATE,  false,    MySqlType.CHARACTER_VARYING.getType(), 20, null, null, true , "", getLabelName(TABLE_NAME, COL_REFUND_DATE),     getPlaceholder(TABLE_NAME, COL_REFUND_DATE)),
+            new ColumnInfoForm(COL_REFUND_STATUS,false,    MySqlType.CHARACTER_VARYING.getType(), 20, null, null, true , "", getLabelName(TABLE_NAME, COL_REFUND_STATUS),   getPlaceholder(TABLE_NAME, COL_REFUND_STATUS)),
+            new ColumnInfoForm(COL_MEMO,         false,    MySqlType.CHARACTER_VARYING.getType(),255, null, null, true , "", getLabelName(TABLE_NAME, COL_MEMO),            getPlaceholder(TABLE_NAME, COL_MEMO)),
             
-        };
+    };
+    public ColumnInfoForm[] columnInfos() {
         
         return cols;
     }
@@ -78,5 +79,14 @@ public class T200MOrder extends BaseTableDef implements BaseDdl{
     
     public String getTableGroup() {
         return TABLE_GROUP;
+    }
+    
+    public ColumnInfoForm getColumnInfo(String columnName) {
+        for (ColumnInfoForm form : cols) {
+            if (form.getName().equals(columnName)) {
+                return form;
+            }
+        }
+        return null;
     }
 }

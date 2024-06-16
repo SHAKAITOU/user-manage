@@ -1,5 +1,6 @@
 package cn.caam.gs.manage.dbmaintenance.table;
 
+import cn.caam.gs.manage.dbmaintenance.form.ColumnInfoForm;
 import cn.caam.gs.manage.dbmaintenance.form.SequenceInfoForm;
 
 public interface BaseDdl {
@@ -18,7 +19,7 @@ public interface BaseDdl {
 
 	String getTableGroup();
 	
-	Object[][] columnInfos();
+	ColumnInfoForm[] columnInfos();
 	
 	Object[][] indexInfos();
 	

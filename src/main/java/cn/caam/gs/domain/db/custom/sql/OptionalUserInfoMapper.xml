@@ -23,7 +23,52 @@
             resultMap="cn.caam.gs.domain.db.base.mapper.MUserMapper.BaseResultMap">
             <id column="id" property="id" />
         </association>
+        <association property="userExtend" 
+            resultMap="cn.caam.gs.domain.db.base.mapper.MUserExtendMapper.BaseResultMap">
+            <id column="id" property="id" />
+        </association>
     </resultMap>
+    
+    <resultMap id="PhotoInfoForm" type="cn.caam.gs.domain.db.base.entity.MUserExtend">
+    	<id property="id" column="id"/>
+    	<result column="photo" property="photo" jdbcType="BLOB"/>
+    	<result column="photo_ext" property="photoExt" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="baseSelect">
+	    mu.*,
+	    F0002.name   AS userTypeName,
+	    F0012_1.name AS membershipPathName,
+	    F0012_2.name AS focusOnName,
+	    F0001.name   AS sexName,
+	    F0005.name   AS nationalityName,
+	    F0003.name   AS politicalName,
+	    F0004.name   AS eduDegreeName,
+	    F0006.name   AS bachelorName,
+	    F0007.name   AS positionName,
+	    F0008.name   AS employerTypeName,
+	    F0009.name   AS jobTitleName,
+	    F0010.name   AS certificateTypeName,
+	    F0011_1.name AS areaName,
+	    F0011_2.name AS areaSubName,
+	    F0013.name   AS checkStatusName
+    </sql>
+    <sql id="baseJoin">
+    	LEFT JOIN m_fixed_value F0002   ON mu.user_type       = F0002.value   AND F0002.code   = 'F0002'
+		LEFT JOIN m_fixed_value F0012_1 ON mu.membership_path = F0012_1.value AND F0012_1.code = 'F0012'
+		LEFT JOIN m_fixed_value F0012_2 ON mu.focus_on        = F0012_2.value AND F0012_2.code = 'F0012'
+		LEFT JOIN m_fixed_value F0001   ON mu.sex             = F0001.value   AND F0001.code   = 'F0001'
+		LEFT JOIN m_fixed_value F0005   ON mu.nationality     = F0005.value   AND F0005.code   = 'F0005'
+		LEFT JOIN m_fixed_value F0003   ON mu.political       = F0003.value   AND F0003.code   = 'F0003'
+		LEFT JOIN m_fixed_value F0004   ON mu.edu_degree      = F0004.value   AND F0004.code   = 'F0004'
+		LEFT JOIN m_fixed_value F0006   ON mu.bachelor        = F0006.value   AND F0006.code   = 'F0006'
+		LEFT JOIN m_fixed_value F0007   ON mu.position        = F0007.value   AND F0007.code   = 'F0007'
+		LEFT JOIN m_fixed_value F0008   ON mu.employer_type   = F0008.value   AND F0008.code   = 'F0008'
+		LEFT JOIN m_fixed_value F0009   ON mu.job_title       = F0009.value   AND F0009.code   = 'F0009'
+		LEFT JOIN m_fixed_value F0010   ON mu.certificate_type= F0010.value   AND F0010.code   = 'F0010'
+		LEFT JOIN m_fixed_value F0011_1 ON mu.area            = F0011_1.value AND F0011_1.code   = 'F0011'
+		LEFT JOIN m_fixed_value F0011_2 ON mu.area_sub        = F0011_2.value AND F0011_2.code   = 'F0011'
+		LEFT JOIN m_fixed_value F0013   ON mu.check_status    = F0013.value   AND F0013.code   = 'F0013'
+    </sql>
     <!-- SQL CHIP -->
 	<select id="getUserListCount" resultType="int">
 		SELECT COUNT(mu.id)
@@ -33,39 +78,53 @@
 	<!-- SQL CHIP -->
 	<select id="getUserList" resultMap="UserInfoForm">
         SELECT
-		    mu.*,
-		    F0002.name   AS userTypeName,
-		    F0012_1.name AS membershipPathName,
-		    F0012_2.name AS focusOnName,
-		    F0001.name   AS sexName,
-		    F0005.name   AS nationalityName,
-		    F0003.name   AS politicalName,
-		    F0004.name   AS eduDegreeName,
-		    F0006.name   AS bachelorName,
-		    F0007.name   AS positionName,
-		    F0008.name   AS employerTypeName,
-		    F0009.name   AS jobTitleName,
-		    F0010.name   AS certificateTypeName,
-		    F0011_1.name AS areaName,
-		    F0011_2.name AS areaSubName,
-		    F0013.name   AS checkStatusName
+		    <include refid="baseSelect"/>
 		FROM
 		    m_user mu 
-			LEFT JOIN m_fixed_value F0002   ON mu.user_type       = F0002.value   AND F0002.code   = 'F0002'
-			LEFT JOIN m_fixed_value F0012_1 ON mu.membership_path = F0012_1.value AND F0012_1.code = 'F0012'
-			LEFT JOIN m_fixed_value F0012_2 ON mu.focus_on        = F0012_2.value AND F0012_2.code = 'F0012'
-			LEFT JOIN m_fixed_value F0001   ON mu.sex             = F0001.value   AND F0001.code   = 'F0001'
-			LEFT JOIN m_fixed_value F0005   ON mu.nationality     = F0005.value   AND F0005.code   = 'F0005'
-			LEFT JOIN m_fixed_value F0003   ON mu.political       = F0003.value   AND F0003.code   = 'F0003'
-			LEFT JOIN m_fixed_value F0004   ON mu.edu_degree      = F0004.value   AND F0004.code   = 'F0004'
-			LEFT JOIN m_fixed_value F0006   ON mu.bachelor        = F0006.value   AND F0006.code   = 'F0006'
-			LEFT JOIN m_fixed_value F0007   ON mu.position        = F0007.value   AND F0007.code   = 'F0007'
-			LEFT JOIN m_fixed_value F0008   ON mu.employer_type   = F0008.value   AND F0008.code   = 'F0008'
-			LEFT JOIN m_fixed_value F0009   ON mu.job_title       = F0009.value   AND F0009.code   = 'F0009'
-			LEFT JOIN m_fixed_value F0010   ON mu.certificate_type= F0010.value   AND F0010.code   = 'F0010'
-			LEFT JOIN m_fixed_value F0011_1 ON mu.area            = F0011_1.value AND F0011_1.code   = 'F0011'
-			LEFT JOIN m_fixed_value F0011_2 ON mu.area_sub        = F0011_2.value AND F0011_2.code   = 'F0011'
-			LEFT JOIN m_fixed_value F0013   ON mu.check_status    = F0013.value   AND F0013.code   = 'F0013'
+			<include refid="baseJoin"/>
+    </select>
+    
+    <select id="getLoginUserInfo" resultMap="UserInfoForm">
+        SELECT
+			mu.*
+		FROM
+		    m_user mu
+		WHERE
+			mu.id = #{userCode, jdbcType=NVARCHAR}
+			OR
+			mu.phone = #{userCode, jdbcType=NVARCHAR}
+			OR
+			mu.mail = #{userCode, jdbcType=NVARCHAR}
+    </select>
+    
+    <select id="getUserInfo" resultMap="UserInfoForm">
+        SELECT
+		    <include refid="baseSelect"/>,
+		    mue.introducer1,
+			mue.introducer2,    
+			mue.major,     
+			mue.research_dir,
+			mue.learn_experience,
+			mue.work_experience,
+			mue.papers,   
+			mue.honors					    
+		FROM
+		    m_user mu 
+		    LEFT JOIN m_user_extend mue ON mu.id = mue.id
+			<include refid="baseJoin"/>
+		WHERE
+			mu.id = #{userId, jdbcType=NVARCHAR}
+    </select>
+    
+    <select id="getUserPhoto" resultMap="PhotoInfoForm">
+        SELECT
+		    mue.id,
+		    mue.photo,
+			mue.photo_ext					    
+		FROM
+		    m_user_extend mue
+		WHERE
+			mue.id = #{userId, jdbcType=NVARCHAR}
     </select>
     
 </mapper>

@@ -123,21 +123,23 @@ try{
 			
 		disabled : function(obj){
 			obj.prop("disabled", true);
+			obj.css("background-color", "#EEEEEE");
 		},
 		
 		enabled : function(obj){
 			obj.prop("disabled", false);
+			obj.css("background-color", "#FFFAF0");
 		},
 		
 		readonly : function(obj){
 			obj.prop("readonly", true);
-			obj.css("background-color", "#dcd3b2");
+			obj.css("background-color", "#EEEEEE");
 			
 		},
 		
 		editable : function(obj){
 			obj.prop("readonly", false);
-			obj.css("background-color", "");
+			obj.css("background-color", "#FFFAF0");
 			
 		},
 		

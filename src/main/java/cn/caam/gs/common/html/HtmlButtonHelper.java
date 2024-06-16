@@ -4,11 +4,12 @@ package cn.caam.gs.common.html;
 import org.springframework.stereotype.Component;
 
 import cn.caam.gs.common.enums.CssClassType;
-import cn.caam.gs.common.html.element.ButtonSet;
-import cn.caam.gs.common.html.element.ButtonSet.ButtonSetType;
+import cn.caam.gs.common.enums.CssGridsType;
 import cn.caam.gs.common.html.element.IconSet;
 import cn.caam.gs.common.html.element.IconSet.IconSetCss;
 import cn.caam.gs.common.html.element.IconSet.IconSetType;
+import cn.caam.gs.common.html.element.bs5.ButtonSet;
+import cn.caam.gs.common.html.element.bs5.ButtonSet.ButtonSetType;
 import cn.caam.gs.common.util.UtilConstants;
 
 @Component
@@ -25,12 +26,27 @@ public class HtmlButtonHelper {
                 .classType(classType).id(id).buttonName(buttonName).build().html();
     }
     
+    public String getBorder(IconSetType icon, CssClassType classType, CssGridsType grids, String id, String buttonName) {
+        return ButtonSet.builder().outPutType(ButtonSetType.NORMAL)
+                .isBorderOnly(true).grids(grids)
+                .classType(classType).id(id).buttonName(
+                        IconSet.builder().type(icon).css(IconSetCss.NOMAL_10).build().html()
+                        + UtilConstants.HTML_SPACE + UtilConstants.HTML_SPACE + buttonName).build().html();
+    }
+    
     public String getBorder(IconSetType icon, CssClassType classType, String id, String buttonName) {
         return ButtonSet.builder().outPutType(ButtonSetType.NORMAL)
                 .isBorderOnly(true)
                 .classType(classType).id(id).buttonName(
                         IconSet.builder().type(icon).css(IconSetCss.NOMAL_10).build().html()
                         + UtilConstants.HTML_SPACE + UtilConstants.HTML_SPACE + buttonName).build().html();
+    }
+    
+    public String getBorder(IconSetType icon, CssClassType classType, String id) {
+        return ButtonSet.builder().outPutType(ButtonSetType.NORMAL)
+                .isBorderOnly(true)
+                .classType(classType).id(id).buttonName(
+                        IconSet.builder().type(icon).css(IconSetCss.NOMAL_10).build().html()).build().html();
     }
     
     public String get(IconSetType icon, CssClassType classType, String id, String buttonName) {

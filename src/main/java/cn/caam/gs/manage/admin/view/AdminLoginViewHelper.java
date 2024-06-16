@@ -39,7 +39,6 @@ public class AdminLoginViewHelper extends HtmlViewBaseHelper {
         js.put("title",          getContext("login.title"));
         // label
         js.put("label_id",     getContext("m_admin.id"));
-        js.put("label_pw", getContext("userAdd.item.mail"));
         js.put("msg_logout_confirm", getContext("login.logout.confirm.msg"));
         
         

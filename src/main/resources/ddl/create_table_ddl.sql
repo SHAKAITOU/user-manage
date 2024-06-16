@@ -503,19 +503,23 @@ CREATE INDEX m_user_idx2 ON m_user (phone);
 DROP TABLE IF EXISTS m_user_extend;
 CREATE TABLE m_user_extend
 ( 
-    id               VARCHAR(20)  NOT NULL COMMENT '(M/TYYMMDDHHmmSSR2)',
-    introducer1      VARCHAR(50)           COMMENT '介绍人1(max32)',
-    introducer2      VARCHAR(50)           COMMENT '介绍人2(max32)',
-    id_photo         BLOB                  COMMENT '2寸证件照jpg/png/jpeg200k',
-    major            VARCHAR(70)  NOT NULL COMMENT '专业(max64)',
-    educational_at   BLOB                  COMMENT '学历证书附件',
-    bachelor_at      BLOB                  COMMENT '学位证书附件',
-    vocational_at    BLOB                  COMMENT '职业证书',
-    research_dir     VARCHAR(40)           COMMENT '研究方向(max36)',
-    learn_experience VARCHAR(255) NOT NULL COMMENT '主要学习经历(max250)',
-    work_experience  VARCHAR(255) NOT NULL COMMENT '主要工作经历(max250)',
-    papers           VARCHAR(255)          COMMENT '代表性论文及著作(max250)',
-    honors           VARCHAR(255)          COMMENT '获得科技奖励及荣誉情况(max250)',
+    id                 VARCHAR(20)  NOT NULL COMMENT '(M/TYYMMDDHHmmSSR2)',
+    introducer1        VARCHAR(50)           COMMENT '介绍人1(max32)',
+    introducer2        VARCHAR(50)           COMMENT '介绍人2(max32)',
+    photo              TEXT            COMMENT '2寸证件照jpg/png/jpeg200k',
+    photo_ext          VARCHAR(10)           COMMENT '证件照文件扩展名',
+    major              VARCHAR(70)  NOT NULL COMMENT '专业(max64)',
+    educational_at     TEXT            COMMENT '学历证书附件',
+    educational_at_ext VARCHAR(10)           COMMENT '学历证书附件文件扩展名',
+    bachelor_at        TEXT            COMMENT '学位证书附件',
+    bachelor_at_ext    VARCHAR(10)           COMMENT '学位证书附件文件扩展名',
+    vocational_at      TEXT            COMMENT '职业证书附件',
+    vocational_at_ext  VARCHAR(10)           COMMENT '职业证书附件文件扩展名',
+    research_dir     VARCHAR(40)             COMMENT '研究方向(max36)',
+    learn_experience VARCHAR(255) NOT NULL   COMMENT '主要学习经历(max250)',
+    work_experience  VARCHAR(255) NOT NULL   COMMENT '主要工作经历(max250)',
+    papers           VARCHAR(255)            COMMENT '代表性论文及著作(max250)',
+    honors           VARCHAR(255)            COMMENT '获得科技奖励及荣誉情况(max250)',
 
     PRIMARY KEY (id)
 ) COMMENT='会员扩展信息' ENGINE=InnoDB DEFAULT CHARSET=utf8;

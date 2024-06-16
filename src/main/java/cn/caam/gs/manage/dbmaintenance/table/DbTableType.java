@@ -1,5 +1,7 @@
 package cn.caam.gs.manage.dbmaintenance.table;
 
+import java.util.Arrays;
+
 import cn.caam.gs.common.util.UtilConstants;
 import cn.caam.gs.manage.dbmaintenance.form.TableInfoForm;
 import cn.caam.gs.manage.dbmaintenance.table.impl.g00mainten.T000MAdmin;
@@ -60,7 +62,7 @@ public enum DbTableType {
     	TableInfoForm tableInfoForm = new TableInfoForm();
 		tableInfoForm.setComment(getComment());
 		tableInfoForm.setTableName(getName());
-		tableInfoForm.setColumnInfos(DbTableUtil.getColumnInfos(baseDdl.columnInfos()));
+		tableInfoForm.setColumnInfos(Arrays.asList(baseDdl.columnInfos()));
 		tableInfoForm.setIndexInfos(DbTableUtil.getIndexInfos(baseDdl.indexInfos()));
 		tableInfoForm.setSequenceInfo(baseDdl.getSequenceInfo());
     	return tableInfoForm;

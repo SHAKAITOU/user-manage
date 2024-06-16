@@ -4,10 +4,14 @@ import cn.caam.gs.common.html.HtmlBaseHelper;
 
 public class BaseTableDef {
     
-    protected String getContext(String tableName) {
+    protected static String getContext(String tableName) {
         return HtmlBaseHelper.getContext(tableName);
     }
-    protected String getContext(String tableName, String columName) {
+    protected static String getLabelName(String tableName, String columName) {
         return HtmlBaseHelper.getContext(tableName + "." + columName);
+    }
+    
+    protected static String getPlaceholder(String tableName, String columName) {
+        return HtmlBaseHelper.getContext(tableName + "." + columName + ".placeholder");
     }
 }

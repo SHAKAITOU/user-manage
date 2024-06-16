@@ -2,9 +2,14 @@ package cn.caam.gs.common.html.element.bs5;
 
 import java.util.Objects;
 
+import org.apache.commons.lang3.StringUtils;
+
 import cn.caam.gs.GlobalConstants;
 import cn.caam.gs.common.enums.CssFontSizeType;
 import cn.caam.gs.common.enums.CssGridsType;
+import cn.caam.gs.common.html.element.IconSet;
+import cn.caam.gs.common.html.element.IconSet.IconSetCss;
+import cn.caam.gs.common.html.element.IconSet.IconSetType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -13,7 +18,7 @@ import lombok.Builder.Default;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class LabelInputSet {
+public class LabelFileSet {
 
     private String labelName; 
     private CssFontSizeType fontSize;
@@ -22,8 +27,6 @@ public class LabelInputSet {
     private String id;
     private String name;
     private String value;
-    private String buttonName;
-    private String buttonId;
     @Default
     private boolean notBlank = false;
     @Default
@@ -36,6 +39,7 @@ public class LabelInputSet {
     private String get() {
         StringBuffer sb = new StringBuffer();
         sb.append("<div class='input-group mb-3'>");
+        sb.append("<div class='input-group-append'>");
         sb.append("<span class='input-group-text " 
                 + (Objects.nonNull(fontSize) ? fontSize.getKey() : "label-14" ) 
                 + "'>" + labelName);
@@ -43,8 +47,10 @@ public class LabelInputSet {
             sb.append("<span class='label-14b-red'>*</span>");
         }
         sb.append("</span>");
-        sb.append("<input type='text' ");
-        sb.append(" class='form-control "); 
+        sb.append("</div>");
+        sb.append("<div class='custom-file'>");
+        sb.append("<input type='file' ");
+        sb.append(" class='custom-file-input "); 
         sb.append((Objects.nonNull(fontSize) ? fontSize.getKey() : "label-14" ) + "'");
         if (Objects.nonNull(placeholder)) {
             sb.append(" placeholder='" + placeholder + "'");
@@ -63,14 +69,14 @@ public class LabelInputSet {
         if (Objects.nonNull(value)) {
             sb.append(" value='"+ value + "'");
         }
-        sb.append("style='background-color:" + GlobalConstants.INPUT_BG_COLOER + "' ");
-        sb.append(">");
-        if (Objects.nonNull(buttonId)) {
-            sb.append("<button class='btn btn-primary " 
-                    + (Objects.nonNull(fontSize) ? fontSize.getKey() : "label-14" ) + "' type='button' id='button-addon'>");
-            sb.append("<i class='fas fa-search'></i>&nbsp;&nbsp;" + buttonName + "&nbsp;&nbsp;");
-            sb.append("</button>");
-        }
+        sb.append("style='background-color:" + GlobalConstants.INPUT_BG_COLOER + "' >");
+        sb.append("<label class='custom-file-label "
+                + (Objects.nonNull(fontSize) ? fontSize.getKey() : "label-14" ) 
+                + "' for='" + id + "'>");
+        sb.append("<i class='fas fa-search'></i>&nbsp;&nbsp;");
+        sb.append("</label>");
+        sb.append("</div>");
+
         sb.append("</div>");
         return getContext(sb.toString());
     }

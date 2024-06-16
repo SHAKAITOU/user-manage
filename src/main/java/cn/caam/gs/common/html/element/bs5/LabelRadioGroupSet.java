@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LabelRadioGroupSet {
 
+    private String id;
     private String labelName; 
     private CssFontSizeType fontSize;
     private CssGridsType grids;
@@ -35,12 +36,12 @@ public class LabelRadioGroupSet {
         
         sb.append("<div class='input-group-append'>");
         for(int i=0; i<radios.size(); i++) {
-            String id = name + "_" + radios.get(i).getValue() + "_" + i;
+            String subId = id + "_" + i;
             sb.append("<div class='radio-inline' style='left:5px'>");
-            sb.append("<input class='form-check-input ");
+            sb.append("<input class='form-check-input " + id + " ");
             sb.append((Objects.nonNull(fontSize) ? fontSize.getKey() : "label-14" ));
             sb.append("' type='radio' ");
-            sb.append(" id='" + id + "' ");
+            sb.append(" id='" + subId + "' ");
             sb.append(" name='" + name + "' ");
             sb.append(" value='" + radios.get(i).getValue() + "' ");
             if (Objects.nonNull(selectedValue)) {
@@ -55,7 +56,7 @@ public class LabelRadioGroupSet {
             sb.append(" >");
             sb.append(" <label class='form-check-label "
                     + (Objects.nonNull(fontSize) ? fontSize.getKey() : "label-14" ) 
-                    + "' for='" + id + "'>");
+                    + "' for='" + subId + "'>");
             sb.append(radios.get(i).getName());
             sb.append("</label>");
             sb.append("</div>");

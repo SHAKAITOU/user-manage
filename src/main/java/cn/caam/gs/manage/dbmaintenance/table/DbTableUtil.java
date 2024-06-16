@@ -66,7 +66,7 @@ public class DbTableUtil {
 		sb.append("CREATE TABLE "+withSchemaName(schemaName)+fileForm.getTableName()).append("\n");
 		sb.append("( ").append("\n");
 		for(ColumnInfoForm columnInfoForm : fileForm.getColumnInfos()) {
-			sb.append("    -- ").append(columnInfoForm.getComment()).append("\n");
+			sb.append("    -- ").append(columnInfoForm.getLabelName()).append("\n");
 			sb.append("    ");
 			sb.append(columnInfoForm.getName()+getTypeSql(columnInfoForm));
 			if(!StringUtils.isBlank(columnInfoForm.getDefaultValue())) {
@@ -132,21 +132,6 @@ public class DbTableUtil {
 		judgeDiffIndexInfos(schemaName, fileForm.getTableName(), fileForm.getIndexInfos(), dbForm.getIndexInfos(), sabun);
 		
 		return sabun.toString();
-	}
-	
-	public static List<ColumnInfoForm> getColumnInfos(Object[][] columnInfos) {
-		List<ColumnInfoForm> columnInfoList = new ArrayList<>();
-		for(Object[] col : columnInfos) {
-			MySqlType type = (MySqlType)col[COL_TYPE];
-			columnInfoList.add(ColumnInfoForm.builder()
-					.name((String)col[COL_NAME]).pkFlg((boolean)col[COL_PK]).type(type.getType())
-					.characterMaxLength(Objects.isNull(col[COL_CHAR_MAX_LENGTH]) ? null : (int)col[COL_CHAR_MAX_LENGTH])
-					.numericPrecision(Objects.isNull(col[COL_NUMERIC_PRECISION]) ? null : (int)col[COL_NUMERIC_PRECISION])
-					.numericScale(Objects.isNull(col[COL_NUMERIC_SCALE]) ? null : (int)col[COL_NUMERIC_SCALE])
-					.nullable((boolean)col[COL_NULLABLE]).defaultValue((String)col[COL_DEFAULT_VALUE]).comment((String)col[COL_COMMENT])
-					.build());
-		}
-		return columnInfoList;
 	}
 	
 	public static List<IndexInfoForm> getIndexInfos(Object[][] indexInfos) {
@@ -264,7 +249,7 @@ public class DbTableUtil {
 	
 	private static String addColumnComment(String schemaName, String tableName, ColumnInfoForm columnInfoForm) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("COMMENT ON COLUMN "+withSchemaName(schemaName)+tableName+"."+columnInfoForm.getName()+" IS '"+columnInfoForm.getComment()+"';").append("\n");
+		sb.append("COMMENT ON COLUMN "+withSchemaName(schemaName)+tableName+"."+columnInfoForm.getName()+" IS '"+columnInfoForm.getLabelName()+"';").append("\n");
 		return sb.toString();
 	}
 	

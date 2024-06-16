@@ -357,12 +357,6 @@ public class LoginViewHelper extends HtmlViewBaseHelper {
         // title
         js.put("title", getContext("login.title"));
         // label
-        js.put("label_mail", getContext("userAdd.item.mail"));
-        js.put("label_authCode", getContext("login.regist.authCode"));
-        js.put("label_familyName", getContext("userAdd.item.familyName"));
-        js.put("label_surname", getContext("userAdd.item.surname"));
-        js.put("label_familyNameJa", getContext("userAdd.item.familyNameJa"));
-        js.put("label_surnameJa", getContext("userAdd.item.surnameJa"));
         js.put("label_pw", getContext("login.regist.pw"));
         js.put("label_pw2", getContext("login.regist.pw2"));
         js.put("label_tel", ("store.tel"));

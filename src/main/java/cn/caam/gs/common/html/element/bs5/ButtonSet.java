@@ -73,25 +73,25 @@ public class ButtonSet {
         if (Objects.nonNull(iconSet)) {
             sb.append(iconSet.html() + "&nbsp;&nbsp;");
         }
-        sb.append(buttonName + "&nbsp;");
+        sb.append(buttonName);
         sb.append("</button>");
         return sb.toString();
     }
     
     private String getContext(String coreStr) {
         StringBuffer sb = new StringBuffer();
-        sb.append("<div ");
         if (Objects.nonNull(grids)) {
+            sb.append("<div ");
             sb.append("class='col-xl-" + grids.getKey() 
             + " col-xxl-" + grids.getKey() 
             + " col-lg-" + grids.getKey()
             + " col-md-12 col-sm-12"
             + " " + (Objects.nonNull(gridFlexType) ? gridFlexType.getKey() : GridFlexType.LEFT.getKey()) + " '>");
+            sb.append(coreStr);
+            sb.append("</div>");
         } else {
-            sb.append("class='col d-flex me-auto'>");
+            sb.append(coreStr);
         }
-        sb.append(coreStr);
-        sb.append("</div>");
         return sb.toString();
     }
     
@@ -114,7 +114,7 @@ public class ButtonSet {
         if (Objects.nonNull(iconSet)) {
             sb.append(iconSet.html() + "&nbsp;&nbsp;");
         }
-        sb.append(buttonName + "&nbsp;");
+        sb.append(buttonName);
         sb.append("</button>");
         return sb.toString();
     }
@@ -139,7 +139,7 @@ public class ButtonSet {
         if (Objects.nonNull(iconSet)) {
             sb.append(iconSet.html() + "&nbsp;&nbsp;");
         }
-        sb.append(buttonName + "&nbsp;");
+        sb.append(buttonName);
         sb.append("</button>");
         return sb.toString();
     }
@@ -165,7 +165,7 @@ public class ButtonSet {
         if (Objects.nonNull(iconSet)) {
             sb.append(iconSet.html() + "&nbsp;&nbsp;");
         }
-        sb.append(buttonName + "&nbsp;");
+        sb.append(buttonName);
         sb.append("</button>");
         return sb.toString();
     }
@@ -181,7 +181,7 @@ public class ButtonSet {
         if (Objects.nonNull(iconSet)) {
             sb.append(iconSet + "&nbsp;&nbsp;");
         }
-        sb.append(buttonName + "&nbsp;");
+        sb.append(buttonName);
         sb.append("</button>");
         return sb.toString();
     }

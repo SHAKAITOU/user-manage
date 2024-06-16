@@ -15,11 +15,13 @@ ShaUtil.other.inherits(Menu, BaseJsController);
 //------------properties define-------------[
 Menu.prototype.ID = {
 	
-	BTN_PRODUCT						: 'menu2',
+	CLASS_NM_MENU1001      			: 'menu1001',
 	BTN_LOGOUT						: 'menu7',
 	
     NAVI_FOR_PC                     : "bigScreenNav",
     NAVI_FOR_PHONE                  : "smallScreenNav",
+    //div
+    DIV_MAINBODY                    : 'mainBody',
 
 };
 //------------------------------------------]
@@ -47,15 +49,21 @@ Menu.prototype.initEvent = function(){
 
 	self.ajustNavi();
 	
-	ShaInput.button.onClick(self.getObject(self.ID.BTN_PRODUCT), 
-		function(event) {
-			ShaAjax.ajax.postToMain(
-	        	self.getJsContext().jsView.product.url_product_init,
-	        	self.getForm().serializeArray());
-		}
-	);
-	
-	
+    //会员查询
+    $buttonList = self.getObjectList(self.ID.CLASS_NM_MENU1001);
+    $buttonList.each(function(i, elem){
+	    ShaInput.button.onClick($(elem),
+	    	function(event) {
+				ShaAjax.ajax.get(
+	                self.jsContext.jsView.userDetail.url_user_detail_init, 
+	                null, 
+	                function(data){
+	                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
+	                }
+	            ); 
+			}
+	    );
+	});
 	
 	//init event to BTN_LOGOUT
 	ShaInput.button.onClick(self.getObject(self.ID.BTN_LOGOUT), 
