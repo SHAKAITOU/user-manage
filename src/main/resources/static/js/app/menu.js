@@ -16,6 +16,8 @@ ShaUtil.other.inherits(Menu, BaseJsController);
 Menu.prototype.ID = {
 	
 	CLASS_NM_MENU1001      			: 'menu1001',
+	
+	CLASS_NM_MENU2001      			: 'menu2001',
 	BTN_LOGOUT						: 'menu7',
 	
     NAVI_FOR_PC                     : "bigScreenNav",
@@ -49,13 +51,29 @@ Menu.prototype.initEvent = function(){
 
 	self.ajustNavi();
 	
-    //会员查询
+    //会员信息
     $buttonList = self.getObjectList(self.ID.CLASS_NM_MENU1001);
     $buttonList.each(function(i, elem){
 	    ShaInput.button.onClick($(elem),
 	    	function(event) {
 				ShaAjax.ajax.get(
 	                self.jsContext.jsView.userDetail.url_user_detail_init, 
+	                null, 
+	                function(data){
+	                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
+	                }
+	            ); 
+			}
+	    );
+	});
+	
+	//缴费确认
+	$buttonList = self.getObjectList(self.ID.CLASS_NM_MENU2001);
+    $buttonList.each(function(i, elem){
+	    ShaInput.button.onClick($(elem),
+	    	function(event) {
+				ShaAjax.ajax.get(
+	                self.jsContext.jsView.order.url_init, 
 	                null, 
 	                function(data){
 	                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);

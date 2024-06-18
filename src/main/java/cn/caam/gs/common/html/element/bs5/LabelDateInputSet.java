@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.Builder.Default;
-import cn.caam.gs.GlobalConstants;
+import cn.caam.gs.app.GlobalConstants;
 import cn.caam.gs.common.enums.CssFontSizeType;
 import cn.caam.gs.common.enums.CssGridsType;
 import cn.caam.gs.common.html.element.IconSet;

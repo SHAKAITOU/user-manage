@@ -2,7 +2,7 @@
 <mapper namespace="cn.caam.gs.domain.db.custom.mapper.OptionalDbTableInfoMapper">
 	<!-- RESULT MAP -->
     <resultMap id="ColumnInfoForm" 
-                type="cn.caam.gs.manage.dbmaintenance.form.ColumnInfoForm">
+                type="cn.caam.gs.app.dbmainten.form.ColumnInfoForm">
         <id property="name" column="column_name"/>
         <result property="pkFlg" column="pk"/>
         <result property="type" column="data_type"/>
@@ -13,7 +13,7 @@
         <result property="defaultValue" column="column_default"/>
     </resultMap>
     <resultMap id="IndexInfoForm" 
-                type="cn.caam.gs.manage.dbmaintenance.form.IndexInfoForm">
+                type="cn.caam.gs.app.dbmainten.form.IndexInfoForm">
         <id property="indexName" column="index_name"/>
         <collection property="columnNames" column="column_name" ofType="java.lang.String" javaType="list" />
     </resultMap>

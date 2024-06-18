@@ -5,8 +5,8 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import cn.caam.gs.manage.dbmaintenance.form.ColumnInfoForm;
-import cn.caam.gs.manage.dbmaintenance.form.IndexInfoForm;
+import cn.caam.gs.app.dbmainten.form.ColumnInfoForm;
+import cn.caam.gs.app.dbmainten.form.IndexInfoForm;
 
 @Mapper
 public interface OptionalDbTableInfoMapper {

@@ -7,8 +7,8 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cn.caam.gs.app.form.RegistForm;
-import cn.caam.gs.app.user.view.RegistStep1ViewHelper;
+import cn.caam.gs.app.user.regist.form.RegistForm;
+import cn.caam.gs.app.user.regist.view.RegistStep1ViewHelper;
 import cn.caam.gs.common.util.LocalDateUtility;
 import cn.caam.gs.common.util.LocalDateUtility.DateTimePattern;
 import cn.caam.gs.domain.db.base.entity.MAuthCode;

@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import cn.caam.gs.GlobalConstants;
-import cn.caam.gs.app.user.view.LoginViewHelper;
+import cn.caam.gs.app.GlobalConstants;
+import cn.caam.gs.app.user.login.view.LoginViewHelper;
 import cn.caam.gs.app.util.ControllerHelper;
 import cn.caam.gs.common.html.HtmlViewBaseHelper;
 import cn.caam.gs.common.view.CommonViewHelper;

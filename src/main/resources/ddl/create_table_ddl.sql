@@ -506,14 +506,14 @@ CREATE TABLE m_user_extend
     id                 VARCHAR(20)  NOT NULL COMMENT '(M/TYYMMDDHHmmSSR2)',
     introducer1        VARCHAR(50)           COMMENT '介绍人1(max32)',
     introducer2        VARCHAR(50)           COMMENT '介绍人2(max32)',
-    photo              TEXT            COMMENT '2寸证件照jpg/png/jpeg200k',
+    photo              MEDIUMBLOB            COMMENT '2寸证件照jpg/png/jpeg200k',
     photo_ext          VARCHAR(10)           COMMENT '证件照文件扩展名',
     major              VARCHAR(70)  NOT NULL COMMENT '专业(max64)',
-    educational_at     TEXT            COMMENT '学历证书附件',
+    educational_at     MEDIUMBLOB            COMMENT '学历证书附件',
     educational_at_ext VARCHAR(10)           COMMENT '学历证书附件文件扩展名',
-    bachelor_at        TEXT            COMMENT '学位证书附件',
+    bachelor_at        MEDIUMBLOB            COMMENT '学位证书附件',
     bachelor_at_ext    VARCHAR(10)           COMMENT '学位证书附件文件扩展名',
-    vocational_at      TEXT            COMMENT '职业证书附件',
+    vocational_at      MEDIUMBLOB            COMMENT '职业证书附件',
     vocational_at_ext  VARCHAR(10)           COMMENT '职业证书附件文件扩展名',
     research_dir     VARCHAR(40)             COMMENT '研究方向(max36)',
     learn_experience VARCHAR(255) NOT NULL   COMMENT '主要学习经历(max250)',
@@ -535,7 +535,7 @@ CREATE TABLE m_order
     order_type       VARCHAR(3)     NOT NULL COMMENT '订单类型(F0015)',
     pay_type         VARCHAR(3)     NOT NULL COMMENT '缴费类型(F0014)',
     order_amount     DECIMAL(13, 3) NOT NULL COMMENT '订单金额',
-    pay_amount       DECIMAL(13, 3) NOT NULL COMMENT '实收金额',
+    pay_amount       DECIMAL(13, 3)          COMMENT '实收金额',
     pay_date         VARCHAR(20)    NOT NULL COMMENT '缴费时间(yyyy-MM-dd HH:mm:ss)',
     check_date       VARCHAR(20)           COMMENT '审核时间(yyyy-MM-dd)',
     check_status     VARCHAR(3)            COMMENT '审核状态(F0013)',
@@ -543,9 +543,9 @@ CREATE TABLE m_order
     refund_status    VARCHAR(3)            COMMENT '退款状态(F0016)',
     bill_status      VARCHAR(3)            COMMENT '开票状态(F0018)',
     memo             VARCHAR(255)          COMMENT '备注(max250)',
-    PRIMARY KEY (id),
-    FOREIGN KEY user_id_foreign_key (user_id) references m_user (id)
+    PRIMARY KEY (id)
 ) COMMENT='会员订单信息' ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE INDEX m_order_idx1 ON m_order (user_id);
 
 -- 会员发票信息 --
 DROP TABLE IF EXISTS m_bill;
@@ -562,9 +562,9 @@ CREATE TABLE m_bill
     check_status     VARCHAR(3)              COMMENT '审核状态(F0013)',
     vote_method      VARCHAR(3)              COMMENT '取票方式(F0019)',
     memo             VARCHAR(255)            COMMENT '备注(max250)',
-    PRIMARY KEY (id),
-    FOREIGN KEY user_id_foreign_key (user_id) references m_user (id)
+    PRIMARY KEY (id)
 ) COMMENT='会员发票信息' ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE INDEX m_bill_idx1 ON m_bill (user_id);
 
 -- 注册认证验证码 --
 DROP TABLE IF EXISTS m_auth_code;
@@ -579,3 +579,15 @@ CREATE TABLE m_auth_code
 ) COMMENT='注册认证验证码' ENGINE=InnoDB DEFAULT CHARSET=utf8;
 CREATE INDEX m_auth_code_idx1 ON m_auth_code (recieved_by);
 CREATE INDEX m_auth_code_idx2 ON m_auth_code (invalid_date);
+
+-- 订单发票图片信息 --
+DROP TABLE IF EXISTS m_image;
+CREATE TABLE m_image
+( 
+    id               VARCHAR(50)    NOT NULL COMMENT '订单号(yyyyMMddHHmmssSSSR7)',
+    order_photo      MEDIUMBLOB              COMMENT '订单图片',
+    order_photo_ext  VARCHAR(10)             COMMENT '订单图片文件扩展名',
+    bill_photo       MEDIUMBLOB              COMMENT '发票图片',
+    bill_photo_ext   VARCHAR(10)             COMMENT '发票图片文件扩展名',
+    PRIMARY KEY (id)
+) COMMENT='订单发票图片信息' ENGINE=InnoDB DEFAULT CHARSET=utf8;

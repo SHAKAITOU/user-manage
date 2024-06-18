@@ -16,13 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 
+import cn.caam.gs.app.dbmainten.form.ColumnInfoForm;
+import cn.caam.gs.app.dbmainten.form.IndexInfoForm;
+import cn.caam.gs.app.dbmainten.form.TableInfoForm;
 import cn.caam.gs.common.util.DateUtility;
 import cn.caam.gs.common.util.FileUtil;
 import cn.caam.gs.domain.db.DBConfig;
 import cn.caam.gs.domain.db.custom.mapper.OptionalDbTableInfoMapper;
-import cn.caam.gs.manage.dbmaintenance.form.ColumnInfoForm;
-import cn.caam.gs.manage.dbmaintenance.form.IndexInfoForm;
-import cn.caam.gs.manage.dbmaintenance.form.TableInfoForm;
 import cn.caam.gs.service.BaseService;
 import lombok.AllArgsConstructor;
 

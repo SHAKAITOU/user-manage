@@ -128,7 +128,7 @@ public class ButtonSet {
         sb.append(" type='button' class='btn btn-"
                 +(isBorderOnly? "outline-" : "")
                 +(Objects.nonNull(classType) ? classType.getKey() : CssClassType.PRIMARY.getKey())
-                +" "+(Objects.nonNull(fontSize) ? fontSize.getKey() + " btn-block" : "label-14 btn-block")
+                +" "+(Objects.nonNull(fontSize) ? fontSize.getKey() : "label-14")
                 +" btn_com_tb btn-sm ");
         sb.append(" "+(Objects.nonNull(classDistinctName) ? classDistinctName : ""));
         sb.append("'");

@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
-import cn.caam.gs.app.bean.ViewData;
+import cn.caam.gs.common.bean.ViewData;
 
 @Component
 public class ControllerHelper {

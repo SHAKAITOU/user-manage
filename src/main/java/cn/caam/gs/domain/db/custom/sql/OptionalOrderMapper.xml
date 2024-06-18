@@ -1,0 +1,81 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.caam.gs.domain.db.custom.mapper.OptionalOrderMapper">
+	<!-- RESULT MAP -->
+    <resultMap id="OrderInfoForm" 
+                type="cn.caam.gs.domain.db.custom.entity.OrderInfo">
+        <id property="id" column="id"/>
+        <result property="payPathName"       column="payPathName"/>
+        <result property="orderMethodName"   column="orderMethodName"/>
+        <result property="orderTypeName"     column="orderTypeName"/>
+        <result property="payTypeName"       column="payTypeName"/>
+        <result property="checkStatusName"    column="checkStatusName"/>
+        
+        <result property="politicalName"      column="politicalName"/>
+        <result property="eduDegreeName"      column="eduDegreeName"/>
+        <result property="bachelorName"       column="bachelorName"/>
+        <result property="positionName"       column="positionName"/>
+        <result property="employerTypeName"   column="employerTypeName"/>
+        <result property="jobTitleName"       column="jobTitleName"/>
+        <result property="certificateTypeName"   column="certificateTypeName"/>
+        <result property="areaName"           column="areaName"/>
+        <result property="areaSubName"        column="areaSubName"/>
+        <result property="checkStatusName"    column="checkStatusName"/>
+        <association property="order" 
+            resultMap="cn.caam.gs.domain.db.base.mapper.MOrderMapper.BaseResultMap">
+            <id column="id" property="id" />
+        </association>
+        <association property="bill" 
+            resultMap="cn.caam.gs.domain.db.base.mapper.MBillMapper.BaseResultMap">
+            <id column="id" property="id" />
+        </association>
+        <association property="orderImg" resultMap="MImageForm">
+            <id column="id" property="id" />
+        </association>
+    </resultMap>
+    
+    <resultMap id="MImageForm" type="cn.caam.gs.domain.db.base.entity.MImage">
+   	    <id column="id" property="id" jdbcType="VARCHAR" />
+    	<result column="order_photo_ext" property="orderPhotoExt" jdbcType="VARCHAR" />
+    	<result column="bill_photo_ext" property="billPhotoExt" jdbcType="VARCHAR" />
+    	<result column="order_photo" property="orderPhoto" jdbcType="BLOB" />
+    	<result column="bill_photo" property="billPhoto" jdbcType="BLOB" />
+    </resultMap>
+    <sql id="baseSelect">
+	    mo.*,
+	    F0012.name   AS payPathName,
+	    F0020.name   AS orderMethodName,
+	    F0015.name   AS orderTypeName,
+	    F0014.name   AS payTypeName,
+	    F0013.name   AS checkStatusName,
+	    F0016.name   AS refundStatusName,
+	    F0018.name   AS billStatusName
+    </sql>
+    <sql id="baseJoin">
+		LEFT JOIN m_fixed_value F0012   ON mo.pay_path        = F0012.value   AND F0012.code   = 'F0012'
+		LEFT JOIN m_fixed_value F0020   ON mo.order_method    = F0020.value   AND F0020.code   = 'F0020'
+		LEFT JOIN m_fixed_value F0015   ON mo.order_type      = F0015.value   AND F0015.code   = 'F0015'
+		LEFT JOIN m_fixed_value F0014   ON mo.pay_type        = F0014.value   AND F0014.code   = 'F0014'
+		LEFT JOIN m_fixed_value F0013   ON mo.check_status    = F0013.value   AND F0013.code   = 'F0013'
+		LEFT JOIN m_fixed_value F0016   ON mo.refund_status   = F0016.value   AND F0016.code   = 'F0016'
+		LEFT JOIN m_fixed_value F0018   ON mo.bill_status     = F0018.value   AND F0018.code   = 'F0018'
+    </sql>
+    <!-- SQL CHIP -->
+	<select id="getOrderListCount" resultType="int">
+		SELECT COUNT(mo.id)
+		FROM
+		    m_order mo 
+		WHERE
+		    mo.user_id = #{userId, jdbcType=NVARCHAR}
+	</select>
+	<!-- SQL CHIP -->
+	<select id="getOrderList" resultMap="OrderInfoForm">
+        SELECT
+		    <include refid="baseSelect"/>
+		FROM
+		    m_order mo 
+			<include refid="baseJoin"/>
+			WHERE
+		    mo.user_id = #{userId, jdbcType=NVARCHAR}
+    </select>
+        
+</mapper>

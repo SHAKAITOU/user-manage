@@ -5,7 +5,7 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 
-import cn.caam.gs.GlobalConstants;
+import cn.caam.gs.app.GlobalConstants;
 import cn.caam.gs.common.enums.CssAlignType;
 import cn.caam.gs.common.enums.CssFontSizeType;
 import cn.caam.gs.common.html.HtmlBaseHelper;

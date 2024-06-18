@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.NoArgsConstructor;
-import cn.caam.gs.GlobalConstants;
+import cn.caam.gs.app.GlobalConstants;
 import cn.caam.gs.common.enums.CssClassType;
 
 @Builder

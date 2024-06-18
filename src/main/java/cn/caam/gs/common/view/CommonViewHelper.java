@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
-import cn.caam.gs.app.bean.ViewData;
 import cn.caam.gs.app.util.LoginInfoHelper;
+import cn.caam.gs.common.bean.ViewData;
 import cn.caam.gs.common.enums.CellWidthType;
 import cn.caam.gs.common.enums.CssAlignType;
 import cn.caam.gs.common.enums.CssClassType;
