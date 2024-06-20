@@ -64,6 +64,5 @@ public class CommonController extends ScreenBaseController{
 
         return ControllerHelper.getModelAndView(CommonViewHelper.getShowPhotoPage(request, userInfo));
     }
-
 }
 

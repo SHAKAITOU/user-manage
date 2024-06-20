@@ -32,6 +32,7 @@ try{
 			HTTP_STATUS_500_MSG : 'HTTP 500 INTERNAL SERVER ERROR!',
 			//check msg
 			NOT_BLANK_MSG 		: ' must not be blank.',
+			NUMBER_ONLY_MSG     : ' only can be number.',
 			NOT_DUPLICATE_MSG 	: ' is duplicated.',
 			MAX_LENGTH_MSG 		: ' should not longer than {0} char.',
 			MIN_LENGTH_MSG		: ' should not less than {0} char.',

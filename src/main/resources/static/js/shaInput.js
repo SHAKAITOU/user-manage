@@ -45,7 +45,8 @@
 // ShaInput.tab.hideAllTab (form, tabId)
 // ShaInput.tab.activeTab (form, tabId, activeId)
 // --ShaInput.img--
-// ShaInput.img.preview(form, fileInputId, imgId)
+// ShaInput.img.previewInline(form, fileInputId, imgId)
+// ShaInput.img.previewInDialog(form, fileInputId, callBackDlg)
 // --------------------------------
 // jQuery(function($){});  initialize when base page loading
 //*****************************************************************************
@@ -635,7 +636,7 @@ try{
 	}	
 	
 	$shaInput.img = {
-		preview : function(form, fileInputId, imgId){
+		previewInline : function(form, fileInputId, imgId){
 			var $files = form.find(ShaUtil.util.convertToJqueryId(fileInputId));
 			var $imgFile;
 			$files.each(function(){
@@ -650,6 +651,48 @@ try{
 		    
 		    reader.readAsDataURL($imgFile);
 		},
+		
+		previewInDialog : function(form, fileInputId, callBackDlg){
+			var $files = form.find(ShaUtil.util.convertToJqueryId(fileInputId));
+			var $imgFile;
+			$files.each(function(){
+				$imgFile = $(this).prop("files")[0];
+		    });
+
+		    var reader = new FileReader();
+		    
+		    reader.onload = function(e) {
+		    	callBackDlg(e.target.result);
+		    }
+		    
+		    reader.readAsDataURL($imgFile);
+		},
+		
+		previewImgCardHtml : function(width, height, dlgCloseScript, imgData) {
+			var html  = "<div class='card border-success mb-3 card-radius-all' style=' max-height:"+(height+20)+"px; min-height:"+(height+20)+"px;'>";
+  				html += "<div class='card-body div-scrollable '>";
+  				html += "	<div class='row'>";
+  				html += "		<div class='col-xl-12 col-xxl-12 col-lg-12 col-md-12 col-sm-12 d-flex justify-content-center'>";
+  				html += "			<img style='width:"+width+"px;height:"+height+"px;' src='" + imgData + "'>"
+  				html += "		</div>";
+  				html += "	</div>";
+  				html += "</div>";
+  				html += "</div>";
+  				html += "<div class='row'>";
+  				html += "	<div class='col-12 d-flex justify-content-center'>"
+  				html += "	</div>";
+  				html += "</div>";
+  				html += "<div class='row'>";
+  				html += "	<div class='col-12 col-12 text-right'>";
+  				html += "		<button style='margin-top:2px' type='button' class='btn btn-outline-dark label-14 btn_com'";
+  				html += " onclick='" + dlgCloseScript + "'";
+  				html += ">";
+				html += "		<span class='nomal10'><i class='fa fa-times-circle'></i></span>&nbsp;&nbsp;关闭</button>";
+  				html += "	</div>";
+  				html += "</div>";
+  				
+			return html;
+		}
 	}	
 })(ShaInput);
 

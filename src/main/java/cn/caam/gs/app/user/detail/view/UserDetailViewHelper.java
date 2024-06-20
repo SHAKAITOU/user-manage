@@ -677,7 +677,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
 
         
         context = getContext("common.page.showImg");
-        comp1 = button().getBorder(IconSetType.CHECK, CssClassType.INFO, CssGridsType.G2, idFileOpen, context);
+        comp1 = button().getBorder(IconSetType.EYE, CssClassType.INFO, CssGridsType.G2, idFileOpen, context);
         contextList.add(comp1);
     
         sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
@@ -724,7 +724,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
 
         
         context = getContext("common.page.showImg");
-        comp1 = button().getBorder(IconSetType.CHECK, CssClassType.INFO, CssGridsType.G2, idFileOpen, context);
+        comp1 = button().getBorder(IconSetType.EYE, CssClassType.INFO, CssGridsType.G2, idFileOpen, context);
         contextList.add(comp1);
     
         sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
@@ -777,7 +777,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
 
         
         context = getContext("common.page.showImg");
-        comp1 = button().getBorder(IconSetType.CHECK, CssClassType.INFO, CssGridsType.G2, idFileOpen, context);
+        comp1 = button().getBorder(IconSetType.EYE, CssClassType.INFO, CssGridsType.G2, idFileOpen, context);
         contextList.add(comp1);
     
         sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
@@ -829,7 +829,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
 
         
         context = getContext("common.page.showImg");
-        comp1 = button().getBorder(IconSetType.CHECK, CssClassType.INFO, CssGridsType.G2, idFileOpen, context);
+        comp1 = button().getBorder(IconSetType.EYE, CssClassType.INFO, CssGridsType.G2, idFileOpen, context);
         contextList.add(comp1);
     
         sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));

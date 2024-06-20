@@ -166,7 +166,7 @@ UserDetail.prototype.initEvent = function(){
         clearBtn : self.clearBtn
     });
     
-    //init event to BTN_NEXT
+    //init event to BTN_PHOTO_OPEN
 	ShaInput.button.onClick(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.BTN_PHOTO_OPEN), 
 		function(event) {
     		ShaAjax.pop.postDialogMiddleCenter(
@@ -176,8 +176,8 @@ UserDetail.prototype.initEvent = function(){
 	    }
 	);
 	
-	//init event to BTN_EDUCATIONAL_AT
-	ShaInput.button.onClick(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.BTN_EDUCATIONAL_AT), 
+	//init event to BTN_EDUCATIONAL_AT_OPEN
+	ShaInput.button.onClick(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.BTN_EDUCATIONAL_AT_OPEN), 
 		function(event) {
     		ShaAjax.pop.postDialogMiddleCenter(
     			self.i18n["m_user_extend.educational_at"],
@@ -186,8 +186,8 @@ UserDetail.prototype.initEvent = function(){
 	    }
 	);
 	
-	//init event to BTN_BACHELOR_AT
-	ShaInput.button.onClick(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.BTN_BACHELOR_AT), 
+	//init event to BTN_BACHELOR_AT_OPEN
+	ShaInput.button.onClick(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.BTN_BACHELOR_AT_OPEN), 
 		function(event) {
     		ShaAjax.pop.postDialogMiddleCenter(
     			self.i18n["m_user_extend.bachelor_at"],
@@ -196,8 +196,8 @@ UserDetail.prototype.initEvent = function(){
 	    }
 	);
 	
-	//init event to BTN_VOCATIONAL_AT
-	ShaInput.button.onClick(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.BTN_VOCATIONAL_AT), 
+	//init event to BTN_VOCATIONAL_AT_OPEN
+	ShaInput.button.onClick(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.BTN_VOCATIONAL_AT_OPEN), 
 		function(event) {
     		ShaAjax.pop.postDialogMiddleCenter(
     			self.i18n["m_user_extend.vocational_at"],

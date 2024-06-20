@@ -61,6 +61,35 @@ try{
 			return ngFlag;
 		},
 		
+		checkNotNumber : function(inputCheckItemList){
+			for( var i = 0; i < inputCheckItemList.length; i++ ){
+				var inputCheckItem = inputCheckItemList[i][1];
+				var id = inputCheckItem.attr('id');
+				var errorId = id + "_error";
+				$("#"+errorId).remove();
+			}
+			
+			var ngFlag = false;
+			for( var i = 0; i < inputCheckItemList.length; i++ ){
+				var errorItemName = inputCheckItemList[i][0];
+				var inputCheckItem = inputCheckItemList[i][1];
+				var id = inputCheckItem.attr('id');
+				var errorId = id + "_error";
+				if(ShaCheck.check._checkNotNumber(inputCheckItem)){
+					var errorMsg = errorItemName + ShaConstants.constants.NUMBER_ONLY_MSG;
+					inputCheckItem.after('<div id="'+ errorId +'" class="invalid-feedback">' + errorMsg + '</div>'); 
+					inputCheckItem.addClass('alert-input');
+					inputCheckItem.addClass('is-invalid');
+					ngFlag = true;
+				}else{
+					inputCheckItem.removeClass('alert-input');
+					inputCheckItem.removeClass('is-invalid');
+				}
+			}
+			
+			return ngFlag;
+		},
+		
 		checkDuplicate : function(inputCheckItemList, itemNameList){
 			var numMap = [];
 			for( var i = 0; i < inputCheckItemList.length; i++ ){
@@ -273,8 +302,20 @@ try{
 			return false;
 		},
 		
-		
-		
+		_checkNotNumber : function(inputCheckItem, minLength){
+			var type = inputCheckItem.attr('type');
+			if(type == 'text' || type == 'password' || type == 'number'||
+					inputCheckItem.is('textarea')) {
+				var reg = new RegExp("^[0-9]*$");
+	            if (!inputCheckItem.val().match(reg)) {
+	                return true;
+				} else {
+					return false;
+				}
+			}
+			
+			return false;
+		}, 
 	}
 	
 })(ShaCheck);

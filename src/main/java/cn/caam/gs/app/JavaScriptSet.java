@@ -100,6 +100,7 @@ public class JavaScriptSet {
 		common.put("urlBasePath", environment.getProperty("server.servlet.context-path"));
 		// check
 		common.put("checkBlankMsg", getContext("common.check.msg.blank"));
+		common.put("checkNumberOnlyMsg", getContext("common.check.msg.numberOnly"));
 		common.put("checkMaxLengthMsg", getContext("common.check.msg.maxLength"));
 		common.put("checkMinLengthMsg", getContext("common.check.msg.minLength"));
 		common.put("checkMinNumberMsg", getContext("common.check.msg.minNumber"));

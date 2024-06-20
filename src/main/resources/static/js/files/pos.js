@@ -116,6 +116,7 @@ try{
 
 			//check msg init
 			ShaConstants.constants.NOT_BLANK_MSG 	= Pos.constants.setInfo.common.checkBlankMsg;
+			ShaConstants.constants.NUMBER_ONLY_MSG 	= Pos.constants.setInfo.common.checkNumberOnlyMsg;
 			ShaConstants.constants.MAX_LENGTH_MSG 	= Pos.constants.setInfo.common.checkMaxLengthMsg;
 			ShaConstants.constants.MIN_LENGTH_MSG 	= Pos.constants.setInfo.common.checkMinLengthMsg;
 			
