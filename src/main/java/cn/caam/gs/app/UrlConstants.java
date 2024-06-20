@@ -1,4 +1,4 @@
-package cn.caam.gs.app.user;
+package cn.caam.gs.app;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +78,7 @@ public class UrlConstants {
 	//ADMIN
 	public static final String ADMIN 			= "/admin";
 
-	public static final String COMPANY 			= "/company";
+	public static final String USER_LIST        = "/userList";
 	
 	/* ===================USER ROLE URL========================= */
 	//USER

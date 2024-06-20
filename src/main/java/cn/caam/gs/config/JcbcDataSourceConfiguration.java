@@ -1,4 +1,4 @@
-package cn.caam.gs.domain.db;
+package cn.caam.gs.config;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

@@ -9,11 +9,9 @@ import java.util.Optional;
 
 import org.springframework.util.StringUtils;
 
+import cn.caam.gs.common.exception.ShaException;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import cn.caam.gs.common.enums.TaxRateType;
-import cn.caam.gs.common.enums.TaxType;
-import cn.caam.gs.common.exception.ShaException;
 
 /**
  * Common component <br>
@@ -281,6 +279,9 @@ public class StringUtility {
     
     public static int byteLength(String str) {
     	int cnt = 0;
+    	if (str == null) {
+    	    return cnt;
+    	}
     	try{
             for (int i = 0; i < str.length(); i++) {
               String tmpStr = str.substring(i, i + 1);
@@ -371,21 +372,7 @@ public class StringUtility {
 	    }
         return str;
     }
-    
-    public static BigDecimal calculateTax(BigDecimal price, TaxType taxType, TaxRateType rateType) {
-    	if (taxType == TaxType.TAX_EXCLUDED) {
-    		BigDecimal priceIn = (price.multiply(new BigDecimal(rateType.getId()+100))).divide(new BigDecimal(100), 0, RoundingMode.HALF_UP);
-    		BigDecimal tax = priceIn.subtract(price).setScale(0, RoundingMode.HALF_UP);
-    		return tax;
-    	} else if (taxType == TaxType.TAX_INCLUDED) {
-    		BigDecimal priceEx = (price.multiply(new BigDecimal(100))).divide(new BigDecimal(rateType.getId()+100), 0, RoundingMode.HALF_UP);
-    		BigDecimal tax = price.subtract(priceEx).setScale(0, RoundingMode.HALF_UP);
-    		return tax;
-    	}
-    	
-    	return BigDecimal.ZERO;
-    }
-    
+
     /**
      * The java number class type enum.
      *

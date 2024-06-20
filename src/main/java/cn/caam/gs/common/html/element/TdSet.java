@@ -13,6 +13,7 @@ import cn.caam.gs.common.util.StringUtility;
 import cn.caam.gs.common.util.UtilConstants;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.NoArgsConstructor;
 
 @Builder
@@ -21,9 +22,11 @@ import lombok.NoArgsConstructor;
 public class TdSet {
     
     private int grids;
+    @Default
     private int height = 30;
+    @Default
     private int width = 0;
-    private String context;
+    private String[] contexts;
     private CssFontSizeType fontSize;
     private CssAlignType align;
     private String tooltipContext;
@@ -50,6 +53,15 @@ public class TdSet {
     
     private String getIndex() {
         StringBuffer sb = new StringBuffer();
+        String contextFull = "";
+        int idx = 0;
+        for (String context : contexts) {
+            if (idx > 0) {
+                contextFull += "<br/>";
+            }
+            contextFull += context;
+            idx++;
+        }
         sb.append("<td scope='col' ");
         if (height > 0) {
             sb.append(" height='"+height+"' ");
@@ -64,12 +76,21 @@ public class TdSet {
         } else {
             sb.append(" col-xs-"+grids+"'"); 
         }
-        sb.append(">"+setMiddleForCell(context, CssAlignType.CENTER)+"</td>");
+        sb.append(">"+setMiddleForCell(contextFull, CssAlignType.CENTER)+"</td>");
         return sb.toString();
     }
     
     private String get() {
         StringBuffer sb = new StringBuffer();
+        String contextFull = "";
+        int idx = 0;
+        for (String context : contexts) {
+            if (idx > 0) {
+                contextFull += "<br/>";
+            }
+            contextFull += context;
+            idx++;
+        }
         sb.append("<td class='");
         sb.append((Objects.nonNull(fontSize) ? align.getKey(): CssFontSizeType.LABEL_12.getKey()));
         sb.append(" text-" + (Objects.nonNull(align) ? align.getKey(): CssAlignType.LEFT.getKey()));
@@ -84,17 +105,26 @@ public class TdSet {
             sb.append(" height='"+GlobalConstants.TABLE_TD_HEIGHT+"' ");
         }
         sb.append(">");
-        String contextFull = StringUtils.isNotBlank(context) ? context : UtilConstants.HTML_SPACE;
+        String contextFullRs = StringUtils.isNotBlank(contextFull) ? contextFull : UtilConstants.HTML_SPACE;
         if(Objects.nonNull(footContext)) {
-            contextFull = contextFull + footContext;
+            contextFullRs = contextFullRs + footContext;
         }    
-        sb.append(setMiddleForCell(contextFull));
+        sb.append(setMiddleForCell(contextFullRs));
         sb.append("</td>");
         return sb.toString();
     }
     
     private String getWithTooltip() {
         StringBuffer sb = new StringBuffer();
+        String contextFull = "";
+        int idx = 0;
+        for (String context : contexts) {
+            if (idx > 0) {
+                contextFull += "<br/>";
+            }
+            contextFull += context;
+            idx++;
+        }
         sb.append("<td class=' ");
         sb.append((Objects.nonNull(fontSize) ? align.getKey(): GlobalConstants.TABLE_BODY_FONT_SIZE.getKey()));
         sb.append(" text-" + (Objects.nonNull(align) ? align.getKey(): CssAlignType.LEFT.getKey()));
@@ -110,19 +140,37 @@ public class TdSet {
             sb.append(" height='"+GlobalConstants.TABLE_TD_HEIGHT+"' ");
         }
         sb.append(">");
-        String contextFull = StringUtils.isNotBlank(context) ? context : UtilConstants.HTML_SPACE;
+        String contextFullRs = StringUtils.isNotBlank(contextFull) ? contextFull : UtilConstants.HTML_SPACE;
         if(Objects.nonNull(footContext)) {
-            contextFull = contextFull + footContext;
+            contextFullRs = contextFullRs + footContext;
         }
-        sb.append(setMiddleForCell(contextFull));
+        sb.append(setMiddleForCell(contextFullRs));
         sb.append("</td>");
         return sb.toString();
     }
 
     private String getWithTrim(boolean customizeTooltip) {
         StringBuffer sb = new StringBuffer();
-        int byteLength = StringUtility.byteLength(context);
         int maxLength = width > 0 ? HtmlBaseHelper.getMaxLengthByWidth(width) : HtmlBaseHelper.getMaxLengthByGrids(grids);
+        String contextFull = "";
+        String contextFullTrim = "";
+        int idx = 0;
+        boolean hasTrim = false;
+        for (String context : contexts) {
+            int byteLength = StringUtility.byteLength(context);
+            if (byteLength > maxLength) {
+                hasTrim = true;
+            }
+            String contextTrim = width > 0 ? HtmlBaseHelper.trimFitForTdByWidth(width, context, true) :
+                HtmlBaseHelper.trimFitForTd(grids, context, false);
+            if (idx > 0) {
+                contextFull += "<br/>";
+                contextFullTrim += "<br/>"; 
+            }
+            contextFull += context;
+            contextFullTrim += contextTrim;
+            idx++;
+        }
         sb.append("<td class=' ");
         sb.append((Objects.nonNull(fontSize) ? align.getKey(): GlobalConstants.TABLE_BODY_FONT_SIZE.getKey()));
         sb.append(" text-" + (Objects.nonNull(align) ? align.getKey(): CssAlignType.LEFT.getKey()));
@@ -131,8 +179,8 @@ public class TdSet {
         } else {
             sb.append(" col-xs-"+grids+"'");
         }
-        if(customizeTooltip || byteLength > maxLength) {
-            sb.append(" title='"+HtmlBaseHelper.filterSpecialCharacters(customizeTooltip ? tooltipContext : context)+"'");
+        if(customizeTooltip || hasTrim) {
+            sb.append(" title='"+HtmlBaseHelper.filterSpecialCharacters(customizeTooltip ? tooltipContext : contextFull)+"'");
         }
         if (height > 0) {
             sb.append(" height='"+height+"'");
@@ -140,20 +188,36 @@ public class TdSet {
             sb.append(" height='"+GlobalConstants.TABLE_TD_HEIGHT+"' ");
         }
         sb.append(">");
-        String contextFull = width > 0 ? HtmlBaseHelper.trimFitForTdByWidth(width, context, true) :
-                HtmlBaseHelper.trimFitForTd(grids, context, false);
+
         if(Objects.nonNull(footContext)) {
-            contextFull = contextFull + footContext;
+            contextFullTrim = contextFullTrim + footContext;
         }
-        sb.append(setMiddleForCell(contextFull));
+        sb.append(setMiddleForCell(contextFullTrim));
         sb.append("</td>");
         return sb.toString();
     }
     
     private String getSubWithTrim(boolean customizeTooltip) {
         StringBuffer sb = new StringBuffer();
-        int byteLength = StringUtility.byteLength(context);
         int maxLength = HtmlBaseHelper.getMaxLengthBySubGrids(grids);
+        String contextFull = "";
+        String contextFullTrim = "";
+        int idx = 0;
+        boolean hasTrim = false;
+        for (String context : contexts) {
+            int byteLength = StringUtility.byteLength(context);
+            if (byteLength > maxLength) {
+                hasTrim = true;
+            }
+            String contextTrim = HtmlBaseHelper.trimFitForSubTd(grids, context, false);
+            if (idx > 0) {
+                contextFull += "<br/>";
+                contextFullTrim += "<br/>"; 
+            }
+            contextFull += context;
+            contextFullTrim += contextTrim;
+            idx++;
+        }
         sb.append("<td class=' ");
         sb.append((Objects.nonNull(fontSize) ? align.getKey(): GlobalConstants.TABLE_BODY_FONT_SIZE.getKey()));
         sb.append(" text-" + (Objects.nonNull(align) ? align.getKey(): CssAlignType.LEFT.getKey()));
@@ -162,8 +226,8 @@ public class TdSet {
         } else {
             sb.append(" col-xs-"+grids+"'");
         }
-        if(customizeTooltip || byteLength > maxLength) {
-            sb.append(" title='"+HtmlBaseHelper.filterSpecialCharacters(customizeTooltip ? tooltipContext : context)+"'");
+        if(customizeTooltip || hasTrim) {
+            sb.append(" title='"+HtmlBaseHelper.filterSpecialCharacters(customizeTooltip ? tooltipContext : contextFull)+"'");
         }
         if (height > 0) {
             sb.append(" height='"+height+"'");
@@ -171,11 +235,10 @@ public class TdSet {
             sb.append(" height='"+GlobalConstants.TABLE_TD_HEIGHT+"' ");
         }
         sb.append(">");
-        String contextFull = HtmlBaseHelper.trimFitForSubTd(grids, context, false);
         if(Objects.nonNull(footContext)) {
-            contextFull = contextFull + footContext;
+            contextFullTrim = contextFullTrim + footContext;
         }
-        sb.append(setMiddleForCell(contextFull));
+        sb.append(setMiddleForCell(contextFullTrim));
         sb.append("</td>");
         return sb.toString();
     }

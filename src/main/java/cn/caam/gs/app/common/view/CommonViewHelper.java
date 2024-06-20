@@ -1,4 +1,4 @@
-package cn.caam.gs.common.view;
+package cn.caam.gs.app.common.view;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +26,9 @@ import cn.caam.gs.domain.db.base.entity.MUserExtend;
 public class CommonViewHelper extends HtmlViewBaseHelper {
 
     // base url
-    public static final String URL_BASE = "/common";  
+    public static final String URL_BASE = "/common";
+    // init url
+    public static final String URL_WINDOW_RESIZE = "/winResize";
     // init url
     public static final String URL_SHOW_PHOTO = "/showPhoto";
     
@@ -60,7 +62,6 @@ public class CommonViewHelper extends HtmlViewBaseHelper {
         StringBuffer sb = new StringBuffer();
         
         sb.append(getShowPhotoCard(request, userInfo));
-        sb.append(DivHrSet.builder().build().html());
         sb.append(buildFooter());
 
         return getForm(FORM_NAME, sb.toString());
@@ -100,6 +101,7 @@ public class CommonViewHelper extends HtmlViewBaseHelper {
         String comp3 = button().getBorder(IconSetType.CLOSE, CssClassType.DARK, id, context);
 
         aligs.add(CssAlignType.RIGHT);
+        sb.append(DivHrSet.builder().build().html());
         sb.append(divRow().get(CellWidthType.TWO_7_5, aligs, concactWithSpace(comp1, comp2), comp3));
         
         return sb.toString();
@@ -120,6 +122,7 @@ public class CommonViewHelper extends HtmlViewBaseHelper {
     public static Map<String, String> getJsProperties() {
         Map<String, String> js = new HashMap<String, String>();
         // url
+        js.put("url_com_win_resize",      URL_BASE + URL_WINDOW_RESIZE);
         js.put("url_com_show_photo",      URL_BASE + URL_SHOW_PHOTO);
         return js;
     }

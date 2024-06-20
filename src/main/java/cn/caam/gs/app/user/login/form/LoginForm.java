@@ -10,6 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginForm {
+    
+    private int mediaHeight;
+    
+    private int mediaWidth;
 	
 	private String userCode;
 	

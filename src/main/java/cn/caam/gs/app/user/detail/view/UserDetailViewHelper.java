@@ -13,8 +13,8 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
 import cn.caam.gs.app.GlobalConstants;
+import cn.caam.gs.app.UrlConstants;
 import cn.caam.gs.app.dbmainten.form.ColumnInfoForm;
-import cn.caam.gs.app.user.UrlConstants;
 import cn.caam.gs.app.util.SessionConstants;
 import cn.caam.gs.common.bean.ViewData;
 import cn.caam.gs.common.enums.CellWidthType;

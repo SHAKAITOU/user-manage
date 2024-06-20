@@ -49,6 +49,7 @@ Menu.prototype.initEvent = function(){
 	//keep self instance for call back
 	var self = this;
 
+	self.ajustWinSize();
 	self.ajustNavi();
 	
     //会员信息
@@ -73,7 +74,7 @@ Menu.prototype.initEvent = function(){
 	    ShaInput.button.onClick($(elem),
 	    	function(event) {
 				ShaAjax.ajax.get(
-	                self.jsContext.jsView.order.url_init, 
+	                self.jsContext.jsView.orderSearch.url_init, 
 	                null, 
 	                function(data){
 	                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
@@ -110,6 +111,21 @@ Menu.prototype.ajustNavi = function(){
 		self.getObject(self.ID.NAVI_FOR_PC).show();
 		self.getObject(self.ID.NAVI_FOR_PHONE).hide();
 	}
+    
+};
+
+Menu.prototype.ajustWinSize = function(){
+    
+    //keep self instance for call back
+    var self = this;
+      
+    $('#mediaHeight').val(window.innerHeight ? window.innerHeight: $(window).height());
+	$('#mediaWidth').val(window.innerWidth ? window.innerWidth: $(window).width());
+	ShaAjax.ajax.post(
+		Pos.constants.setInfo.jsView.common.url_com_win_resize, 
+		self.mainForm.serializeArray(), 
+		function(){}
+	);
     
 };
 //----------------------------------------------------------------------------]

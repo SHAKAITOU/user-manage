@@ -1,10 +1,10 @@
 //-------------------------------------------------------------------------------------------
-//-----------------AdminUserManageList.html view js controll class define ----------------------------
+//-----------------AdminUserSearch.html view js controll class define ----------------------------
 //------------------------------------------------------------------------------------------[
 
 //------------constructor define------------[
-AdminUserManageList = function(dataMap){
-    this.form = $('#user_list_form');
+AdminUserSearch = function(dataMap){
+    this.form = $('#userSearchForm');
     this.jsContext = Pos.constants.setInfo;
     this.i18n = JSON.parse(this.jsContext.i18n);
     this.dataMap = dataMap;
@@ -12,19 +12,24 @@ AdminUserManageList = function(dataMap){
     this.clearBtn = true;
     this.language = 'zh';
 };
-ShaUtil.other.inherits(AdminUserManageList, BaseJsController);
+ShaUtil.other.inherits(AdminUserSearch, BaseJsController);
 //------------------------------------------]
 
 //------------properties define-------------[
-AdminUserManageList.prototype.ID = {
+AdminUserSearch.prototype.ID = {
     
-    REGIST_DATE_FROM_INPT    : "user_list_form_regist_date_from",
-    REGIST_DATE_TO_INPT      : "user_list_form_regist_date_to",
-    VALID_END_DATE_FROM_INPT : "user_list_form_valid_end_date_from",
-    VALID_END_DATE_TO_INPT   : "user_list_form_valid_end_date_to",
+    REGIST_DATE_FROM_INPT    : "registDateFrom",
+    REGIST_DATE_TO_INPT      : "registDateTo",
+    VALID_END_DATE_FROM_INPT : "validEndDateFrom",
+    VALID_END_DATE_TO_INPT   : "validEndDateTo",
     SEARCH_BTN_ID            : "searchBtn",
     SHOW_SEARCH_PANEL_BTN_ID : "showSearchPanelBtn",
     HIDE_SEARCH_PANEL_BTN_ID : "hideSearchPanelBtn",
+    
+    USER_LIST_CHECK_ALL_ID   : "user_check_all",
+    USER_CHECK_PREF_ID       : ".user_check_",
+    TABLE_BTN_RESETPW        : ".restPw",
+    TABLE_BTN_DETAIL         : ".detail",
     
     //div
     DIV_REFRESH_BODY         : "userListRefreshBody",
@@ -37,7 +42,7 @@ AdminUserManageList.prototype.ID = {
 
 //---------------method define--------------[
 //init 
-AdminUserManageList.prototype.init = function(){
+AdminUserSearch.prototype.init = function(){
     //keep self instance for call back
     var self = this;
     
@@ -52,7 +57,7 @@ AdminUserManageList.prototype.init = function(){
 };
 
 // init event
-AdminUserManageList.prototype.initEvent = function(){
+AdminUserSearch.prototype.initEvent = function(){
     
     //keep self instance for call back
     var self = this;
@@ -96,6 +101,41 @@ AdminUserManageList.prototype.initEvent = function(){
 		}
     );
     
+    ShaInput.button.onChange(self.getObject(self.ID.USER_LIST_CHECK_ALL_ID),
+    	function(event) {
+			$checkBoxList = self.getObject(self.ID.USER_LIST_TABLE_ID).find(self.ID.USER_CHECK_PREF_ID);
+			if (self.getObject(self.ID.USER_LIST_CHECK_ALL_ID).is(":checked")) {
+				$checkBoxList.each(function(i, elem){
+					$(elem).prop('checked', true);
+					$(elem).change();
+				});
+			} else {
+				$checkBoxList.each(function(i, elem){
+					$(elem).prop('checked', false);
+					$(elem).change();
+				});
+			}
+		}
+    );
+    $checkBoxList = self.getObject(self.ID.USER_LIST_TABLE_ID).find(self.ID.USER_CHECK_PREF_ID);
+    $checkBoxList.each(function(i, elem){
+		//init
+		self.setTableBtnStatus(i, false);
+		//check box init
+    	ShaInput.button.onChange($(elem),
+	    	function(event) {
+				if ($(elem).is(":checked")) {
+					self.setTableBtnStatus(i, true);
+				} else {
+					self.setTableBtnStatus(i, false);
+				}
+			}
+	    );
+    	
+    });
+    
+    ShaInput.table.addClickActiveToTr(self.getForm(), self.ID.USER_LIST_TABLE_ID);
+    
     ShaInput.button.onClick(self.getObject(self.ID.SEARCH_BTN_ID),
     	function(event) {
 			ShaAjax.ajax.post(
@@ -110,4 +150,16 @@ AdminUserManageList.prototype.initEvent = function(){
     );
     
 };
+
+AdminUserSearch.prototype.setTableBtnStatus = function(rowIdx, enabled){
+    //keep self instance for call back
+    var self = this;
+    if (enabled) {
+		ShaInput.obj.enabled($(self.getObject(self.ID.USER_LIST_TABLE_ID).find(self.ID.TABLE_BTN_RESETPW)[rowIdx]));
+		ShaInput.obj.enabled($(self.getObject(self.ID.USER_LIST_TABLE_ID).find(self.ID.TABLE_BTN_DETAIL)[rowIdx]));
+	} else {
+		ShaInput.obj.disabled($(self.getObject(self.ID.USER_LIST_TABLE_ID).find(self.ID.TABLE_BTN_RESETPW)[rowIdx]));
+		ShaInput.obj.disabled($(self.getObject(self.ID.USER_LIST_TABLE_ID).find(self.ID.TABLE_BTN_DETAIL)[rowIdx]));
+	}
+};	
 //----------------------------------------------------------------------------]

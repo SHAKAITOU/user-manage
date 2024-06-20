@@ -9,7 +9,7 @@ import java.util.Objects;
 import org.springframework.stereotype.Component;
 
 import cn.caam.gs.app.GlobalConstants;
-import cn.caam.gs.app.user.UrlConstants;
+import cn.caam.gs.app.UrlConstants;
 import cn.caam.gs.app.user.regist.form.RegistForm;
 import cn.caam.gs.common.bean.ViewData;
 import cn.caam.gs.common.enums.CellWidthType;

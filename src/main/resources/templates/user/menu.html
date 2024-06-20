@@ -11,7 +11,9 @@
 	</div> 
 	<div id="main">
 		<form id="main_form">
-		<div id="mainBody" style="padding-top: 60px;"></div>
+			<input type="hidden" th:field="${loginForm.mediaHeight}">
+    		<input type="hidden" th:field="${loginForm.mediaWidth}">
+			<div id="mainBody" style="padding-top: 60px;"></div>
 		</form> 
 	</div>
 	</div>

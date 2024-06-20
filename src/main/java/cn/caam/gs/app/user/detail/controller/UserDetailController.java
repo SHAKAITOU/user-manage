@@ -37,7 +37,7 @@ import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.google.code.kaptcha.util.Config;
 
 import cn.caam.gs.app.JavaScriptSet;
-import cn.caam.gs.app.user.UrlConstants;
+import cn.caam.gs.app.UrlConstants;
 import cn.caam.gs.app.user.detail.view.UserDetailViewHelper;
 import cn.caam.gs.app.user.login.form.IndexForm;
 import cn.caam.gs.app.user.login.form.LoginForm;

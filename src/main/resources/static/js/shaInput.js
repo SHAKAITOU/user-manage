@@ -481,7 +481,7 @@ try{
 			$table = form.find(ShaUtil.util.convertToJqueryId(tableId));
 			$table.find('tbody > tr').each(function(i, elem) {
 	        	$(elem).on('click', function(event) {
-	                event.preventDefault();
+	                //event.preventDefault();
 	                clickEventFunc($(this), i);
 	            });
 	        });
@@ -491,7 +491,7 @@ try{
 			$table = form.find(ShaUtil.util.convertToJqueryId(tableId));
 			$table.find('tbody > tr').each(function(i, elem) {
 	        	$(elem).on('click', function(event) {
-	                event.preventDefault();
+	                //event.preventDefault();
 	                if($(this).hasClass('table-selectAct')){
 	                	return;
 	                }

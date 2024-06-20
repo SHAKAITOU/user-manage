@@ -156,22 +156,22 @@ public class TableDetailViewHelper extends HtmlViewBaseHelper {
 			tr.addTd(td().index(TABLE_TD_HEIGHT, grids[index++], context));
 			// --col2--
 			context = cols.getName();
-			tr.addTd(td().get  (TABLE_TD_HEIGHT, grids[index++], context, CssAlignType.LEFT));
+			tr.addTd(td().get  (TABLE_TD_HEIGHT, grids[index++], CssAlignType.LEFT, context));
 			// --col3--
 			context = cols.getLabelName();
-			tr.addTd(td().subWithTrim(TABLE_TD_HEIGHT, grids[index++], context, CssAlignType.LEFT));
+			tr.addTd(td().subWithTrim(TABLE_TD_HEIGHT, grids[index++], CssAlignType.LEFT, context));
 			// --col4--
 			context = cols.getPkFlg() ? "YES" : "";
-			tr.addTd(td().get  (TABLE_TD_HEIGHT, grids[index++], context, CssAlignType.CENTER));
+			tr.addTd(td().get  (TABLE_TD_HEIGHT, grids[index++], CssAlignType.CENTER, context));
 			// --col5--
 			context = DbTableUtil.getTypeSql(cols);
-			tr.addTd(td().get  (TABLE_TD_HEIGHT, grids[index++], context, CssAlignType.LEFT));
+			tr.addTd(td().get  (TABLE_TD_HEIGHT, grids[index++], CssAlignType.LEFT, context));
 			// --col6--
 			context = cols.getNullable() ? "YES" : "";
-			tr.addTd(td().get  (TABLE_TD_HEIGHT, grids[index++], context, CssAlignType.CENTER));
+			tr.addTd(td().get  (TABLE_TD_HEIGHT, grids[index++], CssAlignType.CENTER, context));
 			// --col7--
 			context = cols.getDefaultValue();
-			tr.addTd(td().get  (TABLE_TD_HEIGHT, grids[index++], context, CssAlignType.LEFT));
+			tr.addTd(td().get  (TABLE_TD_HEIGHT, grids[index++], CssAlignType.LEFT, context));
 			
 			bodyList.add(tr);
 		}
@@ -208,10 +208,10 @@ public class TableDetailViewHelper extends HtmlViewBaseHelper {
 			tr.addTd(td().index(TABLE_TD_HEIGHT, grids[index++], context));
 			// --col2--
 			context = indexInfo.getIndexName();
-			tr.addTd(td().get(TABLE_TD_HEIGHT,   grids[index++], context, CssAlignType.LEFT));
+			tr.addTd(td().get(TABLE_TD_HEIGHT,   grids[index++], CssAlignType.LEFT, context));
 			// --col3--
 			context = String.join(",", indexInfo.getColumnNames());
-			tr.addTd(td().get(TABLE_TD_HEIGHT,   grids[index++], context, CssAlignType.LEFT));
+			tr.addTd(td().get(TABLE_TD_HEIGHT,   grids[index++], CssAlignType.LEFT, context));
 			
 			bodyList.add(tr);
 		}

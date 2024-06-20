@@ -149,6 +149,10 @@ public class HtmlViewHelper extends HtmlViewBaseHelper {
 		return sb.toString();
 	}
 	
+	public static boolean isPhoneMode(HttpServletRequest request) {
+	    int outWidth = LoginInfoHelper.getMediaWidth(request);
+	    return outWidth > 800 ? false : true;
+	}
     
 	public static int calcMaxCardWidth(HttpServletRequest request) {
 	    int outWidth = LoginInfoHelper.getMediaWidth(request);

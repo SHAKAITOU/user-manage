@@ -18,7 +18,8 @@ public class T201MBill extends BaseTableDef implements BaseDdl{
     public static final String COL_BILL_TITLE      = "bill_title";
     public static final String COL_CREDIT_CODE     = "credit_code";
     public static final String COL_BILL_DATE       = "bill_date";
-    public static final String COL_BILL_STATUS     = "bill_status";
+    public static final String COL_CHECK_STATUS    = "check_status";
+    public static final String COL_VOTE_METHOD     = "vote_method";
     public static final String COL_MEMO            = "memo";
     
     public static final ColumnInfoForm[] cols = new ColumnInfoForm[] {
@@ -30,7 +31,8 @@ public class T201MBill extends BaseTableDef implements BaseDdl{
         new ColumnInfoForm(COL_BILL_TITLE,   false,    MySqlType.CHARACTER_VARYING.getType(), 20, null, null, false, "", getLabelName(TABLE_NAME, COL_BILL_TITLE),  getPlaceholder(TABLE_NAME, COL_BILL_TITLE)),
         new ColumnInfoForm(COL_CREDIT_CODE,  false,    MySqlType.CHARACTER_VARYING.getType(), 20, null, null, true , "", getLabelName(TABLE_NAME, COL_CREDIT_CODE), getPlaceholder(TABLE_NAME, COL_CREDIT_CODE)),
         new ColumnInfoForm(COL_BILL_DATE,    false,    MySqlType.CHARACTER_VARYING.getType(), 20, null, null, true , "", getLabelName(TABLE_NAME, COL_BILL_DATE),   getPlaceholder(TABLE_NAME, COL_BILL_DATE)),
-        new ColumnInfoForm(COL_BILL_STATUS,  false,    MySqlType.CHARACTER_VARYING.getType(), 20, null, null, true , "", getLabelName(TABLE_NAME, COL_BILL_STATUS), getPlaceholder(TABLE_NAME, COL_BILL_STATUS)),
+        new ColumnInfoForm(COL_CHECK_STATUS, false,    MySqlType.CHARACTER_VARYING.getType(), 3, null, null, true , "",  getLabelName(TABLE_NAME, COL_CHECK_STATUS),getPlaceholder(TABLE_NAME, COL_CHECK_STATUS)),
+        new ColumnInfoForm(COL_VOTE_METHOD,  false,    MySqlType.CHARACTER_VARYING.getType(), 3, null, null, true , "",  getLabelName(TABLE_NAME, COL_VOTE_METHOD), getPlaceholder(TABLE_NAME, COL_VOTE_METHOD)),
         new ColumnInfoForm(COL_MEMO,         false,    MySqlType.CHARACTER_VARYING.getType(),255, null, null, true , "", getLabelName(TABLE_NAME, COL_MEMO),        getPlaceholder(TABLE_NAME, COL_MEMO)),
     };
     public ColumnInfoForm[] columnInfos() {
@@ -72,7 +74,7 @@ public class T201MBill extends BaseTableDef implements BaseDdl{
         return TABLE_GROUP;
     }
     
-    public ColumnInfoForm getColumnInfo(String columnName) {
+    public static ColumnInfoForm getColumnInfo(String columnName) {
         for (ColumnInfoForm form : cols) {
             if (form.getName().equals(columnName)) {
                 return form;

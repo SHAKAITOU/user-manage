@@ -51,7 +51,9 @@ public class LabelTextAreaSet {
         }
         sb.append("style='background-color:" + GlobalConstants.INPUT_BG_COLOER + "' ");
         sb.append(">");
-		sb.append(value);
+        if (Objects.nonNull(value)) {
+            sb.append(value);
+        }
 		sb.append("</textarea>");
 		return sb.toString();
 	}

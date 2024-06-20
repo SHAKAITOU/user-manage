@@ -102,12 +102,34 @@ public class HtmlButtonHelper {
                 .build().html();
     }
     
+    public String forTableNameRight(IconSetType icon, CssClassType classType, String id, String buttonName, String keyValue, String classDistinctName) {
+        return ButtonSet.builder().outPutType(ButtonSetType.TABLE)
+                .isBorderOnly(false)
+                .classType(classType).id(id).keyValue(keyValue)
+                .buttonName(IconSet.builder().type(icon).css(IconSetCss.NOMAL_8).build().html()
+                        + UtilConstants.HTML_SPACE + buttonName)
+                .classDistinctName(classDistinctName)
+                .build().html();
+    }
+    
+    public String forTableNameLeft(IconSetType icon, CssClassType classType, 
+            String id, String buttonName, String keyValue, String classDistinctName) {
+        return ButtonSet.builder().outPutType(ButtonSetType.TABLE)
+                .isBorderOnly(false)
+                .classType(classType).id(id).keyValue(keyValue)
+                .buttonName(buttonName
+                        + UtilConstants.HTML_SPACE + 
+                        IconSet.builder().type(icon).css(IconSetCss.NOMAL_8).build().html())
+                .classDistinctName(classDistinctName)
+                .build().html();
+    }
+    
     public String forTableBorderNameRight(IconSetType icon, CssClassType classType, String id, String buttonName, String keyValue, String classDistinctName) {
         return ButtonSet.builder().outPutType(ButtonSetType.TABLE)
                 .isBorderOnly(true)
                 .classType(classType).id(id).keyValue(keyValue)
                 .buttonName(IconSet.builder().type(icon).css(IconSetCss.NOMAL_8).build().html()
-                        + UtilConstants.HTML_SPACE + UtilConstants.HTML_SPACE + buttonName)
+                        + UtilConstants.HTML_SPACE + buttonName)
                 .classDistinctName(classDistinctName)
                 .build().html();
     }
@@ -118,7 +140,7 @@ public class HtmlButtonHelper {
                 .isBorderOnly(true)
                 .classType(classType).id(id).keyValue(keyValue)
                 .buttonName(buttonName
-                        + UtilConstants.HTML_SPACE + UtilConstants.HTML_SPACE + 
+                        + UtilConstants.HTML_SPACE + 
                         IconSet.builder().type(icon).css(IconSetCss.NOMAL_8).build().html())
                 .classDistinctName(classDistinctName)
                 .build().html();

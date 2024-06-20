@@ -7,9 +7,8 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
+import cn.caam.gs.app.UrlConstants;
 import cn.caam.gs.app.dbmainten.form.DbMaintenanceForm;
-import cn.caam.gs.app.user.UrlConstants;
-import cn.caam.gs.common.enums.AvailabilityType;
 import cn.caam.gs.common.enums.CellWidthType;
 import cn.caam.gs.common.enums.CssAlignType;
 import cn.caam.gs.common.enums.CssClassType;
@@ -143,26 +142,22 @@ public class DbMaintenanceViewHelper extends HtmlViewBaseHelper {
 			tr.addTd(td().index(TABLE_TD_HEIGHT, grids[index++], context));
 			// --col2--
 			context = dbTableType.getSeq();
-			tr.addTd(td().get(TABLE_TD_HEIGHT, grids[index++], context, CssAlignType.CENTER));
+			tr.addTd(td().get(TABLE_TD_HEIGHT, grids[index++], CssAlignType.CENTER, context));
 			// --col2--
 			context = dbTableType.getGroup();
-			tr.addTd(td().get(TABLE_TD_HEIGHT, grids[index++], context, CssAlignType.CENTER));
+			tr.addTd(td().get(TABLE_TD_HEIGHT, grids[index++], CssAlignType.CENTER, context));
 			// --col3--
 			context = dbTableType.getName();
-			tr.addTd(td().get(TABLE_TD_HEIGHT, grids[index++], context, CssAlignType.LEFT));
+			tr.addTd(td().get(TABLE_TD_HEIGHT, grids[index++], CssAlignType.LEFT, context));
 			// --col4--
 			context = dbTableType.getComment();
-			tr.addTd(td().get(TABLE_TD_HEIGHT, grids[index++], context, CssAlignType.LEFT));
+			tr.addTd(td().get(TABLE_TD_HEIGHT, grids[index++], CssAlignType.LEFT, context));
 			// --col5--
 			context = button().forTable(IconSetType.DETAIL, CssClassType.INFO, "", dbTableType.getName(), "detail");
-			tr.addTd(td().get(TABLE_TD_HEIGHT, grids[index++], context, CssAlignType.CENTER));
+			tr.addTd(td().get(TABLE_TD_HEIGHT, grids[index++], CssAlignType.CENTER, context));
 			// --col6--
-			if(dbMaintenanceForm.getSabunFlgs().get(i)) {
-				context = button().forTable(IconSetType.BULLHORN, CssClassType.SUCCESS, "", dbTableType.getName(), "sabun");
-			}else {
-				context = enumSpan().pill(AvailabilityType.ABSENCE.getId(), AvailabilityType.values());
-			}
-			tr.addTd(td().get(TABLE_TD_HEIGHT, grids[index++], context, CssAlignType.CENTER));
+			context = button().forTable(IconSetType.BULLHORN, CssClassType.SUCCESS, "", dbTableType.getName(), "sabun");
+			tr.addTd(td().get(TABLE_TD_HEIGHT, grids[index++], CssAlignType.CENTER, context));
 			bodyList.add(tr);
 		}
 

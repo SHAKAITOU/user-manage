@@ -59,7 +59,7 @@ public class T000MAdmin extends BaseTableDef implements BaseDdl{
         return TABLE_GROUP;
     }
     
-    public ColumnInfoForm getColumnInfo(String columnName) {
+    public static ColumnInfoForm getColumnInfo(String columnName) {
         for (ColumnInfoForm form : cols) {
             if (form.getName().equals(columnName)) {
                 return form;

@@ -13,7 +13,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import cn.caam.gs.app.GlobalConstants;
-import cn.caam.gs.app.admin.UrlConstants;
+import cn.caam.gs.app.UrlConstants;
+import cn.caam.gs.app.dbmainten.form.ColumnInfoForm;
 import cn.caam.gs.app.util.HtmlViewHelper;
 import cn.caam.gs.app.util.LoginInfoHelper;
 import cn.caam.gs.app.util.SessionConstants;
@@ -57,10 +58,12 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
 	public static final String URL_C_INIT = UrlConstants.INIT;
 	//init url
     public static final String URL_C_SEARCH = UrlConstants.SEARCH;
+    
+    public static final String PREFIX_NAME                   = "user.";
 	
-    public static final String MAIN_JS_CLASS                = "AdminUserManageList";
-    public static final String USER_LIST_FORM_NAME          = "user_list_form";
-    public static final String USER_LIST_CHECK_ALL_ID       = "user_list_check_all";
+    public static final String MAIN_JS_CLASS                = "AdminUserSearch";
+    public static final String USER_LIST_FORM_NAME          = "userSearchForm";
+    public static final String USER_LIST_CHECK_ALL_ID       = "user_check_all";
     public static final String USER_CHECK_PREF_ID           = "user_check_";
     public static final String USER_LIST_TABLE_ID           = "userListTable";
     public static final String USER_LIST_REFRESH_BODY_ID    = "userListRefreshBody";
@@ -70,7 +73,12 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
     public static final String HIDE_SEARCH_PANEL_BTN_ID     = "hideSearchPanelBtn";
     public static final String TABLE_HEIGHT_WHEN_HIDE_SEARCH     = "tableHeightWhenHideSearch";
     public static final String TABLE_HEIGHT_WHEN_SHOW_SEARCH     = "tableHeightWhenShowSearch";
+    
+    public static final String TABLE_BTN_RESETPW    = "restPw";
+    public static final String TABLE_BTN_DETAIL     = "detail";
+    
 	
+    public static final CssFontSizeType font = GlobalConstants.INPUT_FONT_SIZE;
 	   /**
      * main画面用
      * @param request
@@ -139,52 +147,60 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         Map<FixedValueType, List<FixValueInfo>> fixedValueMap = 
                 (Map<FixedValueType, List<FixValueInfo>>)request.getSession().getAttribute(SessionConstants.FIXED_VALUE.getValue());
         StringBuffer sbBody = new StringBuffer();
-        String prefix_name = USER_LIST_FORM_NAME + ".";
-        String prefix_label = T100MUser.TABLE_NAME + ".";
-        CssFontSizeType font = GlobalConstants.INPUT_FONT_SIZE;
+        
         List<HtmlRadio> radios = new ArrayList<>();
-        String selectedValue = "00";
+
         
         //-----row 1-------------[
         List<String> contextList = new ArrayList<String>();
 
         
         //name入力値
-        String property  = "name";
-        String name      = prefix_name + property;
-        String labelName = getContext(prefix_label + property);
+        ColumnInfoForm clmForm = T100MUser.getColumnInfo(T100MUser.COL_NAME);
+        String name      = clmForm.getPageName(PREFIX_NAME);
+        String id        = convertNameDotForId(name);
+        String labelName = clmForm.getLabelName();
+        String placeholder = clmForm.getPlaceholder();
         contextList.add(LabelInputSet.builder()
-                .id(convertNameDotForId(name)).name(name).labelName(labelName)
+                .id(id).name(name).labelName(labelName)
+                .maxlength(GlobalConstants.USER_NAME_MAX_L).placeholder(placeholder)
                 .fontSize(font).grids(CssGridsType.G3).build().html());
         
         //phone選択
-        property  = "phone";
-        name      = prefix_name + property;
-        labelName = getContext(prefix_label + property);
+        clmForm = T100MUser.getColumnInfo(T100MUser.COL_PHONE);
+        name      = clmForm.getPageName(PREFIX_NAME);
+        id        = convertNameDotForId(name);
+        labelName = clmForm.getLabelName();
+        placeholder = clmForm.getPlaceholder();
         contextList.add(LabelInputSet.builder()
-                .id(convertNameDotForId(name)).name(name).labelName(labelName)
+                .id(id).name(name).labelName(labelName)
+                .maxlength(GlobalConstants.PHONE_MAX_L).placeholder(placeholder)
                 .fontSize(font).grids(CssGridsType.G3).build().html());
         
         //employer入力値
-        property  = "employer";
-        name      = prefix_name + property;
-        labelName = getContext(prefix_label + property);
+        clmForm = T100MUser.getColumnInfo(T100MUser.COL_EMPLOYER);
+        name      = clmForm.getPageName(PREFIX_NAME);
+        id        = convertNameDotForId(name);
+        labelName = clmForm.getLabelName();
+        placeholder = clmForm.getPlaceholder();
         contextList.add(LabelInputSet.builder()
-                .id(convertNameDotForId(name)).name(name).labelName(labelName)
+                .id(id).name(name).labelName(labelName)
+                .maxlength(GlobalConstants.EMPLOYER_MAX_L).placeholder(placeholder)
                 .fontSize(font).grids(CssGridsType.G3).build().html());
         
         
         //有效状态入力値
-        property  = "validStatus";
-        name      = property;
+        name      = "validStatus";
+        id        = convertNameDotForId(name);
         labelName = getContext("admin.userList.validStatus");
         radios = new ArrayList<>();
+        radios.add(new HtmlRadio(GlobalConstants.DFL_SELECT_ALL, getContext("AvailabilityType.ALL")));
         for (UserExpiredType userExpiredType : UserExpiredType.values()) {
             radios.add(new HtmlRadio(userExpiredType.getKey(), getContext(userExpiredType.getMsg())));
         }
         contextList.add(LabelSelectSet.builder()
-                .id(convertNameDotForId(name)).name(name).labelName(labelName)
-                .radios(radios).selectedValue(selectedValue)
+                .id(id).name(name).labelName(labelName)
+                .radios(radios).selectedValue(GlobalConstants.DFL_SELECT_ALL)
                 .fontSize(font).grids(CssGridsType.G3).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
         
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
@@ -196,35 +212,37 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         contextList = new ArrayList<String>();
 
         //regist_date選択
-        property  = "regist_date";
-        String propertyFrom  = property + "_from";
-        String nameFrom      = prefix_name + propertyFrom;
-        labelName = getContext(prefix_label + property) + getContext("common.page.start");
+        clmForm = T100MUser.getColumnInfo(T100MUser.COL_REGIST_DATE);
+        name      = clmForm.getPageName("") + "From";
+        id        = convertNameDotForId(name);
+        labelName = clmForm.getLabelName() + getContext("common.page.start");
+        placeholder = T100MUser.getColumnInfo(T100MUser.COL_VALID_END_DATE).getPlaceholder();
         contextList.add(LabelDateInputSet.builder()
-                .id(convertNameDotForId(nameFrom)).name(nameFrom).labelName(labelName)
+                .id(id).name(name).labelName(labelName).placeholder(placeholder)
                 .fontSize(font).grids(CssGridsType.G3).outPutType(LabelDateInputSetType.WITH_LABEL_FOOT).build().html());
         
-        String propertyTo    = property + "_to";
-        String nameTo        = prefix_name + propertyTo;
-        labelName = getContext(prefix_label + property) + getContext("common.page.end");
+        name      = clmForm.getPageName("") + "To";
+        id        = convertNameDotForId(name);
+        labelName = clmForm.getLabelName() + getContext("common.page.end");
         contextList.add(LabelDateInputSet.builder()
-                .id(convertNameDotForId(nameTo)).name(nameTo).labelName(labelName)
+                .id(id).name(name).labelName(labelName).placeholder(placeholder)
                 .fontSize(font).grids(CssGridsType.G3).outPutType(LabelDateInputSetType.WITH_LABEL_FOOT).build().html());
         
         //valid_end_date選択
-        property  = "valid_end_date";
-        propertyFrom  = property + "_from";
-        nameFrom      = prefix_name + propertyFrom;
-        labelName = getContext(prefix_label + property) + getContext("common.page.start");
+        clmForm = T100MUser.getColumnInfo(T100MUser.COL_VALID_END_DATE);
+        name      = clmForm.getPageName("") + "From";
+        id        = convertNameDotForId(name);
+        labelName = clmForm.getLabelName() + getContext("common.page.start");
+        placeholder = clmForm.getPlaceholder();
         contextList.add(LabelDateInputSet.builder()
-                .id(convertNameDotForId(nameFrom)).name(nameFrom).labelName(labelName)
+                .id(id).name(name).labelName(labelName).placeholder(placeholder)
                 .fontSize(font).grids(CssGridsType.G3).outPutType(LabelDateInputSetType.WITH_LABEL_FOOT).build().html());
         
-        propertyTo    = property + "_to";
-        nameTo        = prefix_name + propertyTo;
-        labelName = getContext(prefix_label + property) + getContext("common.page.end");
+        name      = clmForm.getPageName("") + "To";
+        id        = convertNameDotForId(name);
+        labelName = clmForm.getLabelName() + getContext("common.page.end");
         contextList.add(LabelDateInputSet.builder()
-                .id(convertNameDotForId(nameTo)).name(nameTo).labelName(labelName)
+                .id(id).name(name).labelName(labelName).placeholder(placeholder)
                 .fontSize(font).grids(CssGridsType.G3).outPutType(LabelDateInputSetType.WITH_LABEL_FOOT).build().html());
 
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
@@ -234,21 +252,24 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         contextList = new ArrayList<String>();
         
         //id選択
-        property  = "id";
-        name      = prefix_name + property;
-        labelName = getContext(prefix_label + property);
+        clmForm = T100MUser.getColumnInfo(T100MUser.COL_ID);
+        name      = clmForm.getPageName(PREFIX_NAME);
+        id        = convertNameDotForId(name);
+        labelName = clmForm.getLabelName();
+        placeholder = clmForm.getPlaceholder();
         contextList.add(LabelInputSet.builder()
                 .id(convertNameDotForId(name)).name(name).labelName(labelName)
-                .fontSize(font).grids(CssGridsType.G2).build().html());
+                .maxlength(GlobalConstants.USER_ID_MAX_L).placeholder(placeholder)
+                .fontSize(font).grids(CssGridsType.G3).build().html());
         
         //user_type選択
-        property  = "user_type";
-        name      = prefix_name + property;
-        labelName = getContext(prefix_label + property);
+        clmForm = T100MUser.getColumnInfo(T100MUser.COL_USER_TYPE);
+        name      = clmForm.getPageName(PREFIX_NAME);
+        id        = convertNameDotForId(name);
+        labelName = clmForm.getLabelName();
         List<FixValueInfo> userTypeList = fixedValueMap.get(FixedValueType.USER_TYPE);
-        selectedValue = "00";
         radios = new ArrayList<>();
-        radios.add(new HtmlRadio(selectedValue, getContext("AvailabilityType.ALL")));
+        radios.add(new HtmlRadio(GlobalConstants.DFL_SELECT_ALL, getContext("AvailabilityType.ALL")));
         for (FixValueInfo fValueInfo : userTypeList) {
             if (fValueInfo.getValueObj().getValue().equals(UserType.PERSON.getKey())) {
                 for (MFixedValue fValue : fValueInfo.getSubList()) {
@@ -258,45 +279,46 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
             }
         }
         contextList.add(LabelSelectSet.builder()
-                .id(convertNameDotForId(name)).name(name).labelName(labelName)
-                .radios(radios).selectedValue(selectedValue)
+                .id(id).name(name).labelName(labelName)
+                .radios(radios).selectedValue(GlobalConstants.DFL_SELECT_ALL)
                 .fontSize(font).grids(CssGridsType.G3).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
  
         //edu_degree選択
-        property  = "edu_degree";
-        name      = prefix_name + property;
-        labelName = getContext(prefix_label + property);
+        clmForm = T100MUser.getColumnInfo(T100MUser.COL_EDU_DEGREE);
+        name      = clmForm.getPageName(PREFIX_NAME);
+        id        = convertNameDotForId(name);
+        labelName = clmForm.getLabelName();
         List<FixValueInfo> edu_degreeList = fixedValueMap.get(FixedValueType.EDU_DEGREE);
-        selectedValue = "00";
         radios = new ArrayList<>();
-        radios.add(new HtmlRadio(selectedValue, getContext("AvailabilityType.ALL")));
+        radios.add(new HtmlRadio(GlobalConstants.DFL_SELECT_ALL, getContext("AvailabilityType.ALL")));
         for (FixValueInfo fValueInfo : edu_degreeList) {
             radios.add(new HtmlRadio(fValueInfo.getValueObj().getValue(), fValueInfo.getValueObj().getName()));
         }
         contextList.add(LabelSelectSet.builder()
-                .id(convertNameDotForId(name)).name(name).labelName(labelName)
-                .radios(radios).selectedValue(selectedValue)
-                .fontSize(font).grids(CssGridsType.G3).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
+                .id(id).name(name).labelName(labelName)
+                .radios(radios).selectedValue(GlobalConstants.DFL_SELECT_ALL)
+                .fontSize(font).grids(CssGridsType.G2).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
 
         //political選択
-        property  = "political";
-        name      = prefix_name + property;
-        labelName = getContext(prefix_label + property);
+        clmForm = T100MUser.getColumnInfo(T100MUser.COL_POLITICAL);
+        name      = clmForm.getPageName(PREFIX_NAME);
+        id        = convertNameDotForId(name);
+        labelName = clmForm.getLabelName();
         List<FixValueInfo> politicalList = fixedValueMap.get(FixedValueType.POLITICAL);
         
-        radios.add(new HtmlRadio(selectedValue, getContext("AvailabilityType.ALL")));
+        radios.add(new HtmlRadio(GlobalConstants.DFL_SELECT_ALL, getContext("AvailabilityType.ALL")));
         for (FixValueInfo fValueInfo : politicalList) {
             radios.add(new HtmlRadio(fValueInfo.getValueObj().getValue(), fValueInfo.getValueObj().getName()));
         }
         contextList.add(LabelSelectSet.builder()
                 .id(convertNameDotForId(name)).name(name).labelName(labelName)
-                .radios(radios).selectedValue(selectedValue)
+                .radios(radios).selectedValue(GlobalConstants.DFL_SELECT_ALL)
                 .fontSize(font).grids(CssGridsType.G3).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
         
         //search btn
         labelName = getContext("common.page.search");
         contextList.add(ButtonSet.builder()
-                .id(SEARCH_BTN_ID).buttonName(labelName)
+                .id(SEARCH_BTN_ID).buttonName(labelName).isBorderOnly(true)
                 .grids(CssGridsType.G1).outPutType(ButtonSetType.GRID_STYLE).gridFlexType(GridFlexType.RIGHT)
                 .iconSet(IconSet.builder().type(IconSetType.SEARCH).css(IconSetCss.NOMAL_10).build())
                 .build().html());
@@ -340,7 +362,8 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         TrSet headTr = tr().head(CssClassType.INFO);
         // --[
         // --col1--
-        String context = CheckBoxSet.builder().id(USER_LIST_CHECK_ALL_ID)
+        String context = CheckBoxSet.builder()
+                .id(USER_LIST_CHECK_ALL_ID).name(USER_LIST_CHECK_ALL_ID)
                 .outPutType(CheckBoxSetType.SINGLE_FOR_TABLE).build().html();
         headTr.addTh(th().get(widths[index++], context, CssAlignType.CENTER));
         // --col2--
@@ -385,43 +408,44 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
                 properties.put("rowDataKey", String.valueOf(userInfo.getId()));
                 TrSet tr = tr().row(properties);
                 // --col1--
-                context = CheckBoxSet.builder().id(USER_CHECK_PREF_ID + i)
+                context = CheckBoxSet.builder()
+                        .id(USER_CHECK_PREF_ID + i).name(USER_CHECK_PREF_ID)
                         .outPutType(CheckBoxSetType.SINGLE_FOR_TABLE).build().html();
-                tr.addTd(td().get(widths[index++], context, CssAlignType.CENTER));
+                tr.addTd(td().get(widths[index++], CssAlignType.CENTER, context));
                 // --col2--
                 context = nonNull(userInfo.getId());
-                tr.addTd(td().withTrimWidth(widths[index++], context, CssAlignType.CENTER));
+                tr.addTd(td().withTrimWidth(widths[index++], CssAlignType.CENTER, context));
                 // --col3--
                 context = nonNull(userInfo.getUser().getName());
-                tr.addTd(td().withTrimWidth(widths[index++], context, CssAlignType.CENTER));
+                tr.addTd(td().withTrimWidth(widths[index++], CssAlignType.CENTER, context));
                 // --col4--
                 context = nonNull(userInfo.getUserTypeName());
-                tr.addTd(td().withTrimWidth(widths[index++], context, CssAlignType.CENTER));
+                tr.addTd(td().withTrimWidth(widths[index++], CssAlignType.CENTER, context));
                 // --col5--
                 context = nonNull(userInfo.getUser().getPhone());
-                tr.addTd(td().withTrimWidth(widths[index++], context, CssAlignType.CENTER));
+                tr.addTd(td().withTrimWidth(widths[index++], CssAlignType.CENTER, context));
                 // --col6--
                 context = nonNull(userInfo.getUser().getMail());
-                tr.addTd(td().withTrimWidth(widths[index++], context, CssAlignType.LEFT));
+                tr.addTd(td().withTrimWidth(widths[index++], CssAlignType.LEFT, context));
                 // --col7--
                 context = nonNull(userInfo.getUser().getEmployer());
-                tr.addTd(td().withTrimWidth(widths[index++], context, CssAlignType.LEFT));
+                tr.addTd(td().withTrimWidth(widths[index++], CssAlignType.LEFT, context));
                 // --col8--
                 context = nonNull(userInfo.getUser().getRegistDate());
-                tr.addTd(td().withTrimWidth(widths[index++], context, CssAlignType.CENTER));
+                tr.addTd(td().withTrimWidth(widths[index++], CssAlignType.CENTER, context));
                 // --col9--
                 context = nonNull(userInfo.getUser().getValidEndDate());
-                tr.addTd(td().withTrimWidth(widths[index++], context, CssAlignType.CENTER));
+                tr.addTd(td().withTrimWidth(widths[index++], CssAlignType.CENTER, context));
                 // --col10--
                 context = nonNull(getValidStatus(userInfo.getUser().getValidEndDate()));
-                tr.addTd(td().get(widths[index++], context, CssAlignType.CENTER));
+                tr.addTd(td().get(widths[index++], CssAlignType.CENTER, context));
                 // --col11--
-                context = button().forTableBorderNameRight(IconSetType.REFRESH, CssClassType.INFO, 
-                        "", getContext("admin.userList.btn.resetPw"), userInfo.getId(), "restPw");
+                context = button().forTableBorderNameLeft(IconSetType.REFRESH, CssClassType.SUCCESS, 
+                        "", getContext("admin.userList.btn.resetPw"), userInfo.getId(), TABLE_BTN_RESETPW);
                 context += "&nbsp;&nbsp;";
-                context += button().forTableBorderNameRight(IconSetType.DETAIL, CssClassType.INFO, 
-                        "", getContext("admin.userList.btn.detail"), userInfo.getId(), "detail");
-                tr.addTd(td().get(widths[index++], context, CssAlignType.CENTER));
+                context += button().forTableBorderNameLeft(IconSetType.DETAIL, CssClassType.INFO, 
+                        "", getContext("admin.userList.btn.detail"), userInfo.getId(), TABLE_BTN_DETAIL);
+                tr.addTd(td().get(widths[index++], CssAlignType.CENTER, context));
                 
                 bodyList.add(tr);
             }

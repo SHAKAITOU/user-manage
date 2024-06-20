@@ -12,14 +12,15 @@ import org.springframework.core.env.Environment;
 import cn.caam.gs.app.admin.login.view.AdminLoginViewHelper;
 import cn.caam.gs.app.admin.menu.menu.AdminMenuViewHelper;
 import cn.caam.gs.app.admin.usersearch.view.AdminUserSearchViewHelper;
+import cn.caam.gs.app.common.view.CommonViewHelper;
 import cn.caam.gs.app.user.detail.view.UserDetailViewHelper;
 import cn.caam.gs.app.user.login.view.LoginViewHelper;
 import cn.caam.gs.app.user.menu.view.MenuViewHelper;
 import cn.caam.gs.app.user.order.view.OrderSearchViewHelper;
+import cn.caam.gs.app.user.order.view.OrderViewHelper;
 import cn.caam.gs.common.enums.ExecuteReturnType;
 import cn.caam.gs.common.util.JsonUtility;
 import cn.caam.gs.common.util.MessageSourceUtil;
-import cn.caam.gs.common.view.CommonViewHelper;
 import lombok.Data;
 
 public class JavaScriptSet {
@@ -137,7 +138,8 @@ public class JavaScriptSet {
 		jsView.put("login",                LoginViewHelper.getJsProperties());
 		jsView.put("userDetail",           UserDetailViewHelper.getJsProperties());
 		jsView.put("common",               CommonViewHelper.getJsProperties());
-		jsView.put("order",                OrderSearchViewHelper.getJsProperties());
+		jsView.put("orderSearch",          OrderSearchViewHelper.getJsProperties());
+		jsView.put("order",                OrderViewHelper.getJsProperties());
 		
 		return jsView;
 	}

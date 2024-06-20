@@ -48,6 +48,10 @@
 		    font-weight: bold;
 		    font-size: 14px;
 		}
+		.btn_com_tb:hover {
+			color:#e83a1c;
+		    text-decoration: underline;
+		}
 		</style>
     </th:block>
     <th:block th:if="${mainKind == 'app'}">
@@ -79,6 +83,10 @@
 		    color: #FFFFFF;
 		    font-weight: bold;
 		    font-size: 14px;
+		}
+		.btn_com_tb:hover {
+			color:rgb(255, 255, 255);
+		    text-decoration: underline;
 		}
 		</style>
     </th:block>
@@ -136,15 +144,15 @@
 
 <div th:remove="tag" th:if="${mainKind == 'app'}">
 <!-- 一般画面 -->
-	<script th:src="@{/js/app/loginBlock.js}"></script>
-	<script th:src="@{/js/app/menu.js}"></script>
-	<script th:src="@{/js/app/user/registStep1.js}"></script>
-	<script th:src="@{/js/app/user/registStep1Confirm.js}"></script>
-	<script th:src="@{/js/app/user/registStep2.js}"></script>
-	<script th:src="@{/js/app/user/userDetail.js}"></script>
 	<script th:src="@{/js/common/showPhoto.js}"></script>
-	
-	<script th:src="@{/js/app/order/orderList.js}"></script>
+	<script th:src="@{/js/user/login/loginBlock.js}"></script>
+	<script th:src="@{/js/user/menu/menu.js}"></script>
+	<script th:src="@{/js/user/regist/registStep1.js}"></script>
+	<script th:src="@{/js/user/regist/registStep1Confirm.js}"></script>
+	<script th:src="@{/js/user/regist/registStep2.js}"></script>
+	<script th:src="@{/js/user/detail/userDetail.js}"></script>
+	<script th:src="@{/js/user/order/orderList.js}"></script>
+	<script th:src="@{/js/user/order/order.js}"></script>
 	
 </div>
 
@@ -153,9 +161,9 @@
 	<script th:src="@{/js/mainten/dbMaintenance.js}"></script>
 	<script th:src="@{/js/mainten/detailTable.js}"></script>
 
-	<script th:src="@{/js/manage/adminLoginBlock.js}"></script>
-	<script th:src="@{/js/manage/adminMenu.js}"></script>
-	<script th:src="@{/js/manage/adminUserManageList.js}"></script>
+	<script th:src="@{/js/admin/login/adminLoginBlock.js}"></script>
+	<script th:src="@{/js/admin/menu/adminMenu.js}"></script>
+	<script th:src="@{/js/admin/usersearch/adminUserSearch.js}"></script>
 	
 </div>
 

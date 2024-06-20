@@ -5,18 +5,18 @@
 
     <!-- component scan -->
 	
-    <context:component-scan base-package="cn.caam.gs.**" />
+    <context:component-scan base-package="cn.caam.gs.domain.db.**" />
 
     <!-- database info -->
-    <bean id="dataSource" class="com.mysql.cj.jdbc.Driver">
-        <property name="driverClassName" value="com.sap.db.jdbc.Driver" />
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
         <property name="url" value="jdbc:mysql://localhost/shatest" />
         <property name="username" value="root" />
         <property name="password" value="admin" />
     </bean>
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource" />
-        <property name="mapperLocations" value="classpath*:cn/caam/gs/domain/db/*/sql/*.xml" />
+        <property name="mapperLocations" value="classpath*:cn/caam/gs/domain/db/**/sql/*.xml" />
     </bean>
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"></property>

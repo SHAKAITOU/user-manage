@@ -31,7 +31,7 @@ spring:
       username: root
       password: admin
     cloud-MySQL:
-      driver-class-name: com.mysql.jdbc.Driver
+      driver-class-name: com.mysql.cj.jdbc.Driver
       jdbc-url: jdbc:mysql://localhost/shatest
       username: root
       password: admin

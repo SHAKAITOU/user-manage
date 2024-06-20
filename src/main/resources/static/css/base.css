@@ -427,9 +427,7 @@ html {
 	border-bottom-left-radius: 3px;
 	border-bottom-right-radius: 3px;
 }
-.btn_com_tb:hover {
-    text-decoration: underline;
-}
+
 
 .btn_com_tb:active {
     box-shadow: none;
@@ -1105,8 +1103,7 @@ html {
 .table-selectAct,
 .table-selectAct > th,
 .table-selectAct > td {
-  color: #fff;
-  background-color: #9d5b8b;
+  background-color: #FFEEFF;
 }
 
 .google-maps iframe {

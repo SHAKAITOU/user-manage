@@ -2,6 +2,8 @@ package cn.caam.gs.common.html.element.bs5;
 
 import java.util.Objects;
 
+import org.apache.commons.lang3.StringUtils;
+
 import cn.caam.gs.app.GlobalConstants;
 import cn.caam.gs.common.enums.CssFontSizeType;
 import cn.caam.gs.common.enums.CssGridsType;
@@ -24,6 +26,7 @@ public class LabelInputSet {
     private String value;
     private String buttonName;
     private String buttonId;
+    private String footHtml;
     @Default
     private boolean notBlank = false;
     @Default
@@ -65,6 +68,15 @@ public class LabelInputSet {
         }
         sb.append("style='background-color:" + GlobalConstants.INPUT_BG_COLOER + "' ");
         sb.append(">");
+        if(StringUtils.isNotEmpty(footHtml)) {
+            sb.append("<div class='input-group-append'>");
+            sb.append("<span class=' input-group-text text-center "
+                    + (Objects.nonNull(fontSize) ? fontSize.getKey() : "label-14" )
+                    + "'>");
+            sb.append(footHtml);
+            sb.append("</span>");
+            sb.append("</div>");
+        }
         if (Objects.nonNull(buttonId)) {
             sb.append("<button class='btn btn-primary " 
                     + (Objects.nonNull(fontSize) ? fontSize.getKey() : "label-14" ) + "' type='button' id='button-addon'>");

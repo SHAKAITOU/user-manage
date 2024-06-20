@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import cn.caam.gs.app.admin.usersearch.form.UserSearchForm;
 import cn.caam.gs.app.admin.usersearch.view.AdminUserSearchViewHelper;
 import cn.caam.gs.app.util.ControllerHelper;
 import cn.caam.gs.common.controller.JcbcBaseController;
@@ -45,6 +46,7 @@ public class AdminUserSearchController extends JcbcBaseController{
 	
 	@PostMapping(path=AdminUserSearchViewHelper.URL_C_SEARCH)
     public ModelAndView search(
+            UserSearchForm pageForm,
             HttpServletRequest request,
             HttpServletResponse response) {
 	    

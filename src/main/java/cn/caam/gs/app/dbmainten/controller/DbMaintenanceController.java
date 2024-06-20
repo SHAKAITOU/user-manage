@@ -40,7 +40,7 @@ import cn.caam.gs.common.enums.ExecuteReturnType;
 import cn.caam.gs.common.exception.ShaApiException;
 import cn.caam.gs.common.util.DateUtility;
 import cn.caam.gs.common.util.MessageSourceUtil;
-import cn.caam.gs.domain.db.DBConfig;
+import cn.caam.gs.config.DBConfig;
 import cn.caam.gs.domain.tabledef.DbTableType;
 import cn.caam.gs.domain.tabledef.DbTableUtil;
 import cn.caam.gs.domain.tabledef.InitialDbDataService;

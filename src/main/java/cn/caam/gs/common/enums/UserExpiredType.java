@@ -2,10 +2,10 @@ package cn.caam.gs.common.enums;
 
 public enum UserExpiredType implements EnumImpl {
 
-	VALID		 (1, 		"valid", 	    true,		"UserExpiredType.VALID",        CssClassType.SUCCESS),
-	EXPIRED_SOON (2,        "expiredSoon",  true,       "UserExpiredType.EXPIRED_SOON", CssClassType.INFO),
-	EXPIRED		 (3, 		"expired", 	    true,		"UserExpiredType.EXPIRED",      CssClassType.WARNING),
-	VARY_EXPIRED (4,        "varyExpired",  true,       "UserExpiredType.VARY_EXPIRED", CssClassType.DANGER),
+	VALID		 (EnumIndex.startIndex(1), 	"01",  true,	"UserExpiredType.VALID",        CssClassType.SUCCESS),
+	EXPIRED_SOON (EnumIndex.getNext(),      "02",  true,    "UserExpiredType.EXPIRED_SOON", CssClassType.INFO),
+	EXPIRED		 (EnumIndex.getNext(), 		"03",  true,	"UserExpiredType.EXPIRED",      CssClassType.WARNING),
+	VARY_EXPIRED (EnumIndex.getNext(),      "04",  true,    "UserExpiredType.VARY_EXPIRED", CssClassType.DANGER),
 	;
     
 

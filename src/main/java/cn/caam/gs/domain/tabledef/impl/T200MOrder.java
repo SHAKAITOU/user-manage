@@ -24,6 +24,7 @@ public class T200MOrder extends BaseTableDef implements BaseDdl{
     public static final String COL_CHECK_STATUS    = "check_status";
     public static final String COL_REFUND_DATE     = "refund_date";
     public static final String COL_REFUND_STATUS   = "refund_status";
+    public static final String COL_BILL_STATUS     = "bill_status";
     public static final String COL_MEMO            = "memo";
     
     public static final ColumnInfoForm[] cols = new ColumnInfoForm[] {
@@ -39,8 +40,9 @@ public class T200MOrder extends BaseTableDef implements BaseDdl{
             new ColumnInfoForm(COL_PAY_DATE,     false,    MySqlType.CHARACTER_VARYING.getType(), 20, null, null, false, "", getLabelName(TABLE_NAME, COL_PAY_DATE),        getPlaceholder(TABLE_NAME, COL_PAY_DATE)),
             new ColumnInfoForm(COL_CHECK_DATE,   false,    MySqlType.CHARACTER_VARYING.getType(), 20, null, null, true , "", getLabelName(TABLE_NAME, COL_CHECK_DATE),      getPlaceholder(TABLE_NAME, COL_CHECK_DATE)),
             new ColumnInfoForm(COL_CHECK_STATUS, false,    MySqlType.CHARACTER_VARYING.getType(), 20, null, null, true , "", getLabelName(TABLE_NAME, COL_CHECK_STATUS),    getPlaceholder(TABLE_NAME, COL_CHECK_STATUS)),
-            new ColumnInfoForm(COL_REFUND_DATE,  false,    MySqlType.CHARACTER_VARYING.getType(), 20, null, null, true , "", getLabelName(TABLE_NAME, COL_REFUND_DATE),     getPlaceholder(TABLE_NAME, COL_REFUND_DATE)),
-            new ColumnInfoForm(COL_REFUND_STATUS,false,    MySqlType.CHARACTER_VARYING.getType(), 20, null, null, true , "", getLabelName(TABLE_NAME, COL_REFUND_STATUS),   getPlaceholder(TABLE_NAME, COL_REFUND_STATUS)),
+            new ColumnInfoForm(COL_REFUND_DATE,  false,    MySqlType.CHARACTER_VARYING.getType(), 3,  null, null, true , "", getLabelName(TABLE_NAME, COL_REFUND_DATE),     getPlaceholder(TABLE_NAME, COL_REFUND_DATE)),
+            new ColumnInfoForm(COL_REFUND_STATUS,false,    MySqlType.CHARACTER_VARYING.getType(), 3,  null, null, true , "", getLabelName(TABLE_NAME, COL_REFUND_STATUS),   getPlaceholder(TABLE_NAME, COL_REFUND_STATUS)),
+            new ColumnInfoForm(COL_BILL_STATUS,  false,    MySqlType.CHARACTER_VARYING.getType(), 3,  null, null, true , "", getLabelName(TABLE_NAME, COL_BILL_STATUS),     getPlaceholder(TABLE_NAME, COL_BILL_STATUS)),
             new ColumnInfoForm(COL_MEMO,         false,    MySqlType.CHARACTER_VARYING.getType(),255, null, null, true , "", getLabelName(TABLE_NAME, COL_MEMO),            getPlaceholder(TABLE_NAME, COL_MEMO)),
             
     };

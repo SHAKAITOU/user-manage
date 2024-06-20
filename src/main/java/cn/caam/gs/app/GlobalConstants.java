@@ -19,6 +19,8 @@ public class GlobalConstants {
     public static final String INPUT_BG_COLOER         = "#FFFAF0";
     public static final int TABLE_TD_HEIGHT            = 30;
     
+    public static final String DFL_SELECT_ALL              = "00";
+    
     public static final String DFL_MEMBERSHIP_PATH_GANSU   = "027";
     
     public static final String DFL_NATIONALITY             = "01";
@@ -27,6 +29,7 @@ public class GlobalConstants {
     
     public static final String DFL_SEX                     = "01";
     
+    public static final int USER_ID_MAX_L              = 20;
     public static final int USER_NAME_MAX_L            = 70;
     public static final int USER_PW_MAX_L              = 40;
     public static final int PHONE_MAX_L                = 11;
@@ -40,4 +43,5 @@ public class GlobalConstants {
     public static final int RESEARCH_DIR_MAX_L         = 64;
     public static final int MAJOR_MAX_L                = 36;
     public static final int LEARN_EXPERIENCE_MAX_L     = 250;
+    public static final int AMOUNT_MAX_L               = 10;
 }

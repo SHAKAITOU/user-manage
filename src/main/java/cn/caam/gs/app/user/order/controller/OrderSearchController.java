@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import cn.caam.gs.app.admin.usersearch.view.AdminUserSearchViewHelper;
+import cn.caam.gs.app.user.order.form.OrderSearchForm;
 import cn.caam.gs.app.user.order.view.OrderSearchViewHelper;
 import cn.caam.gs.app.util.ControllerHelper;
 import cn.caam.gs.app.util.SessionConstants;
@@ -49,11 +50,13 @@ public class OrderSearchController extends JcbcBaseController{
 	
 	@PostMapping(path=OrderSearchViewHelper.URL_C_SEARCH)
     public ModelAndView search(
+            OrderSearchForm pageForm,
             HttpServletRequest request,
             HttpServletResponse response) {
 	    
 	    UserInfo userInfo = (UserInfo)request.getSession().getAttribute(SessionConstants.LOGIN_INFO.getValue());
-	    List<OrderInfo> list = orderService.getOrderList(userInfo.getUser());
+	    pageForm.getOrder().setUserId(userInfo.getId());
+	    List<OrderInfo> list = orderService.getOrderList(pageForm);
 
         return ControllerHelper.getModelAndView(
                 OrderSearchViewHelper.refeshTable(request, list));

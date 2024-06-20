@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.NoArgsConstructor;
 
 @Builder
@@ -22,9 +23,11 @@ public class CheckBoxSet {
     private List<HtmlRadio> radios;
     
     private String id;
-    private String name;
+    @Default
+    private String name = "";
     private boolean checkedFlg;
-    private String value;
+    @Default
+    private String value = "";
     private HtmlRadio item;
     
     private CheckBoxSetType outPutType;
@@ -103,7 +106,7 @@ public class CheckBoxSet {
     private String getTableCheckBox() {
         StringBuffer sb = new StringBuffer();
         sb.append("<div class='custom-control custom-switch' style='margin-left: 5px;'>");
-        sb.append("<input type='checkbox' class='custom-control-input' ");
+        sb.append("<input type='checkbox' class='custom-control-input " + name + "' ");
         sb.append(" id='"+id+"'");
         sb.append(" name='"+name+"'");
         sb.append(" value='"+value+"'");
