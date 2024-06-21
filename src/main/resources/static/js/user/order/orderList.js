@@ -20,11 +20,13 @@ OrderList.prototype.ID = {
     PAY_DATE_FROM_INPT           : "payDateFrom",
     PAY_DATE_TO_INPT             : "payDateTo",
 	
+	SHOW_MORE_BTN_ID             : "showMore",
 	ADD_BTN_ID                   : "addBtn",
 	SEARCH_BTN_ID                : "searchBtn",
 	SEARCH_PANEL_ID              : "searchPanel",
     SHOW_SEARCH_PANEL_BTN_ID     : "showSearchPanelBtn",
     HIDE_SEARCH_PANEL_BTN_ID     : "hideSearchPanelBtn",
+    HID_HIDE_SEARCH              : "hideSearch",
     
     ORDER_LIST_TABLE_ID          : "orderListTable",
     
@@ -39,9 +41,15 @@ OrderList.prototype.ID = {
 OrderList.prototype.init = function(){
 	//keep self instance for call back
 	var self = this;
-	
+
 	//init bond event to btn
 	self.initEvent();
+	
+	if (self.getObject(self.ID.HID_HIDE_SEARCH).val() === "true") {
+		self.getObject(self.ID.HIDE_SEARCH_PANEL_BTN_ID).click();
+	} else {
+		self.getObject(self.ID.SHOW_SEARCH_PANEL_BTN_ID).click();
+	}
 
 };
 
@@ -65,6 +73,7 @@ OrderList.prototype.initEvent = function(){
 	
     ShaInput.button.onClick(self.getObject(self.ID.SHOW_SEARCH_PANEL_BTN_ID),
     	function(event) {
+			self.getObject(self.ID.HID_HIDE_SEARCH).val("false");
 			self.getObject(self.ID.SEARCH_PANEL_ID).show();
 			self.getObject(self.ID.ORDER_LIST_TABLE_ID).find("tbody").height(self.dataMap.tableHeightWhenShowSearch + "px");
 			
@@ -73,6 +82,7 @@ OrderList.prototype.initEvent = function(){
     
     ShaInput.button.onClick(self.getObject(self.ID.HIDE_SEARCH_PANEL_BTN_ID),
     	function(event) {
+			self.getObject(self.ID.HID_HIDE_SEARCH).val("true");
 			self.getObject(self.ID.SEARCH_PANEL_ID).hide();
 			self.getObject(self.ID.ORDER_LIST_TABLE_ID).find("tbody").height(self.dataMap.tableHeightWhenHideSearch + "px");
 		}
@@ -82,6 +92,19 @@ OrderList.prototype.initEvent = function(){
     	function(event) {
 			ShaAjax.ajax.post(
                 self.jsContext.jsView.orderSearch.url_order_list, 
+                self.getForm().serializeArray(), 
+                function(data){
+                    self.getObjectInForm(self.getForm(), self.ID.ORDER_LIST_REFRESH_BODY_ID).html(data);
+                    $('[data-toggle="tooltip"]').tooltip();
+                }
+            ); 
+		}
+    );
+    
+    ShaInput.button.onClick(self.getObject(self.ID.SHOW_MORE_BTN_ID),
+    	function(event) {
+			ShaAjax.ajax.post(
+                self.jsContext.jsView.orderSearch.url_order_list_growing, 
                 self.getForm().serializeArray(), 
                 function(data){
                     self.getObjectInForm(self.getForm(), self.ID.ORDER_LIST_REFRESH_BODY_ID).html(data);

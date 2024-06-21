@@ -111,22 +111,22 @@ public class DbMaintenanceViewHelper extends HtmlViewBaseHelper {
 		headTr.addTh(th().index(grids[index++]));
 		// --col2--
 		String context = "SEQ";
-		headTr.addTh(th().get(grids[index++], context, CssAlignType.CENTER));
+		headTr.addTh(th().get(grids[index++], CssAlignType.CENTER, context));
 		
 		context = "GROUP";
-		headTr.addTh(th().get(grids[index++], context, CssAlignType.CENTER));
+		headTr.addTh(th().get(grids[index++], CssAlignType.CENTER, context));
 		// --col2--
 		context			= "TABLE PHYSIC NAME";
-		headTr.addTh(th().get(grids[index++], context, CssAlignType.CENTER));
+		headTr.addTh(th().get(grids[index++], CssAlignType.CENTER, context));
 		// --col3--
 		context = "TABLE LOGIC NAME";
-		headTr.addTh(th().get(grids[index++], context, CssAlignType.CENTER));
+		headTr.addTh(th().get(grids[index++], CssAlignType.CENTER, context));
 		// --col5--
 		context			= "DETAIL";
-		headTr.addTh(th().get(grids[index++], context, CssAlignType.CENTER));
+		headTr.addTh(th().get(grids[index++], CssAlignType.CENTER, context));
 		// --col6--
 		context			= "SABUN";
-		headTr.addTh(th().get(grids[index++], context, CssAlignType.CENTER));
+		headTr.addTh(th().get(grids[index++], CssAlignType.CENTER, context));
 		// --]
 
 		//body

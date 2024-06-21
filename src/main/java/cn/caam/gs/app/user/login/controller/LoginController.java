@@ -110,7 +110,7 @@ public class LoginController extends ScreenBaseController{
 		LoginForm loginForm = new LoginForm();
 		loginForm.setUserCode("M24060914330223");
 		loginForm.setPassword("1");
-		loginForm.setAuthImg("data:image/;base64," + getAuthImgStr(request));
+		loginForm.setAuthImg("data:image/;base64," + EncryptorUtil.generateAuthImgStr(request));
 		if(!StringUtils.isEmpty(indexForm.getLoginFormJson())) {
 			loginForm = JsonUtility.toObject(indexForm.getLoginFormJson(), LoginForm.class);
 		}
@@ -221,25 +221,5 @@ public class LoginController extends ScreenBaseController{
 						allRequestParams.get(SessionConstants.IS_MOBILE.getValue()));
 			}
 		}
-	}
-	
-	private String getAuthImgStr(HttpServletRequest request) throws IOException {
-	    
-	    Properties properties = new Properties();
-        properties.setProperty("kaptcha.image.width", "150");
-        properties.setProperty("kaptcha.image.height", "50");
-        properties.setProperty("kaptcha.textproducer.char.string", "0123456789");
-        properties.setProperty("kaptcha.textproducer.char.length", "4");
-        Config config = new Config(properties);
-        DefaultKaptcha defaultKaptcha = new DefaultKaptcha();
-        defaultKaptcha.setConfig(config);
-        String text = defaultKaptcha.createText();
-        HttpSession session = request.getSession();
-        session.setAttribute("verify_code", text);
-        BufferedImage image = defaultKaptcha.createImage(text);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        
-        ImageIO.write(image, "jpg", baos);
-        return Base64.encodeBase64String(baos.toByteArray());
 	}
 }

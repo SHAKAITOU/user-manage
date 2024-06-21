@@ -29,16 +29,16 @@ public class HtmlThHelper extends HtmlBaseHelper {
                 .height(height).grids(grids.getKey()).build();
     }
     
-    public ThSet get(int width, String context, CssAlignType alignType) {
-        return ThSet.builder().outPutType(ThSetType.NORMAL).width(width).align(alignType).context(context).build();
+    public ThSet get(int width, CssAlignType alignType, String... contexts) {
+        return ThSet.builder().outPutType(ThSetType.NORMAL).width(width).align(alignType).contexts(contexts).build();
     }
     
-    public ThSet get(CssGridsType grids, String context, CssAlignType alignType) {
-        return ThSet.builder().outPutType(ThSetType.NORMAL).grids(grids.getKey()).align(alignType).context(context).build();
+    public ThSet get(CssGridsType grids, CssAlignType alignType, String... contexts) {
+        return ThSet.builder().outPutType(ThSetType.NORMAL).grids(grids.getKey()).align(alignType).contexts(contexts).build();
     }
     
-    public ThSet get(int height, CssGridsType grids, String context, CssAlignType alignType) {
+    public ThSet get(int height, CssGridsType grids, CssAlignType alignType, String... contexts) {
         return ThSet.builder().outPutType(ThSetType.NORMAL)
-                .height(height).grids(grids.getKey()).align(alignType).context(context).build();
+                .height(height).grids(grids.getKey()).align(alignType).contexts(contexts).build();
     }
 }

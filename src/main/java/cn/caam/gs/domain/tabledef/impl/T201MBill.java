@@ -27,7 +27,7 @@ public class T201MBill extends BaseTableDef implements BaseDdl{
         new ColumnInfoForm(COL_ID,           true,     MySqlType.CHARACTER_VARYING.getType(), 30, null, null, false, "", getLabelName(TABLE_NAME, COL_ID),          getPlaceholder(TABLE_NAME, COL_ID)),
         new ColumnInfoForm(COL_USER_ID,      false,    MySqlType.CHARACTER_VARYING.getType(), 20, null, null, false, "", getLabelName(TABLE_NAME, COL_USER_ID),     getPlaceholder(TABLE_NAME, COL_USER_ID)),
         new ColumnInfoForm(COL_BILL_CODE,    false,    MySqlType.CHARACTER_VARYING.getType(), 50, null, null,  true, "", getLabelName(TABLE_NAME, COL_BILL_CODE),   getPlaceholder(TABLE_NAME, COL_BILL_CODE)),
-        new ColumnInfoForm(COL_BILL_AMOUNT,  false,    MySqlType.NUMERIC.getType(),        null , 13,   3   , false, "", getLabelName(TABLE_NAME, COL_BILL_AMOUNT), getPlaceholder(TABLE_NAME, COL_BILL_AMOUNT)),
+        new ColumnInfoForm(COL_BILL_AMOUNT,  false,    MySqlType.NUMERIC.getType(),        null , 10,   2   , false, "", getLabelName(TABLE_NAME, COL_BILL_AMOUNT), getPlaceholder(TABLE_NAME, COL_BILL_AMOUNT)),
         new ColumnInfoForm(COL_BILL_TITLE,   false,    MySqlType.CHARACTER_VARYING.getType(), 20, null, null, false, "", getLabelName(TABLE_NAME, COL_BILL_TITLE),  getPlaceholder(TABLE_NAME, COL_BILL_TITLE)),
         new ColumnInfoForm(COL_CREDIT_CODE,  false,    MySqlType.CHARACTER_VARYING.getType(), 20, null, null, true , "", getLabelName(TABLE_NAME, COL_CREDIT_CODE), getPlaceholder(TABLE_NAME, COL_CREDIT_CODE)),
         new ColumnInfoForm(COL_BILL_DATE,    false,    MySqlType.CHARACTER_VARYING.getType(), 20, null, null, true , "", getLabelName(TABLE_NAME, COL_BILL_DATE),   getPlaceholder(TABLE_NAME, COL_BILL_DATE)),

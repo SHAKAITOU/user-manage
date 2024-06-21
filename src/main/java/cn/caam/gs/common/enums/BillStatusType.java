@@ -1,12 +1,9 @@
 package cn.caam.gs.common.enums;
 
-public enum OrderType implements EnumImpl {
+public enum BillStatusType implements EnumImpl {
 
-    JOIN             (EnumIndex.startIndex(1), "01",  true,    CssClassType.PRIMARY),
-    RENEWAL          (EnumIndex.getNext(),     "02",  true,    CssClassType.INFO),
-    JOIN_WITH_IMG    (EnumIndex.getNext(),     "03",  true,    CssClassType.PRIMARY),
-    RENEWAL_WITH_IMG (EnumIndex.getNext(),     "04",  true,    CssClassType.SUCCESS),
-    RENEWAL_BY_SYS   (EnumIndex.getNext(),     "05",  true,    CssClassType.SUCCESS),
+    TO_BE_INVOICED    (EnumIndex.startIndex(1), "01",  true,    CssClassType.DANGER),
+    INVOICED          (EnumIndex.getNext(),     "02",  true,    CssClassType.SUCCESS),
 	;
     
 
@@ -16,7 +13,7 @@ public enum OrderType implements EnumImpl {
     private boolean normalShow;
     private CssClassType classType;
 
-    private OrderType(int id, String key, boolean normalShow, CssClassType classType) {
+    private BillStatusType(int id, String key, boolean normalShow, CssClassType classType) {
         this.id = id;
         this.key = key;
         this.normalShow = normalShow;
@@ -44,12 +41,12 @@ public enum OrderType implements EnumImpl {
         return classType;
     }
     
-    public OrderType[] list() {
-    	return OrderType.values();
+    public BillStatusType[] list() {
+    	return BillStatusType.values();
     }
     
-    public static OrderType valueOf(int id) {
-    	for(OrderType type : OrderType.values()) {
+    public static BillStatusType valueOf(int id) {
+    	for(BillStatusType type : BillStatusType.values()) {
     		if(id == type.getId()) {
     			return type;
     		}
@@ -58,8 +55,8 @@ public enum OrderType implements EnumImpl {
     	return null;
     }
     
-    public static OrderType keyOf(String key) {
-    	for(OrderType type : OrderType.values()) {
+    public static BillStatusType keyOf(String key) {
+    	for(BillStatusType type : BillStatusType.values()) {
     		if(key.equals(type.getKey())) {
     			return type;
     		}

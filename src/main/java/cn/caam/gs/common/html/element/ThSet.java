@@ -3,16 +3,11 @@ package cn.caam.gs.common.html.element;
 
 import java.util.Objects;
 
-import org.apache.commons.lang3.StringUtils;
-
 import cn.caam.gs.app.GlobalConstants;
 import cn.caam.gs.common.enums.CssAlignType;
 import cn.caam.gs.common.enums.CssFontSizeType;
-import cn.caam.gs.common.html.HtmlBaseHelper;
 import cn.caam.gs.common.html.element.IconSet.IconSetCss;
 import cn.caam.gs.common.html.element.IconSet.IconSetType;
-import cn.caam.gs.common.util.StringUtility;
-import cn.caam.gs.common.util.UtilConstants;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -25,20 +20,15 @@ public class ThSet {
     private int grids;
     private int height;
     private int width;
-    private String context;
+    private String[] contexts;
     private CssFontSizeType fontSize;
     private CssAlignType align;
-    private String tooltipContext;
     private ThSetType outPutType;
     
     public String html() {
         if(outPutType == ThSetType.INDEX) {
             return getIndex();
-        }else if(outPutType == ThSetType.WITH_TRIM) {
-            return getWithTrim(false);
-        }else if(outPutType == ThSetType.WITH_CUSTOMIZE_TOOLTIP) {
-            return getWithTrim(true);
-        }else {
+        } else {
             return get();
         }
     }
@@ -55,8 +45,8 @@ public class ThSet {
         }
         sb.append(" height='"+(height == 0 ? GlobalConstants.TH_DEFAULT_HEIGHT : height)+"'");        
         sb.append(">");
-        sb.append(setMiddleForCell(
-                IconSet.builder().type(IconSetType.INDEX_MARK).css(IconSetCss.NOMAL_14).build().html(), CssAlignType.CENTER));
+        sb.append(setMiddleForCell(CssAlignType.CENTER, 
+                IconSet.builder().type(IconSetType.INDEX_MARK).css(IconSetCss.NOMAL_14).build().html()));
         sb.append("</th>");
         return sb.toString();
     }
@@ -73,38 +63,16 @@ public class ThSet {
         }
         sb.append(" height='"+(height == 0 ? GlobalConstants.TH_DEFAULT_HEIGHT : height)+"'");
         sb.append(">");
-        sb.append(setMiddleForCell(StringUtils.isNotBlank(context) ? context : UtilConstants.HTML_SPACE));
+        sb.append(setMiddleForCell(contexts));
         sb.append("</th>");
         return sb.toString();
     }
     
-    private String getWithTrim(boolean customizeTooltip) {
-        StringBuffer sb = new StringBuffer();
-        int byteLength = StringUtility.byteLength(context);
-        int maxLength = width > 0 ? HtmlBaseHelper.getMaxLengthByWidth(width) : HtmlBaseHelper.getMaxLengthByGrids(grids);
-        sb.append("<th class=' ");
-        sb.append((Objects.nonNull(fontSize) ? fontSize.getKey(): GlobalConstants.TABLE_HEAD_FONT_SIZE.getKey()));
-        sb.append(" text-" + (Objects.nonNull(align) ? align.getKey(): CssAlignType.LEFT.getKey()));
-        if (width > 0) {
-            sb.append("' width='"+width+"' ");
-        } else {
-            sb.append(" col-xs-"+grids+"' ");
-        }
-        if(byteLength > maxLength) {
-            sb.append(" data-toggle='tooltip' data-toolip='"+HtmlBaseHelper.filterSpecialCharacters(customizeTooltip ? tooltipContext : context)+"'");
-        }
-        sb.append(" height='"+(height == 0 ? GlobalConstants.TH_DEFAULT_HEIGHT : height)+"'");
-        sb.append(">");
-        sb.append(setMiddleForCell(HtmlBaseHelper.trimFitForTd(grids, context, false)));
-        sb.append("</th>");
-        return sb.toString();
+    private String setMiddleForCell(String... contexts) {
+        return setMiddleForCell((Objects.nonNull(align) ? align : CssAlignType.LEFT), contexts);
     }
     
-    private String setMiddleForCell(String context) {
-        return setMiddleForCell(context, (Objects.nonNull(align) ? align : CssAlignType.LEFT));
-    }
-    
-    private String setMiddleForCell(String context, CssAlignType cssAlignType) {
+    private String setMiddleForCell(CssAlignType cssAlignType, String context) {
         StringBuffer sb = new StringBuffer();
         sb.append("<div style='display: table;height:100%;width:100%'>");
         sb.append("<div style='display: table-cell; vertical-align: middle;");
@@ -115,12 +83,23 @@ public class ThSet {
         return sb.toString();
     }
     
+    private String setMiddleForCell(CssAlignType cssAlignType, String... contexts) {
+        StringBuffer sb = new StringBuffer();
+        sb.append("<div style='display: table;height:100%;width:100%'>");
+        sb.append("<div style='display: table-cell; vertical-align: middle;");
+        sb.append(" text-align: "+cssAlignType.getKey()+";'>");
+        for (String context : contexts) {
+            sb.append(context);
+        }
+        sb.append("</div>");
+        sb.append("</div>");
+        return sb.toString();
+    }
+    
     public enum ThSetType {
 
         INDEX                     (1),
         NORMAL                     (2),
-        WITH_TRIM                 (3),
-        WITH_CUSTOMIZE_TOOLTIP     (4),
         ;
         
         /** type. */

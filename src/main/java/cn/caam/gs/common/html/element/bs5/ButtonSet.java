@@ -34,6 +34,8 @@ public class ButtonSet {
     private CssGridsType grids;
     private CssFontSizeType fontSize;
     private GridFlexType gridFlexType;
+    @Builder.Default
+    boolean disabled = false;
     
     public String html() {
         if(outPutType == ButtonSetType.TABLE) {
@@ -69,9 +71,12 @@ public class ButtonSet {
         if(!StringUtils.isEmpty(customizeTooltip)) {
             sb.append(" data-toggle='tooltip' data-toolip='"+HtmlBaseHelper.filterSpecialCharacters(customizeTooltip)+"'");
         }
+        if (disabled) {
+            sb.append(" disabled");
+        }
         sb.append(" >");
         if (Objects.nonNull(iconSet)) {
-            sb.append(iconSet.html() + "&nbsp;&nbsp;");
+            sb.append(iconSet.html() + "&nbsp;");
         }
         sb.append(buttonName);
         sb.append("</button>");
@@ -112,7 +117,7 @@ public class ButtonSet {
         }
         sb.append(">");
         if (Objects.nonNull(iconSet)) {
-            sb.append(iconSet.html() + "&nbsp;&nbsp;");
+            sb.append(iconSet.html() + "&nbsp;");
         }
         sb.append(buttonName);
         sb.append("</button>");
@@ -137,7 +142,7 @@ public class ButtonSet {
         }
         sb.append(" >");
         if (Objects.nonNull(iconSet)) {
-            sb.append(iconSet.html() + "&nbsp;&nbsp;");
+            sb.append(iconSet.html() + "&nbsp;");
         }
         sb.append(buttonName);
         sb.append("</button>");
@@ -163,7 +168,7 @@ public class ButtonSet {
         }
         sb.append(" >");
         if (Objects.nonNull(iconSet)) {
-            sb.append(iconSet.html() + "&nbsp;&nbsp;");
+            sb.append(iconSet.html() + "&nbsp;");
         }
         sb.append(buttonName);
         sb.append("</button>");
@@ -179,7 +184,7 @@ public class ButtonSet {
         }
         sb.append(" >");
         if (Objects.nonNull(iconSet)) {
-            sb.append(iconSet + "&nbsp;&nbsp;");
+            sb.append(iconSet + "&nbsp;");
         }
         sb.append(buttonName);
         sb.append("</button>");

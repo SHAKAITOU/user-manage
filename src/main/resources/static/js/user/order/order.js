@@ -101,6 +101,18 @@ Order.prototype.initEvent = function(){
 			if(self.check()) {
 	            return;
 	        }
+	        ShaDialog.dialogs.confirm(
+				self.i18n["dialogs.confirm.add.title"], 
+				self.i18n["dialogs.confirm.add.msg"], 
+				function () {
+	        		self.getObject(self.ID.BTN_CLOSE).click();
+					ShaAjax.ajax.postWithUploadFile(
+						self.jsContext.jsView.order.url_order_add, 
+						"OrderForm", 
+						function () {ShaDialog.dialogs.success(self.i18n["dialogs.add.success.msg"]);}
+					);
+				}
+			);
 	    }
 	);
 	

@@ -203,10 +203,9 @@ public class OrderViewHelper extends HtmlViewHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         String placeholder = clmForm.getPlaceholder();
-        String foot = getContext("common.page.currency");
         contextList.add(LabelNumberSet.builder()
                 .id(id).name(name).labelName(labelName).notBlank(true)
-                .maxlength(GlobalConstants.AMOUNT_MAX_L).placeholder(placeholder).footHtml(foot)
+                .maxlength(GlobalConstants.AMOUNT_MAX_L).placeholder(placeholder)
                 .fontSize(font).grids(CssGridsType.G12).build().html());
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
         //-----row 5-------------]

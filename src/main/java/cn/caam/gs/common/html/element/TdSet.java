@@ -54,13 +54,8 @@ public class TdSet {
     private String getIndex() {
         StringBuffer sb = new StringBuffer();
         String contextFull = "";
-        int idx = 0;
         for (String context : contexts) {
-            if (idx > 0) {
-                contextFull += "<br/>";
-            }
             contextFull += context;
-            idx++;
         }
         sb.append("<td scope='col' ");
         if (height > 0) {
@@ -83,13 +78,8 @@ public class TdSet {
     private String get() {
         StringBuffer sb = new StringBuffer();
         String contextFull = "";
-        int idx = 0;
         for (String context : contexts) {
-            if (idx > 0) {
-                contextFull += "<br/>";
-            }
             contextFull += context;
-            idx++;
         }
         sb.append("<td class='");
         sb.append((Objects.nonNull(fontSize) ? align.getKey(): CssFontSizeType.LABEL_12.getKey()));
@@ -117,13 +107,8 @@ public class TdSet {
     private String getWithTooltip() {
         StringBuffer sb = new StringBuffer();
         String contextFull = "";
-        int idx = 0;
         for (String context : contexts) {
-            if (idx > 0) {
-                contextFull += "<br/>";
-            }
             contextFull += context;
-            idx++;
         }
         sb.append("<td class=' ");
         sb.append((Objects.nonNull(fontSize) ? align.getKey(): GlobalConstants.TABLE_BODY_FONT_SIZE.getKey()));
@@ -154,7 +139,6 @@ public class TdSet {
         int maxLength = width > 0 ? HtmlBaseHelper.getMaxLengthByWidth(width) : HtmlBaseHelper.getMaxLengthByGrids(grids);
         String contextFull = "";
         String contextFullTrim = "";
-        int idx = 0;
         boolean hasTrim = false;
         for (String context : contexts) {
             int byteLength = StringUtility.byteLength(context);
@@ -163,13 +147,8 @@ public class TdSet {
             }
             String contextTrim = width > 0 ? HtmlBaseHelper.trimFitForTdByWidth(width, context, true) :
                 HtmlBaseHelper.trimFitForTd(grids, context, false);
-            if (idx > 0) {
-                contextFull += "<br/>";
-                contextFullTrim += "<br/>"; 
-            }
             contextFull += context;
             contextFullTrim += contextTrim;
-            idx++;
         }
         sb.append("<td class=' ");
         sb.append((Objects.nonNull(fontSize) ? align.getKey(): GlobalConstants.TABLE_BODY_FONT_SIZE.getKey()));
@@ -202,7 +181,6 @@ public class TdSet {
         int maxLength = HtmlBaseHelper.getMaxLengthBySubGrids(grids);
         String contextFull = "";
         String contextFullTrim = "";
-        int idx = 0;
         boolean hasTrim = false;
         for (String context : contexts) {
             int byteLength = StringUtility.byteLength(context);
@@ -210,13 +188,8 @@ public class TdSet {
                 hasTrim = true;
             }
             String contextTrim = HtmlBaseHelper.trimFitForSubTd(grids, context, false);
-            if (idx > 0) {
-                contextFull += "<br/>";
-                contextFullTrim += "<br/>"; 
-            }
             contextFull += context;
             contextFullTrim += contextTrim;
-            idx++;
         }
         sb.append("<td class=' ");
         sb.append((Objects.nonNull(fontSize) ? align.getKey(): GlobalConstants.TABLE_BODY_FONT_SIZE.getKey()));

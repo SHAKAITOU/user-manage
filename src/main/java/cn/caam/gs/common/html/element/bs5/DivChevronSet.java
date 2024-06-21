@@ -28,11 +28,11 @@ public class DivChevronSet {
         sb.append("<div class='col-12 d-flex justify-content-center' style='padding:0px;'>");
         sb.append("<span id='"+ idUp + "' class='a-a2'>");
         sb.append("<i class='fa fa-chevron-up "
-                + (Objects.nonNull(fontSize) ? fontSize.getKey() : "label-14") +"'></i>");
+                + (Objects.nonNull(fontSize) ? fontSize.getKey() : "label-16") +"'></i>");
         sb.append("</span>");
         sb.append("<span id='"+ idDown + "' class='a-a2'>");
         sb.append("<i class='fa fa-chevron-down "
-                + (Objects.nonNull(fontSize) ? fontSize.getKey() : "label-14") +"'></i>");
+                + (Objects.nonNull(fontSize) ? fontSize.getKey() : "label-16") +"'></i>");
         sb.append("</span>");
         sb.append("</div>");
         sb.append("<div class='col-2 d-flex justify-content-center' style='padding:0px;'></div>");

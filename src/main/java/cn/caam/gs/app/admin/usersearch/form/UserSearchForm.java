@@ -1,10 +1,12 @@
 package cn.caam.gs.app.admin.usersearch.form;
 
 import cn.caam.gs.domain.db.base.entity.MUser;
+import cn.caam.gs.app.GlobalConstants;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Builder.Default;
 
 @Data
 @Builder
@@ -17,4 +19,10 @@ public class UserSearchForm {
 	private String        registDateTo;
 	private String        validEndDateFrom;
     private String        validEndDateTo;
+    @Default
+    private boolean hideSearch = false;
+    @Default
+    private int limit = GlobalConstants.DEFAULT_GROWING_CNT;
+    @Default
+    private int offset = 0;
 }

@@ -35,6 +35,7 @@ public class UrlConstants {
 	//LOTO	
 	public static final String HELP 		= "/help";
 	public static final String SEARCH 		= "/search";
+    public static final String GROWING      = "/growing";
 	public static final String PAGE 		= "/pageLink";
 	public static final String INIT			= "/init";
 	public static final String REGIST		= "/regist";

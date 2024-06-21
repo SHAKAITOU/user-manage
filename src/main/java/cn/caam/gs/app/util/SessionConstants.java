@@ -28,7 +28,11 @@ public enum SessionConstants {
 	
 	RECEIPT_IMG_ANALYSIS_RESULT("receiptImgAnalysisResult", true),
 	
-	FIXED_VALUE("fixedValue", true)
+	FIXED_VALUE("fixedValue", true),
+	   
+    USER_LIST_OUT_PUT("userListOutput", true),
+	
+	ORDER_LIST_OUT_PUT("orderListOutput", true)
 	;
 	
 	private String value;

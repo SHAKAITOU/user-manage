@@ -100,7 +100,7 @@ public class AdminLoginController extends ScreenBaseController{
 		LoginForm loginForm = new LoginForm();
 		loginForm.setUserCode("admin");
 		loginForm.setPassword("1");
-		loginForm.setAuthImg("data:image/;base64," + getAuthImgStr(request));
+		loginForm.setAuthImg("data:image/;base64," + EncryptorUtil.generateAuthImgStr(request));
 		if(!StringUtils.isEmpty(indexForm.getLoginFormJson())) {
 			loginForm = JsonUtility.toObject(indexForm.getLoginFormJson(), LoginForm.class);
 		}
@@ -201,24 +201,4 @@ public class AdminLoginController extends ScreenBaseController{
 			}
 		}
 	}
-	
-	private String getAuthImgStr(HttpServletRequest request) throws IOException {
-        
-        Properties properties = new Properties();
-        properties.setProperty("kaptcha.image.width", "150");
-        properties.setProperty("kaptcha.image.height", "50");
-        properties.setProperty("kaptcha.textproducer.char.string", "0123456789");
-        properties.setProperty("kaptcha.textproducer.char.length", "4");
-        Config config = new Config(properties);
-        DefaultKaptcha defaultKaptcha = new DefaultKaptcha();
-        defaultKaptcha.setConfig(config);
-        String text = defaultKaptcha.createText();
-        HttpSession session = request.getSession();
-        session.setAttribute("verify_code", text);
-        BufferedImage image = defaultKaptcha.createImage(text);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        
-        ImageIO.write(image, "jpg", baos);
-        return Base64.encodeBase64String(baos.toByteArray());
-    }
 }

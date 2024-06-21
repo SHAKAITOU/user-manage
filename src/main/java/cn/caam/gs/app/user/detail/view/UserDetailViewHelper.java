@@ -76,6 +76,9 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
     
     public static final String BASE_PANEL_CARD_ID            = "basePanelCard";
     public static final String SELF_PANEL_CARD_ID            = "selfPanelCard";
+    public static final String HID_HIDE_SEARCH                = "hideSearch";
+    public static final int    HEADER_HEIGHT                  = 360;
+    public static final int    SEARCH_PANEL_HEIGHT            = 90;
     
     public static final CssFontSizeType font = GlobalConstants.INPUT_FONT_SIZE;
 

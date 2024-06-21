@@ -31,15 +31,19 @@ public class HtmlButtonHelper {
                 .isBorderOnly(true).grids(grids)
                 .classType(classType).id(id).buttonName(
                         IconSet.builder().type(icon).css(IconSetCss.NOMAL_10).build().html()
-                        + UtilConstants.HTML_SPACE + UtilConstants.HTML_SPACE + buttonName).build().html();
+                        + UtilConstants.HTML_SPACE + buttonName).build().html();
     }
     
     public String getBorder(IconSetType icon, CssClassType classType, String id, String buttonName) {
+        return getBorder(icon, classType, id, buttonName, false);
+    }
+    
+    public String getBorder(IconSetType icon, CssClassType classType, String id, String buttonName, boolean disabled) {
         return ButtonSet.builder().outPutType(ButtonSetType.NORMAL)
-                .isBorderOnly(true)
+                .isBorderOnly(true).disabled(disabled)
                 .classType(classType).id(id).buttonName(
                         IconSet.builder().type(icon).css(IconSetCss.NOMAL_10).build().html()
-                        + UtilConstants.HTML_SPACE + UtilConstants.HTML_SPACE + buttonName).build().html();
+                        + UtilConstants.HTML_SPACE  + buttonName).build().html();
     }
     
     public String getBorder(IconSetType icon, CssClassType classType, String id) {
@@ -53,7 +57,7 @@ public class HtmlButtonHelper {
         return ButtonSet.builder().outPutType(ButtonSetType.NORMAL)
                 .classType(classType).id(id).buttonName(
                         IconSet.builder().type(icon).css(IconSetCss.NOMAL_10).build().html()
-                        + UtilConstants.HTML_SPACE + UtilConstants.HTML_SPACE + buttonName).build().html();
+                        + UtilConstants.HTML_SPACE + buttonName).build().html();
     }
     
     public String customize(CssClassType classType, String id, String buttonName, String customizeClassName) {

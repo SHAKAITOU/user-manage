@@ -1,27 +1,46 @@
 package cn.caam.gs.common.util;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
+import java.util.Properties;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.apache.tomcat.util.codec.binary.Base64;
+
+import com.google.code.kaptcha.impl.DefaultKaptcha;
+import com.google.code.kaptcha.util.Config;
 
 import cn.caam.gs.common.exception.ShaApiException;
+import cn.caam.gs.common.util.LocalDateUtility.DateTimePattern;
 
 public class EncryptorUtil {
 	
 	private static final String KEY = "YKo83n14SWf7o8G5";
     private static final String ALGORITHM = "AES";
+    private static final String AUTH_IMG_RANDOM = "0123456789";
+    private static final String AUTH_IMG_WIDTH = "150";
+    private static final String AUTH_IMG_HEIGHT = "50";
+    private static final String AUTH_IMG_RANDOM_LENGTH = "4";
+    
+    private static final String ORDER_ID_RANDOM = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final String ORDER_ID_RANDOM_LENGTH = "7";
     
 	public static String encrypt(String source) {
 		try {
 			Cipher cipher = Cipher.getInstance(ALGORITHM);
 	        cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(KEY.getBytes(), ALGORITHM));
-	        return new String(Base64.getEncoder().encode(cipher.doFinal(source.getBytes())));
+	        return new String(Base64.encodeBase64(cipher.doFinal(source.getBytes())));
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException | 
         		InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
             throw new ShaApiException(ex.getMessage());
@@ -32,11 +51,44 @@ public class EncryptorUtil {
     	try {
 	    	Cipher cipher = Cipher.getInstance(ALGORITHM);
 	        cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(KEY.getBytes(), ALGORITHM));
-	        return new String(cipher.doFinal(Base64.getDecoder().decode(encryptSource.getBytes())));
+	        return new String(cipher.doFinal(Base64.decodeBase64(encryptSource.getBytes())));
     	} catch (NoSuchAlgorithmException | NoSuchPaddingException | 
         		InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
             throw new ShaApiException(ex.getMessage());
         }
+    }
+    
+    public static String generateAuthImgStr(HttpServletRequest request) throws IOException {
+        
+        Properties properties = new Properties();
+        properties.setProperty("kaptcha.image.width", AUTH_IMG_WIDTH);
+        properties.setProperty("kaptcha.image.height", AUTH_IMG_HEIGHT);
+        properties.setProperty("kaptcha.textproducer.char.string", AUTH_IMG_RANDOM);
+        properties.setProperty("kaptcha.textproducer.char.length", AUTH_IMG_RANDOM_LENGTH);
+        Config config = new Config(properties);
+        DefaultKaptcha defaultKaptcha = new DefaultKaptcha();
+        defaultKaptcha.setConfig(config);
+        String text = defaultKaptcha.createText();
+        HttpSession session = request.getSession();
+        session.setAttribute("verify_code", text);
+        BufferedImage image = defaultKaptcha.createImage(text);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        
+        ImageIO.write(image, "jpg", baos);
+        return Base64.encodeBase64String(baos.toByteArray());
+    }
+    
+    public static String generateOrderId() {
+        String prefix = LocalDateUtility.getCurrentDateTimeString(DateTimePattern.UUUUMMDDHHMISS);
+        Properties properties = new Properties();
+        properties.setProperty("kaptcha.textproducer.char.string", ORDER_ID_RANDOM);
+        properties.setProperty("kaptcha.textproducer.char.length", ORDER_ID_RANDOM_LENGTH);
+        Config config = new Config(properties);
+        DefaultKaptcha defaultKaptcha = new DefaultKaptcha();
+        defaultKaptcha.setConfig(config);
+        String randomSubfix = defaultKaptcha.createText();
+        
+        return prefix + randomSubfix;
     }
 
     /*

@@ -22,9 +22,12 @@ AdminUserSearch.prototype.ID = {
     REGIST_DATE_TO_INPT      : "registDateTo",
     VALID_END_DATE_FROM_INPT : "validEndDateFrom",
     VALID_END_DATE_TO_INPT   : "validEndDateTo",
+    
+    SHOW_MORE_BTN_ID         : "showMore",
     SEARCH_BTN_ID            : "searchBtn",
     SHOW_SEARCH_PANEL_BTN_ID : "showSearchPanelBtn",
     HIDE_SEARCH_PANEL_BTN_ID : "hideSearchPanelBtn",
+    HID_HIDE_SEARCH          : "hideSearch",
     
     USER_LIST_CHECK_ALL_ID   : "user_check_all",
     USER_CHECK_PREF_ID       : ".user_check_",
@@ -51,8 +54,11 @@ AdminUserSearch.prototype.init = function(){
     //init bond event to btn
     self.initEvent();
 
-    //init click to view
-    //self.getObject(self.ID.ITEM_SELECT).val(self.ID.MENU_TYPE_WORK);
+	if (self.getObject(self.ID.HID_HIDE_SEARCH).val() === "true") {
+		self.getObject(self.ID.HIDE_SEARCH_PANEL_BTN_ID).click();
+	} else {
+		self.getObject(self.ID.SHOW_SEARCH_PANEL_BTN_ID).click();
+	}
 
 };
 
@@ -88,6 +94,7 @@ AdminUserSearch.prototype.initEvent = function(){
     
     ShaInput.button.onClick(self.getObject(self.ID.SHOW_SEARCH_PANEL_BTN_ID),
     	function(event) {
+			self.getObject(self.ID.HID_HIDE_SEARCH).val("false");
 			self.getObject(self.ID.SEARCH_PANEL_ID).show();
 			self.getObject(self.ID.USER_LIST_TABLE_ID).find("tbody").height(self.dataMap.tableHeightWhenShowSearch + "px");
 			
@@ -96,6 +103,7 @@ AdminUserSearch.prototype.initEvent = function(){
     
     ShaInput.button.onClick(self.getObject(self.ID.HIDE_SEARCH_PANEL_BTN_ID),
     	function(event) {
+			self.getObject(self.ID.HID_HIDE_SEARCH).val("true");
 			self.getObject(self.ID.SEARCH_PANEL_ID).hide();
 			self.getObject(self.ID.USER_LIST_TABLE_ID).find("tbody").height(self.dataMap.tableHeightWhenHideSearch + "px");
 		}
@@ -140,6 +148,19 @@ AdminUserSearch.prototype.initEvent = function(){
     	function(event) {
 			ShaAjax.ajax.post(
                 self.jsContext.adminJsView.adminUserSearch.url_user_list, 
+                self.getForm().serializeArray(), 
+                function(data){
+                    self.getObjectInForm(self.getForm(), self.ID.DIV_REFRESH_BODY).html(data);
+                    $('[data-toggle="tooltip"]').tooltip();
+                }
+            ); 
+		}
+    );
+    
+    ShaInput.button.onClick(self.getObject(self.ID.SHOW_MORE_BTN_ID),
+    	function(event) {
+			ShaAjax.ajax.post(
+                self.jsContext.adminJsView.adminUserSearch.url_user_list_growing, 
                 self.getForm().serializeArray(), 
                 function(data){
                     self.getObjectInForm(self.getForm(), self.ID.DIV_REFRESH_BODY).html(data);

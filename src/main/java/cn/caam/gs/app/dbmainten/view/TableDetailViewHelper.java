@@ -125,22 +125,22 @@ public class TableDetailViewHelper extends HtmlViewBaseHelper {
 		headTr.addTh(th().index(grids[index++]));
 		// --col2--
 		String context = "PHYSIC NAME";
-		headTr.addTh(th().get(grids[index++], context, CssAlignType.CENTER));
+		headTr.addTh(th().get(grids[index++], CssAlignType.CENTER, context));
 		// --col2--
 		context = "LOGIC NAME";
-		headTr.addTh(th().get(grids[index++], context, CssAlignType.CENTER));
+		headTr.addTh(th().get(grids[index++], CssAlignType.CENTER, context));
 		// --col3--
 		context			= "PK";
-		headTr.addTh(th().get(grids[index++], context, CssAlignType.CENTER));
+		headTr.addTh(th().get(grids[index++], CssAlignType.CENTER, context));
 		// --col3--
 		context			= "TYPE";
-		headTr.addTh(th().get(grids[index++], context, CssAlignType.CENTER));
+		headTr.addTh(th().get(grids[index++], CssAlignType.CENTER, context));
 		// --col5--
 		context			= "NUL";
-		headTr.addTh(th().get(grids[index++], context, CssAlignType.CENTER));
+		headTr.addTh(th().get(grids[index++], CssAlignType.CENTER, context));
 		// --col6--
 		context			= "DFT";
-		headTr.addTh(th().get(grids[index++], context, CssAlignType.CENTER));
+		headTr.addTh(th().get(grids[index++], CssAlignType.CENTER, context));
 		// --]
 
 		//body
@@ -190,10 +190,10 @@ public class TableDetailViewHelper extends HtmlViewBaseHelper {
 		headTr.addTh(th().index(grids[index++]));
 		// --col2--
 		String context = "INDEX NAME";
-		headTr.addTh(th().get(grids[index++], context, CssAlignType.CENTER));
+		headTr.addTh(th().get(grids[index++], CssAlignType.CENTER, context));
 		// --col2--
 		context = "INDEX COLUMN";
-		headTr.addTh(th().get(grids[index++], context, CssAlignType.CENTER));
+		headTr.addTh(th().get(grids[index++], CssAlignType.CENTER, context));
 
 		//body
 		List<TrSet> bodyList = new ArrayList<>();

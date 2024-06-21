@@ -67,6 +67,8 @@
 			<include refid="baseJoin"/>
 			WHERE
 		    mo.user_id = #{order.userId, jdbcType=NVARCHAR}
+		ORDER BY mo.pay_date DESC
+		LIMIT #{limit} OFFSET #{offset}
     </select>
         
 </mapper>

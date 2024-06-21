@@ -14,11 +14,14 @@ import org.springframework.stereotype.Component;
 
 import cn.caam.gs.app.GlobalConstants;
 import cn.caam.gs.app.UrlConstants;
+import cn.caam.gs.app.admin.usersearch.form.UserSearchForm;
+import cn.caam.gs.app.admin.usersearch.output.UserListOutput;
 import cn.caam.gs.app.dbmainten.form.ColumnInfoForm;
 import cn.caam.gs.app.util.HtmlViewHelper;
 import cn.caam.gs.app.util.LoginInfoHelper;
 import cn.caam.gs.app.util.SessionConstants;
 import cn.caam.gs.common.bean.ViewData;
+import cn.caam.gs.common.enums.CellWidthType;
 import cn.caam.gs.common.enums.CssAlignType;
 import cn.caam.gs.common.enums.CssClassType;
 import cn.caam.gs.common.enums.CssFontSizeType;
@@ -43,6 +46,8 @@ import cn.caam.gs.common.html.element.bs5.LabelDateInputSet.LabelDateInputSetTyp
 import cn.caam.gs.common.html.element.bs5.LabelInputSet;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet.LabelSelectSetType;
+import cn.caam.gs.common.html.element.bs5.PTextSet;
+import cn.caam.gs.common.html.element.bs5.SpanTextSet;
 import cn.caam.gs.common.util.LocalDateUtility;
 import cn.caam.gs.common.util.LocalDateUtility.DateTimePattern;
 import cn.caam.gs.domain.db.base.entity.MFixedValue;
@@ -59,23 +64,31 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
 	//init url
     public static final String URL_C_SEARCH = UrlConstants.SEARCH;
     
-    public static final String PREFIX_NAME                   = "user.";
-	
-    public static final String MAIN_JS_CLASS                = "AdminUserSearch";
-    public static final String USER_LIST_FORM_NAME          = "userSearchForm";
-    public static final String USER_LIST_CHECK_ALL_ID       = "user_check_all";
-    public static final String USER_CHECK_PREF_ID           = "user_check_";
-    public static final String USER_LIST_TABLE_ID           = "userListTable";
-    public static final String USER_LIST_REFRESH_BODY_ID    = "userListRefreshBody";
-    public static final String SEARCH_BTN_ID                = "searchBtn";
-    public static final String SEARCH_PANEL_ID              = "searchPanel";
-    public static final String SHOW_SEARCH_PANEL_BTN_ID     = "showSearchPanelBtn";
-    public static final String HIDE_SEARCH_PANEL_BTN_ID     = "hideSearchPanelBtn";
-    public static final String TABLE_HEIGHT_WHEN_HIDE_SEARCH     = "tableHeightWhenHideSearch";
-    public static final String TABLE_HEIGHT_WHEN_SHOW_SEARCH     = "tableHeightWhenShowSearch";
+    public static final String URL_C_GROWING = UrlConstants.GROWING;
     
-    public static final String TABLE_BTN_RESETPW    = "restPw";
-    public static final String TABLE_BTN_DETAIL     = "detail";
+    public static final String PREFIX_NAME                    = "user.";
+	
+    public static final String MAIN_JS_CLASS                  = "AdminUserSearch";
+    public static final String USER_LIST_FORM_NAME            = "userSearchForm";
+    public static final String USER_LIST_CHECK_ALL_ID         = "user_check_all";
+    public static final String USER_CHECK_PREF_ID             = "user_check_";
+    public static final String USER_LIST_TABLE_ID             = "userListTable";
+    public static final String USER_LIST_REFRESH_BODY_ID      = "userListRefreshBody";
+    public static final String SEARCH_BTN_ID                  = "searchBtn";
+    public static final String SEARCH_PANEL_ID                = "searchPanel";
+    public static final String SHOW_SEARCH_PANEL_BTN_ID       = "showSearchPanelBtn";
+    public static final String HIDE_SEARCH_PANEL_BTN_ID       = "hideSearchPanelBtn";
+    public static final String TABLE_HEIGHT_WHEN_HIDE_SEARCH  = "tableHeightWhenHideSearch";
+    public static final String TABLE_HEIGHT_WHEN_SHOW_SEARCH  = "tableHeightWhenShowSearch";
+    
+    public static final String TABLE_BTN_RESETPW              = "restPw";
+    public static final String TABLE_BTN_DETAIL               = "detail";
+    public static final String SHOW_MORE_BTN_ID               = "showMore";
+    public static final String HID_HIDE_SEARCH                = "hideSearch";
+    public static final String HID_LIMIT                      = "limit";
+    public static final String HID_OFFSET                     = "offset";
+    public static final int    HEADER_HEIGHT                  = 450;
+    public static final int    SEARCH_PANEL_HEIGHT            = 180;
     
 	
     public static final CssFontSizeType font = GlobalConstants.INPUT_FONT_SIZE;
@@ -84,35 +97,41 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
      * @param request
      * @return
      */
-    public static ViewData getMainPage(HttpServletRequest request, 
-            List<UserInfo> userList) {
+    public static ViewData getMainPage(
+            HttpServletRequest request, 
+            UserSearchForm pageForm,
+            UserListOutput userListOutput) {
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put(TABLE_HEIGHT_WHEN_HIDE_SEARCH, calcTableHeightWhenHideSearch(request));
         dataMap.put(TABLE_HEIGHT_WHEN_SHOW_SEARCH, calcTableHeightWhenShowSearch(request));
 
         ViewData viewData = ViewData.builder()
-                .pageContext(getMainPageContext(request, userList))
+                .pageContext(getMainPageContext(request, pageForm, userListOutput))
                 .jsClassName(MAIN_JS_CLASS)
                 .dataMap(dataMap)
                 .build();
         return viewData;
     }
     
-    public static ViewData refeshTable(HttpServletRequest request, 
-            List<UserInfo> userList) {
+    public static ViewData refeshTable(
+            HttpServletRequest request, 
+            UserSearchForm pageForm,
+            UserListOutput userListOutput) {
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put(TABLE_HEIGHT_WHEN_HIDE_SEARCH, calcTableHeightWhenHideSearch(request));
         dataMap.put(TABLE_HEIGHT_WHEN_SHOW_SEARCH, calcTableHeightWhenShowSearch(request));
         ViewData viewData = ViewData.builder()
-                .pageContext(setCardForTable(request, userList))
+                .pageContext(setCardForTable(request, pageForm, userListOutput))
                 .jsClassName(MAIN_JS_CLASS)
                 .dataMap(dataMap)
                 .build();
         return viewData;
     }
     
-    private static String getMainPageContext(HttpServletRequest request, 
-            List<UserInfo> userList) {
+    private static String getMainPageContext(
+            HttpServletRequest request, 
+            UserSearchForm pageForm,
+            UserListOutput userListOutput) {
         StringBuffer sb = new StringBuffer();
         sb.append(divRow().cellBlank(5));
         sb.append(setBreadCrumb());
@@ -121,7 +140,7 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         sb.append("</div>");
         sb.append(DivChevronSet.builder().idUp(HIDE_SEARCH_PANEL_BTN_ID).idDown(SHOW_SEARCH_PANEL_BTN_ID).build().html());
         sb.append("<div id='" + USER_LIST_REFRESH_BODY_ID + "'>");
-        sb.append(setCardForTable(request, userList));
+        sb.append(setCardForTable(request, pageForm, userListOutput));
         sb.append("</div>");
         return getForm(USER_LIST_FORM_NAME, sb.toString());
     }
@@ -147,14 +166,11 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         Map<FixedValueType, List<FixValueInfo>> fixedValueMap = 
                 (Map<FixedValueType, List<FixValueInfo>>)request.getSession().getAttribute(SessionConstants.FIXED_VALUE.getValue());
         StringBuffer sbBody = new StringBuffer();
-        
         List<HtmlRadio> radios = new ArrayList<>();
 
-        
         //-----row 1-------------[
         List<String> contextList = new ArrayList<String>();
 
-        
         //name入力値
         ColumnInfoForm clmForm = T100MUser.getColumnInfo(T100MUser.COL_NAME);
         String name      = clmForm.getPageName(PREFIX_NAME);
@@ -332,12 +348,48 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
     //--------------------body card table -----------------
     private static String setCardForTable(
             HttpServletRequest request, 
-            List<UserInfo> userList) {
+            UserSearchForm pageForm,
+            UserListOutput userListOutput) {
         StringBuffer sbBody = new StringBuffer();
+        StringBuffer cardBody = new StringBuffer();
+        cardBody.append(setHidden(pageForm));
+        cardBody.append(setShowMore(request, userListOutput));
+        cardBody.append(divRow().cellBlank(5));
+        cardBody.append(setUserListTable(request, userListOutput.getUserList()));
         sbBody.append(borderCard().withTitleWithScroll("", CssClassType.INFO, "", 
                 getContext("admin.userList.table.title"),
-                divRow().cellBlank(5),
-                setUserListTable(request, userList)));
+                divRow().cellBlank(5),cardBody.toString()));
+        
+        return sbBody.toString();
+    }
+    
+
+    private static String setHidden(UserSearchForm pageForm) {
+        StringBuffer sb = new StringBuffer();
+        sb.append(hidden().get(HID_HIDE_SEARCH,  String.valueOf(pageForm.isHideSearch())));
+        sb.append(hidden().get(HID_LIMIT,  String.valueOf(pageForm.getLimit())));
+        sb.append(hidden().get(HID_OFFSET, String.valueOf(pageForm.getOffset())));
+        return sb.toString();
+    }
+
+    private static String setShowMore(
+            HttpServletRequest request, 
+            UserListOutput userListOutput) {
+        StringBuffer sbBody = new StringBuffer();
+        
+        
+        List<CssAlignType> aligs = new ArrayList<>();
+        String id = SHOW_MORE_BTN_ID;
+        String context = getContext("common.page.showMore");
+        String comp1 = button().getBorder(IconSetType.BAR, CssClassType.INFO, id, context, 
+                userListOutput.getUserList().size() >= userListOutput.getCount());
+        
+        context = getContext("common.page.btn.close");
+        context = "[" + userListOutput.getUserList().size() + "/" + userListOutput.getCount() + "]";
+        String comp2 = SpanTextSet.builder().classType(CssClassType.CONTEXT).fontSize(font).context(context).build().html();
+        aligs.add(CssAlignType.LEFT);
+        sbBody.append(divRow().get(CellWidthType.ONE, aligs, concactWithSpace(comp1, comp2)));
+        //-----row 3-------------]
         
         return sbBody.toString();
     }
@@ -365,37 +417,37 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         String context = CheckBoxSet.builder()
                 .id(USER_LIST_CHECK_ALL_ID).name(USER_LIST_CHECK_ALL_ID)
                 .outPutType(CheckBoxSetType.SINGLE_FOR_TABLE).build().html();
-        headTr.addTh(th().get(widths[index++], context, CssAlignType.CENTER));
+        headTr.addTh(th().get(widths[index++], CssAlignType.CENTER, context));
         // --col2--
-        context         = getContext("m_user.id");
-        headTr.addTh(th().get(widths[index++], context, CssAlignType.CENTER));
+        context         = T100MUser.getColumnInfo(T100MUser.COL_ID).getLabelName();
+        headTr.addTh(th().get(widths[index++], CssAlignType.CENTER, context));
         // --col3--
-        context         = getContext("m_user.name");
-        headTr.addTh(th().get(widths[index++], context, CssAlignType.CENTER));
+        context         = T100MUser.getColumnInfo(T100MUser.COL_NAME).getLabelName();
+        headTr.addTh(th().get(widths[index++], CssAlignType.CENTER, context));
         // --col4--
-        context         = getContext("m_user.user_type");
-        headTr.addTh(th().get(widths[index++], context, CssAlignType.CENTER));
+        context         = T100MUser.getColumnInfo(T100MUser.COL_USER_TYPE).getLabelName();
+        headTr.addTh(th().get(widths[index++], CssAlignType.CENTER, context));
         // --col5--
-        context         = getContext("m_user.phone");
-        headTr.addTh(th().get(widths[index++], context, CssAlignType.CENTER));
+        context         = T100MUser.getColumnInfo(T100MUser.COL_PHONE).getLabelName();;
+        headTr.addTh(th().get(widths[index++], CssAlignType.CENTER, context));
         // --col6--
-        context         = getContext("m_user.mail");
-        headTr.addTh(th().get(widths[index++], context, CssAlignType.CENTER));
+        context         = T100MUser.getColumnInfo(T100MUser.COL_MAIL).getLabelName();
+        headTr.addTh(th().get(widths[index++], CssAlignType.CENTER, context));
         // --col7--
-        context         = getContext("m_user.employer");
-        headTr.addTh(th().get(widths[index++], context, CssAlignType.CENTER));
+        context         = T100MUser.getColumnInfo(T100MUser.COL_EMPLOYER).getLabelName();
+        headTr.addTh(th().get(widths[index++], CssAlignType.CENTER, context));
         // --col8--
-        context         = getContext("m_user.regist_date");
-        headTr.addTh(th().get(widths[index++], context, CssAlignType.CENTER));
+        context         = T100MUser.getColumnInfo(T100MUser.COL_REGIST_DATE).getLabelName();
+        headTr.addTh(th().get(widths[index++], CssAlignType.CENTER, context));
         // --col9--
-        context         = getContext("m_user.valid_end_date");
-        headTr.addTh(th().get(widths[index++], context, CssAlignType.CENTER));
+        context         = T100MUser.getColumnInfo(T100MUser.COL_VALID_END_DATE).getLabelName();
+        headTr.addTh(th().get(widths[index++], CssAlignType.CENTER, context));
         // --col10--
         context         = getContext("admin.userList.validStatus");
-        headTr.addTh(th().get(widths[index++], context, CssAlignType.CENTER));
+        headTr.addTh(th().get(widths[index++], CssAlignType.CENTER, context));
         // --col11--
         context         = getContext("common.page.do");
-        headTr.addTh(th().get(widths[index++], context, CssAlignType.CENTER));
+        headTr.addTh(th().get(widths[index++], CssAlignType.CENTER, context));
         // --]
         
         //body
@@ -471,16 +523,16 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
                 }
             }
         }
-        return "<p class='text-" + sts.getClassType().getKey() + "'>" + 
-                getContext(sts.getMsg()) + "</p>";
+        return PTextSet.builder().classType(sts.getClassType())
+                .context(getContext(sts.getMsg())).build().html();
     }
     
     private static int calcTableHeightWhenShowSearch(HttpServletRequest request) {
-        return LoginInfoHelper.getMediaHeight(request) - 450;
+        return LoginInfoHelper.getMediaHeight(request) - HEADER_HEIGHT;
     }
     
     private static int calcTableHeightWhenHideSearch(HttpServletRequest request) {
-        return LoginInfoHelper.getMediaHeight(request) - 270;
+        return LoginInfoHelper.getMediaHeight(request) - HEADER_HEIGHT + SEARCH_PANEL_HEIGHT;
     }
     
     private static int calcTableWidth(int [] widths) {
@@ -494,9 +546,10 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
 	public static Map<String, String> getJsProperties() {
 		Map<String, String> js = new HashMap<String, String>();
 		// url
-		js.put("url_init",      URL_BASE + URL_C_INIT);
-		js.put("url_user_list", URL_BASE + URL_C_SEARCH);		
-		
+		js.put("url_init",              URL_BASE + URL_C_INIT);
+		js.put("url_user_list",         URL_BASE + URL_C_SEARCH);
+		js.put("url_user_list_growing", URL_BASE + URL_C_GROWING);
+
 		return js;
 	}
 }

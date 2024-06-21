@@ -95,6 +95,7 @@
 		FROM
 		    m_user mu 
 			<include refid="baseJoin"/>
+		LIMIT #{limit} OFFSET #{offset}
     </select>
     
     <select id="getLoginUserInfo" resultMap="UserInfoForm">
