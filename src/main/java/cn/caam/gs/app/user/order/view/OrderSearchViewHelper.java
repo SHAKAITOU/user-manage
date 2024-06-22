@@ -12,9 +12,9 @@ import org.springframework.stereotype.Component;
 
 import cn.caam.gs.app.GlobalConstants;
 import cn.caam.gs.app.UrlConstants;
+import cn.caam.gs.app.common.form.OrderSearchForm;
+import cn.caam.gs.app.common.output.OrderListOutput;
 import cn.caam.gs.app.dbmainten.form.ColumnInfoForm;
-import cn.caam.gs.app.user.order.form.OrderSearchForm;
-import cn.caam.gs.app.user.order.output.OrderListOutput;
 import cn.caam.gs.app.util.HtmlViewHelper;
 import cn.caam.gs.app.util.LoginInfoHelper;
 import cn.caam.gs.app.util.SessionConstants;
@@ -259,10 +259,11 @@ public class OrderSearchViewHelper extends HtmlViewHelper {
         String comp1 = button().getBorder(IconSetType.BAR, CssClassType.INFO, id, context, 
                 orderListOutput.getOrderList().size() >= orderListOutput.getCount());
         
-        context = getContext("common.page.btn.close");
         context = "[" + orderListOutput.getOrderList().size() + "/" + orderListOutput.getCount() + "]";
         String comp2 = SpanTextSet.builder().classType(CssClassType.CONTEXT).fontSize(font).context(context).build().html();
         aligs.add(CssAlignType.LEFT);
+        
+        id = ADD_BTN_ID;
         context = getContext("order.addPayBtn");
         String comp3 = button().getBorder(IconSetType.SEND, CssClassType.SUCCESS, id, context);
 

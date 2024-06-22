@@ -1,4 +1,4 @@
-package cn.caam.gs.app.user.order.output;
+package cn.caam.gs.app.common.output;
 
 import java.util.ArrayList;
 import java.util.List;

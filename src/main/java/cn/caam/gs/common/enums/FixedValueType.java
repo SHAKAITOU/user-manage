@@ -44,6 +44,8 @@ public enum FixedValueType {
 	VOTE_METHOD     ("F0019"),
 	/** 订单方式(F0020) */
 	ORDER_METHOD    ("F0020"),
+	/** 站内消息类型(F0021) */
+	MSG_TYPE        ("F0021"),
 	;
 	
     /** type. */

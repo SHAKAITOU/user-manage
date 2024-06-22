@@ -1,8 +1,6 @@
 package cn.caam.gs.service.impl;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -10,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import cn.caam.gs.app.common.form.OrderSearchForm;
+import cn.caam.gs.app.common.output.OrderListOutput;
 import cn.caam.gs.app.user.order.form.OrderForm;
-import cn.caam.gs.app.user.order.form.OrderSearchForm;
-import cn.caam.gs.app.user.order.output.OrderListOutput;
 import cn.caam.gs.app.util.SessionConstants;
 import cn.caam.gs.common.enums.BillStatusType;
 import cn.caam.gs.common.enums.CheckStatusType;
@@ -23,7 +21,6 @@ import cn.caam.gs.domain.db.base.entity.MImage;
 import cn.caam.gs.domain.db.base.entity.MOrder;
 import cn.caam.gs.domain.db.base.mapper.MImageMapper;
 import cn.caam.gs.domain.db.base.mapper.MOrderMapper;
-import cn.caam.gs.domain.db.custom.entity.OrderInfo;
 import cn.caam.gs.domain.db.custom.entity.UserInfo;
 import cn.caam.gs.domain.db.custom.mapper.OptionalOrderInfoMapper;
 import cn.caam.gs.service.BaseService;
@@ -51,7 +48,7 @@ public class OrderService extends BaseService {
 	    listOutput.setOrderList(optionalOrderInfoMapper.getOrderList(pageForm));
     	return listOutput;
 	}
-	
+
 	@Transactional
 	public void addOrder(OrderForm pageForm) throws IOException {
 	    UserInfo userInfo = (UserInfo)request.getSession().getAttribute(SessionConstants.LOGIN_INFO.getValue());

@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import cn.caam.gs.app.user.order.form.OrderSearchForm;
-import cn.caam.gs.app.user.order.output.OrderListOutput;
+import cn.caam.gs.app.common.form.OrderSearchForm;
+import cn.caam.gs.app.common.output.OrderListOutput;
 import cn.caam.gs.app.user.order.view.OrderSearchViewHelper;
 import cn.caam.gs.app.util.ControllerHelper;
 import cn.caam.gs.app.util.SessionConstants;

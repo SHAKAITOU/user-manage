@@ -1,0 +1,130 @@
+//-------------------------------------------------------------------------------------------
+//-----------------AdminOrderList.html view js controll class define ----------------------------
+//------------------------------------------------------------------------------------------[
+
+//------------constructor define------------[
+AdminOrderList = function(dataMap){
+    this.form = $('#AdminOrderListForm');
+    this.jsContext = Pos.constants.setInfo;
+    this.i18n = JSON.parse(this.jsContext.i18n);
+    this.dataMap = dataMap;
+    this.dateFormat = 'yyyy-mm-dd';
+    this.clearBtn = true;
+    this.language = 'zh';
+};
+ShaUtil.other.inherits(AdminOrderList, BaseJsController);
+//------------------------------------------]
+
+//------------properties define-------------[
+AdminOrderList.prototype.ID = {
+    PAY_DATE_FROM_INPT           : "payDateFrom",
+    PAY_DATE_TO_INPT             : "payDateTo",
+	
+	SHOW_MORE_BTN_ID             : "showMore",
+	ADD_BTN_ID                   : "addBtn",
+	SEARCH_BTN_ID                : "searchBtn",
+	SEARCH_PANEL_ID              : "searchPanel",
+    SHOW_SEARCH_PANEL_BTN_ID     : "showSearchPanelBtn",
+    HIDE_SEARCH_PANEL_BTN_ID     : "hideSearchPanelBtn",
+    HID_HIDE_SEARCH              : "hideSearch",
+    
+    ORDER_LIST_TABLE_ID          : "orderListTable",
+    
+    //div
+    ORDER_LIST_REFRESH_BODY_ID  : "orderListRefreshBody"
+
+};
+//------------------------------------------]
+
+//---------------method define--------------[
+//init 
+AdminOrderList.prototype.init = function(){
+	//keep self instance for call back
+	var self = this;
+
+	//init bond event to btn
+	self.initEvent();
+	
+	if (self.getObject(self.ID.HID_HIDE_SEARCH).val() === "true") {
+		self.getObject(self.ID.HIDE_SEARCH_PANEL_BTN_ID).click();
+	} else {
+		self.getObject(self.ID.SHOW_SEARCH_PANEL_BTN_ID).click();
+	}
+
+};
+
+// init event
+AdminOrderList.prototype.initEvent = function(){
+	
+	//keep self instance for call back
+	var self = this;
+	
+    self.getObject(self.ID.PAY_DATE_FROM_INPT).datepicker({
+        format   : self.dateFormat,
+        language : self.language,
+        clearBtn : self.clearBtn
+    });
+    
+    self.getObject(self.ID.PAY_DATE_TO_INPT).datepicker({
+        format   : self.dateFormat,
+        language : self.language,
+        clearBtn : self.clearBtn
+    });
+	
+    ShaInput.button.onClick(self.getObject(self.ID.SHOW_SEARCH_PANEL_BTN_ID),
+    	function(event) {
+			self.getObject(self.ID.HID_HIDE_SEARCH).val("false");
+			self.getObject(self.ID.SEARCH_PANEL_ID).show();
+			self.getObject(self.ID.ORDER_LIST_TABLE_ID).find("tbody").height(self.dataMap.tableHeightWhenShowSearch + "px");
+			
+		}
+    );
+    
+    ShaInput.button.onClick(self.getObject(self.ID.HIDE_SEARCH_PANEL_BTN_ID),
+    	function(event) {
+			self.getObject(self.ID.HID_HIDE_SEARCH).val("true");
+			self.getObject(self.ID.SEARCH_PANEL_ID).hide();
+			self.getObject(self.ID.ORDER_LIST_TABLE_ID).find("tbody").height(self.dataMap.tableHeightWhenHideSearch + "px");
+		}
+    );
+	
+    ShaInput.button.onClick(self.getObject(self.ID.SEARCH_BTN_ID),
+    	function(event) {
+			ShaAjax.ajax.post(
+                self.jsContext.adminJsView.adminOrderSearch.url_order_list, 
+                self.getForm().serializeArray(), 
+                function(data){
+                    self.getObjectInForm(self.getForm(), self.ID.ORDER_LIST_REFRESH_BODY_ID).html(data);
+                    $('[data-toggle="tooltip"]').tooltip();
+                }
+            ); 
+		}
+    );
+    
+    ShaInput.button.onClick(self.getObject(self.ID.SHOW_MORE_BTN_ID),
+    	function(event) {
+			ShaAjax.ajax.post(
+                self.jsContext.adminJsView.adminOrderSearch.url_order_list_growing, 
+                self.getForm().serializeArray(), 
+                function(data){
+                    self.getObjectInForm(self.getForm(), self.ID.ORDER_LIST_REFRESH_BODY_ID).html(data);
+                    $('[data-toggle="tooltip"]').tooltip();
+                }
+            ); 
+		}
+    );
+    
+    ShaInput.table.addClickActiveToTr(self.getForm(), self.ID.ORDER_LIST_TABLE_ID);
+    
+    ShaInput.button.onClick(self.getObject(self.ID.ADD_BTN_ID),
+    	function(event) {
+			ShaAjax.pop.postDialogMiddleCenter(
+				self.i18n["order.addPayTitle"],
+				self.jsContext.adminJsView.adminOrderSearch.url_init, 
+				self.getForm().serializeArray());
+		}
+    );
+
+};
+
+//----------------------------------------------------------------------------]

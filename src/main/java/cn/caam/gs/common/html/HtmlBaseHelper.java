@@ -3,12 +3,14 @@ package cn.caam.gs.common.html;
 import java.util.Objects;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import cn.caam.gs.app.util.LoginInfoHelper;
 import cn.caam.gs.common.util.MessageSourceUtil;
 import cn.caam.gs.common.util.StringUtility;
 import cn.caam.gs.common.util.UtilConstants;
@@ -23,6 +25,10 @@ public class HtmlBaseHelper {
     private Environment environment0;
     private static Environment environment;
     
+    @Autowired
+    private HttpServletRequest request0;
+    private static HttpServletRequest request;
+    
     public static final String BTN_CSS_60H = "btn_60h";
     public static final String BTN_CSS_100 = "btn_100";
     
@@ -31,6 +37,7 @@ public class HtmlBaseHelper {
     private void initStaticDao() {
         messageSourceUtil = this.messageSourceUtil0;
         environment = this.environment0;
+        request = this.request0;
     }
     
     public static String getEnvironmentProperty(String key) {
@@ -104,11 +111,8 @@ public class HtmlBaseHelper {
     }
     
     public static int getMaxLengthByGrids(int grids) {
-        if(grids == 1) {
-            return 8;
-        } else {
-            return grids*10;
-        }
+        int scale = LoginInfoHelper.getMediaWidth(request)/12;
+        return grids*scale/10;
     }
     
     public static int getMaxLengthByWidth(int width) {

@@ -50,13 +50,18 @@
 		LEFT JOIN m_fixed_value F0016   ON mo.refund_status   = F0016.value   AND F0016.code   = 'F0016'
 		LEFT JOIN m_fixed_value F0018   ON mo.bill_status     = F0018.value   AND F0018.code   = 'F0018'
     </sql>
+    <sql id="baseCondition">
+		<if test="order != null and order.userId != null" >
+	        and mo.user_id = #{order.userId, jdbcType=NVARCHAR}
+		</if>
+    </sql>
     <!-- SQL CHIP -->
 	<select id="getOrderListCount" resultType="int">
 		SELECT COUNT(mo.id)
 		FROM
 		    m_order mo 
-		WHERE
-		    mo.user_id = #{order.userId, jdbcType=NVARCHAR}
+		WHERE 1=1
+		    <include refid="baseCondition"/>
 	</select>
 	<!-- SQL CHIP -->
 	<select id="getOrderList" resultMap="OrderInfoForm">
@@ -65,8 +70,8 @@
 		FROM
 		    m_order mo 
 			<include refid="baseJoin"/>
-			WHERE
-		    mo.user_id = #{order.userId, jdbcType=NVARCHAR}
+			WHERE 1=1
+		    <include refid="baseCondition"/>
 		ORDER BY mo.pay_date DESC
 		LIMIT #{limit} OFFSET #{offset}
     </select>

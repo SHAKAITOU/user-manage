@@ -20,7 +20,7 @@ UserDetail.prototype.ID = {
 	BASE_PANEL_CARD_ID            : "basePanelCard",
     SELF_PANEL_CARD_ID            : "selfPanelCard",
 	
-	PREFIX_ID                     : "user_",
+	PREFIX_ID                     : "userInfo_user_",
 	ITEM_USER_ID                  : "id",
 	ITEM_USER_ID_SHOW             : "idShow",
 	ITEM_USER_TYPE                : "userType",
@@ -45,7 +45,7 @@ UserDetail.prototype.ID = {
 	ITEM_MEMBERSHIP_PATH          : "membershipPath",
 	ITEM_FOCUS_ON                 : "focusOn",
 	
-	PREFIX_EXTEND_ID              : "userExtend_",
+	PREFIX_EXTEND_ID              : "userInfo_userExtend_",
 	ITEM_INTRODUCER1              : "introducer1",
 	ITEM_INTRODUCER2              : "introducer2",
 	
@@ -167,105 +167,137 @@ UserDetail.prototype.initEvent = function(){
     });
     
     //init event to BTN_PHOTO_OPEN
-	ShaInput.button.onClick(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.BTN_PHOTO_OPEN), 
+	ShaInput.button.onClick(self.getObject(self.ID.BTN_PHOTO_OPEN), 
 		function(event) {
-    		ShaAjax.pop.postDialogMiddleCenter(
-    			self.i18n["m_user_extend.photo"],
-    			Pos.constants.setInfo.jsView.common.url_com_show_photo, 
-    			self.getForm().serializeArray()); 
+			if (self.getObject(self.ID.ITEM_ORDER_PHOTO).val() === "") {
+				return;
+			}
+    		ShaInput.img.previewInDialog(
+				self.getForm(), 
+    			self.ID.ITEM_PHOTO,
+    			function(imgData) {
+					var title = self.i18n["m_user_extend.photo"];
+					var html = ShaInput.img.previewImgCardHtml(260, 250, "ShaDialog.dialogs.subSubDialogClose();", imgData);
+					ShaDialog.dialogs.subSubDialogSmallCenter(title,html);
+				}
+    		);
 	    }
 	);
 	
 	//init event to BTN_EDUCATIONAL_AT_OPEN
-	ShaInput.button.onClick(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.BTN_EDUCATIONAL_AT_OPEN), 
+	ShaInput.button.onClick(self.getObject(self.ID.BTN_EDUCATIONAL_AT_OPEN), 
 		function(event) {
-    		ShaAjax.pop.postDialogMiddleCenter(
-    			self.i18n["m_user_extend.educational_at"],
-    			Pos.constants.setInfo.jsView.common.url_com_show_photo, 
-    			self.getForm().serializeArray()); 
+			if (self.getObject(self.ID.ITEM_EDUCATIONAL_AT).val() === "") {
+				return;
+			}
+    		ShaInput.img.previewInDialog(
+				self.getForm(), 
+    			self.ID.ITEM_EDUCATIONAL_AT,
+    			function(imgData) {
+					var title = self.i18n["m_user_extend.educational_at"];
+					var html = ShaInput.img.previewImgCardHtml(260, 250, "ShaDialog.dialogs.subSubDialogClose();", imgData);
+					ShaDialog.dialogs.subSubDialogSmallCenter(title,html);
+				}
+    		);
 	    }
 	);
 	
 	//init event to BTN_BACHELOR_AT_OPEN
-	ShaInput.button.onClick(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.BTN_BACHELOR_AT_OPEN), 
+	ShaInput.button.onClick(self.getObject(self.ID.BTN_BACHELOR_AT_OPEN), 
 		function(event) {
-    		ShaAjax.pop.postDialogMiddleCenter(
-    			self.i18n["m_user_extend.bachelor_at"],
-    			Pos.constants.setInfo.jsView.common.url_com_show_photo, 
-    			self.getForm().serializeArray()); 
+			if (self.getObject(self.ID.ITEM_BACHELOR_AT).val() === "") {
+				return;
+			}
+    		ShaInput.img.previewInDialog(
+				self.getForm(), 
+    			self.ID.ITEM_BACHELOR_AT,
+    			function(imgData) {
+					var title = self.i18n["m_user_extend.bachelor_at"];
+					var html = ShaInput.img.previewImgCardHtml(260, 250, "ShaDialog.dialogs.subSubDialogClose();", imgData);
+					ShaDialog.dialogs.subSubDialogSmallCenter(title,html);
+				}
+    		);
 	    }
 	);
 	
 	//init event to BTN_VOCATIONAL_AT_OPEN
-	ShaInput.button.onClick(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.BTN_VOCATIONAL_AT_OPEN), 
+	ShaInput.button.onClick(self.getObject(self.ID.BTN_VOCATIONAL_AT_OPEN), 
 		function(event) {
-    		ShaAjax.pop.postDialogMiddleCenter(
-    			self.i18n["m_user_extend.vocational_at"],
-    			Pos.constants.setInfo.jsView.common.url_com_show_photo, 
-    			self.getForm().serializeArray()); 
+			if (self.getObject(self.ID.ITEM_VOCATIONAL_AT).val() === "") {
+				return;
+			}
+    		ShaInput.img.previewInDialog(
+				self.getForm(), 
+    			self.ID.ITEM_VOCATIONAL_AT,
+    			function(imgData) {
+					var title = self.i18n["m_user_extend.vocational_at"];
+					var html = ShaInput.img.previewImgCardHtml(260, 250, "ShaDialog.dialogs.subSubDialogClose();", imgData);
+					ShaDialog.dialogs.subSubDialogSmallCenter(title,html);
+				}
+    		);
 	    }
 	);
 	
-	ShaInput.button.onChange(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_PHOTO), 
+	ShaInput.button.onChange(self.getObject(self.ID.ITEM_PHOTO), 
 		function(event) {
-    		var files = self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_PHOTO).prop('files');
+    		var files = self.getObject(self.ID.ITEM_PHOTO).prop('files');
     		var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
 	        if ($.inArray(files[0].name.split('.').pop().toLowerCase(), fileExtension) == -1) {
 	            ShaDialog.dialogs.alert(self.i18n["common.check.file.wrongExt"]);
-	            self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_PHOTO).val("");
+	            self.getObject(self.ID.ITEM_PHOTO).val("");
 	        } else if(files[0].size > (1024*1024)) {
 				ShaDialog.dialogs.alert(self.i18n["common.check.file.wrongSize"]);
-	            self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_PHOTO).val("");
+	            self.getObject(self.ID.ITEM_PHOTO).val("");
 			} else {
-				self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_PHOTO_NAME).val(files[0].name);
+				self.getObject(self.ID.ITEM_PHOTO_NAME).val(files[0].name);
 			}
 	    }
 	);
 	
-	ShaInput.button.onChange(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_EDUCATIONAL_AT), 
+	ShaInput.button.onChange(self.getObject(self.ID.ITEM_EDUCATIONAL_AT), 
 		function(event) {
-    		var files = self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_EDUCATIONAL_AT).prop('files');
+    		var files = self.getObject(self.ID.ITEM_EDUCATIONAL_AT).prop('files');
     		var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
 	        if ($.inArray(files[0].name.split('.').pop().toLowerCase(), fileExtension) == -1) {
 	            ShaDialog.dialogs.alert(self.i18n["common.check.file.wrongExt"]);
-	            self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_EDUCATIONAL_AT).val("");
+	            self.getObject(self.ID.ITEM_EDUCATIONAL_AT).val("");
 	        } else if(files[0].size > (1024*1024*5)) {
 				ShaDialog.dialogs.alert(self.i18n["common.check.file.wrongSize"]);
-	            self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_EDUCATIONAL_AT).val("");
+	            self.getObject(self.ID.ITEM_EDUCATIONAL_AT).val("");
 			} else {
-				self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_EDUCATIONAL_AT_NAME).val(files[0].name);
+				self.getObject(self.ID.ITEM_EDUCATIONAL_AT_NAME).val(files[0].name);
 			}
 	    }
 	);
 	
-	ShaInput.button.onChange(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_BACHELOR_AT), 
+	ShaInput.button.onChange(self.getObject(self.ID.ITEM_BACHELOR_AT), 
 		function(event) {
-    		var files = self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_BACHELOR_AT).prop('files');
+    		var files = self.getObject(self.ID.ITEM_BACHELOR_AT).prop('files');
     		var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
 	        if ($.inArray(files[0].name.split('.').pop().toLowerCase(), fileExtension) == -1) {
 	            ShaDialog.dialogs.alert(self.i18n["common.check.file.wrongExt"]);
-	            self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_BACHELOR_AT).val("");
+	            self.getObject(self.ID.ITEM_BACHELOR_AT).val("");
 	        } else if(files[0].size > (1024*1024*5)) {
 				ShaDialog.dialogs.alert(self.i18n["common.check.file.wrongSize"]);
-	            self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_BACHELOR_AT).val("");
+	            self.getObject(self.ID.ITEM_BACHELOR_AT).val("");
 			} else {
-				self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_BACHELOR_AT_NAME).val(files[0].name);
+				self.getObject(self.ID.ITEM_BACHELOR_AT_NAME).val(files[0].name);
 			}
 	    }
 	);
 	
-	ShaInput.button.onChange(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_VOCATIONAL_AT), 
+	ShaInput.button.onChange(self.getObject(self.ID.ITEM_VOCATIONAL_AT), 
 		function(event) {
-    		var files = self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_VOCATIONAL_AT).prop('files');
+    		var files = self.getObject(self.ID.ITEM_VOCATIONAL_AT).prop('files');
     		var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
 	        if ($.inArray(files[0].name.split('.').pop().toLowerCase(), fileExtension) == -1) {
 	            ShaDialog.dialogs.alert(self.i18n["common.check.file.wrongExt"]);
-	            self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_VOCATIONAL_AT).val("");
+	            self.getObject(self.ID.ITEM_VOCATIONAL_AT).val("");
 	        } else if(files[0].size > (1024*1024*5)) {
 				ShaDialog.dialogs.alert(self.i18n["common.check.file.wrongSize"]);
-	            self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_VOCATIONAL_AT).val("");
+	            self.getObject(self.ID.ITEM_VOCATIONAL_AT).val("");
 			} else {
-				self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_VOCATIONAL_AT_NAME).val(files[0].name);
+				self.getObject(self.ID.ITEM_VOCATIONAL_AT_NAME).val(files[0].name);
 			}
 	    }
 	);
@@ -335,14 +367,18 @@ UserDetail.prototype.setEditableExtendDetail = function(){
 	var self = this;
 	ShaInput.obj.enabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_INTRODUCER1));	
 	ShaInput.obj.enabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_INTRODUCER2));
-	ShaInput.obj.enabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_PHOTO));
-	ShaInput.obj.enabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_PHOTO_LBL));
-	ShaInput.obj.enabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_EDUCATIONAL_AT));
-	ShaInput.obj.enabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_EDUCATIONAL_AT_LBL));	
-	ShaInput.obj.enabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_BACHELOR_AT));
-	ShaInput.obj.enabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_BACHELOR_AT_LBL));
-	ShaInput.obj.enabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_VOCATIONAL_AT));
-	ShaInput.obj.enabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_VOCATIONAL_AT_LBL));
+	ShaInput.obj.enabled(self.getObject(self.ID.ITEM_PHOTO));
+	ShaInput.obj.enabled(self.getObject(self.ID.ITEM_PHOTO_LBL));
+	ShaInput.obj.enabledBtn(self.getObject(self.ID.BTN_PHOTO_OPEN));
+	ShaInput.obj.enabled(self.getObject(self.ID.ITEM_EDUCATIONAL_AT));
+	ShaInput.obj.enabled(self.getObject(self.ID.ITEM_EDUCATIONAL_AT_LBL));	
+	ShaInput.obj.enabledBtn(self.getObject(self.ID.BTN_EDUCATIONAL_AT_OPEN));
+	ShaInput.obj.enabled(self.getObject(self.ID.ITEM_BACHELOR_AT));
+	ShaInput.obj.enabled(self.getObject(self.ID.ITEM_BACHELOR_AT_LBL));
+	ShaInput.obj.enabledBtn(self.getObject(self.ID.BTN_BACHELOR_AT_OPEN));
+	ShaInput.obj.enabled(self.getObject(self.ID.ITEM_VOCATIONAL_AT));
+	ShaInput.obj.enabled(self.getObject(self.ID.ITEM_VOCATIONAL_AT_LBL));
+	ShaInput.obj.enabledBtn(self.getObject(self.ID.BTN_VOCATIONAL_AT_OPEN));
 	ShaInput.obj.enabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_MAJOR));	
 	ShaInput.obj.enabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_RESEARCH_DIR));
 	ShaInput.obj.enabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_LEARN_EXPERIENCE));
@@ -355,18 +391,22 @@ UserDetail.prototype.setReadonlyExtendDetail = function(){
 	var self = this;
 	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_INTRODUCER1));	
 	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_INTRODUCER2));	
-	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_PHOTO));	
-	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_PHOTO_LBL));
-	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_PHOTO_NAME));
-	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_EDUCATIONAL_AT));
-	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_EDUCATIONAL_AT_LBL));
-	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_EDUCATIONAL_AT_NAME));	
-	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_BACHELOR_AT));
-	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_BACHELOR_AT_LBL));
-	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_BACHELOR_AT_NAME));
-	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_VOCATIONAL_AT));
-	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_VOCATIONAL_AT_LBL));
-	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_VOCATIONAL_AT_NAME));
+	ShaInput.obj.disabled(self.getObject(self.ID.ITEM_PHOTO));	
+	ShaInput.obj.disabled(self.getObject(self.ID.ITEM_PHOTO_LBL));
+	ShaInput.obj.disabled(self.getObject(self.ID.ITEM_PHOTO_NAME));
+	ShaInput.obj.disabledBtn(self.getObject(self.ID.BTN_PHOTO_OPEN));
+	ShaInput.obj.disabled(self.getObject(self.ID.ITEM_EDUCATIONAL_AT));
+	ShaInput.obj.disabled(self.getObject(self.ID.ITEM_EDUCATIONAL_AT_LBL));
+	ShaInput.obj.disabled(self.getObject(self.ID.ITEM_EDUCATIONAL_AT_NAME));	
+	ShaInput.obj.disabledBtn(self.getObject(self.ID.BTN_EDUCATIONAL_AT_OPEN));
+	ShaInput.obj.disabled(self.getObject(self.ID.ITEM_BACHELOR_AT));
+	ShaInput.obj.disabled(self.getObject(self.ID.ITEM_BACHELOR_AT_LBL));
+	ShaInput.obj.disabled(self.getObject(self.ID.ITEM_BACHELOR_AT_NAME));
+	ShaInput.obj.disabledBtn(self.getObject(self.ID.BTN_BACHELOR_AT_OPEN));
+	ShaInput.obj.disabled(self.getObject(self.ID.ITEM_VOCATIONAL_AT));
+	ShaInput.obj.disabled(self.getObject(self.ID.ITEM_VOCATIONAL_AT_LBL));
+	ShaInput.obj.disabled(self.getObject(self.ID.ITEM_VOCATIONAL_AT_NAME));
+	ShaInput.obj.disabledBtn(self.getObject(self.ID.BTN_VOCATIONAL_AT_OPEN));
 	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_MAJOR));	
 	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_RESEARCH_DIR));
 	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_LEARN_EXPERIENCE));

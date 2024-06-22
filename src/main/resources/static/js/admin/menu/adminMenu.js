@@ -21,7 +21,9 @@ AdminMenu.prototype.ID = {
     NAVI_FOR_PC                     : "bigScreenNav",
     NAVI_FOR_PHONE                  : "smallScreenNav",
     
-    CLASS_NM_MENU5004      			: 'menu5004',
+    CLASS_NM_ORDER_SEARCH           : "menu2001",
+    CLASS_NM_USER_SEARCH      		: 'menu4001',
+    CLASS_NM_MESSAGE_SEARCH         : 'menu5001',
     ITEM_LANGUAGE                   : 'language',
     //div
     DIV_MAINBODY                    : 'mainBody',
@@ -36,6 +38,9 @@ AdminMenu.prototype.init = function(){
     var self = this;
     
     $('[data-toggle="tooltip"]').tooltip({ boundary: 'window' });
+    
+	$('#mediaHeight').val(window.innerHeight ? window.innerHeight: $(window).height());
+	$('#mediaWidth').val(window.innerWidth ? window.innerWidth: $(window).width());
     
     ShaUtil.time.showTime();
     
@@ -55,14 +60,47 @@ AdminMenu.prototype.initEvent = function(){
     var self = this;
     
 	self.ajustNavi();
+	
+	
+	//缴费订单查询
+    $buttonList = self.getObjectList(self.ID.CLASS_NM_ORDER_SEARCH);
+    $buttonList.each(function(i, elem){
+	    ShaInput.button.onClick($(elem),
+	    	function(event) {
+				ShaAjax.ajax.get(
+	                self.jsContext.adminJsView.adminOrderSearch.url_init, 
+	                null, 
+	                function(data){
+	                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
+	                }
+	            ); 
+			}
+	    );
+	});
     
     //会员查询
-    $buttonList = self.getObjectList(self.ID.CLASS_NM_MENU5004);
+    $buttonList = self.getObjectList(self.ID.CLASS_NM_USER_SEARCH);
     $buttonList.each(function(i, elem){
 	    ShaInput.button.onClick($(elem),
 	    	function(event) {
 				ShaAjax.ajax.get(
 	                self.jsContext.adminJsView.adminUserSearch.url_init, 
+	                null, 
+	                function(data){
+	                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
+	                }
+	            ); 
+			}
+	    );
+	});
+	
+	//站内消息查询
+	$buttonList = self.getObjectList(self.ID.CLASS_NM_MESSAGE_SEARCH);
+    $buttonList.each(function(i, elem){
+	    ShaInput.button.onClick($(elem),
+	    	function(event) {
+				ShaAjax.ajax.get(
+	                self.jsContext.adminJsView.adminMessageSearch.url_init, 
 	                null, 
 	                function(data){
 	                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);

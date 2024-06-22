@@ -11,6 +11,10 @@ import org.springframework.core.env.Environment;
 
 import cn.caam.gs.app.admin.login.view.AdminLoginViewHelper;
 import cn.caam.gs.app.admin.menu.menu.AdminMenuViewHelper;
+import cn.caam.gs.app.admin.message.view.AdminMessageDetailViewHelper;
+import cn.caam.gs.app.admin.message.view.AdminMessagePushViewHelper;
+import cn.caam.gs.app.admin.message.view.AdminMessageSearchViewHelper;
+import cn.caam.gs.app.admin.userorder.view.AdminOrderSearchViewHelper;
 import cn.caam.gs.app.admin.usersearch.view.AdminUserSearchViewHelper;
 import cn.caam.gs.app.common.view.CommonViewHelper;
 import cn.caam.gs.app.user.detail.view.UserDetailViewHelper;
@@ -147,9 +151,19 @@ public class JavaScriptSet {
 	
 	private Map<String, Object> initAdminJsView() {
 		Map<String, Object> jsView = new HashMap<String, Object>();
-		jsView.put("adminLogin",      AdminLoginViewHelper.getJsProperties());
-		jsView.put("adminMenu",       AdminMenuViewHelper.getJsProperties());
-		jsView.put("adminUserSearch", AdminUserSearchViewHelper.getJsProperties());
+		jsView.put("adminLogin",         AdminLoginViewHelper.getJsProperties());
+		jsView.put("adminMenu",          AdminMenuViewHelper.getJsProperties());
+		
+		jsView.put("adminUserSearch",    AdminUserSearchViewHelper.getJsProperties());
+		
+		jsView.put("adminMessageSearch", AdminMessageSearchViewHelper.getJsProperties());
+		jsView.put("adminMessagePush",   AdminMessagePushViewHelper.getJsProperties());
+		jsView.put("adminMessageDetail", AdminMessageDetailViewHelper.getJsProperties());
+		
+		jsView.put("adminOrderSearch",   AdminOrderSearchViewHelper.getJsProperties());
+		
+		
+		
 		return jsView;
 	}
 

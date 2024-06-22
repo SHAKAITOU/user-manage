@@ -36,6 +36,8 @@ public class EncryptorUtil {
     private static final String ORDER_ID_RANDOM = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String ORDER_ID_RANDOM_LENGTH = "7";
     
+    private static final String MSG_ID_RANDOM_LENGTH = "3";
+    
 	public static String encrypt(String source) {
 		try {
 			Cipher cipher = Cipher.getInstance(ALGORITHM);
@@ -83,6 +85,19 @@ public class EncryptorUtil {
         Properties properties = new Properties();
         properties.setProperty("kaptcha.textproducer.char.string", ORDER_ID_RANDOM);
         properties.setProperty("kaptcha.textproducer.char.length", ORDER_ID_RANDOM_LENGTH);
+        Config config = new Config(properties);
+        DefaultKaptcha defaultKaptcha = new DefaultKaptcha();
+        defaultKaptcha.setConfig(config);
+        String randomSubfix = defaultKaptcha.createText();
+        
+        return prefix + randomSubfix;
+    }
+    
+    public static String generateMsgId() {
+        String prefix = LocalDateUtility.getCurrentDateTimeString(DateTimePattern.UUUUMMDDHHMISS);
+        Properties properties = new Properties();
+        properties.setProperty("kaptcha.textproducer.char.string", ORDER_ID_RANDOM);
+        properties.setProperty("kaptcha.textproducer.char.length", MSG_ID_RANDOM_LENGTH);
         Config config = new Config(properties);
         DefaultKaptcha defaultKaptcha = new DefaultKaptcha();
         defaultKaptcha.setConfig(config);

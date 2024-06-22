@@ -461,6 +461,9 @@ INSERT INTO m_fixed_value VALUES ('F0019', '01', '电子票据',    1);
 --订单方式
 INSERT INTO m_fixed_value VALUES ('F0020', '01', '个人订单',    1);
 INSERT INTO m_fixed_value VALUES ('F0020', '02', '推荐订单',    2);
+--站内消息类型
+INSERT INTO m_fixed_value VALUES ('F0021', '01', '全体消息',    1);
+INSERT INTO m_fixed_value VALUES ('F0021', '02', '个人消息',    2);
 
 -- 会员基本信息 --
 DROP TABLE IF EXISTS m_user;
@@ -470,21 +473,21 @@ CREATE TABLE m_user
     name             VARCHAR(70)  NOT NULL COMMENT '会员名称(max64)',
     user_type        VARCHAR(6)   NOT NULL COMMENT '会员类型(F0002)',
     password         VARCHAR(200) NOT NULL COMMENT '密码',
-    membership_path  VARCHAR(3)   NOT NULL COMMENT '入会途径(F0012)',
+    membership_path  VARCHAR(6)   NOT NULL COMMENT '入会途径(F0012)',
     focus_on         VARCHAR(255)          COMMENT '关注(F0012)',
-    sex              VARCHAR(3)   NOT NULL COMMENT '性别(F0001)',
+    sex              VARCHAR(6)   NOT NULL COMMENT '性别(F0001)',
     birth            VARCHAR(10)  NOT NULL COMMENT '出生年月',
-    nationality      VARCHAR(3)   NOT NULL COMMENT '民族(F0005)',
-    political        VARCHAR(3)   NOT NULL COMMENT '政治面貌(F0003)',
-    edu_degree       VARCHAR(3)   NOT NULL COMMENT '学历(F0004)',
-    bachelor         VARCHAR(3)   NOT NULL COMMENT '学位(F0006)',
-    position         VARCHAR(3)            COMMENT '职务(F0007)',
+    nationality      VARCHAR(6)   NOT NULL COMMENT '民族(F0005)',
+    political        VARCHAR(6)   NOT NULL COMMENT '政治面貌(F0003)',
+    edu_degree       VARCHAR(6)   NOT NULL COMMENT '学历(F0004)',
+    bachelor         VARCHAR(6)   NOT NULL COMMENT '学位(F0006)',
+    position         VARCHAR(6)            COMMENT '职务(F0007)',
     employer         VARCHAR(70)  NOT NULL COMMENT '工作单位(max64)',
-    employer_type    VARCHAR(3)            COMMENT '单位性质(F0008)',
-    job_title        VARCHAR(3)            COMMENT '职称(F0009)',
-    certificate_type VARCHAR(3)   NOT NULL COMMENT '证件类型(F0010)',
+    employer_type    VARCHAR(6)            COMMENT '单位性质(F0008)',
+    job_title        VARCHAR(6)            COMMENT '职称(F0009)',
+    certificate_type VARCHAR(6)   NOT NULL COMMENT '证件类型(F0010)',
     certificate_code VARCHAR(20)  NOT NULL COMMENT '证件号码(max18)',
-    area             VARCHAR(3)   NOT NULL COMMENT '所在地区(F0011)',
+    area             VARCHAR(6)   NOT NULL COMMENT '所在地区(F0011)',
     area_sub         VARCHAR(6)   NOT NULL COMMENT '所在地区市级(F0011)',
     address          VARCHAR(140) NOT NULL COMMENT '通讯地址(max128)',
     postal_code      VARCHAR(10)  NOT NULL COMMENT '邮政编码(max10)',
@@ -492,6 +495,7 @@ CREATE TABLE m_user
     mail             VARCHAR(70)  NOT NULL COMMENT '电子邮箱(max64)',
     check_date       VARCHAR(20)  NOT NULL COMMENT '审核时间(yyyy-MM-dd)',
     check_status     VARCHAR(20)  NOT NULL COMMENT '审核状态(F0013)',
+    valid_status     VARCHAR(6)   NOT NULL COMMENT '有效状态',
     regist_date      VARCHAR(20)  NOT NULL COMMENT '入会时间(yyyy-MM-dd HH:mm:ss)',
     valid_start_date VARCHAR(20)  NOT NULL COMMENT '有效开始日期(yyyy-MM-dd HH:mm:ss)',
     valid_end_date   VARCHAR(20)  NOT NULL COMMENT '有效结束日期(yyyy-MM-dd HH:mm:ss)',
@@ -543,6 +547,7 @@ CREATE TABLE m_order
     refund_status    VARCHAR(3)            COMMENT '退款状态(F0016)',
     bill_status      VARCHAR(3)            COMMENT '开票状态(F0018)',
     memo             VARCHAR(255)          COMMENT '备注(max250)',
+    ans              VARCHAR(255)          COMMENT '回执(max250)',
     PRIMARY KEY (id)
 ) COMMENT='会员订单信息' ENGINE=InnoDB DEFAULT CHARSET=utf8;
 CREATE INDEX m_order_idx1 ON m_order (user_id);
@@ -591,3 +596,28 @@ CREATE TABLE m_image
     bill_photo_ext   VARCHAR(10)             COMMENT '发票图片文件扩展名',
     PRIMARY KEY (id)
 ) COMMENT='订单发票图片信息' ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 站内消息 --
+DROP TABLE IF EXISTS m_message;
+CREATE TABLE m_message
+( 
+    id               VARCHAR(50)    NOT NULL COMMENT '站内消息ID(yyyyMMddHHmmssR3)',
+    msg_type         VARCHAR(6)     NOT NULL COMMENT '站内消息类型(F0021)',
+    user_id          VARCHAR(20)             COMMENT '会员号(M/TYYMMDDHHmmSSR2)',
+    title            VARCHAR(255)   NOT NULL COMMENT '标题',
+    msg              TEXT           NOT NULL COMMENT '消息内容',
+    regist_date      VARCHAR(20)             COMMENT '消息时间(yyyy-MM-dd HH:mm:ss)',
+    PRIMARY KEY (id)
+) COMMENT='站内消息' ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE INDEX m_message_idx1 ON m_message (user_id);
+CREATE INDEX m_message_idx2 ON m_message (msg_type);
+
+-- 站内消息已读状态 --
+DROP TABLE IF EXISTS m_message_read;
+CREATE TABLE m_message_read
+( 
+    id               VARCHAR(50)    NOT NULL COMMENT '站内消息ID(yyyyMMddHHmmssR3)',
+    user_id          VARCHAR(20)             COMMENT '会员号(M/TYYMMDDHHmmSSR2)',
+    PRIMARY KEY (id)
+) COMMENT='站内消息已读状态' ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE INDEX m_message_read_idx1 ON m_message_read (user_id);

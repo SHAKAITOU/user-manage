@@ -127,9 +127,17 @@ try{
 			obj.css("background-color", "#EEEEEE");
 		},
 		
+		disabledBtn : function(obj){
+			obj.prop("disabled", true);
+		},
+		
 		enabled : function(obj){
 			obj.prop("disabled", false);
 			obj.css("background-color", "#FFFAF0");
+		},
+		
+		enabledBtn : function(obj){
+			obj.prop("disabled", false);
 		},
 		
 		readonly : function(obj){

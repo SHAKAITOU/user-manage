@@ -26,6 +26,7 @@ public class T200MOrder extends BaseTableDef implements BaseDdl{
     public static final String COL_REFUND_STATUS   = "refund_status";
     public static final String COL_BILL_STATUS     = "bill_status";
     public static final String COL_MEMO            = "memo";
+    public static final String COL_ANS             = "ans";
     
     public static final ColumnInfoForm[] cols = new ColumnInfoForm[] {
             // name | pk | type | charMaxLength | numPrecision | numScale | nullable | default | comment
@@ -44,6 +45,7 @@ public class T200MOrder extends BaseTableDef implements BaseDdl{
             new ColumnInfoForm(COL_REFUND_STATUS,false,    MySqlType.CHARACTER_VARYING.getType(), 3,  null, null, true , "", getLabelName(TABLE_NAME, COL_REFUND_STATUS),   getPlaceholder(TABLE_NAME, COL_REFUND_STATUS)),
             new ColumnInfoForm(COL_BILL_STATUS,  false,    MySqlType.CHARACTER_VARYING.getType(), 3,  null, null, true , "", getLabelName(TABLE_NAME, COL_BILL_STATUS),     getPlaceholder(TABLE_NAME, COL_BILL_STATUS)),
             new ColumnInfoForm(COL_MEMO,         false,    MySqlType.CHARACTER_VARYING.getType(),255, null, null, true , "", getLabelName(TABLE_NAME, COL_MEMO),            getPlaceholder(TABLE_NAME, COL_MEMO)),
+            new ColumnInfoForm(COL_ANS,          false,    MySqlType.CHARACTER_VARYING.getType(),255, null, null, true , "", getLabelName(TABLE_NAME, COL_ANS),             getPlaceholder(TABLE_NAME, COL_ANS)),
             
     };
     public ColumnInfoForm[] columnInfos() {

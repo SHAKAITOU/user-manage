@@ -149,6 +149,17 @@ public class HtmlViewHelper extends HtmlViewBaseHelper {
 		return sb.toString();
 	}
 	
+	public static String convertTextAreaContext(String textArea) {
+	    String preConStr = textArea.replaceAll("\r\n", "\n");
+	    preConStr = preConStr.replaceAll("\r", "\n");
+	    String[] chips = textArea.split("\n");
+	    String context = "";
+	    for (String chip : chips) {
+	        context += chip + "<BR>";
+	    }
+	    return context;
+	}
+	
 	public static boolean isPhoneMode(HttpServletRequest request) {
 	    int outWidth = LoginInfoHelper.getMediaWidth(request);
 	    return outWidth > 800 ? false : true;

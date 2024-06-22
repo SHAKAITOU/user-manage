@@ -34,6 +34,9 @@ Menu.prototype.init = function(){
 	//keep self instance for call back
 	var self = this;
 	
+	$('#mediaHeight').val(window.innerHeight ? window.innerHeight: $(window).height());
+	$('#mediaWidth').val(window.innerWidth ? window.innerWidth: $(window).width());
+	
 	//init bond event to btn
 	self.initEvent();
 	

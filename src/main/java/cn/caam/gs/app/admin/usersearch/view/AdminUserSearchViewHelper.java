@@ -147,7 +147,7 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
     
     //--------------------header BreadCrumb -----------------
     private static String setBreadCrumb() {
-        String[] names = new String[] {getContext("menu.group5"), getContext("menu.group5.button4")};
+        String[] names = new String[] {getContext("menu.group4"), getContext("menu.group4.button1")};
         return BreadCrumbSet.builder().labelNames(names).build().html();
     }
 

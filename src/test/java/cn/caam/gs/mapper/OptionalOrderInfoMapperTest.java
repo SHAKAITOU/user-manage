@@ -14,7 +14,7 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.annotation.Transactional;
 
 import cn.caam.gs.TestConstant;
-import cn.caam.gs.app.user.order.form.OrderSearchForm;
+import cn.caam.gs.app.common.form.OrderSearchForm;
 import cn.caam.gs.domain.db.base.entity.MOrder;
 import cn.caam.gs.domain.db.custom.entity.OrderInfo;
 import cn.caam.gs.domain.db.custom.mapper.OptionalOrderInfoMapper;

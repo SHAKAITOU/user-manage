@@ -4,9 +4,9 @@ package cn.caam.gs.common.html;
 import org.springframework.stereotype.Component;
 
 import cn.caam.gs.common.enums.CssClassType;
-import cn.caam.gs.common.html.element.DivAlertSet;
 import cn.caam.gs.common.html.element.DivContainerSet;
 import cn.caam.gs.common.html.element.DivContainerSet.DivContainerSetType;
+import cn.caam.gs.common.html.element.bs5.DivAlertSet;
 
 @Component
 public class HtmlDivContainerHelper extends HtmlBaseHelper {

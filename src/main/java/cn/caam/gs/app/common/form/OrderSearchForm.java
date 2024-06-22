@@ -1,4 +1,4 @@
-package cn.caam.gs.app.user.order.form;
+package cn.caam.gs.app.common.form;
 
 import cn.caam.gs.domain.db.base.entity.MOrder;
 import cn.caam.gs.app.GlobalConstants;

@@ -1,0 +1,45 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.caam.gs.domain.db.custom.mapper.OptionalMessageInfoMapper">
+	<!-- RESULT MAP -->
+    <resultMap id="MessageInfoForm" 
+                type="cn.caam.gs.domain.db.custom.entity.MessageInfo">
+        <id property="id" column="id"/>
+        <result property="msgTypeName"       column="msgTypeName"/>
+        <association property="message" 
+            resultMap="cn.caam.gs.domain.db.base.mapper.MMessageMapper.BaseResultMap">
+            <id column="id" property="id" />
+        </association>
+        <association property="messageRead" 
+            resultMap="cn.caam.gs.domain.db.base.mapper.MMessageReadMapper.BaseResultMap">
+            <id column="id" property="id" />
+        </association>
+    </resultMap>
+    <sql id="baseSelect">
+	    mm.*,
+	    F0021.name   AS msgTypeName
+    </sql>
+    <sql id="baseJoin">
+		LEFT JOIN m_fixed_value F0021   ON mm.msg_type        = F0021.value   AND F0021.code   = 'F0021'
+    </sql>
+    <!-- SQL CHIP -->
+	<select id="getMessageListCount" resultType="int">
+		SELECT COUNT(mm.id)
+		FROM
+		    m_message mm 
+		WHERE
+		    1=1
+	</select>
+	<!-- SQL CHIP -->
+	<select id="getMessageList" resultMap="MessageInfoForm">
+        SELECT
+		    <include refid="baseSelect"/>
+		FROM
+		    m_message mm 
+			<include refid="baseJoin"/>
+			WHERE
+		    1=1
+		ORDER BY mm.regist_date DESC
+		LIMIT #{limit} OFFSET #{offset}
+    </select>
+        
+</mapper>

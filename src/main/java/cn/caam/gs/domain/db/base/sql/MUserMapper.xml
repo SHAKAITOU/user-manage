@@ -32,6 +32,7 @@
     <result column="mail" property="mail" jdbcType="VARCHAR" />
     <result column="check_date" property="checkDate" jdbcType="VARCHAR" />
     <result column="check_status" property="checkStatus" jdbcType="VARCHAR" />
+    <result column="valid_status" property="validStatus" jdbcType="VARCHAR" />
     <result column="regist_date" property="registDate" jdbcType="VARCHAR" />
     <result column="valid_start_date" property="validStartDate" jdbcType="VARCHAR" />
     <result column="valid_end_date" property="validEndDate" jdbcType="VARCHAR" />
@@ -44,7 +45,7 @@
     id, name, user_type, password, membership_path, focus_on, sex, birth, nationality, 
     political, edu_degree, bachelor, position, employer, employer_type, job_title, certificate_type, 
     certificate_code, area, area_sub, address, postal_code, phone, mail, check_date, 
-    check_status, regist_date, valid_start_date, valid_end_date
+    check_status, valid_status, regist_date, valid_start_date, valid_end_date
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     <!--
@@ -77,8 +78,9 @@
       job_title, certificate_type, certificate_code, 
       area, area_sub, address, 
       postal_code, phone, mail, 
-      check_date, check_status, regist_date, 
-      valid_start_date, valid_end_date)
+      check_date, check_status, valid_status, 
+      regist_date, valid_start_date, valid_end_date
+      )
     values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{userType,jdbcType=VARCHAR}, 
       #{password,jdbcType=VARCHAR}, #{membershipPath,jdbcType=VARCHAR}, #{focusOn,jdbcType=VARCHAR}, 
       #{sex,jdbcType=VARCHAR}, #{birth,jdbcType=VARCHAR}, #{nationality,jdbcType=VARCHAR}, 
@@ -87,8 +89,9 @@
       #{jobTitle,jdbcType=VARCHAR}, #{certificateType,jdbcType=VARCHAR}, #{certificateCode,jdbcType=VARCHAR}, 
       #{area,jdbcType=VARCHAR}, #{areaSub,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
       #{postalCode,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{mail,jdbcType=VARCHAR}, 
-      #{checkDate,jdbcType=VARCHAR}, #{checkStatus,jdbcType=VARCHAR}, #{registDate,jdbcType=VARCHAR}, 
-      #{validStartDate,jdbcType=VARCHAR}, #{validEndDate,jdbcType=VARCHAR})
+      #{checkDate,jdbcType=VARCHAR}, #{checkStatus,jdbcType=VARCHAR}, #{validStatus,jdbcType=VARCHAR}, 
+      #{registDate,jdbcType=VARCHAR}, #{validStartDate,jdbcType=VARCHAR}, #{validEndDate,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="cn.caam.gs.domain.db.base.entity.MUser" >
     <!--
@@ -174,6 +177,9 @@
       </if>
       <if test="checkStatus != null" >
         check_status,
+      </if>
+      <if test="validStatus != null" >
+        valid_status,
       </if>
       <if test="registDate != null" >
         regist_date,
@@ -263,6 +269,9 @@
       </if>
       <if test="checkStatus != null" >
         #{checkStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="validStatus != null" >
+        #{validStatus,jdbcType=VARCHAR},
       </if>
       <if test="registDate != null" >
         #{registDate,jdbcType=VARCHAR},
@@ -357,6 +366,9 @@
       <if test="checkStatus != null" >
         check_status = #{checkStatus,jdbcType=VARCHAR},
       </if>
+      <if test="validStatus != null" >
+        valid_status = #{validStatus,jdbcType=VARCHAR},
+      </if>
       <if test="registDate != null" >
         regist_date = #{registDate,jdbcType=VARCHAR},
       </if>
@@ -400,6 +412,7 @@
       mail = #{mail,jdbcType=VARCHAR},
       check_date = #{checkDate,jdbcType=VARCHAR},
       check_status = #{checkStatus,jdbcType=VARCHAR},
+      valid_status = #{validStatus,jdbcType=VARCHAR},
       regist_date = #{registDate,jdbcType=VARCHAR},
       valid_start_date = #{validStartDate,jdbcType=VARCHAR},
       valid_end_date = #{validEndDate,jdbcType=VARCHAR}

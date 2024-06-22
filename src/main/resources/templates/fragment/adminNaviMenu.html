@@ -5,6 +5,8 @@
 
 <div th:fragment="navi">
 <form id="menu_form">
+    <input type="hidden" th:field="${loginForm.mediaHeight}">
+    <input type="hidden" th:field="${loginForm.mediaWidth}">
 <div class="fixed-top">
   <!-- for pc -->
 <nav id="bigScreenNav" class="navbar navbar-expand-lg navbar-dark bg-primary" style="display: block;">
@@ -21,21 +23,21 @@
       <ul class="navbar-nav me-auto">
         <li class="nav-item dropdown">
 			<a class="nav-link dropdown-toggle label-16b" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-            	<i class="fas fa-stamp"></i>&nbsp;&nbsp;[[#{menu.group1}]]
+            	<i class="fas fa-stamp"></i>&nbsp;[[#{menu.group1}]]
 			</a>
       		<div class="dropdown-menu" style="min-width:200px">
 	            <!-- =================== group1 ================ -->
 	            <div class="row">
 					<div class="col-12">
 						<a id="menu1001" class="dropdown-item label-16b" href="#">
-							<i class="fas fa-user"></i>&nbsp;&nbsp;[[#{menu.group1.button1}]]
+							<i class="fas fa-user"></i>&nbsp;[[#{menu.group1.button1}]]
 						</a>
 	            	</div>
 	            </div>
 	            <div class="row">
 					<div class="col-12">
 						<a id="menu1002" class="dropdown-item label-16b" href="#">
-	 						<i class="fas fa-building"></i>&nbsp;&nbsp;[[#{menu.group1.button2}]]
+	 						<i class="fas fa-building"></i>&nbsp;[[#{menu.group1.button2}]]
 	 					</a>
 	                </div>
 				</div>
@@ -44,21 +46,42 @@
 		</li>
 		<li class="nav-item dropdown">
 			<a class="nav-link dropdown-toggle label-16b" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-				<i class="fas fa-stamp"></i>&nbsp;&nbsp;[[#{menu.group2}]]
+				<i class="fas fa-stamp"></i>&nbsp;[[#{menu.group2}]]
 			</a>
       		<div class="dropdown-menu" style="min-width:200px">
         		<!-- =================== group2 ================ -->
         		<div class="row">
           			<div class="col-12">
-            			<a id="menu2001" class="dropdown-item label-16b" href="#">
-              				<i class="fas fa-user"></i>&nbsp;&nbsp;[[#{menu.group2.button1}]]
+            			<a class="dropdown-item label-16b menu2001" href="#">
+              				<i class="fas fa-user"></i>&nbsp;[[#{menu.group2.button1}]]
 						</a>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-12">
-						<a id="menu2002" class="dropdown-item label-16b" href="#">
-							<i class="fas fa-building"></i>&nbsp;&nbsp;[[#{menu.group2.button2}]]
+						<a class="dropdown-item label-16b" href="#">
+							<i class="fas fa-building"></i>&nbsp;[[#{menu.group2.button2}]]
+						</a>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12">
+						<a class="dropdown-item label-16b" href="#">
+							<i class="fas fa-building"></i>&nbsp;[[#{menu.group2.button3}]]
+						</a>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12">
+						<a class="dropdown-item label-16b" href="#">
+							<i class="fas fa-building"></i>&nbsp;[[#{menu.group2.button4}]]
+						</a>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12">
+						<a class="dropdown-item label-16b" href="#">
+							<i class="fas fa-building"></i>&nbsp;[[#{menu.group2.button5}]]
 						</a>
 					</div>
 				</div>
@@ -67,14 +90,21 @@
 		</li>
 		<li class="nav-item dropdown">
 			<a class="nav-link dropdown-toggle label-16b" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-				<i class="fas fa-receipt"></i>&nbsp;&nbsp;[[#{menu.group3}]]
+				<i class="fas fa-receipt"></i>&nbsp;[[#{menu.group3}]]
 			</a>
 			<div class="dropdown-menu" style="min-width:200px">
 				<!-- =================== group3 ================ -->
 				<div class="row">
 					<div class="col-12">
                         <a id="menu3001" class="dropdown-item label-16b" href="#">
-                          <i class="fas fa-user"></i>&nbsp;&nbsp;[[#{menu.group3.button1}]]
+                            <i class="fas fa-user"></i>&nbsp;[[#{menu.group3.button1}]]
+						</a>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12">
+						<a id="menu2002" class="dropdown-item label-16b" href="#">
+							<i class="fas fa-building"></i>&nbsp;[[#{menu.group3.button2}]]
 						</a>
 					</div>
 				</div>
@@ -83,65 +113,37 @@
 		</li>
 		<li class="nav-item dropdown">
 			<a class="nav-link dropdown-toggle label-16b" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-				<i class="fas fa-thumbs-up"></i>&nbsp;&nbsp;[[#{menu.group4}]]
+				<i class="fas fa-thumbs-up"></i>&nbsp;[[#{menu.group4}]]
 			</a>
 			<div class="dropdown-menu" style="min-width:200px">
 				<!-- =================== group4 ================ -->
 				<div class="row">
 					<div class="col-12">
-						<a id="menu4001" class="dropdown-item label-16b" href="#">
-							<i class="fas fa-stamp"></i>&nbsp;&nbsp;[[#{menu.group4.button1}]]
+						<a class="dropdown-item label-16b menu4001" href="#">
+							<i class="fas fa-stamp"></i>&nbsp;[[#{menu.group4.button1}]]
 						</a>
 					</div>
 				</div>
-				<div class="row">
-					<div class="col-12">
-						<a id="menu4002" class="dropdown-item label-16b" href="#">
-							<i class="fas fa-thumbs-up"></i>&nbsp;&nbsp;[[#{menu.group4.button2}]]
-						</a>
-					</div>
-				</div>
-                <div class="row">
-					<div class="col-12">
-						<a id="menu4003" class="dropdown-item label-16b" href="#">
-							<i class="fas fa-receipt"></i>&nbsp;&nbsp;[[#{menu.group4.button3}]]
-						</a>
-					</div>
-                </div>
                 <!-- ========================================= -->
 			</div>
 		</li>
         <li class="nav-item dropdown">
 			<a class="nav-link dropdown-toggle label-16b" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-				<i class="fas fa-user-friends"></i>&nbsp;&nbsp;[[#{menu.group5}]]
+				<i class="fas fa-user-friends"></i>&nbsp;[[#{menu.group5}]]
 			</a>
 			<div class="dropdown-menu" style="min-width:200px">
 				<!-- =================== group5 ================ -->
 				<div class="row">
 					<div class="col-12">
-						<a id="menu5001" class="dropdown-item label-16b" href="#">
-							<i class="fas fa-user-check"></i>&nbsp;&nbsp;[[#{menu.group5.button1}]]
+						<a class="dropdown-item label-16b menu5001" href="#">
+							<i class="fa fa-bullhorn"></i>&nbsp;[[#{menu.group5.button1}]]
 						</a>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-12">
 						<a id="menu5002" class="dropdown-item label-16b" href="#">
-							<i class="fas fa-user-clock"></i>&nbsp;&nbsp;[[#{menu.group5.button2}]]
-						</a>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-12">
-						<a id="menu5003" class="dropdown-item label-16b" href="#">
-							<i class="fas fa-user-lock"></i>&nbsp;&nbsp;[[#{menu.group5.button3}]]
-						</a>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-12">
-						<a class="dropdown-item label-16b menu5004" href="#">
-							<i class="fas fa-users"></i>&nbsp;&nbsp;[[#{menu.group5.button4}]]
+							<i class="fas fa-user-clock"></i>&nbsp;[[#{menu.group5.button2}]]
 						</a>
 					</div>
 				</div>
@@ -154,28 +156,28 @@
 		<ul class="navbar-nav">
 			<li class="nav-item dropdown">
 				<a class="nav-link dropdown-toggle label-16b" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-					<i class="fas fa-user-circle"></i>&nbsp;&nbsp;超级管理员
+					<i class="fas fa-user-circle"></i>&nbsp;超级管理员
 				</a>
 				<div class="dropdown-menu" style="min-width:200px">
 					<!-- =================== 応用 ================ -->
 					<div class="row">
 						<div class="col-12">
 							<a class="dropdown-item label-16b" href="#">
-								<i class="fas fa-address-card"></i>&nbsp;&nbsp;[[#{menu.group9.button1}]]
+								<i class="fas fa-address-card"></i>&nbsp;[[#{menu.group9.button1}]]
 							</a>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-12">
 							<a class="dropdown-item label-16b" href="#">
-								<i class="fas fa-pencil-alt"></i>&nbsp;&nbsp;[[#{menu.group9.button2}]]
+								<i class="fas fa-pencil-alt"></i>&nbsp;[[#{menu.group9.button2}]]
 							</a>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-12">
 							<a class="dropdown-item label-16b" href="#">
-								<i class="fa fa-sign-out-alt" aria-hidden="true"></i>&nbsp;&nbsp;[[#{menu.group9.button3}]]
+								<i class="fa fa-sign-out-alt" aria-hidden="true"></i>&nbsp;[[#{menu.group9.button3}]]
 							</a>
 						</div>
 					</div>
@@ -201,19 +203,19 @@
 					<!-- =================== group1 ================ -->
 					<div class="row">
 						<div class="col-12 label-16">
-							<strong>&nbsp;<i class="fas fa-stamp"></i>&nbsp;&nbsp;[[#{menu.group1}]]</strong>
+							<strong>&nbsp;<i class="fas fa-stamp"></i>&nbsp;[[#{menu.group1}]]</strong>
 						</div>
 					</div>
 					<div class="dropdown-divider"></div>
 					<div class="row">
 						<div class="col-6">
 							<a class="dropdown-item" href="#"> 
-								<i class="fas fa-user"></i>&nbsp;&nbsp;[[#{menu.group1.button1}]]
+								<i class="fas fa-user"></i>&nbsp;[[#{menu.group1.button1}]]
 							</a>
 						</div>
 						<div class="col-6">
 							<a class="dropdown-item" href="#"> 
-								<i class="fas fa-building"></i>&nbsp;&nbsp;[[#{menu.group1.button2}]]
+								<i class="fas fa-building"></i>&nbsp;[[#{menu.group1.button2}]]
 							</a>
 						</div>
 					</div>
@@ -223,36 +225,38 @@
 					<div class="dropdown-divider"></div>
 					<div class="row">
 						<div class="col-12 label-16">
-							<strong>&nbsp;<i class="fas fa-stamp"></i>&nbsp;&nbsp;[[#{menu.group2}]]</strong>
+							<strong>&nbsp;<i class="fas fa-stamp"></i>&nbsp;[[#{menu.group2}]]</strong>
 						</div>
 					</div>
 					<div class="dropdown-divider"></div>
 					<div class="row">
 						<div class="col-6">
-							<a class="dropdown-item" href="#">
-								<i class="fas fa-user"></i>&nbsp;&nbsp;[[#{menu.group2.button1}]]
+							<a class="dropdown-item menu2001" href="#">
+								<i class="fas fa-user"></i>&nbsp;[[#{menu.group2.button1}]]
 							</a>
 						</div>
 						<div class="col-6">
 							<a class="dropdown-item" href="#">
-								<i class="fas fa-user"></i>&nbsp;&nbsp;[[#{menu.group2.button2}]]
+								<i class="fas fa-user"></i>&nbsp;[[#{menu.group2.button2}]]
 							</a>
 						</div>
 					</div>
-					<!-- ========================================= -->
-					
-					<!-- =================== group3 ================ -->
-					<div class="dropdown-divider"></div>
-					<div class="row">
-						<div class="col-12 label-16">
-						<strong>&nbsp;<i class="fas fa-receipt"></i>&nbsp;&nbsp;[[#{menu.group3}]]</strong>
-						</div>
-					</div>
-					<div class="dropdown-divider"></div>
 					<div class="row">
 						<div class="col-6">
-							<a class="dropdown-item" href="#"> 
-								<i class="fas fa-user"></i>&nbsp;&nbsp;[[#{menu.group3.button1}]]
+							<a class="dropdown-item" href="#">
+								<i class="fas fa-user"></i>&nbsp;[[#{menu.group2.button3}]]
+							</a>
+						</div>
+						<div class="col-6">
+							<a class="dropdown-item" href="#">
+								<i class="fas fa-user"></i>&nbsp;[[#{menu.group2.button4}]]
+							</a>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-6">
+							<a class="dropdown-item" href="#">
+								<i class="fas fa-user"></i>&nbsp;[[#{menu.group2.button5}]]
 							</a>
 						</div>
 						<div class="col-6">
@@ -261,32 +265,44 @@
 					</div>
 					<!-- ========================================= -->
 					
+					<!-- =================== group3 ================ -->
+					<div class="dropdown-divider"></div>
+					<div class="row">
+						<div class="col-12 label-16">
+						<strong>&nbsp;<i class="fas fa-receipt"></i>&nbsp;[[#{menu.group3}]]</strong>
+						</div>
+					</div>
+					<div class="dropdown-divider"></div>
+					<div class="row">
+						<div class="col-6">
+							<a class="dropdown-item" href="#"> 
+								<i class="fas fa-user"></i>&nbsp;[[#{menu.group3.button1}]]
+							</a>
+						</div>
+						<div class="col-6">
+							<a class="dropdown-item" href="#"> 
+								<i class="fas fa-user"></i>&nbsp;[[#{menu.group3.button2}]]
+							</a>
+						</div>
+					</div>
+					<!-- ========================================= -->
+					
 					<!-- =================== group4 ================ -->
 					<div class="dropdown-divider"></div>
 					<div class="row">
 						<div class="col-12 label-16">
-							<strong>&nbsp;<i class="fas fa-thumbs-up"></i>&nbsp;&nbsp;[[#{menu.group4}]]</strong>
+							<strong>&nbsp;<i class="fas fa-thumbs-up"></i>&nbsp;[[#{menu.group4}]]</strong>
 						</div>
 					</div>
 					<div class="dropdown-divider"></div>
 					<div class="row">
 						<div class="col-6">
-							<a class="dropdown-item" href="#"> 
+							<a class="dropdown-item menu4001" href="#"> 
 								<i class="fas fa-stamp"></i>&nbsp;&nbsp;[[#{menu.group4.button1}]]
 							</a>
 						</div>
 						<div class="col-6">
-							<a class="dropdown-item" href="#"> 
-								<i class="fas fa-thumbs-up"></i>&nbsp;&nbsp;[[#{menu.group4.button2}]]
-							</a>
-						</div>
-					</div>
-					<div class="dropdown-divider"></div>
-					<div class="row">
-						<div class="col-12">
-							<a class="dropdown-item" href="#">
-								<i class="fas fa-receipt"></i>&nbsp;&nbsp;[[#{menu.group4.button3}]]
-							</a>
+							
 						</div>
 					</div>
 					<!-- ========================================= -->
@@ -294,32 +310,19 @@
 					<div class="dropdown-divider"></div>
 					<div class="row">
 						<div class="col-12 label-16">
-							<strong>&nbsp;<i class="fas fa-user-friends"></i>&nbsp;&nbsp;[[#{menu.group5}]]
+							<strong>&nbsp;<i class="fas fa-user-friends"></i>&nbsp;[[#{menu.group5}]]
 						</div>
 					</div>
 					<div class="dropdown-divider"></div>
 					<div class="row">
 						<div class="col-6">
-							<a class="dropdown-item" href="#"> 
-								<i class="fas fa-user-check"></i>&nbsp;&nbsp;[[#{menu.group5.button1}]]
+							<a class="dropdown-item menu5001" href="#"> 
+								<i class="fa fa-bullhorn"></i>&nbsp;[[#{menu.group5.button1}]]
 							</a>
 						</div>
 						<div class="col-6">
 							<a class="dropdown-item" href="#"> 
-								<i class="fas fa-user-clock"></i>&nbsp;&nbsp;[[#{menu.group5.button2}]]
-							</a>
-						</div>
-					</div>
-					<div class="dropdown-divider"></div>
-					<div class="row">
-						<div class="col-6">
-							<a class="dropdown-item" href="#">
-								<i class="fas fa-user-lock"></i>&nbsp;&nbsp;[[#{menu.group5.button3}]]
-							</a>
-						</div>
-						<div class="col-6">
-							<a class="dropdown-item menu5004" href="#"> 
-								<i class="fas fa-users"></i>&nbsp;&nbsp;[[#{menu.group5.button4}]]
+								<i class="fas fa-user-clock"></i>&nbsp;[[#{menu.group5.button2}]]
 							</a>
 						</div>
 					</div>

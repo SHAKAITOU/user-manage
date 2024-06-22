@@ -32,7 +32,9 @@ public enum SessionConstants {
 	   
     USER_LIST_OUT_PUT("userListOutput", true),
 	
-	ORDER_LIST_OUT_PUT("orderListOutput", true)
+	ORDER_LIST_OUT_PUT("orderListOutput", true),
+    
+	MESSAGE_LIST_OUT_PUT("messageListOutput", true),
 	;
 	
 	private String value;

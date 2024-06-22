@@ -5,6 +5,8 @@
 
 <div th:fragment="navi">
 <form id="menu_form">
+    <input type="hidden" th:field="${loginForm.mediaHeight}">
+    <input type="hidden" th:field="${loginForm.mediaWidth}">
 <div class="fixed-top">
   <!-- for pc -->
 <nav id="bigScreenNav" class="navbar navbar-expand-lg navbar-dark bg-primary" style="display: block;">
