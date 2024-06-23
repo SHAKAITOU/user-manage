@@ -141,18 +141,24 @@
 -->
 
 <script th:src="@{/js/files/pos.js}"></script>
+<script th:src="@{/js/common/orderDetail.js}"></script>
+<script th:src="@{/js/common/messageDetail.js}"></script>
+<script th:src="@{/js/common/showPhoto.js}"></script>
 
 <div th:remove="tag" th:if="${mainKind == 'app'}">
 <!-- 一般画面 -->
-	<script th:src="@{/js/common/showPhoto.js}"></script>
 	<script th:src="@{/js/user/login/loginBlock.js}"></script>
 	<script th:src="@{/js/user/menu/menu.js}"></script>
 	<script th:src="@{/js/user/regist/registStep1.js}"></script>
 	<script th:src="@{/js/user/regist/registStep1Confirm.js}"></script>
 	<script th:src="@{/js/user/regist/registStep2.js}"></script>
 	<script th:src="@{/js/user/detail/userDetail.js}"></script>
+	
 	<script th:src="@{/js/user/order/orderList.js}"></script>
 	<script th:src="@{/js/user/order/order.js}"></script>
+	
+	<script th:src="@{/js/user/message/messageSearch.js}"></script>
+	
 	
 </div>
 
@@ -163,10 +169,12 @@
 
 	<script th:src="@{/js/admin/login/adminLoginBlock.js}"></script>
 	<script th:src="@{/js/admin/menu/adminMenu.js}"></script>
+	
 	<script th:src="@{/js/admin/usersearch/adminUserSearch.js}"></script>
+	
 	<script th:src="@{/js/admin/message/adminMessageSearch.js}"></script>
 	<script th:src="@{/js/admin/message/adminMessagePush.js}"></script>
-	<script th:src="@{/js/admin/message/adminMessageDetail.js}"></script>
+	
 	<script th:src="@{/js/admin/order/adminOrderList.js}"></script>
 	
 

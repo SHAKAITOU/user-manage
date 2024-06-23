@@ -15,9 +15,12 @@ ShaUtil.other.inherits(Menu, BaseJsController);
 //------------properties define-------------[
 Menu.prototype.ID = {
 	
-	CLASS_NM_MENU1001      			: 'menu1001',
+	CLASS_NM_USEr_DETAIL         	: 'menu1001',
 	
-	CLASS_NM_MENU2001      			: 'menu2001',
+	CLASS_NM_ORDER      			: 'menu2001',
+	
+	CLASS_NM_MESSAGE      			: 'menu9001',
+	
 	BTN_LOGOUT						: 'menu7',
 	
     NAVI_FOR_PC                     : "bigScreenNav",
@@ -56,7 +59,7 @@ Menu.prototype.initEvent = function(){
 	self.ajustNavi();
 	
     //会员信息
-    $buttonList = self.getObjectList(self.ID.CLASS_NM_MENU1001);
+    $buttonList = self.getObjectList(self.ID.CLASS_NM_USEr_DETAIL);
     $buttonList.each(function(i, elem){
 	    ShaInput.button.onClick($(elem),
 	    	function(event) {
@@ -72,12 +75,28 @@ Menu.prototype.initEvent = function(){
 	});
 	
 	//缴费确认
-	$buttonList = self.getObjectList(self.ID.CLASS_NM_MENU2001);
+	$buttonList = self.getObjectList(self.ID.CLASS_NM_ORDER);
     $buttonList.each(function(i, elem){
 	    ShaInput.button.onClick($(elem),
 	    	function(event) {
 				ShaAjax.ajax.get(
 	                self.jsContext.jsView.orderSearch.url_init, 
+	                null, 
+	                function(data){
+	                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
+	                }
+	            ); 
+			}
+	    );
+	});
+	
+	//站内信息确认
+	$buttonList = self.getObjectList(self.ID.CLASS_NM_MESSAGE);
+    $buttonList.each(function(i, elem){
+	    ShaInput.button.onClick($(elem),
+	    	function(event) {
+				ShaAjax.ajax.get(
+	                self.jsContext.jsView.messageSearch.url_init, 
 	                null, 
 	                function(data){
 	                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
@@ -125,7 +144,7 @@ Menu.prototype.ajustWinSize = function(){
     $('#mediaHeight').val(window.innerHeight ? window.innerHeight: $(window).height());
 	$('#mediaWidth').val(window.innerWidth ? window.innerWidth: $(window).width());
 	ShaAjax.ajax.post(
-		Pos.constants.setInfo.jsView.common.url_com_win_resize, 
+		Pos.constants.setInfo.common.common.url_com_win_resize, 
 		self.mainForm.serializeArray(), 
 		function(){}
 	);

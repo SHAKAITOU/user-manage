@@ -1,4 +1,4 @@
-package cn.caam.gs.app.admin.message.output;
+package cn.caam.gs.app.common.output;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AdminMessageListOutput {
+public class MessageListOutput {
 
     @Default
     private int count = 0;

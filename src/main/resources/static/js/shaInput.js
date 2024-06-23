@@ -677,11 +677,21 @@ try{
 		},
 		
 		previewImgCardHtml : function(width, height, dlgCloseScript, imgData) {
-			var html  = "<div class='card border-success mb-3 card-radius-all' style=' max-height:"+(height+20)+"px; min-height:"+(height+20)+"px;'>";
+			return ShaInput.img.previewOrigImgCardHtml(width, height, width, height, dlgCloseScript, imgData);
+		},
+		
+		previewOrigImgCardHtml : function(width, height, imgW, imgH, dlgCloseScript, imgData) {
+			var mediaWidth = window.innerWidth ? window.innerWidth: $(window).width();
+			if (mediaWidth < width) {
+				width = mediaWidth - 20;
+			}
+			var html  = "<div class='card border-success mb-3 card-radius-all' style=' max-height:"+(height+20)+"px; min-height:"+(height+20)+"px;";
+				html += " max-width:"+(width)+"px; min-width:"+(width)+"px;";
+				html += "'>";
   				html += "<div class='card-body div-scrollable '>";
   				html += "	<div class='row'>";
   				html += "		<div class='col-xl-12 col-xxl-12 col-lg-12 col-md-12 col-sm-12 d-flex justify-content-center'>";
-  				html += "			<img style='width:"+width+"px;height:"+height+"px;' src='" + imgData + "'>"
+  				html += "			<img style='width:"+imgW+"px;height:"+imgH+"px;' src='" + imgData + "'>"
   				html += "		</div>";
   				html += "	</div>";
   				html += "</div>";
@@ -700,7 +710,7 @@ try{
   				html += "</div>";
   				
 			return html;
-		}
+		},
 	}	
 })(ShaInput);
 

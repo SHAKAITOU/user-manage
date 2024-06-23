@@ -29,6 +29,7 @@ AdminOrderList.prototype.ID = {
     HID_HIDE_SEARCH              : "hideSearch",
     
     ORDER_LIST_TABLE_ID          : "orderListTable",
+    TABLE_BTN_DETAIL             : ".detail",
     
     //div
     ORDER_LIST_REFRESH_BODY_ID  : "orderListRefreshBody"
@@ -115,6 +116,20 @@ AdminOrderList.prototype.initEvent = function(){
     );
     
     ShaInput.table.addClickActiveToTr(self.getForm(), self.ID.ORDER_LIST_TABLE_ID);
+    
+    $tableBtnList = self.getObject(self.ID.ORDER_LIST_TABLE_ID).find(self.ID.TABLE_BTN_DETAIL);
+    $tableBtnList.each(function(i, elem){
+		//check box init
+    	ShaInput.button.onClick($(elem),
+	    	function(event) {
+				ShaAjax.pop.postDialogLargeCenter(
+					self.i18n["admin.order.title.detail"],
+					self.jsContext.common.orderDetail.url_init,  
+					[{name:"id", value:$(elem).attr("data")}]);
+			}
+	    );
+    	
+    });
     
     ShaInput.button.onClick(self.getObject(self.ID.ADD_BTN_ID),
     	function(event) {

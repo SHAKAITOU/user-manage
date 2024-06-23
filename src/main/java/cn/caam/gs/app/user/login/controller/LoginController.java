@@ -51,6 +51,7 @@ import cn.caam.gs.common.util.MessageSourceUtil;
 import cn.caam.gs.domain.db.custom.entity.LoginResult;
 import cn.caam.gs.domain.db.custom.entity.UserInfo;
 import cn.caam.gs.service.impl.FixedValueService;
+import cn.caam.gs.service.impl.MessageService;
 import cn.caam.gs.service.impl.UserService;
 
 /**
@@ -73,6 +74,9 @@ public class LoginController extends ScreenBaseController{
 	
 	@Autowired
     UserService userService;
+	
+   @Autowired
+   MessageService messageService;
 
 	@GetMapping("")
 	public ModelAndView index(
@@ -160,6 +164,9 @@ public class LoginController extends ScreenBaseController{
 					javaScriptSetInfo.loginAdminSet());
 			request.getSession().setAttribute(SessionConstants.FIXED_VALUE.getValue(), 
 			        fixedValueService.getMap());
+			
+			request.getSession().setAttribute(SessionConstants.UN_READ_MESSAGE_CNT.getValue(), 
+			        messageService.getUnReadCnt(userInfo.getId()));
 			
 			mav.setViewName(LoginViewHelper.HTML_MENU_MENU);
 		}

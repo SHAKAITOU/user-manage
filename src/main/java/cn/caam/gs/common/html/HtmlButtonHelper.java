@@ -5,11 +5,11 @@ import org.springframework.stereotype.Component;
 
 import cn.caam.gs.common.enums.CssClassType;
 import cn.caam.gs.common.enums.CssGridsType;
-import cn.caam.gs.common.html.element.IconSet;
-import cn.caam.gs.common.html.element.IconSet.IconSetCss;
-import cn.caam.gs.common.html.element.IconSet.IconSetType;
 import cn.caam.gs.common.html.element.bs5.ButtonSet;
+import cn.caam.gs.common.html.element.bs5.IconSet;
 import cn.caam.gs.common.html.element.bs5.ButtonSet.ButtonSetType;
+import cn.caam.gs.common.html.element.bs5.IconSet.IconSetCss;
+import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
 import cn.caam.gs.common.util.UtilConstants;
 
 @Component
@@ -125,6 +125,14 @@ public class HtmlButtonHelper {
                         + UtilConstants.HTML_SPACE + 
                         IconSet.builder().type(icon).css(IconSetCss.NOMAL_8).build().html())
                 .classDistinctName(classDistinctName)
+                .build().html();
+    }
+    
+    public String forTableBorder(IconSetType icon, CssClassType classType, String id) {
+        return ButtonSet.builder().outPutType(ButtonSetType.TABLE)
+                .isBorderOnly(true)
+                .classType(classType).id(id)
+                .buttonName(IconSet.builder().type(icon).css(IconSetCss.NOMAL_8).build().html())
                 .build().html();
     }
     

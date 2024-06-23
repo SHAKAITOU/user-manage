@@ -19,6 +19,8 @@ public class MessageInfo {
 	private MMessage message;
 	private MMessageRead messageRead;
     
+	/** 未读状态 */
+	private boolean readSts;
 	/** 站内消息类型(F0021) */
 	private String msgTypeName;
 }

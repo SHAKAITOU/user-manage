@@ -11,15 +11,17 @@ import org.springframework.core.env.Environment;
 
 import cn.caam.gs.app.admin.login.view.AdminLoginViewHelper;
 import cn.caam.gs.app.admin.menu.menu.AdminMenuViewHelper;
-import cn.caam.gs.app.admin.message.view.AdminMessageDetailViewHelper;
 import cn.caam.gs.app.admin.message.view.AdminMessagePushViewHelper;
 import cn.caam.gs.app.admin.message.view.AdminMessageSearchViewHelper;
 import cn.caam.gs.app.admin.userorder.view.AdminOrderSearchViewHelper;
 import cn.caam.gs.app.admin.usersearch.view.AdminUserSearchViewHelper;
+import cn.caam.gs.app.common.view.MessageDetailViewHelper;
+import cn.caam.gs.app.common.view.OrderDetailViewHelper;
 import cn.caam.gs.app.common.view.CommonViewHelper;
 import cn.caam.gs.app.user.detail.view.UserDetailViewHelper;
 import cn.caam.gs.app.user.login.view.LoginViewHelper;
 import cn.caam.gs.app.user.menu.view.MenuViewHelper;
+import cn.caam.gs.app.user.message.view.MessageSearchViewHelper;
 import cn.caam.gs.app.user.order.view.OrderSearchViewHelper;
 import cn.caam.gs.app.user.order.view.OrderViewHelper;
 import cn.caam.gs.common.enums.ExecuteReturnType;
@@ -128,6 +130,12 @@ public class JavaScriptSet {
 		common.put("msg_dialogs_delete_success", getContext("dialogs.delete.success.msg"));
 		common.put("msg_dialogs_move_success", getContext("dialogs.move.success.msg"));
 		common.put("msg_dialogs_cancel_regist", getContext("dialogs.confirm.cancelRegist.msg"));
+		
+		common.put("common",        CommonViewHelper.getJsProperties());
+		common.put("orderDetail",   OrderDetailViewHelper.getJsProperties());
+		common.put("messageDetail", MessageDetailViewHelper.getJsProperties());
+		
+		
 
 		JSONObject msgObj = new JSONObject();
         for (String key : messageSourceUtil.getKeys()) {
@@ -142,9 +150,11 @@ public class JavaScriptSet {
 	    // login
 		jsView.put("login",                LoginViewHelper.getJsProperties());
 		jsView.put("userDetail",           UserDetailViewHelper.getJsProperties());
-		jsView.put("common",               CommonViewHelper.getJsProperties());
+
 		jsView.put("orderSearch",          OrderSearchViewHelper.getJsProperties());
 		jsView.put("order",                OrderViewHelper.getJsProperties());
+		
+		jsView.put("messageSearch",        MessageSearchViewHelper.getJsProperties());
 		
 		return jsView;
 	}
@@ -158,7 +168,6 @@ public class JavaScriptSet {
 		
 		jsView.put("adminMessageSearch", AdminMessageSearchViewHelper.getJsProperties());
 		jsView.put("adminMessagePush",   AdminMessagePushViewHelper.getJsProperties());
-		jsView.put("adminMessageDetail", AdminMessageDetailViewHelper.getJsProperties());
 		
 		jsView.put("adminOrderSearch",   AdminOrderSearchViewHelper.getJsProperties());
 		

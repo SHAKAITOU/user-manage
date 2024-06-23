@@ -4,6 +4,7 @@
     <resultMap id="OrderInfoForm" 
                 type="cn.caam.gs.domain.db.custom.entity.OrderInfo">
         <id property="id" column="id"/>
+        <result property="userName"       column="userName"/>
         <result property="payPathName"       column="payPathName"/>
         <result property="orderMethodName"   column="orderMethodName"/>
         <result property="orderTypeName"     column="orderTypeName"/>
@@ -33,6 +34,7 @@
     </resultMap>
     <sql id="baseSelect">
 	    mo.*,
+	    mu.name      AS userName,
 	    F0012.name   AS payPathName,
 	    F0020.name   AS orderMethodName,
 	    F0015.name   AS orderTypeName,
@@ -42,6 +44,7 @@
 	    F0018.name   AS billStatusName
     </sql>
     <sql id="baseJoin">
+    	LEFT JOIN m_user mu ON mo.user_id = mu.id
 		LEFT JOIN m_fixed_value F0012   ON mo.pay_path        = F0012.value   AND F0012.code   = 'F0012'
 		LEFT JOIN m_fixed_value F0020   ON mo.order_method    = F0020.value   AND F0020.code   = 'F0020'
 		LEFT JOIN m_fixed_value F0015   ON mo.order_type      = F0015.value   AND F0015.code   = 'F0015'
@@ -75,5 +78,16 @@
 		ORDER BY mo.pay_date DESC
 		LIMIT #{limit} OFFSET #{offset}
     </select>
+    
+    <select id="getOrder" resultMap="OrderInfoForm">
+		SELECT
+		    <include refid="baseSelect"/>,
+		    mi.*
+		FROM
+		    m_order mo 
+			<include refid="baseJoin"/>
+			LEFT JOIN m_image mi ON mo.id = mi.id
+			WHERE mo.id = #{orderId, jdbcType=NVARCHAR}
+	</select>
         
 </mapper>

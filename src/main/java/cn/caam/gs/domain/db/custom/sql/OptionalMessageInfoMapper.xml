@@ -4,15 +4,21 @@
     <resultMap id="MessageInfoForm" 
                 type="cn.caam.gs.domain.db.custom.entity.MessageInfo">
         <id property="id" column="id"/>
-        <result property="msgTypeName"       column="msgTypeName"/>
+        <result property="msgTypeName"   column="msgTypeName"/>
+        <result property="readSts"       column="readSts"/>
+        
         <association property="message" 
             resultMap="cn.caam.gs.domain.db.base.mapper.MMessageMapper.BaseResultMap">
             <id column="id" property="id" />
         </association>
         <association property="messageRead" 
-            resultMap="cn.caam.gs.domain.db.base.mapper.MMessageReadMapper.BaseResultMap">
-            <id column="id" property="id" />
+            resultMap="MessageRead">
+            <id column="mr_id" property="id" />
         </association>
+    </resultMap>
+    <resultMap id="MessageRead" type="cn.caam.gs.domain.db.base.entity.MMessageRead">
+    	<id     column="mr_id" property="id" jdbcType="VARCHAR" />
+    	<result column="mr_user_id" property="userId"  jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="baseSelect">
 	    mm.*,
@@ -29,6 +35,16 @@
 		WHERE
 		    1=1
 	</select>
+	
+	<!-- SQL CHIP -->
+	<select id="getUserMessageListCount" resultType="int">
+		SELECT COUNT(mm.id)
+		FROM
+		    m_message mm 
+		WHERE
+		    mm.user_id = #{userId, jdbcType=NVARCHAR} OR mm.user_id is null
+		    
+	</select>
 	<!-- SQL CHIP -->
 	<select id="getMessageList" resultMap="MessageInfoForm">
         SELECT
@@ -41,5 +57,49 @@
 		ORDER BY mm.regist_date DESC
 		LIMIT #{limit} OFFSET #{offset}
     </select>
+    
+    <!-- SQL CHIP -->
+    <select id="getUserMessageUnReadCnt" resultType="int">
+        SELECT COUNT(main.id)
+        FROM (
+	        SELECT
+			    mm.id,
+			    case when mr.id is null then false else true end AS readSts
+			FROM
+			    m_message mm 
+				LEFT JOIN m_message_read mr ON mm.id = mr.id
+				WHERE
+			    mm.user_id = #{userId, jdbcType=NVARCHAR} OR mm.user_id is null
+	    ) AS main
+	    WHERE main.readSts = false
+    </select>
+    
+	<select id="getUserMessageList" resultMap="MessageInfoForm">
+        SELECT
+		    <include refid="baseSelect"/>,
+		    mr.id AS mr_id,
+		    mr.user_id AS mr_user_id,
+		    case when mr.id is null then false else true end AS readSts
+		FROM
+		    m_message mm 
+			<include refid="baseJoin"/>
+			LEFT JOIN m_message_read mr ON mm.id = mr.id
+			WHERE
+		    mm.user_id = #{userId, jdbcType=NVARCHAR} OR mm.user_id is null
+		ORDER BY readSts, mm.regist_date DESC
+		LIMIT #{limit} OFFSET #{offset}
+    </select>
+    
+    <select id="getMessageRead" resultMap="MessageRead">
+        SELECT
+		    mr.id AS mr_id,
+		    mr.user_id AS mr_user_id
+		FROM
+		    m_message_read mr 
+			WHERE
+		    mr.user_id = #{userId, jdbcType=NVARCHAR}
+			AND mr.id = #{msgId, jdbcType=NVARCHAR}
+    </select>
+    
         
 </mapper>

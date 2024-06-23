@@ -1,9 +1,10 @@
-package cn.caam.gs.common.html.element;
+package cn.caam.gs.common.html.element.bs5;
 
 import java.util.Objects;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.NoArgsConstructor;
 
 @Builder
@@ -13,6 +14,8 @@ public class IconSet {
 
     private IconSetType type;
     private IconSetCss css;
+    @Default
+    private IconType iconType = IconType.SIMPLE;
     private String id;
     
     public String html() {
@@ -28,7 +31,9 @@ public class IconSet {
         
         sb.append("<i "
                 + (Objects.nonNull(id) ? "id='" + id + "'" : "" )
-                + "class='"+iconName+"'>");
+                + "class='" + iconName
+                + " " + (iconType.key == IconType.LINK.getKey() ? "a-a2" : "")
+                +"'>");
         sb.append("</i>");
         
         return sb.toString();
@@ -37,7 +42,9 @@ public class IconSet {
     private String getIcon(String iconName, String cssName) {
         StringBuffer sb = new StringBuffer();
         
-        sb.append("<span class='"+cssName+"'>");
+        sb.append("<span class='" + cssName
+                + " " + (iconType.key == IconType.LINK.getKey() ? "a-a2" : "")
+                + "'>");
         sb.append("<i "
                 + (Objects.nonNull(id) ? "id='" + id + "'" : "" )
                 + " class='"+iconName+"'>");
@@ -45,6 +52,39 @@ public class IconSet {
         sb.append("</span>");
         
         return sb.toString();
+    }
+    
+
+    public enum IconType {
+
+        SIMPLE      (1),
+        LINK        (2),
+        ;
+        
+        /** type. */
+        private int key;
+
+        private IconType(int key) {
+            this.key = key;
+        }
+
+        public int getKey() {
+            return key;
+        }
+
+        public IconType[] list() {
+            return IconType.values();
+        }
+        
+        public static IconType keyOf(int key) {
+            for(IconType type : IconType.values()) {
+                if(key == type.getKey()) {
+                    return type;
+                }
+            }
+            
+            return null;
+        }
     }
     
     public enum IconSetType {

@@ -69,18 +69,18 @@ public class LabelImageSet {
     
     private String getContext(String coreStr) {
         StringBuffer sb = new StringBuffer();
-        sb.append("<div ");
         if (Objects.nonNull(grids)) {
+            sb.append("<div ");
             sb.append("class='col-xl-" + grids.getKey() 
             + " col-xxl-" + grids.getKey() 
             + " col-lg-" + grids.getKey()
             + " col-md-12 col-sm-12"
             +" '>");
+            sb.append(coreStr);
+            sb.append("</div>");
         } else {
-            sb.append("class='col'>");
+            sb.append(coreStr);
         }
-        sb.append(coreStr);
-        sb.append("</div>");
         return sb.toString();
     }
 

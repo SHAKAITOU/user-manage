@@ -4,17 +4,28 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import cn.caam.gs.common.html.HtmlViewBaseHelper;
 import cn.caam.gs.common.util.JsonUtility;
 import cn.caam.gs.common.util.StringUtility;
 import cn.caam.gs.domain.db.custom.entity.LoginResult;
+import cn.caam.gs.domain.db.custom.entity.UserInfo;
 
 @Component
 public class LoginInfoHelper {
+    
+    @Autowired
+    private HttpServletRequest request0;
+    private static HttpServletRequest request;
+    @PostConstruct
+    private void initStaticDao () {
+        request = request0;
+    }
 	
 	
 	public static boolean isLogined(Map<String,Object> session) {
@@ -24,6 +35,14 @@ public class LoginInfoHelper {
 		
 		return false;
 	}
+	
+	public static UserInfo getLoginResult() {
+	    if(Objects.nonNull(request.getSession().getAttribute(SessionConstants.LOGIN_INFO.getValue()))) {
+            return null;
+        }
+        
+        return (UserInfo)request.getSession().getAttribute(SessionConstants.LOGIN_INFO.getValue());
+    }
 	
 	public static LoginResult getLoginResult(Map<String,Object> session) {
 		if(session.containsKey(SessionConstants.LOGIN_INFO.getValue())) {

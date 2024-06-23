@@ -1,4 +1,4 @@
-package cn.caam.gs.app.admin.message.view;
+package cn.caam.gs.app.user.message.view;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,44 +14,34 @@ import cn.caam.gs.app.GlobalConstants;
 import cn.caam.gs.app.UrlConstants;
 import cn.caam.gs.app.common.form.MessageSearchForm;
 import cn.caam.gs.app.common.output.MessageListOutput;
-import cn.caam.gs.app.dbmainten.form.ColumnInfoForm;
 import cn.caam.gs.app.util.HtmlViewHelper;
 import cn.caam.gs.app.util.LoginInfoHelper;
-import cn.caam.gs.app.util.SessionConstants;
 import cn.caam.gs.common.bean.ViewData;
 import cn.caam.gs.common.enums.CellWidthType;
 import cn.caam.gs.common.enums.CssAlignType;
 import cn.caam.gs.common.enums.CssClassType;
 import cn.caam.gs.common.enums.CssFontSizeType;
 import cn.caam.gs.common.enums.CssGridsType;
-import cn.caam.gs.common.enums.FixedValueType;
 import cn.caam.gs.common.enums.GridFlexType;
 import cn.caam.gs.common.enums.MsgType;
-import cn.caam.gs.common.enums.OrderType;
-import cn.caam.gs.common.html.element.HtmlRadio;
+import cn.caam.gs.common.html.element.SpanSet.SpanSetType;
+import cn.caam.gs.common.html.element.SpanSet;
 import cn.caam.gs.common.html.element.TrSet;
 import cn.caam.gs.common.html.element.bs5.BreadCrumbSet;
 import cn.caam.gs.common.html.element.bs5.ButtonSet;
+import cn.caam.gs.common.html.element.bs5.IconSet;
+import cn.caam.gs.common.html.element.bs5.PTextSet;
+import cn.caam.gs.common.html.element.bs5.SpanTextSet;
 import cn.caam.gs.common.html.element.bs5.ButtonSet.ButtonSetType;
 import cn.caam.gs.common.html.element.bs5.IconSet.IconSetCss;
 import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
-import cn.caam.gs.common.html.element.bs5.DivChevronSet;
-import cn.caam.gs.common.html.element.bs5.IconSet;
-import cn.caam.gs.common.html.element.bs5.LabelDateInputSet;
-import cn.caam.gs.common.html.element.bs5.LabelDateInputSet.LabelDateInputSetType;
-import cn.caam.gs.common.html.element.bs5.LabelInputSet;
-import cn.caam.gs.common.html.element.bs5.LabelSelectSet;
-import cn.caam.gs.common.html.element.bs5.PTextSet;
-import cn.caam.gs.common.html.element.bs5.LabelSelectSet.LabelSelectSetType;
-import cn.caam.gs.common.html.element.bs5.SpanTextSet;
-import cn.caam.gs.domain.db.custom.entity.FixValueInfo;
 import cn.caam.gs.domain.db.custom.entity.MessageInfo;
 import cn.caam.gs.domain.tabledef.impl.T203MMessage;
 
 @Component
-public class AdminMessageSearchViewHelper extends HtmlViewHelper {
+public class MessageSearchViewHelper extends HtmlViewHelper {
 	
-	public static final String URL_BASE = UrlConstants.ADMIN + "/message";
+	public static final String URL_BASE = "/message";
 	//init url
 	public static final String URL_C_INIT = UrlConstants.INIT;
 	//init url
@@ -61,20 +51,14 @@ public class AdminMessageSearchViewHelper extends HtmlViewHelper {
     
     public static final String PREFIX_NAME                    = "message.";
 	
-    public static final String MAIN_JS_CLASS                  = "AdminMessageSearch";
+    public static final String MAIN_JS_CLASS                  = "MessageSearch";
     public static final String FORM_NAME                      = MAIN_JS_CLASS + "Form";
     public static final String LIST_TABLE_ID                  = "messageListTable";
     public static final String LIST_REFRESH_BODY_ID           = "messageListRefreshBody";
     public static final String SEARCH_BTN_ID                  = "searchBtn";
-    public static final String SEARCH_PANEL_ID                = "searchPanel";
-    public static final String SHOW_SEARCH_PANEL_BTN_ID       = "showSearchPanelBtn";
-    public static final String HIDE_SEARCH_PANEL_BTN_ID       = "hideSearchPanelBtn";
-    public static final String TABLE_HEIGHT_WHEN_HIDE_SEARCH  = "tableHeightWhenHideSearch";
-    public static final String TABLE_HEIGHT_WHEN_SHOW_SEARCH  = "tableHeightWhenShowSearch";
 
     public static final String TABLE_BTN_DETAIL               = "detail";
     public static final String SHOW_MORE_BTN_ID               = "showMore";
-    public static final String ADD_BTN_ID                     = "btnAdd";
     public static final String HID_HIDE_SEARCH                = "hideSearch";
     public static final String HID_LIMIT                      = "limit";
     public static final String HID_OFFSET                     = "offset";
@@ -95,8 +79,6 @@ public class AdminMessageSearchViewHelper extends HtmlViewHelper {
             MessageSearchForm pageForm,
             MessageListOutput listOutput) {
         Map<String, Object> dataMap = new HashMap<>();
-        dataMap.put(TABLE_HEIGHT_WHEN_HIDE_SEARCH, calcTableHeightWhenHideSearch(request));
-        dataMap.put(TABLE_HEIGHT_WHEN_SHOW_SEARCH, calcTableHeightWhenShowSearch(request));
 
         ViewData viewData = ViewData.builder()
                 .pageContext(getMainPageContext(request, pageForm, listOutput))
@@ -111,8 +93,6 @@ public class AdminMessageSearchViewHelper extends HtmlViewHelper {
             MessageSearchForm pageForm,
             MessageListOutput listOutput) {
         Map<String, Object> dataMap = new HashMap<>();
-        dataMap.put(TABLE_HEIGHT_WHEN_HIDE_SEARCH, calcTableHeightWhenHideSearch(request));
-        dataMap.put(TABLE_HEIGHT_WHEN_SHOW_SEARCH, calcTableHeightWhenShowSearch(request));
         ViewData viewData = ViewData.builder()
                 .pageContext(setCardForTable(request, pageForm, listOutput))
                 .jsClassName(MAIN_JS_CLASS)
@@ -128,10 +108,6 @@ public class AdminMessageSearchViewHelper extends HtmlViewHelper {
         StringBuffer sb = new StringBuffer();
         sb.append(divRow().cellBlank(5));
         sb.append(setBreadCrumb());
-        sb.append("<div id='" + SEARCH_PANEL_ID + "'>");
-        sb.append(setCardForSearchPanel(request));
-        sb.append("</div>");
-        sb.append(DivChevronSet.builder().idUp(HIDE_SEARCH_PANEL_BTN_ID).idDown(SHOW_SEARCH_PANEL_BTN_ID).build().html());
         sb.append("<div id='" + LIST_REFRESH_BODY_ID + "'>");
         sb.append(setCardForTable(request, pageForm, listOutput));
         sb.append("</div>");
@@ -140,88 +116,8 @@ public class AdminMessageSearchViewHelper extends HtmlViewHelper {
     
     //--------------------header BreadCrumb -----------------
     private static String setBreadCrumb() {
-        String[] names = new String[] {getContext("menu.group5"), getContext("menu.group5.button1")};
+        String[] names = new String[] {getContext("user.menu.group9.button1")};
         return BreadCrumbSet.builder().labelNames(names).build().html();
-    }
-
-    //--------------------header SearchPanel -----------------
-    
-    private static String setCardForSearchPanel(HttpServletRequest request) {
-        StringBuffer sbBody = new StringBuffer();
-        sbBody.append(borderCard().noTitleNoScroll("", CssClassType.SUCCESS, "", 
-                "",
-                setSearchPanel(request)));
-        
-        return sbBody.toString();
-    }
-    private static String setSearchPanel(HttpServletRequest request) {
-        @SuppressWarnings("unchecked")
-        Map<FixedValueType, List<FixValueInfo>> fixedValueMap = 
-                (Map<FixedValueType, List<FixValueInfo>>)request.getSession().getAttribute(SessionConstants.FIXED_VALUE.getValue());
-        StringBuffer sbBody = new StringBuffer();
-        sbBody.append(divRow().cellBlank(5));
-        List<HtmlRadio> radios = new ArrayList<>();
-
-        //-----row 1-------------[
-        List<String> contextList = new ArrayList<String>();
-
-        //站内消息类型(F0021)入力値
-        ColumnInfoForm clmForm = T203MMessage.getColumnInfo(T203MMessage.COL_MSG_TYPE);
-        String name      = clmForm.getPageName(PREFIX_NAME);
-        String id        = convertNameDotForId(name);
-        String labelName = clmForm.getLabelName();
-        String placeholder = clmForm.getPlaceholder();
-        List<FixValueInfo> msgTypeList = fixedValueMap.get(FixedValueType.MSG_TYPE);
-        radios = new ArrayList<>();
-        radios.add(new HtmlRadio(GlobalConstants.DFL_SELECT_ALL, getContext("AvailabilityType.ALL")));
-        for (FixValueInfo fValueInfo : msgTypeList) {
-            radios.add(new HtmlRadio(fValueInfo.getValueObj().getValue(), fValueInfo.getValueObj().getName()));
-        }
-        contextList.add(LabelSelectSet.builder()
-                .id(id).name(name).labelName(labelName)
-                .radios(radios).selectedValue(GlobalConstants.DFL_SELECT_ALL)
-                .fontSize(font).grids(CssGridsType.G2).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
-        
-        //会员号(M/TYYMMDDHHmmSSR2)選択
-        clmForm = T203MMessage.getColumnInfo(T203MMessage.COL_USER_ID);
-        name      = clmForm.getPageName(PREFIX_NAME);
-        id        = convertNameDotForId(name);
-        labelName = clmForm.getLabelName();
-        placeholder = clmForm.getPlaceholder();
-        contextList.add(LabelInputSet.builder()
-                .id(id).name(name).labelName(labelName)
-                .maxlength(GlobalConstants.USER_ID_MAX_L).placeholder(placeholder)
-                .fontSize(font).grids(CssGridsType.G3).build().html());
-        
-        //消息时间(yyyy-MM-dd HH選択
-        clmForm = T203MMessage.getColumnInfo(T203MMessage.COL_REGIST_DATE);
-        name      = clmForm.getPageName("") + "From";
-        id        = convertNameDotForId(name);
-        labelName = clmForm.getLabelName() + getContext("common.page.start");
-        placeholder = clmForm.getPlaceholder();
-        contextList.add(LabelDateInputSet.builder()
-                .id(id).name(name).labelName(labelName).placeholder(placeholder)
-                .fontSize(font).grids(CssGridsType.G3).outPutType(LabelDateInputSetType.WITH_LABEL_FOOT).build().html());
-        
-        name      = clmForm.getPageName("") + "To";
-        id        = convertNameDotForId(name);
-        labelName = clmForm.getLabelName() + getContext("common.page.end");
-        contextList.add(LabelDateInputSet.builder()
-                .id(id).name(name).labelName(labelName).placeholder(placeholder)
-                .fontSize(font).grids(CssGridsType.G3).outPutType(LabelDateInputSetType.WITH_LABEL_FOOT).build().html());
-        
-        name = getContext("common.page.search");
-        contextList.add(ButtonSet.builder()
-                .id(SEARCH_BTN_ID).buttonName(name).isBorderOnly(true)
-                .grids(CssGridsType.G1).outPutType(ButtonSetType.NORMAL).gridFlexType(GridFlexType.RIGHT)
-                .iconSet(IconSet.builder().type(IconSetType.SEARCH).css(IconSetCss.NOMAL_10).build())
-                .build().html());
-        
-        sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
-
-        //-----row 1-------------]
-        
-        return sbBody.toString();
     }
     
     //--------------------body card table -----------------
@@ -232,6 +128,7 @@ public class AdminMessageSearchViewHelper extends HtmlViewHelper {
         StringBuffer sbBody = new StringBuffer();
         StringBuffer cardBody = new StringBuffer();
         cardBody.append(setHidden(pageForm));
+        cardBody.append(divRow().cellBlank(5));
         cardBody.append(setShowMore(request, listOutput));
         cardBody.append(divRow().cellBlank(5));
         cardBody.append(setUserListTable(request, listOutput.getMessageList()));
@@ -267,9 +164,10 @@ public class AdminMessageSearchViewHelper extends HtmlViewHelper {
         String comp2 = SpanTextSet.builder().classType(CssClassType.CONTEXT).fontSize(font).context(context).build().html();
         aligs.add(CssAlignType.LEFT);
         
-        context = getContext("admin.messageList.sendAll");
+        context = getContext("common.page.refresh");
+        String comp3 = button().getBorder(IconSetType.REFRESH , CssClassType.INFO, SEARCH_BTN_ID, context, false);
         aligs.add(CssAlignType.RIGHT);
-        String comp3 = button().getBorder(IconSetType.BULLHORN, CssClassType.SUCCESS, ADD_BTN_ID, context);
+
         sbBody.append(divRow().get(CellWidthType.TWO_6_6, aligs, concactWithSpace(comp1, comp2), comp3));
         //-----row 3-------------]
         
@@ -321,7 +219,11 @@ public class AdminMessageSearchViewHelper extends HtmlViewHelper {
                         .context(info.getMsgTypeName())
                         .classType(MsgType.keyOf(info.getMessage().getMsgType()).getClassType()).build().html();
                 String registDt = info.getMessage().getRegistDate();
-                String title = trimFitForTd(CssGridsType.G10.getKey(), info.getMessage().getTitle(), true);
+                String title = "";
+                if (!info.isReadSts()) {
+                    title += SpanSet.builder().context("未读").outPutType(SpanSetType.PILL).type(CssClassType.DANGER).build().html();
+                }
+                title += trimFitForTd(CssGridsType.G10.getKey(), info.getMessage().getTitle(), true);
                 String btnDetail = button().forTableBorderNameRight(IconSetType.DETAIL, CssClassType.INFO, 
                         "", getContext("admin.userList.btn.detail"), info.getId(), TABLE_BTN_DETAIL);
                 if (isPhoneMode(request)) {
@@ -353,10 +255,6 @@ public class AdminMessageSearchViewHelper extends HtmlViewHelper {
     
     private static int calcTableHeightWhenShowSearch(HttpServletRequest request) {
         return LoginInfoHelper.getMediaHeight(request) - HEADER_HEIGHT;
-    }
-    
-    private static int calcTableHeightWhenHideSearch(HttpServletRequest request) {
-        return LoginInfoHelper.getMediaHeight(request) - HEADER_HEIGHT + SEARCH_PANEL_HEIGHT;
     }
     
 	public static Map<String, String> getJsProperties() {

@@ -16,7 +16,7 @@ public class GlobalConstants {
     public static final int DEFAULT_MEDIA_WIDTH            = 360;
     public static final int TD_DEFAULT_HEIGHT              = 30;
     public static final int TH_DEFAULT_HEIGHT              = 30;
-    public static final int DEFAULT_GROWING_CNT            = 1;
+    public static final int DEFAULT_GROWING_CNT            = 10;
     public static final String INPUT_BG_COLOER             = "#FFFAF0";
     public static final int TABLE_TD_HEIGHT                = 30;
     

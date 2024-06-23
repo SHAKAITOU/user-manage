@@ -23,6 +23,8 @@ public class OrderInfo {
 	private MBill bill;
     private MImage orderImg;
     
+    private String userName;
+    
 	/** 缴费渠道(F0012) */
 	private String payPathName;
 	

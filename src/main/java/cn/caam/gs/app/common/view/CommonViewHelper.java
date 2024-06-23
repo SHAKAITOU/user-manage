@@ -17,9 +17,9 @@ import cn.caam.gs.common.enums.CssAlignType;
 import cn.caam.gs.common.enums.CssClassType;
 import cn.caam.gs.common.enums.CssGridsType;
 import cn.caam.gs.common.html.HtmlViewBaseHelper;
-import cn.caam.gs.common.html.element.IconSet.IconSetType;
 import cn.caam.gs.common.html.element.bs5.DivHrSet;
 import cn.caam.gs.common.html.element.bs5.LabelImageSet;
+import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
 import cn.caam.gs.domain.db.base.entity.MUserExtend;
 
 @Component

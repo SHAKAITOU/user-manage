@@ -1,4 +1,4 @@
-package cn.caam.gs.common.html.element;
+package cn.caam.gs.common.html.element.bs5;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -32,7 +32,9 @@ public class DivContainerSet {
         }
         sb.append(">");
         for(String context : contexts) {
+            context  += "<div class='col12'>";
             sb.append(context);
+            sb.append("</div>");
         }
         sb.append("</div>");
         return sb.toString();
@@ -46,7 +48,9 @@ public class DivContainerSet {
         }
         sb.append(" style='min-width: 100%;max-width: 100%; max-height:"+scrollHeight+"px; min-height:"+scrollHeight+"px;'>");
         for(String context : contexts) {
+            context  += "<div class='col12'>";
             sb.append(context);
+            sb.append("</div>");
         }
         sb.append("</div>");
         return sb.toString();

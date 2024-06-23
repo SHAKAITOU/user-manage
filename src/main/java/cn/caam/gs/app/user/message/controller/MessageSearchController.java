@@ -1,4 +1,4 @@
-package cn.caam.gs.app.admin.message.controller;
+package cn.caam.gs.app.user.message.controller;
 
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,12 +11,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import cn.caam.gs.app.admin.message.view.AdminMessageSearchViewHelper;
 import cn.caam.gs.app.common.form.MessageSearchForm;
 import cn.caam.gs.app.common.output.MessageListOutput;
+import cn.caam.gs.app.user.message.view.MessageSearchViewHelper;
 import cn.caam.gs.app.util.ControllerHelper;
 import cn.caam.gs.app.util.SessionConstants;
 import cn.caam.gs.common.controller.JcbcBaseController;
+import cn.caam.gs.domain.db.custom.entity.UserInfo;
 import cn.caam.gs.service.impl.MessageService;
 import lombok.AllArgsConstructor;
 
@@ -26,53 +27,63 @@ import lombok.AllArgsConstructor;
  */
 @Controller
 @AllArgsConstructor
-@RequestMapping(path=AdminMessageSearchViewHelper.URL_BASE)
-public class AdminMessageSearchController extends JcbcBaseController{
+@RequestMapping(path=MessageSearchViewHelper.URL_BASE)
+public class MessageSearchController extends JcbcBaseController{
     
     @Autowired
     MessageService messageService;
 	
-	@GetMapping(path=AdminMessageSearchViewHelper.URL_C_INIT)
+	@GetMapping(path=MessageSearchViewHelper.URL_C_INIT)
 	public ModelAndView init(
 	        MessageSearchForm pageForm,
 			HttpServletRequest request,
 			HttpServletResponse response) {
-	    
-	    MessageListOutput userListOutput = new MessageListOutput();
-	    request.getSession().setAttribute(SessionConstants.MESSAGE_LIST_OUT_PUT.getValue(), userListOutput);
 
-		return ControllerHelper.getModelAndView(
-		        AdminMessageSearchViewHelper.getMainPage(request, pageForm, userListOutput));
+		return doSearch(pageForm, request, response, true);
 	}
 	
-	@PostMapping(path=AdminMessageSearchViewHelper.URL_C_SEARCH)
+	@PostMapping(path=MessageSearchViewHelper.URL_C_SEARCH)
     public ModelAndView search(
             MessageSearchForm pageForm,
             HttpServletRequest request,
             HttpServletResponse response) {
-	    
-        pageForm.setOffset(0);
-        MessageListOutput userListOutput = messageService.getMessageList(pageForm);
-        pageForm.setOffset(userListOutput.getMessageList().size());
-        request.getSession().setAttribute(SessionConstants.MESSAGE_LIST_OUT_PUT.getValue(), userListOutput);
-        return ControllerHelper.getModelAndView(
-                AdminMessageSearchViewHelper.refeshTable(request, pageForm, userListOutput));
+        return doSearch(pageForm, request, response, false);
     }
 	
-	@PostMapping(path=AdminMessageSearchViewHelper.URL_C_GROWING)
+	@PostMapping(path=MessageSearchViewHelper.URL_C_GROWING)
     public ModelAndView growing(
             MessageSearchForm pageForm,
             HttpServletRequest request,
             HttpServletResponse response) {
         
+	    UserInfo userInfo = (UserInfo)request.getSession().getAttribute(SessionConstants.LOGIN_INFO.getValue());
 	    MessageListOutput userListOutput = 
                 (MessageListOutput)request.getSession().getAttribute(SessionConstants.MESSAGE_LIST_OUT_PUT.getValue());
-	    MessageListOutput growing = messageService.getMessageList(pageForm);
+	    MessageListOutput growing = messageService.getMessageList(userInfo.getId(), pageForm.getLimit(), pageForm.getOffset());
 	    userListOutput.setCount(growing.getCount());
 	    userListOutput.getMessageList().addAll(growing.getMessageList());
         pageForm.setOffset(userListOutput.getMessageList().size());
         request.getSession().setAttribute(SessionConstants.MESSAGE_LIST_OUT_PUT.getValue(), userListOutput);
         return ControllerHelper.getModelAndView(
-                AdminMessageSearchViewHelper.refeshTable(request, pageForm, userListOutput));
+                MessageSearchViewHelper.refeshTable(request, pageForm, userListOutput));
     }
+	
+	private ModelAndView doSearch(
+	        MessageSearchForm pageForm,
+            HttpServletRequest request,
+            HttpServletResponse response,
+            boolean init) {
+        pageForm.setOffset(0);
+        UserInfo userInfo = (UserInfo)request.getSession().getAttribute(SessionConstants.LOGIN_INFO.getValue());
+        MessageListOutput userListOutput = messageService.getMessageList(userInfo.getId(), pageForm.getLimit(), pageForm.getOffset());
+        pageForm.setOffset(userListOutput.getMessageList().size());
+        request.getSession().setAttribute(SessionConstants.MESSAGE_LIST_OUT_PUT.getValue(), userListOutput);
+        if (init) {
+            return ControllerHelper.getModelAndView(
+                MessageSearchViewHelper.getMainPage(request, pageForm, userListOutput));
+        } else {
+            return ControllerHelper.getModelAndView(
+                    MessageSearchViewHelper.refeshTable(request, pageForm, userListOutput));
+        }
+	}
 }

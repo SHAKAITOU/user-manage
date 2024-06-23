@@ -34,7 +34,11 @@ public enum SessionConstants {
 	
 	ORDER_LIST_OUT_PUT("orderListOutput", true),
     
+    UN_READ_MESSAGE_CNT("unReadMsgCnt", true),
+	
 	MESSAGE_LIST_OUT_PUT("messageListOutput", true),
+	
+	
 	;
 	
 	private String value;

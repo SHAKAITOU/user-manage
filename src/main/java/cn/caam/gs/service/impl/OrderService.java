@@ -21,6 +21,7 @@ import cn.caam.gs.domain.db.base.entity.MImage;
 import cn.caam.gs.domain.db.base.entity.MOrder;
 import cn.caam.gs.domain.db.base.mapper.MImageMapper;
 import cn.caam.gs.domain.db.base.mapper.MOrderMapper;
+import cn.caam.gs.domain.db.custom.entity.OrderInfo;
 import cn.caam.gs.domain.db.custom.entity.UserInfo;
 import cn.caam.gs.domain.db.custom.mapper.OptionalOrderInfoMapper;
 import cn.caam.gs.service.BaseService;
@@ -48,6 +49,10 @@ public class OrderService extends BaseService {
 	    listOutput.setOrderList(optionalOrderInfoMapper.getOrderList(pageForm));
     	return listOutput;
 	}
+	
+	public OrderInfo getOrder(String orderId) {
+        return optionalOrderInfoMapper.getOrder(orderId);
+    }
 
 	@Transactional
 	public void addOrder(OrderForm pageForm) throws IOException {

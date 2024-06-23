@@ -10,9 +10,8 @@ import lombok.NoArgsConstructor;
 import cn.caam.gs.app.GlobalConstants;
 import cn.caam.gs.common.enums.CssFontSizeType;
 import cn.caam.gs.common.enums.CssGridsType;
-import cn.caam.gs.common.html.element.IconSet;
-import cn.caam.gs.common.html.element.IconSet.IconSetCss;
-import cn.caam.gs.common.html.element.IconSet.IconSetType;
+import cn.caam.gs.common.html.element.bs5.IconSet.IconSetCss;
+import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
 
 @Builder
 @AllArgsConstructor

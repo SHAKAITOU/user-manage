@@ -1,21 +1,14 @@
 package cn.caam.gs.app.admin.login.controller;
 
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Properties;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
@@ -25,9 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
-import com.google.code.kaptcha.impl.DefaultKaptcha;
-import com.google.code.kaptcha.util.Config;
 
 import cn.caam.gs.app.JavaScriptSet;
 import cn.caam.gs.app.UrlConstants;
@@ -41,8 +31,10 @@ import cn.caam.gs.common.enums.ExecuteReturnType;
 import cn.caam.gs.common.util.EncryptorUtil;
 import cn.caam.gs.common.util.JsonUtility;
 import cn.caam.gs.common.util.MessageSourceUtil;
+import cn.caam.gs.domain.db.base.entity.MAdmin;
 import cn.caam.gs.domain.db.custom.entity.LoginResult;
 import cn.caam.gs.service.impl.FixedValueService;
+import cn.caam.gs.service.impl.UserService;
 
 /**
  * S002 Thymeleaf 
@@ -58,6 +50,9 @@ public class AdminLoginController extends ScreenBaseController{
 	
 	@Autowired
 	Environment environment;
+    
+	@Autowired
+    UserService userService;
 	
 	@Autowired
 	FixedValueService fixedValueService;
@@ -98,7 +93,7 @@ public class AdminLoginController extends ScreenBaseController{
 		request.getSession().setAttribute(SessionConstants.IS_MOBILE.getValue(), indexForm.getMobileDisplay());
 		ModelAndView mav = new ModelAndView();
 		LoginForm loginForm = new LoginForm();
-		loginForm.setUserCode("admin");
+		loginForm.setUserCode("A24060914330223");
 		loginForm.setPassword("1");
 		loginForm.setAuthImg("data:image/;base64," + EncryptorUtil.generateAuthImgStr(request));
 		if(!StringUtils.isEmpty(indexForm.getLoginFormJson())) {
@@ -111,22 +106,25 @@ public class AdminLoginController extends ScreenBaseController{
 	
 
 	@PostMapping(path=AdminLoginViewHelper.URL_C_USER_LOGIN)
-	public ModelAndView menu(LoginForm loginForm, Locale loc, 
+	public ModelAndView menu(
+	        LoginForm loginForm, Locale loc, 
 			HttpServletRequest request,
 			HttpServletResponse response) {
 		
 		boolean okFlag = false;
 		boolean noSession = false;
+		MAdmin userInfo = userService.getLoginAdminInfo(loginForm.getUserCode());
+		
 		String ePw = EncryptorUtil.encrypt(loginForm.getPassword());
-		//if(!ePw.equals("VD2cOmWS0ly0K2NWXLszLQ==")) {
-		//	loginForm.setErrorMsg(messageSourceUtil.getContext("login.fail.msg.wrongPw"));
-		//} else if(Objects.isNull(request.getSession().getAttribute(SessionConstants.THEMES_TYPE.getValue()))) {
-		//	okFlag = false;
-		//	noSession = true;
-		//}
-		//else {
-			okFlag = true;
-		//}
+        if (userInfo == null) {
+            loginForm.setErrorMsg(messageSourceUtil.getContext("login.fail.msg.notexist"));
+            okFlag = false;
+        } else if(!userInfo.getPassword().equals(ePw)) {
+            loginForm.setErrorMsg(messageSourceUtil.getContext("login.fail.msg.wrongPw"));
+            okFlag = false;
+        } else {
+            okFlag = true;
+        }
 		
 		ModelAndView mav = new ModelAndView();
 		if(noSession) {

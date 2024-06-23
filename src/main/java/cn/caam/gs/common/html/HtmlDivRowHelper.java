@@ -7,10 +7,10 @@ import org.springframework.stereotype.Component;
 
 import cn.caam.gs.common.enums.CellWidthType;
 import cn.caam.gs.common.enums.CssAlignType;
-import cn.caam.gs.common.html.element.DivContainerSet;
-import cn.caam.gs.common.html.element.DivContainerSet.DivContainerSetType;
 import cn.caam.gs.common.html.element.DivRowSet;
 import cn.caam.gs.common.html.element.DivRowSet.DivRowSetType;
+import cn.caam.gs.common.html.element.bs5.DivContainerSet;
+import cn.caam.gs.common.html.element.bs5.DivContainerSet.DivContainerSetType;
 
 @Component
 public class HtmlDivRowHelper extends HtmlBaseHelper {

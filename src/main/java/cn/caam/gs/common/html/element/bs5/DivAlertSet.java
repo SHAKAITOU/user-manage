@@ -47,6 +47,7 @@ public class DivAlertSet {
             }
             sb.append(">");
             for(String context : contexts) {
+                
                 sb.append(context);
             }
             sb.append("</div>");

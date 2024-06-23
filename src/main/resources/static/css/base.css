@@ -1137,3 +1137,8 @@ html {
     max-width: 1200px;
   }
 }
+
+.marginLR {
+	margin-left: 5px;
+	margin-right: 5px;
+}

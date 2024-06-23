@@ -1,4 +1,4 @@
-package cn.caam.gs.app.admin.message.form;
+package cn.caam.gs.app.common.form;
 
 import cn.caam.gs.app.GlobalConstants;
 import cn.caam.gs.domain.db.base.entity.MMessage;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AdminMessageSearchForm {
+public class MessageSearchForm {
 
 	private MMessage message;
 	private String registDateFrom;

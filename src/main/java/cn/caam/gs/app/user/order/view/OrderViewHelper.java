@@ -25,7 +25,6 @@ import cn.caam.gs.common.enums.OrderMethodType;
 import cn.caam.gs.common.enums.OrderType;
 import cn.caam.gs.common.enums.PayType;
 import cn.caam.gs.common.html.element.HtmlRadio;
-import cn.caam.gs.common.html.element.IconSet.IconSetType;
 import cn.caam.gs.common.html.element.bs5.DivHrSet;
 import cn.caam.gs.common.html.element.bs5.LabelDateInputSet;
 import cn.caam.gs.common.html.element.bs5.LabelFileSet;
@@ -34,6 +33,7 @@ import cn.caam.gs.common.html.element.bs5.LabelNumberSet;
 import cn.caam.gs.common.html.element.bs5.LabelDateInputSet.LabelDateInputSetType;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet;
 import cn.caam.gs.common.html.element.bs5.LabelTextAreaSet;
+import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet.LabelSelectSetType;
 import cn.caam.gs.common.html.element.bs5.LabelTextAreaSet.LabelTextAreaSetType;
 import cn.caam.gs.domain.db.custom.entity.FixValueInfo;
@@ -177,7 +177,7 @@ public class OrderViewHelper extends HtmlViewHelper {
         //-----row 4-------------[
         contextList = new ArrayList<String>();
         
-        //缴费渠道(F0012)選択
+        //缴费类型(F0014)選択
         clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_PAY_TYPE);
         name      = clmForm.getPageName(PREFIX_NAME);
         id        = convertNameDotForId(name);
