@@ -15,6 +15,7 @@ import cn.caam.gs.app.admin.message.view.AdminMessagePushViewHelper;
 import cn.caam.gs.app.util.ControllerHelper;
 import cn.caam.gs.common.controller.JcbcBaseController;
 import cn.caam.gs.common.enums.ExecuteReturnType;
+import cn.caam.gs.common.enums.MsgType;
 import cn.caam.gs.domain.db.base.entity.MMessage;
 import cn.caam.gs.domain.db.base.mapper.MMessageMapper;
 import cn.caam.gs.service.impl.MessageService;
@@ -53,7 +54,7 @@ public class AdminMessagePushController extends JcbcBaseController{
             HttpServletResponse response) {
 
 	    
-	    messageService.addMessage(pageForm);
+	    messageService.addMessage(pageForm, MsgType.ALL);
 	    
         return ExecuteReturnType.OK.getId();
     }

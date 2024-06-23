@@ -224,6 +224,9 @@ public class IconSet {
         CHEVRON_UP        ("fa fa-chevron-up"),
         //向下箭头
         CHEVRON_DOWN        ("fa fa-chevron-down"),
+        
+        //小手放去
+        HAND_RIGHT            ("fa fa-hand-point-right"),
         ;
         
         /** type. */

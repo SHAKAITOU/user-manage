@@ -19,6 +19,8 @@ public class OrderSearchForm {
 	private String payDateTo;
 	@Default
 	private boolean hideSearch = false;
+    @Default
+    private boolean inVisableSearch = false;
 	@Default
 	private int limit = GlobalConstants.DEFAULT_GROWING_CNT;
 	@Default

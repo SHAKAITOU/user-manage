@@ -14,4 +14,8 @@ public interface OptionalOrderInfoMapper {
 	List<OrderInfo> getOrderList(OrderSearchForm pageForm);
 	
 	OrderInfo getOrder(String orderId);
+	
+	int getOrderWaitCount();
+	
+	int getOrderReviewCount();
 }

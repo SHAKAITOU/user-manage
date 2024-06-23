@@ -65,10 +65,10 @@ public class MessageService extends BaseService {
     }
 	
 	@Transactional
-	public void addMessage(MMessage message) {
+	public void addMessage(MMessage message, MsgType msgType) {
         
 	    message.setId(EncryptorUtil.generateMsgId());
-	    message.setMsgType(MsgType.ALL.getKey());
+	    message.setMsgType(msgType.getKey());
 	    message.setRegistDate(LocalDateUtility.getCurrentDateTimeString(DateTimePattern.UUUUHMMHDDHHQMIQSS));
 	    
 	    mMessageMapper.insert(message);

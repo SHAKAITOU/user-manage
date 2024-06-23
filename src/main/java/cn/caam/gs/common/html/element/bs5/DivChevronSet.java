@@ -7,6 +7,7 @@ import cn.caam.gs.common.enums.CssFontSizeType;
 import cn.caam.gs.common.enums.CssGridsType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.NoArgsConstructor;
 
 @Builder
@@ -17,13 +18,19 @@ public class DivChevronSet {
     private CssFontSizeType fontSize;
     private String idUp;
     private String idDown;
+    @Default
+    private boolean inVlisable = false;
     public String html() {
         return get();
     }
 
     private String get() {
         StringBuffer sb = new StringBuffer();
-        sb.append("<div class='row'>");
+        sb.append("<div class='row'");
+        if (inVlisable) {
+            sb.append(" style='display:none;'");
+        }
+        sb.append(">");
         sb.append("<div class='col-2 d-flex justify-content-center' style='padding:0px;'></div>");
         sb.append("<div class='col-12 d-flex justify-content-center' style='padding:0px;'>");
         sb.append("<span id='"+ idUp + "' class='a-a2'>");

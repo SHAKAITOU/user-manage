@@ -62,8 +62,7 @@ public class MessageSearchViewHelper extends HtmlViewHelper {
     public static final String HID_HIDE_SEARCH                = "hideSearch";
     public static final String HID_LIMIT                      = "limit";
     public static final String HID_OFFSET                     = "offset";
-    public static final int    HEADER_HEIGHT                  = 450;
-    public static final int    SEARCH_PANEL_HEIGHT            = 180;
+    public static final int    HEADER_HEIGHT                  = 200;
     
     public static final int PHONE_TD_HEIGHT = 45;
     

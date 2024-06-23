@@ -34,6 +34,7 @@ import cn.caam.gs.common.util.MessageSourceUtil;
 import cn.caam.gs.domain.db.base.entity.MAdmin;
 import cn.caam.gs.domain.db.custom.entity.LoginResult;
 import cn.caam.gs.service.impl.FixedValueService;
+import cn.caam.gs.service.impl.OrderService;
 import cn.caam.gs.service.impl.UserService;
 
 /**
@@ -56,6 +57,9 @@ public class AdminLoginController extends ScreenBaseController{
 	
 	@Autowired
 	FixedValueService fixedValueService;
+	
+    @Autowired
+    OrderService orderService;
 
 	@GetMapping("")
 	public ModelAndView index(
@@ -139,14 +143,21 @@ public class AdminLoginController extends ScreenBaseController{
 			mav.setViewName(AdminLoginViewHelper.HTML_INDEX);
 		} else {
 			loginForm.setReturnType(ExecuteReturnType.OK.getId());
-			LoginResult loginResult = new LoginResult();
-			request.getSession().setAttribute(SessionConstants.LOGIN_INFO.getValue(), 
-					JsonUtility.toJson(loginResult));
+			request.getSession().setAttribute(SessionConstants.LOGIN_INFO.getValue(), userInfo);
 			JavaScriptSet javaScriptSetInfo = new JavaScriptSet(request, environment, messageSourceUtil);
 			request.getSession().setAttribute(SessionConstants.JAVASCRIPT_SET_INFO.getValue(), 
 					javaScriptSetInfo.loginAdminSet());
 			request.getSession().setAttribute(SessionConstants.FIXED_VALUE.getValue(), 
 			        fixedValueService.getMap());
+			
+			int orderWaitCnt = orderService.getOrderWaitCount();
+	        request.getSession().setAttribute(SessionConstants.ORDER_WAIT_CNT.getValue(), orderWaitCnt);
+	        
+	        int orderReviewCnt = orderService.getOrderReviewCount();
+	        request.getSession().setAttribute(SessionConstants.ORDER_REVIEW_CNT.getValue(), orderReviewCnt);
+	        
+	        request.getSession().setAttribute(SessionConstants.ORDER_NOT_FINISH_CNT.getValue(), 
+	                orderWaitCnt + orderReviewCnt);
 			
 			mav.setViewName(AdminMenuViewHelper.HTML_MENU_MENU);
 		}

@@ -57,6 +57,9 @@
 		<if test="order != null and order.userId != null" >
 	        and mo.user_id = #{order.userId, jdbcType=NVARCHAR}
 		</if>
+		<if test="order != null and order.checkStatus != null and order.checkStatus != '00'" >
+	        and mo.check_status = #{order.checkStatus, jdbcType=NVARCHAR}
+		</if>
     </sql>
     <!-- SQL CHIP -->
 	<select id="getOrderListCount" resultType="int">
@@ -88,6 +91,21 @@
 			<include refid="baseJoin"/>
 			LEFT JOIN m_image mi ON mo.id = mi.id
 			WHERE mo.id = #{orderId, jdbcType=NVARCHAR}
+	</select>
+	
+	<select id="getOrderWaitCount" resultType="int">
+		SELECT COUNT(mo.id)
+		FROM
+		    m_order mo 
+		WHERE mo.check_status = '01'
+		    
+	</select>
+	<select id="getOrderReviewCount" resultType="int">
+		SELECT COUNT(mo.id)
+		FROM
+		    m_order mo 
+		WHERE mo.check_status = '02'
+		    
 	</select>
         
 </mapper>

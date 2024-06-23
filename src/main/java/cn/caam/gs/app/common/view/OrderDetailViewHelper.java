@@ -48,6 +48,8 @@ public class OrderDetailViewHelper extends HtmlViewHelper {
     //init url
     public static final String URL_C_INIT = UrlConstants.INIT;
     
+    public static final String URL_C_GET_NOT_FINISH_CNT = "/getNotFinishCnt"; 
+    
     public static final String MAIN_JS_CLASS                  = "OrderDetail";
     public static final String FORM_NAME                      = MAIN_JS_CLASS + "Form";
     
@@ -286,7 +288,8 @@ public class OrderDetailViewHelper extends HtmlViewHelper {
     public static Map<String, String> getJsProperties() {
         Map<String, String> js = new HashMap<String, String>();
         // url
-        js.put("url_init",         URL_BASE + URL_C_INIT);     
+        js.put("url_init",                URL_BASE + URL_C_INIT);
+        js.put("url_get_not_finfish_cnt", URL_BASE + URL_C_GET_NOT_FINISH_CNT);
         
         return js;
     }

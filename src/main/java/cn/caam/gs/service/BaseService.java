@@ -24,6 +24,10 @@ public class BaseService {
 		return messageSourceUtil.getContext(key);
 	}
 	
+	protected String getContext(String key, String... args) {
+        return messageSourceUtil.getContext(key, args);
+    }
+	
 	protected void signInsertMark(Object entity) {
 		//common item
 		String dt = DateUtility.getCurrentDateTime();

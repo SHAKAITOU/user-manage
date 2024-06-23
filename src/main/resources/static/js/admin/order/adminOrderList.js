@@ -4,6 +4,8 @@
 
 //------------constructor define------------[
 AdminOrderList = function(dataMap){
+    this.mainForm = $('#main_form');
+    this.menuForm = $('#menu_form');
     this.form = $('#AdminOrderListForm');
     this.jsContext = Pos.constants.setInfo;
     this.i18n = JSON.parse(this.jsContext.i18n);
@@ -27,12 +29,20 @@ AdminOrderList.prototype.ID = {
     SHOW_SEARCH_PANEL_BTN_ID     : "showSearchPanelBtn",
     HIDE_SEARCH_PANEL_BTN_ID     : "hideSearchPanelBtn",
     HID_HIDE_SEARCH              : "hideSearch",
+    HID_INVISABLE_SEARCH         : "inVisableSearch",
     
     ORDER_LIST_TABLE_ID          : "orderListTable",
     TABLE_BTN_DETAIL             : ".detail",
+    TABLE_BTN_PUT_TO_REVIEW      : ".putToReview",
     
     //div
-    ORDER_LIST_REFRESH_BODY_ID  : "orderListRefreshBody"
+    ORDER_LIST_REFRESH_BODY_ID  : "orderListRefreshBody",
+    ORDER_WAIT_CNT_DIV          : ".orderWaitCntDiv",
+    ORDER_REVIEW_CNT_DIV        : ".orderReviewCntDiv",
+    ORDER_NOT_FINISH_CNT_DIV    : ".orderNotFinishCntDiv",
+    
+    //div
+    DIV_MAINBODY                    : 'mainBody',
 
 };
 //------------------------------------------]
@@ -46,7 +56,7 @@ AdminOrderList.prototype.init = function(){
 	//init bond event to btn
 	self.initEvent();
 	
-	if (self.getObject(self.ID.HID_HIDE_SEARCH).val() === "true") {
+	if (self.getObject(self.ID.HID_HIDE_SEARCH).val() === "true" || self.getObject(self.ID.HID_INVISABLE_SEARCH).val() === "true") {
 		self.getObject(self.ID.HIDE_SEARCH_PANEL_BTN_ID).click();
 	} else {
 		self.getObject(self.ID.SHOW_SEARCH_PANEL_BTN_ID).click();
@@ -126,6 +136,75 @@ AdminOrderList.prototype.initEvent = function(){
 					self.i18n["admin.order.title.detail"],
 					self.jsContext.common.orderDetail.url_init,  
 					[{name:"id", value:$(elem).attr("data")}]);
+			}
+	    );
+    	
+    });
+    
+    $tableBtnList = self.getObject(self.ID.ORDER_LIST_TABLE_ID).find(self.ID.TABLE_BTN_PUT_TO_REVIEW);
+    $tableBtnList.each(function(i, elem){
+		//check box init
+    	ShaInput.button.onClick($(elem),
+	    	function(event) {
+				var msg = ShaUtil.util.format(self.i18n["admin.order.msg.putToReview"], $(elem).attr("data"));
+				var msgSuc = ShaUtil.util.format(self.i18n["admin.order.msg.putToReview.success"], $(elem).attr("data"));
+				ShaDialog.dialogs.confirm(
+					self.i18n["admin.order.btn.putToReview"],
+					msg, 
+					function () {
+						ShaAjax.ajax.post(
+							self.jsContext.adminJsView.adminOrderSearch.url_order_putToReview, 
+							[{name:"id",     value:$(elem).attr("data")}], 
+							function () {
+								ShaDialog.dialogs.success(msgSuc);
+								ShaAjax.ajax.get(
+						            self.jsContext.common.orderDetail.url_get_not_finfish_cnt, 
+						            null, 
+						            function(data){
+										$orderWaitCntDivList = self.menuForm.find(self.ID.ORDER_WAIT_CNT_DIV);
+										$orderWaitCntDivList.each(function(i, elem){
+							                if (data[0] > 0) {
+												$(elem).show();
+											} else {
+												$(elem).hide();
+											}
+											$(elem).html(data[0]);
+										});
+										
+										$orderReviewCntDivList = self.menuForm.find(self.ID.ORDER_REVIEW_CNT_DIV);
+										$orderReviewCntDivList.each(function(i, elem){
+							                if (data[1] > 0) {
+												$(elem).show();
+											} else {
+												$(elem).hide();
+											}
+											$(elem).html(data[1]);
+										});
+										
+										$orderNotFinishCntDivList = self.menuForm.find(self.ID.ORDER_NOT_FINISH_CNT_DIV);
+										$orderNotFinishCntDivList.each(function(i, elem){
+							                if ((data[0] + data[1]) > 0) {
+												$(elem).show();
+											} else {
+												$(elem).hide();
+											}
+											$(elem).html((data[0] + data[1]));
+										});
+										
+										//refresh order list
+										ShaAjax.ajax.post(
+							                self.jsContext.adminJsView.adminOrderSearch.url_order_list_wait, 
+							                null, 
+							                function(data){
+							                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
+							                }
+							            ); 
+						            }
+						        );
+							}
+						);
+					}
+				);
 			}
 	    );
     	

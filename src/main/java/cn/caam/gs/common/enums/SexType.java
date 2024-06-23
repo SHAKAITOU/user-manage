@@ -2,8 +2,8 @@ package cn.caam.gs.common.enums;
 
 public enum SexType implements EnumImpl {
 
-	MAN			(EnumIndex.startIndex(0), 	"man", 	 	true,	"SexType.MAN", CssClassType.INFO),
-	WOMEN		(EnumIndex.getNext(), 		"women", 	 true,	"SexType.WOMEN", CssClassType.DANGER);
+	MAN			(EnumIndex.startIndex(0), 	"01",  	true,	"SexType.MAN", CssClassType.INFO),
+	WOMEN		(EnumIndex.getNext(), 		"02",   true,	"SexType.WOMEN", CssClassType.INFO);
 	
     /** type. */
     private int id;

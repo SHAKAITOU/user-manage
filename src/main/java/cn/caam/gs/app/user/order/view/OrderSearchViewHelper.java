@@ -341,7 +341,7 @@ public class OrderSearchViewHelper extends HtmlViewHelper {
                         .classType(BillStatusType.keyOf(orderInfo.getOrder().getBillStatus()).getClassType()).build().html();
                 String checkStatusName = PTextSet.builder()
                         .context(orderInfo.getCheckStatusName())
-                        .classType(CheckStatusType.keyOf(orderInfo.getOrder().getBillStatus()).getClassType()).build().html();
+                        .classType(CheckStatusType.keyOf(orderInfo.getOrder().getCheckStatus()).getClassType()).build().html();
                 if (isPhoneMode(request)) {
                     // --col1--
                     List<CssAlignType> aligs = new ArrayList<>();

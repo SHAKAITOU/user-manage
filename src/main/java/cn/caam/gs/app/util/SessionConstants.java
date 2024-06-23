@@ -35,6 +35,12 @@ public enum SessionConstants {
 	ORDER_LIST_OUT_PUT("orderListOutput", true),
     
     UN_READ_MESSAGE_CNT("unReadMsgCnt", true),
+    
+    ORDER_NOT_FINISH_CNT("orderNotFinishCnt", true),
+    
+    ORDER_WAIT_CNT("orderWaitCnt", true),
+    
+    ORDER_REVIEW_CNT("orderReviewCnt", true),
 	
 	MESSAGE_LIST_OUT_PUT("messageListOutput", true),
 	
