@@ -15,6 +15,7 @@ import cn.caam.gs.app.GlobalConstants;
 import cn.caam.gs.app.UrlConstants;
 import cn.caam.gs.app.common.form.OrderSearchForm;
 import cn.caam.gs.app.common.view.OrderDetailViewHelper;
+import cn.caam.gs.app.dbmainten.form.ColumnInfoForm;
 import cn.caam.gs.app.util.HtmlViewHelper;
 import cn.caam.gs.app.util.LoginInfoHelper;
 import cn.caam.gs.common.bean.ViewData;
@@ -46,7 +47,7 @@ import cn.caam.gs.domain.tabledef.impl.T202MImage;
 @Component
 public class ReviewOrderViewHelper extends HtmlViewHelper {
     // base url
-    public static final String URL_BASE = "/reviewOrder";
+    public static final String URL_BASE = UrlConstants.ADMIN + "/reviewOrder";
     
     //init url
     public static final String URL_C_INIT = UrlConstants.INIT;
@@ -67,7 +68,9 @@ public class ReviewOrderViewHelper extends HtmlViewHelper {
     
     public static final int PHONE_CARD_HEIGHT              = 270;
     
-    public static final String BTN_CLOSE = "btnClose";
+    public static final String BTN_REVIEW_OK = "btnReviewOk";
+    public static final String BTN_REVIEW_NG = "btnReviewNg";
+    public static final String BTN_BACK = "btnBack";
     
     public static final CssFontSizeType font = GlobalConstants.INPUT_FONT_SIZE;
     /**
@@ -92,11 +95,21 @@ public class ReviewOrderViewHelper extends HtmlViewHelper {
             HttpServletRequest request, 
             OrderInfo orderInfo) {
         StringBuffer sb = new StringBuffer();
+        sb.append(divRow().cellBlank(5));
+        sb.append(setHidden(orderInfo));
         sb.append(setBreadCrumb(orderInfo));
         sb.append(divRow().cellBlank(5));
         sb.append(OrderDetailViewHelper.setOrderCardPanel(request, orderInfo, calcCardHeight(request)));
         sb.append(buildFooter());
         return getForm(FORM_NAME, sb.toString());
+    }
+    
+    private static String setHidden(OrderInfo orderInfo) {
+        StringBuffer sb = new StringBuffer();
+        ColumnInfoForm clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_ID);
+        String name      = clmForm.getPageName("");
+        sb.append(hidden().get(name, orderInfo.getId()));
+        return sb.toString();
     }
     
     //--------------------header BreadCrumb -----------------
@@ -121,13 +134,22 @@ public class ReviewOrderViewHelper extends HtmlViewHelper {
         List<CssAlignType> aligs = new ArrayList<>();
         // bottom button
 
-        String id = BTN_CLOSE;
-        String context = getContext("common.page.btn.close");
-        String comp1 = button().getBorder(IconSetType.CLOSE, CssClassType.DARK, id, context);
+        String id = BTN_REVIEW_OK;
+        String context = getContext("admin.order.btn.reviewOk");
+        String comp1 = button().getBorder(IconSetType.CHECK, CssClassType.SUCCESS, id, context);
+        
+        id = BTN_REVIEW_NG;
+        context = getContext("admin.order.btn.reviewNg");
+        String comp2 = button().getBorder(IconSetType.CLOSE, CssClassType.DANGER, id, context);
+        
+        id = BTN_BACK;
+        context = getContext("common.page.btn.back");
+        String comp3 = button().getBorder(IconSetType.BACK, CssClassType.DARK, id, context);
 
+        aligs.add(CssAlignType.LEFT);
         aligs.add(CssAlignType.RIGHT);
         sb.append(DivHrSet.builder().build().html());
-        sb.append(divRow().get(CellWidthType.ONE, aligs, comp1));
+        sb.append(divRow().get(CellWidthType.TWO_6_6, aligs, concactWithSpace(comp1,comp2), comp3));
         
         return sb.toString();
     }

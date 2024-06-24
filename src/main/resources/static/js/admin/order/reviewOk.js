@@ -3,27 +3,24 @@
 //------------------------------------------------------------------------------------------[
 
 //------------constructor define------------[
-ReviewOrder = function(dataMap){
+ReviewOk = function(dataMap){
     this.mainForm = $('#main_form');
     this.menuForm = $('#menu_form');
-    this.form = $('#ReviewOrderForm');
+    this.form = $('#ReviewOkForm');
     this.jsContext = Pos.constants.setInfo;
     this.i18n = JSON.parse(this.jsContext.i18n);
     this.dataMap = dataMap;
 };
-ShaUtil.other.inherits(ReviewOrder, BaseJsController);
+ShaUtil.other.inherits(ReviewOk, BaseJsController);
 //------------------------------------------]
 
 //------------properties define-------------[
-ReviewOrder.prototype.ID = {
+ReviewOk.prototype.ID = {
     
-	BTN_BACK                 : "btnBack",
 	SHOW_ORDER_IMG_BTN_ID    : "showOrderImg",
 	ORDER_IMG_ID             : "orderImg",
 	
-	ITEM_ID                  : "id",
-	
-	BTN_REVIEW_OK            : "btnReviewOk",
+	BTN_CLOSE                : "btnClose",
 	
     //div
     DIV_MAINBODY             : 'mainBody',
@@ -33,7 +30,7 @@ ReviewOrder.prototype.ID = {
 
 //---------------method define--------------[
 //init 
-ReviewOrder.prototype.init = function(){
+ReviewOk.prototype.init = function(){
     //keep self instance for call back
     var self = this;
     
@@ -46,12 +43,13 @@ ReviewOrder.prototype.init = function(){
 };
 
 // init event
-ReviewOrder.prototype.initEvent = function(){
+ReviewOk.prototype.initEvent = function(){
     
     //keep self instance for call back
     var self = this;
     
-	ShaInput.button.onClick(self.getObject(self.ID.SHOW_ORDER_IMG_BTN_ID), 
+    
+    ShaInput.button.onClick(self.getObject(self.ID.SHOW_ORDER_IMG_BTN_ID), 
 		function(event) {
 			var newImg = new Image();
 
@@ -67,26 +65,11 @@ ReviewOrder.prototype.initEvent = function(){
 			
 		}
 	);
-	    
-    ShaInput.button.onClick(self.getObject(self.ID.BTN_REVIEW_OK), 
-		function(event) {
-			ShaAjax.pop.postDialogLargeCenter(
-					self.i18n["admin.order.btn.reviewOk"],
-					self.jsContext.adminJsView.adminReviewOk.url_init,  
-					[{name:"id", value:self.getObject(self.ID.ITEM_ID).val()}]);
-		}
-	);
 	
     //init event to BTN_CLOSE
-	ShaInput.button.onClick(self.getObject(self.ID.BTN_BACK), 
+	ShaInput.button.onClick(self.getObject(self.ID.BTN_CLOSE), 
 		function(event) {
-			ShaAjax.ajax.post(
-                self.jsContext.adminJsView.adminOrderSearch.url_order_list_review, 
-                null, 
-                function(data){
-                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
-                }
-            ); 
+			ShaDialog.dialogs.dialogClose(); 
 	    }
 	);
 };

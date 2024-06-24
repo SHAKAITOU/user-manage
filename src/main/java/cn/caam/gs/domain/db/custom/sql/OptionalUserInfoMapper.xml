@@ -111,6 +111,15 @@
 			mu.mail = #{userCode, jdbcType=NVARCHAR}
     </select>
     
+    <select id="getBaseUserInfo" resultMap="UserInfoForm">
+        SELECT
+			mu.*
+		FROM
+		    m_user mu
+		WHERE
+			mu.id = #{userId, jdbcType=NVARCHAR}
+    </select>
+    
     <select id="getUserInfo" resultMap="UserInfoForm">
         SELECT
 		    <include refid="baseSelect"/>,

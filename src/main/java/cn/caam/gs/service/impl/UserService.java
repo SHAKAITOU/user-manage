@@ -37,6 +37,10 @@ public class UserService extends BaseService {
         return optionalUserInfoMapper.getLoginUserInfo(userCode);
     }
 	
+	public UserInfo getBaseUserInfo(String userId) {
+        return optionalUserInfoMapper.getBaseUserInfo(userId);
+    }
+	
 	public MAdmin getLoginAdminInfo(String userCode) {
         return adminMapper.selectByPrimaryKey(userCode);
     }

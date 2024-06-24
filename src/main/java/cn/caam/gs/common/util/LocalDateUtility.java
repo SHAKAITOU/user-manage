@@ -496,6 +496,46 @@ public class LocalDateUtility {
         // 日付先 ＝ 日付元 + 加算分数
         return formatDateTime(orgDt.plusMinutes(mins), pattern);
     }
+    
+    /**
+     * 日付算出 (月数)<br>
+     * 基準年月日と加算したい日数を引数で受け取り、年月日に日数を加算した日付を算出して返却する.
+     *
+     * @param orgDtStr 日付元
+     * @param pattern 指定された日付フォーマット形式
+     * @param days 加算日数
+     * @return 日付先
+     */
+    public static String addMonths(final String orgDtStr, final DateTimePattern pattern, final long months) {
+
+        if (StringUtils.isEmpty(orgDtStr)) {
+            return null;
+        }
+
+        LocalDateTime orgDt = parseLocalDateTime(orgDtStr, pattern);
+        // 日付先 ＝ 日付元 + 加算分数
+        return formatDateTime(orgDt.plusMonths(months), pattern);
+    }
+    
+    /**
+     * 日付算出 (年数)<br>
+     * 基準年月日と加算したい日数を引数で受け取り、年月日に日数を加算した日付を算出して返却する.
+     *
+     * @param orgDtStr 日付元
+     * @param pattern 指定された日付フォーマット形式
+     * @param days 加算日数
+     * @return 日付先
+     */
+    public static String addyears(final String orgDtStr, final DateTimePattern pattern, final long years) {
+
+        if (StringUtils.isEmpty(orgDtStr)) {
+            return null;
+        }
+
+        LocalDateTime orgDt = parseLocalDateTime(orgDtStr, pattern);
+        // 日付先 ＝ 日付元 + 加算分数
+        return formatDateTime(orgDt.plusYears(years), pattern);
+    }
 
     /**
      * 指定された日付コンテキストより後にあるかどうかをチェックする.

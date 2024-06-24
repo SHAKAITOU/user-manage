@@ -19,5 +19,7 @@ public interface OptionalUserInfoMapper {
 	
 	UserInfo getLoginUserInfo(@Param("userCode") String userCode);
 	
+	UserInfo getBaseUserInfo(@Param("userId") String userId);
+	
 	MUserExtend getUserPhoto(@Param("userId") String userId);
 }

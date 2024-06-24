@@ -97,12 +97,6 @@ public class HtmlViewBaseHelper extends HtmlBaseHelper {
     @Autowired
     private HtmlSelectHelper htmlSelectHelper0;
     private static HtmlSelectHelper htmlSelectHelper;
-    
-    
-    public static final int DEFAULT_MEDIA_HEIGHT = 730;
-    public static final int DEFAULT_MEDIA_WIDTH = 360;
-    public static final int TD_DEFAULT_HEIGHT = 30;
-    public static final int TH_DEFAULT_HEIGHT = 30;
 
     @PostConstruct
     private void initStaticDao () {

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import cn.caam.gs.app.GlobalConstants;
 import cn.caam.gs.common.html.HtmlViewBaseHelper;
 import cn.caam.gs.common.util.JsonUtility;
 import cn.caam.gs.common.util.StringUtility;
@@ -74,7 +75,7 @@ public class LoginInfoHelper {
 			return (int)session.get(SessionConstants.MEDIA_HEIGHT.getValue());
 		}
 		
-		return HtmlViewBaseHelper.DEFAULT_MEDIA_HEIGHT;
+		return GlobalConstants.DEFAULT_MEDIA_HEIGHT;
 	}
 
 	public static int getMediaHeight(HttpServletRequest request) {
@@ -82,7 +83,7 @@ public class LoginInfoHelper {
 			return (int)request.getSession().getAttribute(SessionConstants.MEDIA_HEIGHT.getValue());
 		}
 		
-		return HtmlViewBaseHelper.DEFAULT_MEDIA_HEIGHT;
+		return GlobalConstants.DEFAULT_MEDIA_HEIGHT;
 	}
 
 	public static int getMediaWidth(HttpServletRequest request) {
@@ -90,7 +91,7 @@ public class LoginInfoHelper {
 			return (int)request.getSession().getAttribute(SessionConstants.MEDIA_WIDTH.getValue());
 		}
 		
-		return HtmlViewBaseHelper.DEFAULT_MEDIA_WIDTH;
+		return GlobalConstants.DEFAULT_MEDIA_WIDTH;
 	}
 
 	public static String getRandomAuthCode() {

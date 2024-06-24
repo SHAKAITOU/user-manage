@@ -160,8 +160,8 @@ public class IconSet {
         CLEAR                ("fa fa-trash"),
         /** send */
         SEND                ("fa fa-paper-plane"),
-        /** select */
-        SELECT                ("fa fa-reply"),
+        /** back */
+        BACK                ("fa fa-reply"),
         /** → */
         TO_RIGHT            ("fa fa-arrow-right"),
         /** ← */
