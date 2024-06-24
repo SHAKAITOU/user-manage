@@ -227,6 +227,10 @@ public class IconSet {
         
         //小手放去
         HAND_RIGHT            ("fa fa-hand-point-right"),
+        
+        TO_STACK          ("fas fa-stack-overflow"),
+        //小手放去
+        STAMP            ("fa fa-stamp"),
         ;
         
         /** type. */

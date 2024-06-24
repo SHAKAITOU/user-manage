@@ -89,16 +89,18 @@ public class OrderDetailViewHelper extends HtmlViewHelper {
             OrderInfo orderInfo) {
         StringBuffer sb = new StringBuffer();
         sb.append(divRow().cellBlank(5));
-        sb.append(setCardPanel(request, orderInfo));
+        sb.append(setOrderCardPanel(request, orderInfo, calcOrderCardHeight(request)));
+        sb.append(setBillCardPanel(request, orderInfo, 100));
         sb.append(buildFooter());
         return getForm(FORM_NAME, sb.toString());
     }
 
     //--------------------header Panel -----------------
     
-    private static String setCardPanel(
+    public static String setOrderCardPanel(
             HttpServletRequest request,
-            OrderInfo orderInfo) {
+            OrderInfo orderInfo,
+            int cartHeight) {
         StringBuffer sbBody = new StringBuffer();
 
         List<String> contextList = new ArrayList<String>();
@@ -121,7 +123,7 @@ public class OrderDetailViewHelper extends HtmlViewHelper {
         //-----row 2-------------]
         
         //内容
-        sbBody.append(borderCard().noTitleWithScroll("", CssClassType.SUCCESS, "", calcCardHeight(request),
+        sbBody.append(borderCard().noTitleWithScroll("", CssClassType.SUCCESS, "", cartHeight,
                 setPanel(request, orderInfo)));
         return sbBody.toString();
     }
@@ -221,12 +223,26 @@ public class OrderDetailViewHelper extends HtmlViewHelper {
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
         //------row4----------]
         
+        //------row6----------]
+        return sbBody.toString();
+    }
+    
+    public static String setBillCardPanel(
+            HttpServletRequest request,
+            OrderInfo orderInfo,
+            int cartHeight) {
+        StringBuffer sb = new StringBuffer();
+        StringBuffer sbBody = new StringBuffer();
+
+        List<String> contextList = new ArrayList<String>();
+        
+
         //------row5----------[
         contextList = new ArrayList<String>();
         
         //审核状态(F0013)選択
-        labelName = T200MOrder.getColumnInfo(T200MOrder.COL_CHECK_STATUS).getLabelName() + UtilConstants.COLON;
-        context   = PTextSet.builder()
+        String labelName = T200MOrder.getColumnInfo(T200MOrder.COL_CHECK_STATUS).getLabelName() + UtilConstants.COLON;
+        String context   = PTextSet.builder()
                     .context(orderInfo.getCheckStatusName())
                     .classType(CheckStatusType.keyOf(orderInfo.getOrder().getCheckStatus()).getClassType()).build().html();
         contextList.add(DivAlertSet.builder().gridFlexType(GridFlexType.LEFT)
@@ -258,15 +274,18 @@ public class OrderDetailViewHelper extends HtmlViewHelper {
                 .grids(CssGridsType.G6).classType(CssClassType.SUCCESS)
                 .contexts(new String[] {labelName, context}).build().html());
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
-        //------row6----------]
-        return sbBody.toString();
+        
+        //内容
+        sb.append(borderCard().noTitleWithScroll("", CssClassType.WARNING, "", cartHeight,
+                sbBody.toString()));
+        return sb.toString();
     }
     
-    private static int calcCardHeight(HttpServletRequest request) {
+    private static int calcOrderCardHeight(HttpServletRequest request) {
         if (isPhoneMode(request)) {
             return PHONE_CARD_HEIGHT;
         }
-        return LoginInfoHelper.getMediaHeight(request) - 300;
+        return LoginInfoHelper.getMediaHeight(request) - 200;
     }
     
     private static String buildFooter() {

@@ -46,6 +46,8 @@ public enum FixedValueType {
 	ORDER_METHOD    ("F0020"),
 	/** 站内消息类型(F0021) */
 	MSG_TYPE        ("F0021"),
+    /** 会费计算方式类型(F0022) */
+    FEE_TYPE        ("F0022"),
 	;
 	
     /** type. */

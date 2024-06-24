@@ -34,6 +34,7 @@ AdminOrderList.prototype.ID = {
     ORDER_LIST_TABLE_ID          : "orderListTable",
     TABLE_BTN_DETAIL             : ".detail",
     TABLE_BTN_PUT_TO_REVIEW      : ".putToReview",
+    TABLE_BTN_START_REVIEW       : ".startReview",
     
     //div
     ORDER_LIST_REFRESH_BODY_ID  : "orderListRefreshBody",
@@ -205,6 +206,24 @@ AdminOrderList.prototype.initEvent = function(){
 						);
 					}
 				);
+			}
+	    );
+    	
+    });
+    
+    $tableBtnList = self.getObject(self.ID.ORDER_LIST_TABLE_ID).find(self.ID.TABLE_BTN_START_REVIEW);
+    $tableBtnList.each(function(i, elem){
+		//check box init
+    	ShaInput.button.onClick($(elem),
+	    	function(event) {
+				//refresh order list
+				ShaAjax.ajax.post(
+	                self.jsContext.adminJsView.adminReviewOrder.url_init, 
+	                [{name:"id",     value:$(elem).attr("data")}], 
+	                function(data){
+	                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
+	                }
+	            ); 
 			}
 	    );
     	

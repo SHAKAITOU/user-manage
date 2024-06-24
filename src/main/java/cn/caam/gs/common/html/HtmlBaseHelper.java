@@ -47,6 +47,10 @@ public class HtmlBaseHelper {
     public static String getContext(String key) {
         return messageSourceUtil.getContext(key);
     }
+    
+    public static String getContext(String key, String... args) {
+        return messageSourceUtil.getContext(key, args);
+    }
 
     public static String nonNull(boolean value) {
         return Objects.nonNull(value) ? Boolean.toString(value) : "";

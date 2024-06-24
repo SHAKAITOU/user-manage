@@ -84,6 +84,7 @@ public class AdminOrderSearchViewHelper extends HtmlViewHelper {
     
     public static final String TABLE_BTN_DETAIL               = "detail";
     public static final String TABLE_BTN_PUT_TO_REVIEW        = "putToReview";
+    public static final String TABLE_BTN_START_REVIEW         = "startReview";
     public static final String SHOW_MORE_BTN_ID               = "showMore";
     public static final String HID_HIDE_SEARCH                = "hideSearch";
     public static final String HID_INVISABLE_SEARCH           = "inVisableSearch";
@@ -254,7 +255,7 @@ public class AdminOrderSearchViewHelper extends HtmlViewHelper {
         cardBody.append(setHidden(pageForm));
         cardBody.append(setShowMore(request, listOutput));
         cardBody.append(divRow().cellBlank(5));
-        cardBody.append(setListTable(request, listOutput.getOrderList()));
+        cardBody.append(setListTable(request, pageForm, listOutput.getOrderList()));
         sbBody.append(borderCard().withTitleWithScroll("", CssClassType.INFO, "", 
                 getContext("admin.orderList.table.title"),
                 divRow().cellBlank(5),cardBody.toString()));
@@ -299,6 +300,7 @@ public class AdminOrderSearchViewHelper extends HtmlViewHelper {
     
     private static String setListTable(
             HttpServletRequest request, 
+            OrderSearchForm pageForm,
             List<OrderInfo> list) {
 
         //head
@@ -376,8 +378,14 @@ public class AdminOrderSearchViewHelper extends HtmlViewHelper {
                 String btn = button().forTableBorderNameRight(IconSetType.DETAIL, CssClassType.INFO, 
                         "", getContext("common.page.info"), orderInfo.getId(), TABLE_BTN_DETAIL);
                 btn += "&nbsp;";
-                btn += button().forTableBorderNameLeft(IconSetType.HAND_RIGHT, CssClassType.SUCCESS, 
-                        "", getContext("admin.order.btn.putToReview"), orderInfo.getId(), TABLE_BTN_PUT_TO_REVIEW);
+                if (pageForm.getOrder().getCheckStatus().equals(CheckStatusType.WAIT_FOR_REVIEW.getKey())) {
+                    btn += button().forTableBorderNameLeft(IconSetType.HAND_RIGHT, CssClassType.SUCCESS, 
+                            "", getContext("admin.order.btn.putToReview"), orderInfo.getId(), TABLE_BTN_PUT_TO_REVIEW);
+                } else if (pageForm.getOrder().getCheckStatus().equals(CheckStatusType.REVIEW.getKey())) {
+                    btn += button().forTableBorderNameLeft(IconSetType.STAMP, CssClassType.DANGER, 
+                            "", getContext("admin.order.btn.startToReview"), orderInfo.getId(), TABLE_BTN_START_REVIEW);
+                }
+
                 if (isPhoneMode(request)) {
                     // --col1--
                     List<CssAlignType> aligs = new ArrayList<>();

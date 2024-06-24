@@ -465,6 +465,15 @@ INSERT INTO m_fixed_value VALUES ('F0020', '02', '推荐订单',    2);
 INSERT INTO m_fixed_value VALUES ('F0021', '01', '全体消息',    1);
 INSERT INTO m_fixed_value VALUES ('F0021', '02', '个人消息',    2);
 
+--站内消息类型
+INSERT INTO m_fixed_value VALUES ('F0021', '01', '全体消息',    1);
+INSERT INTO m_fixed_value VALUES ('F0021', '02', '个人消息',    2);
+
+--会费计算方式类型
+INSERT INTO m_fixed_value VALUES ('F0022', '01', '月额型计算',    1);
+INSERT INTO m_fixed_value VALUES ('F0022', '02', '日额型计算',    2);
+INSERT INTO m_fixed_value VALUES ('F0022', '03', '年额型计算',    3);
+
 -- 会员基本信息 --
 DROP TABLE IF EXISTS m_user;
 CREATE TABLE m_user
