@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import cn.caam.gs.app.admin.userorder.form.ReviewOkForm;
+import cn.caam.gs.app.admin.userorder.view.ReviewNgViewHelper;
 import cn.caam.gs.app.admin.userorder.view.ReviewOkViewHelper;
 import cn.caam.gs.app.common.form.IdForm;
 import cn.caam.gs.app.util.ControllerHelper;
@@ -31,8 +32,8 @@ import lombok.AllArgsConstructor;
  */
 @Controller
 @AllArgsConstructor
-@RequestMapping(path=ReviewOkViewHelper.URL_BASE)
-public class ReviewOkController extends JcbcBaseController{
+@RequestMapping(path=ReviewNgViewHelper.URL_BASE)
+public class ReviewNgController extends JcbcBaseController{
     
     @Autowired
     OrderService orderService;
@@ -43,7 +44,7 @@ public class ReviewOkController extends JcbcBaseController{
     @Autowired
     MMessageMapper messageMapper;
 	
-    @PostMapping(path=ReviewOkViewHelper.URL_C_INIT)
+    @PostMapping(path=ReviewNgViewHelper.URL_C_INIT)
 	public ModelAndView init(
 	        IdForm idForm,
 			HttpServletRequest request,
@@ -53,17 +54,17 @@ public class ReviewOkController extends JcbcBaseController{
         UserInfo userInfo = userService.getBaseUserInfo(orderInfo.getOrder().getUserId());
         
 		return ControllerHelper.getModelAndView(
-		        ReviewOkViewHelper.getMainPage(request, userInfo, orderInfo));
+		        ReviewNgViewHelper.getMainPage(request, userInfo, orderInfo));
 	}
     
-    @PostMapping(path=ReviewOkViewHelper.URL_C_COMMIT)
+    @PostMapping(path=ReviewNgViewHelper.URL_C_COMMIT)
     @ResponseBody
     public int commit(
             ReviewOkForm pageForm,
             HttpServletRequest request,
             HttpServletResponse response) {
         
-        orderService.updateOrderReviewOk(pageForm);
+        orderService.updateOrderReviewNg(pageForm);
 
         return ExecuteReturnType.OK.getId();
     }

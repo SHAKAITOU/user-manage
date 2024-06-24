@@ -1,5 +1,7 @@
 package cn.caam.gs.common.html.element.bs5;
 
+import java.util.Objects;
+
 import org.apache.commons.lang3.StringUtils;
 
 import lombok.AllArgsConstructor;
@@ -32,9 +34,11 @@ public class DivContainerSet {
         }
         sb.append(">");
         for(String context : contexts) {
-            context  += "<div class='col12'>";
-            sb.append(context);
-            sb.append("</div>");
+            if (Objects.nonNull(context)) {
+                context  += "<div class='col12'>";
+                sb.append(context);
+                sb.append("</div>");
+            }
         }
         sb.append("</div>");
         return sb.toString();

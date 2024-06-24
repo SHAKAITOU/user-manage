@@ -21,7 +21,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <servlet-api.version>4.0.1</servlet-api.version>
-        <lombok.version>1.18.12</lombok.version>
+        <lombok.version>1.18.28</lombok.version>
         <commons-lang3.version>3.10</commons-lang3.version>
         <modelmapper.version>2.3.7</modelmapper.version>
         <poi.version>4.1.2</poi.version>
@@ -77,6 +77,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version><!--$NO-MVN-MAN-VER$-->
             <scope>provided</scope>
         </dependency>
 
@@ -249,26 +250,26 @@
 		</dependency>
 
         <!-- junit test -->
+        <!--
 		<dependency>
 		  <groupId>org.springframework.boot</groupId>
 		  <artifactId>spring-boot-starter-test</artifactId>
 		  <scope>test</scope>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.junit.platform/junit-platform-suite-api -->
 		<dependency>
 		    <groupId>org.junit.platform</groupId>
 		    <artifactId>junit-platform-suite-api</artifactId>
 		    <version>1.8.2</version>
 		    <scope>test</scope>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.junit.platform/junit-platform-runner -->
+
 		<dependency>
 		    <groupId>org.junit.platform</groupId>
 		    <artifactId>junit-platform-runner</artifactId>
 		    <version>1.8.2</version>
 		    <scope>test</scope>
 		</dependency>
-
+		-->
         
     </dependencies>
 

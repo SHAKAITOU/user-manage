@@ -1,6 +1,8 @@
 //*****************************************************************************
 // --ShaPage.pageLink--
 // ShaPage.pageLink.initPageLink(pageLinkIdPrefix, initSetting, excuteFunc)
+// --ShaPage.pageCom--
+// ShaPage.pageCom.refreshOrderCnt(jsContext, menuForm, callBackFunc)
 // --------------------------------
 // jQuery(function($){});  initialize when base page loading
 //*****************************************************************************
@@ -52,6 +54,61 @@ try{
 			}
 		},
 	}
+	
+//*****************************************************************************
+// common pageCom define
+//*****************************************************************************	
+	
+	if($shaPage.pageCom) { 
+		return $shaPage.pageCom; 
+	}	
+	
+	$shaPage.pageCom = {
+		//订单状态数更新
+		refreshOrderCnt : function(jsContext, menuForm, callBackFunc) {
+		    var ORDER_WAIT_CNT_DIV          = ".orderWaitCntDiv";
+		    var ORDER_REVIEW_CNT_DIV        = ".orderReviewCntDiv";
+		    var ORDER_NOT_FINISH_CNT_DIV    = ".orderNotFinishCntDiv";
+			ShaAjax.ajax.get(
+	            jsContext.common.orderDetail.url_get_not_finfish_cnt, 
+	            null, 
+	            function(data){
+					$orderWaitCntDivList = menuForm.find(ORDER_WAIT_CNT_DIV);
+					$orderWaitCntDivList.each(function(i, elem){
+		                if (data[0] > 0) {
+							$(elem).show();
+						} else {
+							$(elem).hide();
+						}
+						$(elem).html(data[0]);
+					});
+					
+					$orderReviewCntDivList = menuForm.find(ORDER_REVIEW_CNT_DIV);
+					$orderReviewCntDivList.each(function(i, elem){
+		                if (data[1] > 0) {
+							$(elem).show();
+						} else {
+							$(elem).hide();
+						}
+						$(elem).html(data[1]);
+					});
+					
+					$orderNotFinishCntDivList = menuForm.find(ORDER_NOT_FINISH_CNT_DIV);
+					$orderNotFinishCntDivList.each(function(i, elem){
+		                if ((data[0] + data[1]) > 0) {
+							$(elem).show();
+						} else {
+							$(elem).hide();
+						}
+						$(elem).html((data[0] + data[1]));
+					});
+					
+					callBackFunc();
+	            }
+	        );
+		}
+	}
+	
 })(ShaPage);
 
 //*****************************************************************************

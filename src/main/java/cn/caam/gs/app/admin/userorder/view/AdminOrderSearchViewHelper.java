@@ -63,6 +63,8 @@ public class AdminOrderSearchViewHelper extends HtmlViewHelper {
     public static final String URL_C_SEARCH_WAIT   = "/searchWait";
     //init url
     public static final String URL_C_SEARCH_REVIEW = "/searchReview";
+    //init url
+    public static final String URL_C_SEARCH_PASS = "/searchPass";
     
     public static final String URL_C_GROWING = UrlConstants.GROWING;
     
@@ -158,6 +160,8 @@ public class AdminOrderSearchViewHelper extends HtmlViewHelper {
             subCrum = getContext("menu.group2.button2");
         } else if (pageForm.getOrder().getCheckStatus().equals(CheckStatusType.REVIEW.getKey())) {
             subCrum = getContext("menu.group2.button3");
+        } else if (pageForm.getOrder().getCheckStatus().equals(CheckStatusType.PASS.getKey())) {
+            subCrum = getContext("menu.group2.button4");
         }
         String[] names = new String[] {getContext("menu.group2"), subCrum};
         return BreadCrumbSet.builder().labelNames(names).build().html();
@@ -441,6 +445,8 @@ public class AdminOrderSearchViewHelper extends HtmlViewHelper {
 		js.put("url_order_list",         URL_BASE + URL_C_SEARCH);
 		js.put("url_order_list_wait",    URL_BASE + URL_C_SEARCH_WAIT);
 		js.put("url_order_list_review",  URL_BASE + URL_C_SEARCH_REVIEW);
+		js.put("url_order_list_pass",    URL_BASE + URL_C_SEARCH_PASS);
+		
 		
 		js.put("url_order_list_growing", URL_BASE + URL_C_GROWING);
 		js.put("url_order_putToReview",  URL_BASE + URL_C_PUT_TO_REVIEW);

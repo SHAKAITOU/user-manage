@@ -245,6 +245,21 @@ public class LocalDateUtility {
     public static String formatDate(final Date date, final DatePattern pattern) {
         return formatDate(date2LocalDate(date), pattern);
     }
+    
+    /**
+     * 指定されたDateを指定する日付フォーマット形式でStringに変換する.
+     * @param date
+     * @param pattern
+     * @return
+     */
+    public static String formatDateZH(final String dateTime) {
+        if (StringUtils.isEmpty(dateTime)) {
+            return null;
+        }
+
+        LocalDateTime orgDt = parseLocalDateTime(dateTime, DateTimePattern.UUUUHMMHDDHHQMIQSS);
+        return formatDate(orgDt.toLocalDate(), DatePattern.UUUUHMMHDD);
+    }
 
     /**
      * 指定されたLocalTimeを指定する時刻フォーマット形式でStringに変換する.
@@ -518,6 +533,26 @@ public class LocalDateUtility {
     }
     
     /**
+     * 日付算出 (月数)<br>
+     * 基準年月日と加算したい日数を引数で受け取り、年月日に日数を加算した日付を算出して返却する.
+     *
+     * @param orgDtStr 日付元
+     * @param pattern 指定された日付フォーマット形式
+     * @param days 加算日数
+     * @return 日付先
+     */
+    public static String addMonthsZH(final String orgDtStr, final long months) {
+
+        if (StringUtils.isEmpty(orgDtStr)) {
+            return null;
+        }
+
+        LocalDate orgDt = parseLocalDate(orgDtStr, DatePattern.UUUUHMMHDD);
+        // 日付先 ＝ 日付元 + 加算分数
+        return formatDate(orgDt.plusMonths(months), DatePattern.UUUUHMMHDD);
+    }
+    
+    /**
      * 日付算出 (年数)<br>
      * 基準年月日と加算したい日数を引数で受け取り、年月日に日数を加算した日付を算出して返却する.
      *
@@ -660,12 +695,12 @@ public class LocalDateUtility {
     }
 
     /**
-     * デフォルトの日時フォーマット形式"uuuu/MM/dd HH:mm:ss"で
+     * デフォルトの日時フォーマット形式"uuuu-MM-dd HH:mm:ss"で
      * デフォルトのタイムゾーンのシステム・クロックから現在の日時を取得する.
      * @return 現在の日時コンテキスト
      */
     public static String getCurrentDateTimeString() {
-        return getCurrentDateTimeString(DateTimePattern.UUUUSMMSDDHHQMIQSS);
+        return getCurrentDateTimeString(DateTimePattern.UUUUHMMHDDHHQMIQSS);
     }
 
     /**

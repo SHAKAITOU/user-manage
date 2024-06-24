@@ -61,7 +61,8 @@ public class OrderDetailViewHelper extends HtmlViewHelper {
     public static final int IMG_WIDTH                      = 300;
     public static final int IMG_HEIGHT                     = 250;
     
-    public static final int PHONE_CARD_HEIGHT              = 270;
+    public static final int ORDER_BASE_CARD_HEIGHT         = 200;
+    public static final int PHONE_ORDER_BASE_CARD_HEIGHT   = 150;
     
     public static final String BTN_CLOSE = "btnClose";
     
@@ -90,7 +91,7 @@ public class OrderDetailViewHelper extends HtmlViewHelper {
         StringBuffer sb = new StringBuffer();
         sb.append(divRow().cellBlank(5));
         sb.append(setOrderCardPanel(request, orderInfo, calcOrderCardHeight(request)));
-        sb.append(setBillCardPanel(request, orderInfo, 100));
+        sb.append(setBillCardPanel(request, orderInfo, calcOrderCardHeight(request)));
         sb.append(buildFooter());
         return getForm(FORM_NAME, sb.toString());
     }
@@ -248,32 +249,62 @@ public class OrderDetailViewHelper extends HtmlViewHelper {
         contextList.add(DivAlertSet.builder().gridFlexType(GridFlexType.LEFT)
                 .grids(CssGridsType.G6).classType(CssClassType.SUCCESS)
                 .contexts(new String[] {labelName, context}).build().html());
-        
-        //开票状态(F0018)選択
-        labelName = T200MOrder.getColumnInfo(T200MOrder.COL_BILL_STATUS).getLabelName() + UtilConstants.COLON;
-        context   = PTextSet.builder()
-                    .context(orderInfo.getBillStatusName())
-                    .classType(BillStatusType.keyOf(orderInfo.getOrder().getBillStatus()).getClassType()).build().html();
+  
+        //回执(max250)選択
+        String strRow1 = T200MOrder.getColumnInfo(T200MOrder.COL_ANS).getLabelName() + UtilConstants.COLON;
+        String strRow2 = orderInfo.getOrder().getAns();
+        context = DivContainerSet.builder().contexts(new String[] {strRow1, divRow().cellBlank(5), strRow2}).outPutType(DivContainerSetType.SIMPLE).build().html();
         contextList.add(DivAlertSet.builder().gridFlexType(GridFlexType.LEFT)
                 .grids(CssGridsType.G6).classType(CssClassType.SUCCESS)
-                .contexts(new String[] {labelName, context}).build().html());
+                .contexts(new String[] {context}).build().html());
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+
         //------row5----------]
-        
         //------row6----------[
         contextList = new ArrayList<String>();
+
+        if (!orderInfo.getOrder().getCheckStatus().equals(CheckStatusType.REFUSED.getKey())) {
+            //开票状态(F0018)選択
+            labelName = T200MOrder.getColumnInfo(T200MOrder.COL_BILL_STATUS).getLabelName() + UtilConstants.COLON;
+            context   = PTextSet.builder()
+                        .context(orderInfo.getBillStatusName())
+                        .classType(BillStatusType.keyOf(orderInfo.getOrder().getBillStatus()).getClassType()).build().html();
+            contextList.add(DivAlertSet.builder().gridFlexType(GridFlexType.LEFT)
+                    .grids(CssGridsType.G6).classType(CssClassType.SUCCESS)
+                    .contexts(new String[] {labelName, context}).build().html());
+            sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+        }
         
-        //实收金额選択
-        labelName = T200MOrder.getColumnInfo(T200MOrder.COL_PAY_AMOUNT).getLabelName() + UtilConstants.COLON;
-        context   = Objects.nonNull(orderInfo.getOrder().getPayAmount()) ? 
-                orderInfo.getOrder().getPayAmount().toString() : 
-                    PTextSet.builder()
-                    .context(getContext("common.page.toBeConfirm"))
-                    .classType(CssClassType.DANGER).build().html();
-        contextList.add(DivAlertSet.builder().gridFlexType(GridFlexType.LEFT)
-                .grids(CssGridsType.G6).classType(CssClassType.SUCCESS)
-                .contexts(new String[] {labelName, context}).build().html());
-        sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+        if (orderInfo.getOrder().getBillStatus().equals(BillStatusType.INVOICED.getKey())) {
+            contextList = new ArrayList<String>();
+            //开票图片選択
+            strRow1 = T202MImage.getColumnInfo(T202MImage.COL_BILL_PHOTO).getLabelName() + UtilConstants.COLON;
+            strRow2 = divRow().get(getContext("common.page.noImge"));
+            if (orderInfo.getOrderImg() != null && orderInfo.getOrderImg().getBillPhoto() != null) {
+                strRow1 += UtilConstants.HTML_SPACE + UtilConstants.HTML_SPACE + button().forTableBorder(IconSetType.EYE, CssClassType.INFO, SHOW_BILL_IMG_BTN_ID);
+                String src = Base64.encodeBase64String(orderInfo.getOrderImg().getBillPhoto());
+                strRow2 = LabelImageSet.builder().extent(orderInfo.getOrderImg().getBillPhotoExt())
+                        .base64String(src).id(BILL_IMG_ID)
+                        .imgWidth(IMG_WIDTH).imgHeight(IMG_HEIGHT).outPutType(LabelImageSetType.SIMPLE).build().html();
+            }
+            context = DivContainerSet.builder().contexts(new String[] {strRow1, divRow().cellBlank(5), strRow2}).outPutType(DivContainerSetType.SIMPLE).build().html();
+            contextList.add(DivAlertSet.builder().gridFlexType(GridFlexType.LEFT)
+                    .grids(CssGridsType.G6).classType(CssClassType.SUCCESS)
+                    .contexts(new String[] {context}).build().html());
+            
+            //实收金额選択
+            labelName = T200MOrder.getColumnInfo(T200MOrder.COL_PAY_AMOUNT).getLabelName() + UtilConstants.COLON;
+            context   = Objects.nonNull(orderInfo.getOrder().getPayAmount()) ? 
+                    orderInfo.getOrder().getPayAmount().toString() : 
+                        PTextSet.builder()
+                        .context(getContext("common.page.toBeConfirm"))
+                        .classType(CssClassType.DANGER).build().html();
+            contextList.add(DivAlertSet.builder().gridFlexType(GridFlexType.LEFT)
+                    .grids(CssGridsType.G6).classType(CssClassType.SUCCESS)
+                    .contexts(new String[] {labelName, context}).build().html());
+
+            sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+        }
         
         //内容
         sb.append(borderCard().noTitleWithScroll("", CssClassType.WARNING, "", cartHeight,
@@ -283,9 +314,9 @@ public class OrderDetailViewHelper extends HtmlViewHelper {
     
     private static int calcOrderCardHeight(HttpServletRequest request) {
         if (isPhoneMode(request)) {
-            return PHONE_CARD_HEIGHT;
+            return PHONE_ORDER_BASE_CARD_HEIGHT;
         }
-        return LoginInfoHelper.getMediaHeight(request) - 200;
+        return ORDER_BASE_CARD_HEIGHT;
     }
     
     private static String buildFooter() {

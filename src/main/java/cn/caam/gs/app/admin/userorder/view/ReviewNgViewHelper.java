@@ -1,6 +1,5 @@
 package cn.caam.gs.app.admin.userorder.view;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,25 +22,20 @@ import cn.caam.gs.common.enums.CssGridsType;
 import cn.caam.gs.common.enums.GridFlexType;
 import cn.caam.gs.common.html.element.bs5.DivAlertSet;
 import cn.caam.gs.common.html.element.bs5.DivHrSet;
-import cn.caam.gs.common.html.element.bs5.LabelDateInputSet;
-import cn.caam.gs.common.html.element.bs5.LabelInputSet;
-import cn.caam.gs.common.html.element.bs5.LabelTextAreaSet;
 import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
-import cn.caam.gs.common.html.element.bs5.LabelDateInputSet.LabelDateInputSetType;
+import cn.caam.gs.common.html.element.bs5.LabelTextAreaSet;
 import cn.caam.gs.common.html.element.bs5.LabelTextAreaSet.LabelTextAreaSetType;
 import cn.caam.gs.common.util.LocalDateUtility;
-import cn.caam.gs.common.util.LocalDateUtility.DateTimePattern;
 import cn.caam.gs.common.util.UtilConstants;
 import cn.caam.gs.domain.db.custom.entity.OrderInfo;
 import cn.caam.gs.domain.db.custom.entity.UserInfo;
 import cn.caam.gs.domain.tabledef.impl.T100MUser;
-import cn.caam.gs.domain.tabledef.impl.T101MUserExtend;
 import cn.caam.gs.domain.tabledef.impl.T200MOrder;
 
 @Component
-public class ReviewOkViewHelper extends HtmlViewHelper {
+public class ReviewNgViewHelper extends HtmlViewHelper {
     // base url
-    public static final String URL_BASE = UrlConstants.ADMIN + "/reviewOk";
+    public static final String URL_BASE = UrlConstants.ADMIN + "/reviewNg";
     
     //init url
     public static final String URL_C_INIT = UrlConstants.INIT;
@@ -49,7 +43,7 @@ public class ReviewOkViewHelper extends HtmlViewHelper {
     public static final String URL_C_COMMIT = UrlConstants.COMMIT;  
     
     
-    public static final String MAIN_JS_CLASS                  = "ReviewOk";
+    public static final String MAIN_JS_CLASS                  = "ReviewNg";
     public static final String FORM_NAME                      = MAIN_JS_CLASS + "Form";
     
     public static final String BTN_OK = "btnOk";
@@ -127,7 +121,6 @@ public class ReviewOkViewHelper extends HtmlViewHelper {
         
         //旧的有效结束日期(yyyy-MM-dd HH選択
         String oldValidDt = LocalDateUtility.formatDateZH(userInfo.getUser().getValidEndDate());
-        String newValidDt = addVlidDate(oldValidDt, orderInfo.getOrder().getOrderAmount());
         labelName = T100MUser.getColumnInfo(T100MUser.COL_VALID_END_DATE).getLabelName() + UtilConstants.COLON;
         context   = oldValidDt;
         contextList.add(DivAlertSet.builder().gridFlexType(GridFlexType.LEFT)
@@ -144,28 +137,14 @@ public class ReviewOkViewHelper extends HtmlViewHelper {
                 .contexts(new String[] {labelName, context}).build().html());
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
         contextList = new ArrayList<String>();
-        
-        //加算有效结束日期(yyyy-MM-dd HH選択
-        ColumnInfoForm clmForm = T100MUser.getColumnInfo(T100MUser.COL_VALID_END_DATE);
-        String name      = clmForm.getPageName("");
-        String id        = convertNameDotForId(name);
-        labelName = getContext("admin.order.addValidDate");
-        String placeholder = clmForm.getPlaceholder();
-        String value = newValidDt;
-        contextList.add(LabelDateInputSet.builder()
-                .id(id).name(name).labelName(labelName).value(value)
-                .placeholder(placeholder)
-                .fontSize(font).grids(CssGridsType.G12).outPutType(LabelDateInputSetType.WITH_LABEL_FOOT).build().html());
-        sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
-        contextList = new ArrayList<String>();
-        
+
         //回执(max250)
-        clmForm     = T200MOrder.getColumnInfo(T200MOrder.COL_ANS);
-        name        = clmForm.getPageName("");
-        id          = convertNameDotForId(name);
+        ColumnInfoForm clmForm     = T200MOrder.getColumnInfo(T200MOrder.COL_ANS);
+        String name        = clmForm.getPageName("");
+        String id          = convertNameDotForId(name);
         labelName   = clmForm.getLabelName();
-        placeholder = clmForm.getPlaceholder();
-        value       = getContext("admin.order.btn.reviewOk");
+        String placeholder = clmForm.getPlaceholder();
+        String value       = getContext("admin.order.msg.reviewNg");
         contextList.add(LabelTextAreaSet.builder()
                 .id(id).name(name).labelName(labelName).value(value)
                 .placeholder(placeholder).outPutType(LabelTextAreaSetType.WITH_LABEL)
@@ -173,13 +152,8 @@ public class ReviewOkViewHelper extends HtmlViewHelper {
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
 
         
-        return borderCard().noTitleWithScroll("", CssClassType.SUCCESS, "", 370,
+        return borderCard().noTitleWithScroll("", CssClassType.DANGER, "", 370,
                 sbBody.toString());
-    }
-    
-    private static String addVlidDate(String oldValidDt, BigDecimal amount) {
-       int mounths = (amount.divide(new BigDecimal("50"))).intValue();
-       return LocalDateUtility.addMonthsZH(oldValidDt, mounths);
     }
     
     private static String buildFooter() {

@@ -115,6 +115,28 @@ public class AdminOrderSearchController extends JcbcBaseController{
                 AdminOrderSearchViewHelper.getMainPage(request, pageForm, listOutput));
     }
 	
+	@PostMapping(path=AdminOrderSearchViewHelper.URL_C_SEARCH_PASS)
+    public ModelAndView searchPass(
+            OrderSearchForm pageForm,
+            HttpServletRequest request,
+            HttpServletResponse response) {
+        
+        pageForm.setOffset(0);
+        MOrder order = new MOrder();
+        order.setCheckStatus(CheckStatusType.PASS.getKey());
+        order.setOrderType(GlobalConstants.DFL_SELECT_ALL);
+        order.setBillStatus(GlobalConstants.DFL_SELECT_ALL);
+        pageForm.setOrder(order);
+        pageForm.setPayDateFrom(null);
+        pageForm.setPayDateTo(null);
+        pageForm.setInVisableSearch(true);
+        OrderListOutput listOutput = orderService.getOrderList(pageForm);
+        pageForm.setOffset(listOutput.getOrderList().size());
+        request.getSession().setAttribute(SessionConstants.ORDER_LIST_OUT_PUT.getValue(), listOutput);
+        return ControllerHelper.getModelAndView(
+                AdminOrderSearchViewHelper.getMainPage(request, pageForm, listOutput));
+    }
+	
 	@PostMapping(path=AdminOrderSearchViewHelper.URL_C_GROWING)
     public ModelAndView growing(
             OrderSearchForm pageForm,

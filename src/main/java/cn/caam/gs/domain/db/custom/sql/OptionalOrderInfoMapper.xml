@@ -57,8 +57,11 @@
 		<if test="order != null and order.userId != null" >
 	        and mo.user_id = #{order.userId, jdbcType=NVARCHAR}
 		</if>
-		<if test="order != null and order.checkStatus != null and order.checkStatus != '00'" >
+		<if test="order != null and order.checkStatus != null and order.checkStatus != '00' and order.checkStatus != '04'" >
 	        and mo.check_status = #{order.checkStatus, jdbcType=NVARCHAR}
+		</if>
+		<if test="order != null and order.checkStatus != null and order.checkStatus == '04'" >
+	        and mo.check_status IN ('04', '05')
 		</if>
     </sql>
     <!-- SQL CHIP -->

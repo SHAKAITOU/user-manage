@@ -13,7 +13,7 @@ public class GlobalConstants {
     public static final CssFontSizeType TABLE_HEAD_FONT_SIZE      = CssFontSizeType.LABEL_12B;
     public static final CssFontSizeType TABLE_BODY_FONT_SIZE      = CssFontSizeType.LABEL_12;
     public static final int DEFAULT_MEDIA_HEIGHT           = 730;
-    public static final int DEFAULT_MEDIA_WIDTH            = 360;
+    public static final int DEFAULT_MEDIA_WIDTH            = 1100;
     public static final int TD_DEFAULT_HEIGHT              = 30;
     public static final int TH_DEFAULT_HEIGHT              = 30;
     public static final int DEFAULT_GROWING_CNT            = 10;

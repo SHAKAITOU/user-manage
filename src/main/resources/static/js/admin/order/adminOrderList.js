@@ -158,40 +158,10 @@ AdminOrderList.prototype.initEvent = function(){
 							[{name:"id",     value:$(elem).attr("data")}], 
 							function () {
 								ShaDialog.dialogs.success(msgSuc);
-								ShaAjax.ajax.get(
-						            self.jsContext.common.orderDetail.url_get_not_finfish_cnt, 
-						            null, 
-						            function(data){
-										$orderWaitCntDivList = self.menuForm.find(self.ID.ORDER_WAIT_CNT_DIV);
-										$orderWaitCntDivList.each(function(i, elem){
-							                if (data[0] > 0) {
-												$(elem).show();
-											} else {
-												$(elem).hide();
-											}
-											$(elem).html(data[0]);
-										});
-										
-										$orderReviewCntDivList = self.menuForm.find(self.ID.ORDER_REVIEW_CNT_DIV);
-										$orderReviewCntDivList.each(function(i, elem){
-							                if (data[1] > 0) {
-												$(elem).show();
-											} else {
-												$(elem).hide();
-											}
-											$(elem).html(data[1]);
-										});
-										
-										$orderNotFinishCntDivList = self.menuForm.find(self.ID.ORDER_NOT_FINISH_CNT_DIV);
-										$orderNotFinishCntDivList.each(function(i, elem){
-							                if ((data[0] + data[1]) > 0) {
-												$(elem).show();
-											} else {
-												$(elem).hide();
-											}
-											$(elem).html((data[0] + data[1]));
-										});
-										
+								ShaPage.pageCom.refreshOrderCnt(
+									self.jsContext, 
+									self.menuForm, 
+									function(){
 										//refresh order list
 										ShaAjax.ajax.post(
 							                self.jsContext.adminJsView.adminOrderSearch.url_order_list_wait, 
@@ -199,9 +169,9 @@ AdminOrderList.prototype.initEvent = function(){
 							                function(data){
 							                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
 							                }
-							            ); 
-						            }
-						        );
+							            );
+									}
+								);
 							}
 						);
 					}

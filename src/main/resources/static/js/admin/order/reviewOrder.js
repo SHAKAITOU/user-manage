@@ -24,6 +24,7 @@ ReviewOrder.prototype.ID = {
 	ITEM_ID                  : "id",
 	
 	BTN_REVIEW_OK            : "btnReviewOk",
+	BTN_REVIEW_NG            : "btnReviewNg",
 	
     //div
     DIV_MAINBODY             : 'mainBody',
@@ -73,6 +74,15 @@ ReviewOrder.prototype.initEvent = function(){
 			ShaAjax.pop.postDialogLargeCenter(
 					self.i18n["admin.order.btn.reviewOk"],
 					self.jsContext.adminJsView.adminReviewOk.url_init,  
+					[{name:"id", value:self.getObject(self.ID.ITEM_ID).val()}]);
+		}
+	);
+	
+	ShaInput.button.onClick(self.getObject(self.ID.BTN_REVIEW_NG), 
+		function(event) {
+			ShaAjax.pop.postDialogLargeCenter(
+					self.i18n["admin.order.btn.reviewNg"],
+					self.jsContext.adminJsView.adminReviewNg.url_init,  
 					[{name:"id", value:self.getObject(self.ID.ITEM_ID).val()}]);
 		}
 	);

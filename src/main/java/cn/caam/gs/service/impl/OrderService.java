@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import cn.caam.gs.app.admin.userorder.form.ReviewOkForm;
 import cn.caam.gs.app.common.form.IdForm;
 import cn.caam.gs.app.common.form.OrderSearchForm;
 import cn.caam.gs.app.common.output.OrderListOutput;
@@ -108,7 +109,60 @@ public class OrderService extends BaseService {
                 user.getName(),
                 getContext(SexType.keyOf(user.getSex()).getMsg()),
                 pageForm.getId(), 
-                LocalDateUtility.getCurrentDateTimeString(DateTimePattern.UUUUHMMHDDHHQMIQSS));
+                LocalDateUtility.getCurrentDateTimeString());
+        message.setMsg(msgBody);
+        message.setUserId(orderDb.getUserId());
+        messageService.addMessage(message, MsgType.PERSONAL);
+    }
+	
+	@Transactional
+    public void updateOrderReviewOk(ReviewOkForm pageForm) {
+        MOrder orderDb = mOrderMapper.selectByPrimaryKey(pageForm.getId());
+        MUser userDb = userMapper.selectByPrimaryKey(orderDb.getUserId());
+        MOrder order = new MOrder();
+        order.setId(pageForm.getId());
+        order.setCheckStatus(CheckStatusType.PASS.getKey());
+        order.setCheckDate(LocalDateUtility.getCurrentDateTimeString());
+        order.setAns(pageForm.getAns());
+        mOrderMapper.updateByPrimaryKeySelective(order);
+        
+        MUser user = new MUser();
+        user.setId(orderDb.getUserId());
+        String newValidDt = pageForm.getValidEndDate() + " 23:59:59";
+        user.setValidEndDate(newValidDt);
+        userMapper.updateByPrimaryKeySelective(user);
+        
+        MMessage message = new MMessage();
+        message.setTitle(getContext("admin.order.msg.reviewOk.message.title", pageForm.getId()));
+        String msgBody = getContext("admin.order.msg.reviewOk.message.body", 
+                userDb.getName(),
+                getContext(SexType.keyOf(userDb.getSex()).getMsg()),
+                pageForm.getId(), 
+                LocalDateUtility.getCurrentDateTimeString(),
+                newValidDt);
+        message.setMsg(msgBody);
+        message.setUserId(orderDb.getUserId());
+        messageService.addMessage(message, MsgType.PERSONAL);
+    }
+	
+	@Transactional
+    public void updateOrderReviewNg(ReviewOkForm pageForm) {
+        MOrder orderDb = mOrderMapper.selectByPrimaryKey(pageForm.getId());
+        MUser userDb = userMapper.selectByPrimaryKey(orderDb.getUserId());
+        MOrder order = new MOrder();
+        order.setId(pageForm.getId());
+        order.setCheckStatus(CheckStatusType.REFUSED.getKey());
+        order.setCheckDate(LocalDateUtility.getCurrentDateTimeString());
+        order.setAns(pageForm.getAns());
+        mOrderMapper.updateByPrimaryKeySelective(order);
+        
+        MMessage message = new MMessage();
+        message.setTitle(getContext("admin.order.msg.reviewNg.message.title", pageForm.getId()));
+        String msgBody = getContext("admin.order.msg.reviewNg.message.body", 
+                userDb.getName(),
+                getContext(SexType.keyOf(userDb.getSex()).getMsg()),
+                pageForm.getId(), 
+                pageForm.getAns());
         message.setMsg(msgBody);
         message.setUserId(orderDb.getUserId());
         messageService.addMessage(message, MsgType.PERSONAL);

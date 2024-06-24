@@ -3,22 +3,19 @@
 //------------------------------------------------------------------------------------------[
 
 //------------constructor define------------[
-ReviewOk = function(dataMap){
+ReviewNg = function(dataMap){
     this.menuForm = $('#menu_form');
     this.fatherForm = $('#ReviewOrderForm');
-    this.form = $('#ReviewOkForm');
+    this.form = $('#ReviewNgForm');
     this.jsContext = Pos.constants.setInfo;
     this.i18n = JSON.parse(this.jsContext.i18n);
     this.dataMap = dataMap;
-    this.dateFormat = 'yyyy-mm-dd';
-    this.clearBtn = true;
-    this.language = 'zh';
 };
-ShaUtil.other.inherits(ReviewOk, BaseJsController);
+ShaUtil.other.inherits(ReviewNg, BaseJsController);
 //------------------------------------------]
 
 //------------properties define-------------[
-ReviewOk.prototype.ID = {
+ReviewNg.prototype.ID = {
 	
 	BTN_BACK                 : "btnBack",
 	
@@ -26,7 +23,6 @@ ReviewOk.prototype.ID = {
 	BTN_CLOSE                : "btnClose",
 	
 	ITEM_ID                  : "id",
-	ITEM_VALID_END_DATE      : "validEndDate",
 	ITEM_ANS                 : "ans",
 	
     //div
@@ -37,7 +33,7 @@ ReviewOk.prototype.ID = {
 
 //---------------method define--------------[
 //init 
-ReviewOk.prototype.init = function(){
+ReviewNg.prototype.init = function(){
     //keep self instance for call back
     var self = this;
     
@@ -50,27 +46,20 @@ ReviewOk.prototype.init = function(){
 };
 
 // init event
-ReviewOk.prototype.initEvent = function(){
+ReviewNg.prototype.initEvent = function(){
     
     //keep self instance for call back
     var self = this;
-    
-	//init event to BTN_BACK
-    self.getObject(self.ID.ITEM_VALID_END_DATE).datepicker({
-        format   : self.dateFormat,
-        language : self.language,
-        clearBtn : self.clearBtn
-    });
 	
 	//init event to BTN_OK
 	ShaInput.button.onClick(self.getObject(self.ID.BTN_OK), 
 		function(event) {
 			ShaDialog.dialogs.confirm(
-				self.i18n["admin.order.btn.reviewOk"],
+				self.i18n["admin.order.btn.reviewNg"],
 				self.i18n["dialogs.confirm.add.msg"], 
 				function () { 
 					ShaAjax.ajax.post(
-		                self.jsContext.adminJsView.adminReviewOk.url_review_commit, 
+		                self.jsContext.adminJsView.adminReviewNg.url_review_commit, 
 		                self.form.serializeArray(), 
 		                function(data){
 							ShaDialog.dialogs.dialogClose();
