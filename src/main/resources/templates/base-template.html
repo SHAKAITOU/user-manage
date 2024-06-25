@@ -19,6 +19,42 @@
     <link rel="stylesheet" th:href="@{/css/all.css}"/>
     
     <th:block th:if="${mainKind == 'admin'}">
+		<link rel="stylesheet" th:href="@{/css/bootstrapJournal.css}"/>
+		<style>
+		 .dialog-boder{
+		    background: #eb6864;
+		    color: #FFFFFF;
+		    font-weight: bold;
+		    font-size: 14px;
+		}
+		
+		 .subDialog-boder{
+		    background: #eb6864;
+		    color: #FFFFFF;
+		    font-weight: bold;
+		    font-size: 14px;
+		}
+		
+		 .subSubDialog-boder{
+		    background: #eb6864;
+		    color: #FFFFFF;
+		    font-weight: bold;
+		    font-size: 14px;
+		}
+		
+		 .subSubSubDialog-boder{
+		    background: #eb6864;
+		    color: #FFFFFF;
+		    font-weight: bold;
+		    font-size: 14px;
+		}
+		.btn_com_tb:hover {
+			color:rgb(255, 255, 255);
+		    text-decoration: underline;
+		}
+		</style>
+    </th:block>
+    <th:block th:if="${mainKind == 'app'}">
     	<link rel="stylesheet" th:href="@{/css/bootstrap-cerulean.css}"/>
     	<style>
 		 .dialog-boder{
@@ -44,42 +80,6 @@
 		
 		 .subSubSubDialog-boder{
 		    background: #008BBB;
-		    color: #FFFFFF;
-		    font-weight: bold;
-		    font-size: 14px;
-		}
-		.btn_com_tb:hover {
-			color:rgb(255, 255, 255);
-		    text-decoration: underline;
-		}
-		</style>
-    </th:block>
-    <th:block th:if="${mainKind == 'app'}">
-    	<link rel="stylesheet" th:href="@{/css/bootstrapJournal.css}"/>
-		<style>
-		 .dialog-boder{
-		    background: #eb6864;
-		    color: #FFFFFF;
-		    font-weight: bold;
-		    font-size: 14px;
-		}
-		
-		 .subDialog-boder{
-		    background: #eb6864;
-		    color: #FFFFFF;
-		    font-weight: bold;
-		    font-size: 14px;
-		}
-		
-		 .subSubDialog-boder{
-		    background: #eb6864;
-		    color: #FFFFFF;
-		    font-weight: bold;
-		    font-size: 14px;
-		}
-		
-		 .subSubSubDialog-boder{
-		    background: #eb6864;
 		    color: #FFFFFF;
 		    font-weight: bold;
 		    font-size: 14px;

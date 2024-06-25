@@ -61,7 +61,7 @@
 		LEFT JOIN m_fixed_value F0019   ON mb.vote_method     = F0019.value   AND F0019.code   = 'F0019'
     </sql>
     <sql id="baseCondition">
-		<if test="order != null and order.userId != null" >
+		<if test="order != null and order.userId != null and order.userId != ''" >
 	        and mo.user_id = #{order.userId, jdbcType=NVARCHAR}
 		</if>
 		<if test="order != null and order.checkStatus != null and order.checkStatus != '00' and order.checkStatus != '04'" >
@@ -69,6 +69,22 @@
 		</if>
 		<if test="order != null and order.checkStatus != null and order.checkStatus == '04'" >
 	        and mo.check_status IN ('04', '05')
+		</if>
+		<if test="order != null and order.orderType != null and order.orderType != '' and order.orderType != '00' " >
+	        and mo.order_type = #{order.orderType, jdbcType=NVARCHAR}
+		</if>
+		<if test="order != null and order.billStatus != null and order.billStatus != '' and order.billStatus != '00'" >
+	        and mo.bill_status = #{order.billStatus, jdbcType=NVARCHAR}
+		</if>
+		<if test="payDateFrom != null and payDateFrom != ''" >
+	        <![CDATA[
+	        	and STR_TO_DATE(mo.pay_date, '%Y-%m-%d %T') >= STR_TO_DATE(concat(#{payDateFrom, jdbcType=NVARCHAR}, ' 00:00:00'), '%Y-%m-%d %T')
+	        ]]>
+		</if>
+		<if test="payDateTo != null and payDateTo != ''" >
+	        <![CDATA[
+	        	and STR_TO_DATE(mo.pay_date, '%Y-%m-%d %T') <= STR_TO_DATE(concat(#{payDateTo, jdbcType=NVARCHAR}, ' 23:59:59'), '%Y-%m-%d %T')
+	        ]]>
 		</if>
     </sql>
     <!-- SQL CHIP -->
@@ -123,9 +139,23 @@
 	<select id="getBillListCount" resultType="int">
 		SELECT COUNT(mo.id)
 		FROM
-		    m_order mo 
+		    m_order mo
+		    <include refid="baseJoin"/> 
 		WHERE 1=1
 		    and mo.check_status = '04'
+		    <if test="order != null and order.billStatus != null and order.billStatus != '' and order.billStatus != '00'" >
+	        	and mo.bill_status = #{order.billStatus, jdbcType=NVARCHAR}
+			</if>
+			<if test="billDateFrom != null and billDateFrom != ''" >
+		        <![CDATA[
+		        	and STR_TO_DATE(mb.bill_date, '%Y-%m-%d %T') >= STR_TO_DATE(concat(#{billDateFrom, jdbcType=NVARCHAR}, ' 00:00:00'), '%Y-%m-%d %T')
+		        ]]>
+			</if>
+			<if test="billDateTo != null and billDateTo != ''" >
+		        <![CDATA[
+		        	and STR_TO_DATE(mb.bill_date, '%Y-%m-%d %T') <= STR_TO_DATE(concat(#{billDateTo, jdbcType=NVARCHAR}, ' 23:59:59'), '%Y-%m-%d %T')
+		        ]]>
+			</if>
 	</select>
 	<!-- SQL CHIP -->
 	<select id="getBillList" resultMap="OrderInfoForm">
@@ -136,6 +166,19 @@
 			<include refid="baseJoin"/>
 			WHERE 1=1
 		    and mo.check_status = '04'
+		    <if test="order != null and order.billStatus != null and order.billStatus != '' and order.billStatus != '00'" >
+	        	and mo.bill_status = #{order.billStatus, jdbcType=NVARCHAR}
+			</if>
+			<if test="billDateFrom != null and billDateFrom != ''" >
+		        <![CDATA[
+		        	and STR_TO_DATE(mb.bill_date, '%Y-%m-%d %T') >= STR_TO_DATE(concat(#{billDateFrom, jdbcType=NVARCHAR}, ' 00:00:00'), '%Y-%m-%d %T')
+		        ]]>
+			</if>
+			<if test="billDateTo != null and billDateTo != ''" >
+		        <![CDATA[
+		        	and STR_TO_DATE(mb.bill_date, '%Y-%m-%d %T') <= STR_TO_DATE(concat(#{billDateTo, jdbcType=NVARCHAR}, ' 23:59:59'), '%Y-%m-%d %T')
+		        ]]>
+			</if>
 		ORDER BY mo.bill_status, mo.pay_date DESC
 		LIMIT #{limit} OFFSET #{offset}
     </select>
@@ -147,6 +190,19 @@
 		    m_order mo 
 		WHERE 1=1
 		    and mo.check_status = '05'
+		    <if test="order != null and order.refundStatus != null and order.refundStatus != '' and order.refundStatus != '00'" >
+	        	and mo.refund_status = #{order.refundStatus, jdbcType=NVARCHAR}
+			</if>
+			<if test="refundDateFrom != null and refundDateFrom != ''" >
+		        <![CDATA[
+		        	and STR_TO_DATE(mo.refund_date, '%Y-%m-%d %T') >= STR_TO_DATE(concat(#{refundDateFrom, jdbcType=NVARCHAR}, ' 00:00:00'), '%Y-%m-%d %T')
+		        ]]>
+			</if>
+			<if test="refundDateTo != null and refundDateTo != ''" >
+		        <![CDATA[
+		        	and STR_TO_DATE(mo.refund_date, '%Y-%m-%d %T') <= STR_TO_DATE(concat(#{refundDateTo, jdbcType=NVARCHAR}, ' 23:59:59'), '%Y-%m-%d %T')
+		        ]]>
+			</if>
 	</select>
 	<!-- SQL CHIP -->
 	<select id="getRefundList" resultMap="OrderInfoForm">
@@ -157,6 +213,19 @@
 			<include refid="baseJoin"/>
 			WHERE 1=1
 		    and mo.check_status = '05'
+		    <if test="order != null and order.refundStatus != null and order.refundStatus != '' and order.refundStatus != '00'" >
+	        	and mo.refund_status = #{order.refundStatus, jdbcType=NVARCHAR}
+			</if>
+			<if test="refundDateFrom != null and refundDateFrom != ''" >
+		        <![CDATA[
+		        	and STR_TO_DATE(mo.refund_date, '%Y-%m-%d %T') >= STR_TO_DATE(concat(#{refundDateFrom, jdbcType=NVARCHAR}, ' 00:00:00'), '%Y-%m-%d %T')
+		        ]]>
+			</if>
+			<if test="refundDateTo != null and refundDateTo != ''" >
+		        <![CDATA[
+		        	and STR_TO_DATE(mo.refund_date, '%Y-%m-%d %T') <= STR_TO_DATE(concat(#{refundDateTo, jdbcType=NVARCHAR}, ' 23:59:59'), '%Y-%m-%d %T')
+		        ]]>
+			</if>
 		ORDER BY mo.bill_status, mo.pay_date DESC
 		LIMIT #{limit} OFFSET #{offset}
     </select>

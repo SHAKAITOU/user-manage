@@ -61,9 +61,7 @@ public class AdminOrderSearchController extends JcbcBaseController{
             HttpServletResponse response) {
 	    
         pageForm.setOffset(0);
-        MOrder order = new MOrder();
-        order.setCheckStatus(GlobalConstants.DFL_SELECT_ALL);
-        pageForm.setOrder(order);
+        pageForm.getOrder().setCheckStatus(GlobalConstants.DFL_SELECT_ALL);
         OrderListOutput listOutput = orderService.getOrderList(pageForm);
         pageForm.setOffset(listOutput.getOrderList().size());
         request.getSession().setAttribute(SessionConstants.ORDER_LIST_OUT_PUT.getValue(), listOutput);

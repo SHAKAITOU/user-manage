@@ -37,7 +37,7 @@ public class AdminBillSearchController extends JcbcBaseController{
 	
 	@GetMapping(path=AdminBillSearchViewHelper.URL_C_INIT)
 	public ModelAndView init(
-	        cn.caam.gs.app.admin.userbill.form.BillSearchForm pageForm,
+	        BillSearchForm pageForm,
 			HttpServletRequest request,
 			HttpServletResponse response) {
 	    
@@ -58,9 +58,7 @@ public class AdminBillSearchController extends JcbcBaseController{
             HttpServletResponse response) {
 	    
         pageForm.setOffset(0);
-        MOrder order = new MOrder();
-        order.setCheckStatus(CheckStatusType.PASS.getKey());
-        pageForm.setOrder(order);
+        pageForm.getOrder().setCheckStatus(CheckStatusType.PASS.getKey());
         OrderListOutput listOutput = orderService.getBillList(pageForm);
         pageForm.setOffset(listOutput.getOrderList().size());
         request.getSession().setAttribute(SessionConstants.ORDER_LIST_OUT_PUT.getValue(), listOutput);

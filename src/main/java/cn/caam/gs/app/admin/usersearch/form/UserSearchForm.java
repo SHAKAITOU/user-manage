@@ -19,6 +19,9 @@ public class UserSearchForm {
 	private String        registDateTo;
 	private String        validEndDateFrom;
     private String        validEndDateTo;
+    
+    private String        expiredSoonDate;
+    private String        varyExpiredDate;
     @Default
     private boolean hideSearch = false;
     @Default

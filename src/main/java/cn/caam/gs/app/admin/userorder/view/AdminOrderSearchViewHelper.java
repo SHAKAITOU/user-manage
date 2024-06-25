@@ -71,7 +71,7 @@ public class AdminOrderSearchViewHelper extends HtmlViewHelper {
     
     public static final String URL_C_PUT_TO_REVIEW = "/putToReview";
     
-    public static final String PREFIX_NAME                    = "orde.";
+    public static final String PREFIX_NAME                    = "order.";
 	
     public static final String MAIN_JS_CLASS                  = "AdminOrderList";
     public static final String FORM_NAME                      = MAIN_JS_CLASS + "Form";

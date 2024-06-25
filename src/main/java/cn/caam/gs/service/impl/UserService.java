@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 
 import cn.caam.gs.app.admin.usersearch.form.UserSearchForm;
 import cn.caam.gs.app.admin.usersearch.output.UserListOutput;
+import cn.caam.gs.common.util.LocalDateUtility;
+import cn.caam.gs.common.util.LocalDateUtility.DatePattern;
 import cn.caam.gs.domain.db.base.entity.MAdmin;
 import cn.caam.gs.domain.db.base.mapper.MAdminMapper;
 import cn.caam.gs.domain.db.custom.entity.UserInfo;
@@ -24,6 +26,9 @@ public class UserService extends BaseService {
 
 	public UserListOutput getUserList(UserSearchForm pageForm) {
 	    UserListOutput userListOutput = new UserListOutput();
+	    pageForm.setExpiredSoonDate(
+	            LocalDateUtility.addDate(LocalDateUtility.getCurrentDateString(), DatePattern.UUUUHMMHDD, 5));
+	    pageForm.setVaryExpiredDate(LocalDateUtility.addDate(LocalDateUtility.getCurrentDateString(), DatePattern.UUUUHMMHDD, -60));
 	    userListOutput.setCount(optionalUserInfoMapper.getUserListCount(pageForm));
 	    userListOutput.setUserList(optionalUserInfoMapper.getUserList(pageForm));
     	return userListOutput;

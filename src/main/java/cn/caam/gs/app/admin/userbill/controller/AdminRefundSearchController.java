@@ -58,9 +58,7 @@ public class AdminRefundSearchController extends JcbcBaseController{
             HttpServletResponse response) {
 	    
         pageForm.setOffset(0);
-        MOrder order = new MOrder();
-        order.setCheckStatus(CheckStatusType.REFUSED.getKey());
-        pageForm.setOrder(order);
+        pageForm.getOrder().setCheckStatus(CheckStatusType.REFUSED.getKey());
         OrderListOutput listOutput = orderService.getRefundList(pageForm);
         pageForm.setOffset(listOutput.getOrderList().size());
         request.getSession().setAttribute(SessionConstants.ORDER_LIST_OUT_PUT.getValue(), listOutput);

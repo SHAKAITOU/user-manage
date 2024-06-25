@@ -66,7 +66,7 @@ public class AdminBillSearchViewHelper extends HtmlViewHelper {
     
     public static final String URL_C_GROWING = UrlConstants.GROWING;
     
-    public static final String PREFIX_NAME                    = "orde.";
+    public static final String PREFIX_NAME                    = "order.";
 	
     public static final String MAIN_JS_CLASS                  = "AdminBillList";
     public static final String FORM_NAME                      = MAIN_JS_CLASS + "Form";

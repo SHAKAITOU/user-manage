@@ -321,7 +321,7 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         List<FixValueInfo> politicalList = fixedValueMap.get(FixedValueType.POLITICAL);
-        
+        radios = new ArrayList<>();
         radios.add(new HtmlRadio(GlobalConstants.DFL_SELECT_ALL, getContext("AvailabilityType.ALL")));
         for (FixValueInfo fValueInfo : politicalList) {
             radios.add(new HtmlRadio(fValueInfo.getValueObj().getValue(), fValueInfo.getValueObj().getName()));

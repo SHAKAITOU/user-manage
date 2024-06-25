@@ -728,7 +728,7 @@ public class LocalDateUtility {
      * @return 現在の日付コンテキスト
      */
     public static String getCurrentDateString() {
-        return getCurrentDateString(DatePattern.UUUUSMMSDD);
+        return getCurrentDateString(DatePattern.UUUUHMMHDD);
     }
 
     /**
