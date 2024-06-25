@@ -13,20 +13,27 @@ import cn.caam.gs.app.GlobalConstants;
 import cn.caam.gs.app.UrlConstants;
 import cn.caam.gs.app.dbmainten.form.ColumnInfoForm;
 import cn.caam.gs.app.util.HtmlViewHelper;
+import cn.caam.gs.app.util.SessionConstants;
 import cn.caam.gs.common.bean.ViewData;
 import cn.caam.gs.common.enums.CellWidthType;
 import cn.caam.gs.common.enums.CssAlignType;
 import cn.caam.gs.common.enums.CssClassType;
 import cn.caam.gs.common.enums.CssFontSizeType;
 import cn.caam.gs.common.enums.CssGridsType;
+import cn.caam.gs.common.enums.FixedValueType;
 import cn.caam.gs.common.enums.GridFlexType;
+import cn.caam.gs.common.enums.ReFundStatusType;
+import cn.caam.gs.common.html.element.HtmlRadio;
 import cn.caam.gs.common.html.element.bs5.DivAlertSet;
 import cn.caam.gs.common.html.element.bs5.DivHrSet;
+import cn.caam.gs.common.html.element.bs5.LabelSelectSet;
 import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
+import cn.caam.gs.common.html.element.bs5.LabelSelectSet.LabelSelectSetType;
 import cn.caam.gs.common.html.element.bs5.LabelTextAreaSet;
 import cn.caam.gs.common.html.element.bs5.LabelTextAreaSet.LabelTextAreaSetType;
 import cn.caam.gs.common.util.LocalDateUtility;
 import cn.caam.gs.common.util.UtilConstants;
+import cn.caam.gs.domain.db.custom.entity.FixValueInfo;
 import cn.caam.gs.domain.db.custom.entity.OrderInfo;
 import cn.caam.gs.domain.db.custom.entity.UserInfo;
 import cn.caam.gs.domain.tabledef.impl.T100MUser;
@@ -95,6 +102,11 @@ public class ReviewNgViewHelper extends HtmlViewHelper {
             HttpServletRequest request,
             UserInfo userInfo,
             OrderInfo orderInfo) {
+        
+        @SuppressWarnings("unchecked")
+        Map<FixedValueType, List<FixValueInfo>> fixedValueMap = 
+                (Map<FixedValueType, List<FixValueInfo>>)request.getSession().getAttribute(SessionConstants.FIXED_VALUE.getValue());
+        
         StringBuffer sbBody = new StringBuffer();
         List<String> contextList = new ArrayList<String>();
         
@@ -150,7 +162,22 @@ public class ReviewNgViewHelper extends HtmlViewHelper {
                 .placeholder(placeholder).outPutType(LabelTextAreaSetType.WITH_LABEL)
                 .fontSize(font).rows(4).grids(CssGridsType.G12).build().html());
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
-
+        
+        contextList = new ArrayList<String>();
+        clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_REFUND_STATUS);
+        name      = clmForm.getPageName("");
+        id        = convertNameDotForId(name);
+        labelName = clmForm.getLabelName();
+        List<FixValueInfo> refundStatusList = fixedValueMap.get(FixedValueType.REFUND_STATUS);
+        List<HtmlRadio> radios = new ArrayList<>();
+        for (FixValueInfo fValueInfo : refundStatusList) {
+            radios.add(new HtmlRadio(fValueInfo.getValueObj().getValue(), fValueInfo.getValueObj().getName()));
+        }
+        contextList.add(LabelSelectSet.builder()
+                .id(id).name(name).labelName(labelName)
+                .radios(radios).selectedValue(ReFundStatusType.NOT_CONFIRM.getKey())
+                .fontSize(font).grids(CssGridsType.G12).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
+        sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
         
         return borderCard().noTitleWithScroll("", CssClassType.DANGER, "", 370,
                 sbBody.toString());

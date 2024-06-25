@@ -593,36 +593,25 @@ try{
 		
 		hideAllTab : function (form, tabId){
 			$tab = form.find(ShaUtil.util.convertToJqueryId(tabId));
-			$tab.find('label').each(function(i, elem) {
-				var contextId = $(elem).attr('for');
-				form.find('#'+contextId).hide();
+			$tab.find('.a-tab').each(function(i, elem) {
 				$(elem).removeClass('active');
 			});
+			$tab.find('.tab-pane').each(function(i, elem) {
+				$(elem).removeClass('active');
+				$(elem).removeClass('show');
+			});
 		},
 		
-		activeTab : function (form, tabId, activeId){
+		activeTab : function (form, tabId, activeTabId, activeBodyId){
 			$tab = form.find(ShaUtil.util.convertToJqueryId(tabId));
 			ShaInput.tab.hideAllTab(form, tabId);
-			$tab.find('label').each(function(i, elem) {
-				if($(elem).attr('for') == activeId){
-					$(elem).addClass('active');
-					form.find('#'+activeId).show();
-				}
-			});
+			$activeTab = form.find(ShaUtil.util.convertToJqueryId(activeTabId));
+			$activeTab.addClass('active');
+			$activeBody = form.find(ShaUtil.util.convertToJqueryId(activeBodyId));
+			$activeBody.addClass('active');
+			$activeBody.addClass('show');
 		},
-		
-		getTabButton : function (form, tabId, activeId){
-			$tab = form.find(ShaUtil.util.convertToJqueryId(tabId));
-			var btn;
-			$tab.find('label').each(function(i, elem) {
-				if($(elem).attr('for') == activeId){
-					btn = $(elem);
-				}
-			});
-			
-			return btn;
-		},
-		
+				
 		getActivedTab : function (form, tabId){
 			$tab = form.find(ShaUtil.util.convertToJqueryId(tabId));
 			var activeId;

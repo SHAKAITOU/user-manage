@@ -446,9 +446,9 @@ INSERT INTO m_fixed_value VALUES ('F0015', '03', '入会订单(详情添加)',  
 INSERT INTO m_fixed_value VALUES ('F0015', '04', '续费订单(详情添加)',    4);
 INSERT INTO m_fixed_value VALUES ('F0015', '05', '续费订单(系统导入)',    5);
 --退款状态
-INSERT INTO m_fixed_value VALUES ('F0016', '01', '已退款',    1);
-INSERT INTO m_fixed_value VALUES ('F0016', '02', '退款中',    2);
-INSERT INTO m_fixed_value VALUES ('F0016', '03', '退款失败',  3);
+INSERT INTO m_fixed_value VALUES ('F0016', '01', '未定',    1);
+INSERT INTO m_fixed_value VALUES ('F0016', '02', '退款中',  2);
+INSERT INTO m_fixed_value VALUES ('F0016', '03', '已退款',  3);
 --发票类型
 INSERT INTO m_fixed_value VALUES ('F0017', '01', '全国性社会团体会费统一收据',    1);
 INSERT INTO m_fixed_value VALUES ('F0017', '02', '增值税专用发票',                2);
@@ -575,7 +575,7 @@ CREATE TABLE m_bill
     bill_date        VARCHAR(20)             COMMENT '开票时间(yyyy-MM-dd HH:mm:ss)',
     check_status     VARCHAR(3)              COMMENT '审核状态(F0013)',
     vote_method      VARCHAR(3)              COMMENT '取票方式(F0019)',
-    memo             VARCHAR(255)            COMMENT '备注(max250)',
+    bill_memo        VARCHAR(255)            COMMENT '备注(max250)',
     PRIMARY KEY (id)
 ) COMMENT='会员发票信息' ENGINE=InnoDB DEFAULT CHARSET=utf8;
 CREATE INDEX m_bill_idx1 ON m_bill (user_id);

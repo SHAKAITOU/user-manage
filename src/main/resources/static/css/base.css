@@ -689,6 +689,22 @@ html {
 	text-decoration: none;
 }
 
+.a-tab{
+	color: #1e50a2;
+	cursor:pointer;
+	text-decoration: none;
+}
+.a-tab:hover{
+	color: #F4803D;
+	cursor:pointer;
+	text-decoration: none;
+}
+.a-tab:active {
+	color: #dccb18;
+	cursor:pointer;
+	text-decoration: none;
+}
+
 /*!--------------------------
  * isotope CSS
  * --------------------------

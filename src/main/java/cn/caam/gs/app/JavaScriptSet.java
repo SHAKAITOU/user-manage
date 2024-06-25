@@ -13,6 +13,9 @@ import cn.caam.gs.app.admin.login.view.AdminLoginViewHelper;
 import cn.caam.gs.app.admin.menu.menu.AdminMenuViewHelper;
 import cn.caam.gs.app.admin.message.view.AdminMessagePushViewHelper;
 import cn.caam.gs.app.admin.message.view.AdminMessageSearchViewHelper;
+import cn.caam.gs.app.admin.userbill.view.AdminBillSearchViewHelper;
+import cn.caam.gs.app.admin.userbill.view.AdminRefundSearchViewHelper;
+import cn.caam.gs.app.admin.userbill.view.BillViewHelper;
 import cn.caam.gs.app.admin.userorder.view.AdminOrderSearchViewHelper;
 import cn.caam.gs.app.admin.userorder.view.ReviewNgViewHelper;
 import cn.caam.gs.app.admin.userorder.view.ReviewOkViewHelper;
@@ -177,6 +180,11 @@ public class JavaScriptSet {
 		jsView.put("adminReviewOk",      ReviewOkViewHelper.getJsProperties());
 		jsView.put("adminReviewNg",      ReviewNgViewHelper.getJsProperties());
 		
+		jsView.put("adminBillSearch",    AdminBillSearchViewHelper.getJsProperties());
+		jsView.put("adminBill",          BillViewHelper.getJsProperties());
+		
+		
+		jsView.put("adminRefundSearch",  AdminRefundSearchViewHelper.getJsProperties());
 		
 		
 		

@@ -1,0 +1,1 @@
+ALTER TABLE m_bill CHANGE COLUMN memo bill_memo VARCHAR(255);

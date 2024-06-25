@@ -231,6 +231,8 @@ public class IconSet {
         TO_STACK          ("fas fa-stack-overflow"),
         //小手放去
         STAMP            ("fa fa-stamp"),
+        
+        BILL             ("fa fa-clipboard"),
         ;
         
         /** type. */

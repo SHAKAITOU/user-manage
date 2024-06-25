@@ -1,4 +1,4 @@
-package cn.caam.gs.app.admin.userorder.view;
+package cn.caam.gs.app.admin.userbill.view;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,8 +12,7 @@ import org.springframework.stereotype.Component;
 
 import cn.caam.gs.app.GlobalConstants;
 import cn.caam.gs.app.UrlConstants;
-import cn.caam.gs.app.admin.usersearch.form.UserSearchForm;
-import cn.caam.gs.app.common.form.OrderSearchForm;
+import cn.caam.gs.app.admin.userbill.form.RefundSearchForm;
 import cn.caam.gs.app.common.output.OrderListOutput;
 import cn.caam.gs.app.dbmainten.form.ColumnInfoForm;
 import cn.caam.gs.app.util.HtmlViewHelper;
@@ -36,10 +35,10 @@ import cn.caam.gs.common.html.element.TrSet;
 import cn.caam.gs.common.html.element.bs5.BreadCrumbSet;
 import cn.caam.gs.common.html.element.bs5.ButtonSet;
 import cn.caam.gs.common.html.element.bs5.ButtonSet.ButtonSetType;
-import cn.caam.gs.common.html.element.bs5.IconSet.IconSetCss;
-import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
 import cn.caam.gs.common.html.element.bs5.DivChevronSet;
 import cn.caam.gs.common.html.element.bs5.IconSet;
+import cn.caam.gs.common.html.element.bs5.IconSet.IconSetCss;
+import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
 import cn.caam.gs.common.html.element.bs5.LabelDateInputSet;
 import cn.caam.gs.common.html.element.bs5.LabelDateInputSet.LabelDateInputSetType;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet;
@@ -50,33 +49,25 @@ import cn.caam.gs.domain.db.custom.entity.FixValueInfo;
 import cn.caam.gs.domain.db.custom.entity.OrderInfo;
 import cn.caam.gs.domain.tabledef.impl.T100MUser;
 import cn.caam.gs.domain.tabledef.impl.T200MOrder;
+import cn.caam.gs.domain.tabledef.impl.T201MBill;
 
 @Component
-public class AdminOrderSearchViewHelper extends HtmlViewHelper {
+public class AdminRefundSearchViewHelper extends HtmlViewHelper {
 	
-	public static final String URL_BASE = UrlConstants.ADMIN + "/orderList";
+	public static final String URL_BASE = UrlConstants.ADMIN + "/refundList";
 	//init url
 	public static final String URL_C_INIT = UrlConstants.INIT;
 	//init url
     public static final String URL_C_SEARCH = UrlConstants.SEARCH;
     
-    //init url
-    public static final String URL_C_SEARCH_WAIT   = "/searchWait";
-    //init url
-    public static final String URL_C_SEARCH_REVIEW = "/searchReview";
-    //init url
-    public static final String URL_C_SEARCH_PASS = "/searchPass";
-    
     public static final String URL_C_GROWING = UrlConstants.GROWING;
-    
-    public static final String URL_C_PUT_TO_REVIEW = "/putToReview";
     
     public static final String PREFIX_NAME                    = "orde.";
 	
-    public static final String MAIN_JS_CLASS                  = "AdminOrderList";
+    public static final String MAIN_JS_CLASS                  = "AdminRefundList";
     public static final String FORM_NAME                      = MAIN_JS_CLASS + "Form";
-    public static final String LIST_TABLE_ID                  = "orderListTable";
-    public static final String LIST_REFRESH_BODY_ID           = "orderListRefreshBody";
+    public static final String LIST_TABLE_ID                  = "refundListTable";
+    public static final String LIST_REFRESH_BODY_ID           = "refundListRefreshBody";
     public static final String SEARCH_BTN_ID                  = "searchBtn";
     public static final String SEARCH_PANEL_ID                = "searchPanel";
     public static final String SHOW_SEARCH_PANEL_BTN_ID       = "showSearchPanelBtn";
@@ -85,8 +76,7 @@ public class AdminOrderSearchViewHelper extends HtmlViewHelper {
     public static final String TABLE_HEIGHT_WHEN_SHOW_SEARCH  = "tableHeightWhenShowSearch";
     
     public static final String TABLE_BTN_DETAIL               = "detail";
-    public static final String TABLE_BTN_PUT_TO_REVIEW        = "putToReview";
-    public static final String TABLE_BTN_START_REVIEW         = "startReview";
+    public static final String TABLE_BTN_TO_BE                = "tobeRefund";
     public static final String SHOW_MORE_BTN_ID               = "showMore";
     public static final String HID_HIDE_SEARCH                = "hideSearch";
     public static final String HID_INVISABLE_SEARCH           = "inVisableSearch";
@@ -106,7 +96,7 @@ public class AdminOrderSearchViewHelper extends HtmlViewHelper {
      */
     public static ViewData getMainPage(
             HttpServletRequest request, 
-            OrderSearchForm pageForm,
+            RefundSearchForm pageForm,
             OrderListOutput listOutput) {
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put(TABLE_HEIGHT_WHEN_HIDE_SEARCH, calcTableHeightWhenHideSearch(request));
@@ -122,7 +112,7 @@ public class AdminOrderSearchViewHelper extends HtmlViewHelper {
     
     public static ViewData refeshTable(
             HttpServletRequest request, 
-            OrderSearchForm pageForm,
+            RefundSearchForm pageForm,
             OrderListOutput listOutput) {
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put(TABLE_HEIGHT_WHEN_HIDE_SEARCH, calcTableHeightWhenHideSearch(request));
@@ -137,7 +127,7 @@ public class AdminOrderSearchViewHelper extends HtmlViewHelper {
     
     private static String getMainPageContext(
             HttpServletRequest request, 
-            OrderSearchForm pageForm,
+            RefundSearchForm pageForm,
             OrderListOutput listOutput) {
         StringBuffer sb = new StringBuffer();
         sb.append(divRow().cellBlank(5));
@@ -154,16 +144,8 @@ public class AdminOrderSearchViewHelper extends HtmlViewHelper {
     }
     
     //--------------------header BreadCrumb -----------------
-    private static String setBreadCrumb(OrderSearchForm pageForm) {
-        String subCrum = getContext("menu.group2.button1");
-        if (pageForm.getOrder().getCheckStatus().equals(CheckStatusType.WAIT_FOR_REVIEW.getKey())) {
-            subCrum = getContext("menu.group2.button2");
-        } else if (pageForm.getOrder().getCheckStatus().equals(CheckStatusType.REVIEW.getKey())) {
-            subCrum = getContext("menu.group2.button3");
-        } else if (pageForm.getOrder().getCheckStatus().equals(CheckStatusType.PASS.getKey())) {
-            subCrum = getContext("menu.group2.button4");
-        }
-        String[] names = new String[] {getContext("menu.group2"), subCrum};
+    private static String setBreadCrumb(RefundSearchForm pageForm) {
+        String[] names = new String[] {getContext("menu.group3"), getContext("menu.group3.button2")};
         return BreadCrumbSet.builder().labelNames(names).build().html();
     }
 
@@ -187,31 +169,15 @@ public class AdminOrderSearchViewHelper extends HtmlViewHelper {
         
         //-----row 1-------------[
         
-        //订单类型(F0015)選択
-        ColumnInfoForm clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_ORDER_TYPE);
+        //退款状态(F0016)選択
+        ColumnInfoForm clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_REFUND_STATUS);
         String name      = clmForm.getPageName(PREFIX_NAME);
         String id        = convertNameDotForId(name);
         String labelName = clmForm.getLabelName();
-        List<FixValueInfo> orderTypeList = fixedValueMap.get(FixedValueType.ORDER_TYPE);
+        List<FixValueInfo> refundStatusList = fixedValueMap.get(FixedValueType.REFUND_STATUS);
         List<HtmlRadio> radios = new ArrayList<>();
         radios.add(new HtmlRadio(GlobalConstants.DFL_SELECT_ALL, getContext("AvailabilityType.ALL")));
-        for (FixValueInfo fValueInfo : orderTypeList) {
-            radios.add(new HtmlRadio(fValueInfo.getValueObj().getValue(), fValueInfo.getValueObj().getName()));
-        }
-        contextList.add(LabelSelectSet.builder()
-                .id(id).name(name).labelName(labelName)
-                .radios(radios).selectedValue(GlobalConstants.DFL_SELECT_ALL)
-                .fontSize(font).grids(CssGridsType.G3).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
-        
-        //开票状态(F0018)選択
-        clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_BILL_STATUS);
-        name      = clmForm.getPageName(PREFIX_NAME);
-        id        = convertNameDotForId(name);
-        labelName = clmForm.getLabelName();
-        List<FixValueInfo> billStatusList = fixedValueMap.get(FixedValueType.BILL_STATUS);
-        radios = new ArrayList<>();
-        radios.add(new HtmlRadio(GlobalConstants.DFL_SELECT_ALL, getContext("AvailabilityType.ALL")));
-        for (FixValueInfo fValueInfo : billStatusList) {
+        for (FixValueInfo fValueInfo : refundStatusList) {
             radios.add(new HtmlRadio(fValueInfo.getValueObj().getValue(), fValueInfo.getValueObj().getName()));
         }
         contextList.add(LabelSelectSet.builder()
@@ -219,27 +185,27 @@ public class AdminOrderSearchViewHelper extends HtmlViewHelper {
                 .radios(radios).selectedValue(GlobalConstants.DFL_SELECT_ALL)
                 .fontSize(font).grids(CssGridsType.G2).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
         
-        //订单时间選択
-        clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_PAY_DATE);
+        //退款时间(yyyy-MM-dd HH選択
+        clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_REFUND_DATE);
         name      = clmForm.getPageName("") + "From";
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName() + getContext("common.page.start");
         String placeholder = T100MUser.getColumnInfo(T100MUser.COL_VALID_END_DATE).getPlaceholder();
         contextList.add(LabelDateInputSet.builder()
                 .id(id).name(name).labelName(labelName).placeholder(placeholder)
-                .fontSize(font).grids(CssGridsType.G3).outPutType(LabelDateInputSetType.WITH_LABEL_FOOT).build().html());
+                .fontSize(font).grids(CssGridsType.G4).outPutType(LabelDateInputSetType.WITH_LABEL_FOOT).build().html());
         
         name      = clmForm.getPageName("") + "To";
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName() + getContext("common.page.end");
         contextList.add(LabelDateInputSet.builder()
                 .id(id).name(name).labelName(labelName).placeholder(placeholder)
-                .fontSize(font).grids(CssGridsType.G3).outPutType(LabelDateInputSetType.WITH_LABEL_FOOT).build().html());
+                .fontSize(font).grids(CssGridsType.G4).outPutType(LabelDateInputSetType.WITH_LABEL_FOOT).build().html());
         
         name = getContext("common.page.search");
         contextList.add(ButtonSet.builder()
                 .id(SEARCH_BTN_ID).buttonName(name).isBorderOnly(true)
-                .grids(CssGridsType.G1).outPutType(ButtonSetType.NORMAL).gridFlexType(GridFlexType.RIGHT)
+                .grids(CssGridsType.G2).outPutType(ButtonSetType.NORMAL).gridFlexType(GridFlexType.RIGHT)
                 .iconSet(IconSet.builder().type(IconSetType.SEARCH).css(IconSetCss.NOMAL_10).build())
                 .build().html());
 
@@ -252,7 +218,7 @@ public class AdminOrderSearchViewHelper extends HtmlViewHelper {
     //--------------------body card table -----------------
     private static String setCardForTable(
             HttpServletRequest request, 
-            OrderSearchForm pageForm,
+            RefundSearchForm pageForm,
             OrderListOutput listOutput) {
         StringBuffer sbBody = new StringBuffer();
         StringBuffer cardBody = new StringBuffer();
@@ -268,7 +234,7 @@ public class AdminOrderSearchViewHelper extends HtmlViewHelper {
     }
     
 
-    private static String setHidden(OrderSearchForm pageForm) {
+    private static String setHidden(RefundSearchForm pageForm) {
         StringBuffer sb = new StringBuffer();
         sb.append(hidden().get(HID_HIDE_SEARCH,  String.valueOf(pageForm.isHideSearch())));
         sb.append(hidden().get(HID_INVISABLE_SEARCH,  String.valueOf(pageForm.isInVisableSearch())));
@@ -304,7 +270,7 @@ public class AdminOrderSearchViewHelper extends HtmlViewHelper {
     
     private static String setListTable(
             HttpServletRequest request, 
-            OrderSearchForm pageForm,
+            RefundSearchForm pageForm,
             List<OrderInfo> list) {
 
         //head
@@ -324,7 +290,7 @@ public class AdminOrderSearchViewHelper extends HtmlViewHelper {
             aligs.add(CssAlignType.CENTER);
             String subRow2 = divRow().get(CellWidthType.THREE_6_3_3, aligs, T200MOrder.getColumnInfo(T200MOrder.COL_ORDER_TYPE).getLabelName(), 
                                                                         T200MOrder.getColumnInfo(T200MOrder.COL_CHECK_STATUS).getLabelName(),
-                                                                        T200MOrder.getColumnInfo(T200MOrder.COL_BILL_STATUS).getLabelName());
+                                                                        T200MOrder.getColumnInfo(T200MOrder.COL_REFUND_STATUS).getLabelName());
             aligs = new ArrayList<>();
             aligs.add(CssAlignType.LEFT);
             aligs.add(CssAlignType.RIGHT);
@@ -350,7 +316,7 @@ public class AdminOrderSearchViewHelper extends HtmlViewHelper {
             context  = clmForm.getLabelName();
             headTr.addTh(th().get(CssGridsType.G2, CssAlignType.CENTER, clmForm.getLabelName()));
             // --col5--
-            clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_BILL_STATUS);
+            clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_REFUND_STATUS);
             context  = clmForm.getLabelName();
             headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, clmForm.getLabelName()));
             // --col6--
@@ -373,30 +339,19 @@ public class AdminOrderSearchViewHelper extends HtmlViewHelper {
                 String orderTypeName = PTextSet.builder()
                         .context(orderInfo.getOrderTypeName())
                         .classType(OrderType.keyOf(orderInfo.getOrder().getOrderType()).getClassType()).build().html();
-                
-                String billStatusName = "";
-                if (orderInfo.getOrder().getCheckStatus().equals(CheckStatusType.REFUSED.getKey())) {
-                    billStatusName = PTextSet.builder()
+                String refundStatusName = PTextSet.builder()
                         .context(orderInfo.getRefundStatusName())
                         .classType(ReFundStatusType.keyOf(orderInfo.getOrder().getRefundStatus()).getClassType()).build().html();
-                } else {
-                    billStatusName = PTextSet.builder()
-                        .context(orderInfo.getBillStatusName())
-                        .classType(BillStatusType.keyOf(orderInfo.getOrder().getBillStatus()).getClassType()).build().html();
-                }
                 String checkStatusName = PTextSet.builder()
                         .context(orderInfo.getCheckStatusName())
                         .classType(CheckStatusType.keyOf(orderInfo.getOrder().getCheckStatus()).getClassType()).build().html();
                 String btn = button().forTableBorderNameRight(IconSetType.DETAIL, CssClassType.INFO, 
                         "", getContext("common.page.info"), orderInfo.getId(), TABLE_BTN_DETAIL);
                 btn += "&nbsp;";
-                if (pageForm.getOrder().getCheckStatus().equals(CheckStatusType.WAIT_FOR_REVIEW.getKey())) {
-                    btn += button().forTableBorderNameLeft(IconSetType.HAND_RIGHT, CssClassType.SUCCESS, 
-                            "", getContext("admin.order.btn.putToReview"), orderInfo.getId(), TABLE_BTN_PUT_TO_REVIEW);
-                } else if (pageForm.getOrder().getCheckStatus().equals(CheckStatusType.REVIEW.getKey())) {
-                    btn += button().forTableBorderNameLeft(IconSetType.STAMP, CssClassType.DANGER, 
-                            "", getContext("admin.order.btn.startToReview"), orderInfo.getId(), TABLE_BTN_START_REVIEW);
-                }
+                if (!orderInfo.getOrder().getBillStatus().equals(ReFundStatusType.REFUND_OVER.getKey())) {
+                    btn += button().forTableBorderNameLeft(IconSetType.BILL, CssClassType.DANGER, 
+                            "", getContext("admin.refund.btn.tobe"), orderInfo.getId(), TABLE_BTN_TO_BE);
+                } 
 
                 if (isPhoneMode(request)) {
                     // --col1--
@@ -408,7 +363,7 @@ public class AdminOrderSearchViewHelper extends HtmlViewHelper {
                     aligs.add(CssAlignType.LEFT);
                     aligs.add(CssAlignType.CENTER);
                     aligs.add(CssAlignType.CENTER);
-                    String subRow2 = divRow().get(CellWidthType.THREE_6_3_3, aligs, orderTypeName, checkStatusName, billStatusName);
+                    String subRow2 = divRow().get(CellWidthType.THREE_6_3_3, aligs, orderTypeName, checkStatusName, refundStatusName);
                     aligs = new ArrayList<>();
                     aligs.add(CssAlignType.LEFT);
                     aligs.add(CssAlignType.RIGHT);
@@ -425,7 +380,7 @@ public class AdminOrderSearchViewHelper extends HtmlViewHelper {
                     // --col4--
                     tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, checkStatusName));
                     // --col5--
-                    tr.addTd(td().get(CssGridsType.G1, CssAlignType.CENTER, billStatusName));
+                    tr.addTd(td().get(CssGridsType.G1, CssAlignType.CENTER, refundStatusName));
                     // --col6--
                     tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, orderInfo.getOrder().getPayDate()));
                     // --col7--
@@ -449,16 +404,10 @@ public class AdminOrderSearchViewHelper extends HtmlViewHelper {
 	public static Map<String, String> getJsProperties() {
 		Map<String, String> js = new HashMap<String, String>();
 		// url
-		js.put("url_init",               URL_BASE + URL_C_INIT);
-		js.put("url_order_list",         URL_BASE + URL_C_SEARCH);
-		js.put("url_order_list_wait",    URL_BASE + URL_C_SEARCH_WAIT);
-		js.put("url_order_list_review",  URL_BASE + URL_C_SEARCH_REVIEW);
-		js.put("url_order_list_pass",    URL_BASE + URL_C_SEARCH_PASS);
+		js.put("url_init",              URL_BASE + URL_C_INIT);
+		js.put("url_refund_list",         URL_BASE + URL_C_SEARCH);		
 		
-		
-		js.put("url_order_list_growing", URL_BASE + URL_C_GROWING);
-		js.put("url_order_putToReview",  URL_BASE + URL_C_PUT_TO_REVIEW);
-		
+		js.put("url_refund_list_growing", URL_BASE + URL_C_GROWING);		
 		
 
 		return js;

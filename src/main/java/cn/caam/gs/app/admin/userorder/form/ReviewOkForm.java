@@ -14,5 +14,5 @@ public class ReviewOkForm {
 	private String id;
 	private String validEndDate;
 	private String ans;
-	
+	private String refundStatus;
 }

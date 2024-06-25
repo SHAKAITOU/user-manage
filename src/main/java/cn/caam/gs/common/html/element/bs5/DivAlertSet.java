@@ -47,8 +47,9 @@ public class DivAlertSet {
             }
             sb.append(">");
             for(String context : contexts) {
-                
-                sb.append(context);
+                if (Objects.nonNull(context)) {
+                    sb.append(context);
+                }
             }
             sb.append("</div>");
             return sb.toString();
@@ -67,7 +68,9 @@ public class DivAlertSet {
         + " " + fontSize.getKey()
         + " '>");
         for(String context : contexts) {
-            sb.append(context);
+            if (Objects.nonNull(context)) {
+                sb.append(context);
+            }
         }
         sb.append("</div>");
         return sb.toString();

@@ -12,6 +12,8 @@
         <result property="checkStatusName"    column="checkStatusName"/>
         <result property="refundStatusName"      column="refundStatusName"/>
         <result property="billStatusName"      column="billStatusName"/>
+        <result property="billTypeName"      column="billTypeName"/>
+        <result property="voteMethodName"      column="voteMethodName"/>
         <association property="order" 
             resultMap="cn.caam.gs.domain.db.base.mapper.MOrderMapper.BaseResultMap">
             <id column="id" property="id" />
@@ -41,10 +43,13 @@
 	    F0014.name   AS payTypeName,
 	    F0013.name   AS checkStatusName,
 	    F0016.name   AS refundStatusName,
-	    F0018.name   AS billStatusName
+	    F0018.name   AS billStatusName,
+	    F0017.name   AS billTypeName,
+	    F0019.name   AS voteMethodName
     </sql>
     <sql id="baseJoin">
     	LEFT JOIN m_user mu ON mo.user_id = mu.id
+		LEFT JOIN m_bill mb ON mo.id = mb.id
 		LEFT JOIN m_fixed_value F0012   ON mo.pay_path        = F0012.value   AND F0012.code   = 'F0012'
 		LEFT JOIN m_fixed_value F0020   ON mo.order_method    = F0020.value   AND F0020.code   = 'F0020'
 		LEFT JOIN m_fixed_value F0015   ON mo.order_type      = F0015.value   AND F0015.code   = 'F0015'
@@ -52,6 +57,8 @@
 		LEFT JOIN m_fixed_value F0013   ON mo.check_status    = F0013.value   AND F0013.code   = 'F0013'
 		LEFT JOIN m_fixed_value F0016   ON mo.refund_status   = F0016.value   AND F0016.code   = 'F0016'
 		LEFT JOIN m_fixed_value F0018   ON mo.bill_status     = F0018.value   AND F0018.code   = 'F0018'
+		LEFT JOIN m_fixed_value F0017   ON mb.bill_type       = F0017.value   AND F0017.code   = 'F0017'
+		LEFT JOIN m_fixed_value F0019   ON mb.vote_method     = F0019.value   AND F0019.code   = 'F0019'
     </sql>
     <sql id="baseCondition">
 		<if test="order != null and order.userId != null" >
@@ -88,7 +95,8 @@
     <select id="getOrder" resultMap="OrderInfoForm">
 		SELECT
 		    <include refid="baseSelect"/>,
-		    mi.*
+		    mi.*,
+		    mb.*
 		FROM
 		    m_order mo 
 			<include refid="baseJoin"/>
@@ -110,5 +118,47 @@
 		WHERE mo.check_status = '02'
 		    
 	</select>
+	
+	<!-- SQL CHIP -->
+	<select id="getBillListCount" resultType="int">
+		SELECT COUNT(mo.id)
+		FROM
+		    m_order mo 
+		WHERE 1=1
+		    and mo.check_status = '04'
+	</select>
+	<!-- SQL CHIP -->
+	<select id="getBillList" resultMap="OrderInfoForm">
+        SELECT
+		    <include refid="baseSelect"/>
+		FROM
+		    m_order mo 
+			<include refid="baseJoin"/>
+			WHERE 1=1
+		    and mo.check_status = '04'
+		ORDER BY mo.bill_status, mo.pay_date DESC
+		LIMIT #{limit} OFFSET #{offset}
+    </select>
+    
+    <!-- SQL CHIP -->
+	<select id="getRefundListCount" resultType="int">
+		SELECT COUNT(mo.id)
+		FROM
+		    m_order mo 
+		WHERE 1=1
+		    and mo.check_status = '05'
+	</select>
+	<!-- SQL CHIP -->
+	<select id="getRefundList" resultMap="OrderInfoForm">
+        SELECT
+		    <include refid="baseSelect"/>
+		FROM
+		    m_order mo 
+			<include refid="baseJoin"/>
+			WHERE 1=1
+		    and mo.check_status = '05'
+		ORDER BY mo.bill_status, mo.pay_date DESC
+		LIMIT #{limit} OFFSET #{offset}
+    </select>
         
 </mapper>

@@ -12,31 +12,42 @@ public class TabSet {
     
     private String id;
     private String[] tabTitles;
-    private String[] tabIds;
-    private CssClassType[] tabTypes;
-    private String[] tabContexts;
+    private String[] tabTitleIds;
+    private String[] tabBodyIds;
+    private String[] tabBodys;
 
     public String html() {
         StringBuffer sb = new StringBuffer();
-        sb.append("<div class='row'>");
-        sb.append("<div id='"+id+"' class='col-mb-12 col-sm-12 btn-group btn-group-toggle' data-toggle='buttons'>");
+        sb.append("<div id='"+id+"'>");
+        sb.append("<ul class='nav nav-tabs' role='tablist'>");
         int index = 0;
         for(String title : tabTitles) {
-            sb.append("<label for='"+tabIds[index]+"' class='btn btn-outline-"+tabTypes[index].getKey()+" btn_tab'>");
-            sb.append("<input type='radio' name='"+id+"' autocomplete='off'>");
-            sb.append(title);
-            sb.append("</label>");
+            sb.append("<li class='nav-item' role='presentation'>");
+            sb.append("<a class='nav-link label-16b a-tab ");
+            if (index == 0) {
+                sb.append("active");
+            }
+            sb.append("' id='"+tabTitleIds[index]+"'");
+            sb.append(" data-bs-toggle='tab' href='#' role='tab'>"+title+"</a>");
+            sb.append("</li>");
             index++;
         }
-        sb.append("</div>");
-        sb.append("</div>");
-         index = 0;
-        for(String context : tabContexts) {
-            sb.append("<div id='"+tabIds[index]+"'>");
+        sb.append("</ul>");
+        sb.append("<div class='tab-content'>");
+        index = 0;
+        for(String context : tabBodys) {
+            
+            sb.append("<div class='tab-pane ");
+            if (index == 0) {
+                sb.append(" active show");
+            }
+            sb.append("' id='"+tabBodyIds[index]+"' role='tabpanel'>");
             sb.append(context);
             sb.append("</div>");
             index++;
-        }
+        }        
+        sb.append("</div>");
+        sb.append("</div>");
         return sb.toString();
     }
 }

@@ -45,5 +45,11 @@ public class OrderInfo {
     
     /** 开票状态(F0018) */
     private String billStatusName;
+    
+    /** 发票类型(F0017) */
+    private String billTypeName;
+    
+    /** 取票方式(F0019) */
+    private String voteMethodName;
 
 }

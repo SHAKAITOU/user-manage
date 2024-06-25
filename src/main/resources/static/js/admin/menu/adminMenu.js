@@ -25,6 +25,8 @@ AdminMenu.prototype.ID = {
     CLASS_NM_ORDER_WAIT_SEARCH      : "menu2002",
     CLASS_NM_ORDER_REVIEW           : "menu2003",
     CLASS_NM_ORDER_PASS             : "menu2004",
+    CLASS_NM_BILL_SEARCH            : "menu3001",
+    CLASS_NM_REFUND_SEARCH          : "menu3002",
     CLASS_NM_USER_SEARCH      		: 'menu4001',
     CLASS_NM_MESSAGE_SEARCH         : 'menu5001',
     ITEM_LANGUAGE                   : 'language',
@@ -120,6 +122,38 @@ AdminMenu.prototype.initEvent = function(){
 	    	function(event) {
 				ShaAjax.ajax.post(
 	                self.jsContext.adminJsView.adminOrderSearch.url_order_list_pass, 
+	                null, 
+	                function(data){
+	                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
+	                }
+	            ); 
+			}
+	    );
+	});
+	
+	//开票查询
+    $buttonList = self.getObjectList(self.ID.CLASS_NM_BILL_SEARCH);
+    $buttonList.each(function(i, elem){
+	    ShaInput.button.onClick($(elem),
+	    	function(event) {
+				ShaAjax.ajax.get(
+	                self.jsContext.adminJsView.adminBillSearch.url_init, 
+	                null, 
+	                function(data){
+	                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
+	                }
+	            ); 
+			}
+	    );
+	});
+	
+	//退款查询
+    $buttonList = self.getObjectList(self.ID.CLASS_NM_REFUND_SEARCH);
+    $buttonList.each(function(i, elem){
+	    ShaInput.button.onClick($(elem),
+	    	function(event) {
+				ShaAjax.ajax.get(
+	                self.jsContext.adminJsView.adminRefundSearch.url_init, 
 	                null, 
 	                function(data){
 	                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);

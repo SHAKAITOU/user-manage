@@ -1,4 +1,4 @@
-package cn.caam.gs.app.common.form;
+package cn.caam.gs.app.admin.userbill.form;
 
 import cn.caam.gs.domain.db.base.entity.MOrder;
 import cn.caam.gs.app.GlobalConstants;
@@ -12,11 +12,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderSearchForm {
+public class RefundSearchForm {
 
 	private MOrder order;
-	private String payDateFrom;
-	private String payDateTo;
+    private String refundDateFrom;
+    private String refundDateTo;
 	
 	@Default
 	private boolean hideSearch = false;

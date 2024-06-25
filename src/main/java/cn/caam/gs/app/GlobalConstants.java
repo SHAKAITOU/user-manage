@@ -45,4 +45,6 @@ public class GlobalConstants {
     public static final int MAJOR_MAX_L                = 36;
     public static final int LEARN_EXPERIENCE_MAX_L     = 250;
     public static final int AMOUNT_MAX_L               = 10;
+    public static final int BILL_CODE_MAX_L            = 50;
+    public static final int BILL_TITLE_MAX_L           = 20;
 }
