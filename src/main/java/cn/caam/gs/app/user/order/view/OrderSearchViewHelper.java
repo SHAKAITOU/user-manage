@@ -29,6 +29,7 @@ import cn.caam.gs.common.enums.CssGridsType;
 import cn.caam.gs.common.enums.FixedValueType;
 import cn.caam.gs.common.enums.GridFlexType;
 import cn.caam.gs.common.enums.OrderType;
+import cn.caam.gs.common.enums.ReFundStatusType;
 import cn.caam.gs.common.html.element.HtmlRadio;
 import cn.caam.gs.common.html.element.TrSet;
 import cn.caam.gs.common.html.element.bs5.BreadCrumbSet;
@@ -336,9 +337,16 @@ public class OrderSearchViewHelper extends HtmlViewHelper {
                 String orderTypeName = PTextSet.builder()
                         .context(orderInfo.getOrderTypeName())
                         .classType(OrderType.keyOf(orderInfo.getOrder().getOrderType()).getClassType()).build().html();
-                String billStatusName = PTextSet.builder()
+                String billStatusName = "";
+                if (orderInfo.getOrder().getCheckStatus().equals(CheckStatusType.REFUSED.getKey())) {
+                    billStatusName = PTextSet.builder()
+                        .context(orderInfo.getRefundStatusName())
+                        .classType(ReFundStatusType.keyOf(orderInfo.getOrder().getRefundStatus()).getClassType()).build().html();
+                } else {
+                    billStatusName = PTextSet.builder()
                         .context(orderInfo.getBillStatusName())
                         .classType(BillStatusType.keyOf(orderInfo.getOrder().getBillStatus()).getClassType()).build().html();
+                }
                 String checkStatusName = PTextSet.builder()
                         .context(orderInfo.getCheckStatusName())
                         .classType(CheckStatusType.keyOf(orderInfo.getOrder().getCheckStatus()).getClassType()).build().html();

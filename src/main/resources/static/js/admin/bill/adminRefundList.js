@@ -142,14 +142,10 @@ AdminRefundList.prototype.initEvent = function(){
 		//check box init
     	ShaInput.button.onClick($(elem),
 	    	function(event) {
-				//refresh order list
-				ShaAjax.ajax.post(
-	                self.jsContext.adminJsView.adminTobeRefund.url_init, 
-	                [{name:"id",     value:$(elem).attr("data")}], 
-	                function(data){
-	                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
-	                }
-	            ); 
+				ShaAjax.pop.postDialogLargeCenter(
+					self.i18n["admin.refund.btn.tobe"],
+					self.jsContext.adminJsView.adminRefund.url_init,
+					[{name:"id",     value:$(elem).attr("data")}]); 
 			}
 	    );
     	

@@ -348,7 +348,7 @@ public class AdminRefundSearchViewHelper extends HtmlViewHelper {
                 String btn = button().forTableBorderNameRight(IconSetType.DETAIL, CssClassType.INFO, 
                         "", getContext("common.page.info"), orderInfo.getId(), TABLE_BTN_DETAIL);
                 btn += "&nbsp;";
-                if (!orderInfo.getOrder().getBillStatus().equals(ReFundStatusType.REFUND_OVER.getKey())) {
+                if (!orderInfo.getOrder().getRefundStatus().equals(ReFundStatusType.REFUND_OVER.getKey())) {
                     btn += button().forTableBorderNameLeft(IconSetType.BILL, CssClassType.DANGER, 
                             "", getContext("admin.refund.btn.tobe"), orderInfo.getId(), TABLE_BTN_TO_BE);
                 } 

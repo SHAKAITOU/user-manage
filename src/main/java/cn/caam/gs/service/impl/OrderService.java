@@ -210,7 +210,7 @@ public class OrderService extends BaseService {
         messageService.addMessage(message, MsgType.PERSONAL);
     }
 	
-   @Transactional
+    @Transactional
     public void addBill(BillForm pageForm) throws IOException {
 
         MOrder order = pageForm.getOrder();
@@ -246,6 +246,54 @@ public class OrderService extends BaseService {
         MMessage message = new MMessage();
         message.setTitle(getContext("admin.bill.msg.add.message.title", order.getId()));
         String msgBody = getContext("admin.bill.msg.add.message.body", 
+                userDb.getName(),
+                getContext(SexType.keyOf(userDb.getSex()).getMsg()),
+                order.getId(), 
+                LocalDateUtility.getCurrentDateTimeString());
+        message.setMsg(msgBody);
+        message.setUserId(order.getUserId());
+        messageService.addMessage(message, MsgType.PERSONAL);
+    }
+    
+    @Transactional
+    public void refundBill(BillForm pageForm) throws IOException {
+
+        MOrder order = pageForm.getOrder();
+        order.setPayDate(LocalDateUtility.getCurrentDateTimeString());
+        order.setPayAmount(pageForm.getBill().getBillAmount());
+        order.setRefundStatus(ReFundStatusType.REFUND_OVER.getKey());
+        order.setRefundDate(LocalDateUtility.getCurrentDateTimeString());
+        mOrderMapper.updateByPrimaryKeySelective(order);
+        
+        MBill billDb = billMapper.selectByPrimaryKey(order.getId());
+        MBill bill = new MBill();
+        bill.setId(order.getId());
+        bill.setUserId(order.getUserId());
+        bill.setBillAmount(order.getOrderAmount());
+        bill.setBillTitle(getContext("admin.refund.btn.tobe"));
+        bill.setBillMemo(pageForm.getBill().getBillMemo());;
+        if (billDb == null) {
+            billMapper.insert(bill);
+        } else {
+            billMapper.updateByPrimaryKeySelective(bill);
+        }
+        
+        MImage imageDb = mImageMapper.selectByPrimaryKey(order.getId());
+        MImage image = new MImage();
+        image.setId(order.getId());
+        image.setBillPhoto(pageForm.getBillPhotoFile().getBytes());
+        image.setBillPhotoExt(pageForm.getBillPhotoFile().getOriginalFilename().split("\\.")[1]);
+        
+        if (imageDb == null) {
+            mImageMapper.insert(image);
+        } else {
+            mImageMapper.updateByPrimaryKeySelective(image);
+        }
+        
+        MUser userDb = userMapper.selectByPrimaryKey(order.getUserId());
+        MMessage message = new MMessage();
+        message.setTitle(getContext("admin.refund.msg.add.message.title", order.getId()));
+        String msgBody = getContext("admin.refund.msg.add.message.body", 
                 userDb.getName(),
                 getContext(SexType.keyOf(userDb.getSex()).getMsg()),
                 order.getId(), 

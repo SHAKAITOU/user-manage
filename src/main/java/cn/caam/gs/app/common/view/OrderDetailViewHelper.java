@@ -290,6 +290,38 @@ public class OrderDetailViewHelper extends HtmlViewHelper {
                     .grids(CssGridsType.G6).classType(CssClassType.DANGER)
                     .contexts(new String[] {labelName, context}).build().html());
             
+            sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+            
+            if (orderInfo.getOrder().getRefundStatus().equals(ReFundStatusType.REFUND_OVER.getKey())) {
+                contextList = new ArrayList<String>();
+                
+                //退款凭证图片選択
+                strRow1 = getContext("admin.refund.photo") + UtilConstants.COLON;
+                strRow2 = divRow().get(getContext("common.page.noImge"));
+                if (orderInfo.getOrderImg() != null && orderInfo.getOrderImg().getBillPhoto() != null) {
+                    strRow1 += UtilConstants.HTML_SPACE + UtilConstants.HTML_SPACE + button().forTableBorder(IconSetType.EYE, CssClassType.INFO, SHOW_BILL_IMG_BTN_ID);
+                    String src = Base64.encodeBase64String(orderInfo.getOrderImg().getBillPhoto());
+                    strRow2 = LabelImageSet.builder().extent(orderInfo.getOrderImg().getBillPhotoExt())
+                            .base64String(src).id(BILL_IMG_ID)
+                            .imgWidth(IMG_WIDTH).imgHeight(IMG_HEIGHT).outPutType(LabelImageSetType.SIMPLE).build().html();
+                }
+                context = DivContainerSet.builder().contexts(new String[] {strRow1, divRow().cellBlank(5), strRow2}).outPutType(DivContainerSetType.SIMPLE).build().html();
+                contextList.add(DivAlertSet.builder().gridFlexType(GridFlexType.LEFT)
+                        .grids(CssGridsType.G6).classType(CssClassType.DANGER)
+                        .contexts(new String[] {context}).build().html());
+                
+                //开票备注(max250)選択
+                strRow1 = T201MBill.getColumnInfo(T201MBill.COL_BILL_MEMO).getLabelName() + UtilConstants.COLON;
+                strRow2 = orderInfo.getBill().getBillMemo();
+                context = DivContainerSet.builder().contexts(new String[] {strRow1, divRow().cellBlank(5), strRow2}).outPutType(DivContainerSetType.SIMPLE).build().html();
+                contextList.add(DivAlertSet.builder().gridFlexType(GridFlexType.LEFT)
+                        .grids(CssGridsType.G6).classType(CssClassType.DANGER)
+                        .contexts(new String[] {context}).build().html());
+                
+                sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+                contextList = new ArrayList<String>();
+            }
+            
         } else {
           //开票状态(F0018)選択
             labelName = T200MOrder.getColumnInfo(T200MOrder.COL_BILL_STATUS).getLabelName() + UtilConstants.COLON;
@@ -300,8 +332,8 @@ public class OrderDetailViewHelper extends HtmlViewHelper {
                     .grids(CssGridsType.G6).classType(CssClassType.SUCCESS)
                     .contexts(new String[] {labelName, context}).build().html());
 
+            sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
         }
-        sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
 
         //内容
         sb.append(borderCard().noTitleWithScroll("", CssClassType.WARNING, "", cartHeight,

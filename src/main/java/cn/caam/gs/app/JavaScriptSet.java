@@ -16,6 +16,7 @@ import cn.caam.gs.app.admin.message.view.AdminMessageSearchViewHelper;
 import cn.caam.gs.app.admin.userbill.view.AdminBillSearchViewHelper;
 import cn.caam.gs.app.admin.userbill.view.AdminRefundSearchViewHelper;
 import cn.caam.gs.app.admin.userbill.view.BillViewHelper;
+import cn.caam.gs.app.admin.userbill.view.RefundViewHelper;
 import cn.caam.gs.app.admin.userorder.view.AdminOrderSearchViewHelper;
 import cn.caam.gs.app.admin.userorder.view.ReviewNgViewHelper;
 import cn.caam.gs.app.admin.userorder.view.ReviewOkViewHelper;
@@ -182,6 +183,8 @@ public class JavaScriptSet {
 		
 		jsView.put("adminBillSearch",    AdminBillSearchViewHelper.getJsProperties());
 		jsView.put("adminBill",          BillViewHelper.getJsProperties());
+		jsView.put("adminRefund",        RefundViewHelper.getJsProperties());
+		
 		
 		
 		jsView.put("adminRefundSearch",  AdminRefundSearchViewHelper.getJsProperties());
