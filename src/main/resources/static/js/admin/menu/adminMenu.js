@@ -27,11 +27,13 @@ AdminMenu.prototype.ID = {
     CLASS_NM_ORDER_PASS             : "menu2004",
     CLASS_NM_BILL_SEARCH            : "menu3001",
     CLASS_NM_REFUND_SEARCH          : "menu3002",
-    CLASS_NM_USER_SEARCH      		: 'menu4001',
-    CLASS_NM_MESSAGE_SEARCH         : 'menu5001',
-    ITEM_LANGUAGE                   : 'language',
+    CLASS_NM_USER_SEARCH      		: "menu4001",
+    CLASS_NM_MESSAGE_SEARCH         : "menu5001",
+    
+    CLASS_NM_LOGOUT                 : "menu9003",
+    ITEM_LANGUAGE                   : "language",
     //div
-    DIV_MAINBODY                    : 'mainBody',
+    DIV_MAINBODY                    : "mainBody",
 
 };
 //------------------------------------------]
@@ -194,11 +196,28 @@ AdminMenu.prototype.initEvent = function(){
 			}
 	    );
 	});
+	
+	//退出登录
+	$buttonList = self.getObjectList(self.ID.CLASS_NM_LOGOUT);
+    $buttonList.each(function(i, elem){
+	    ShaInput.button.onClick($(elem),
+	    	function(event) {
+				ShaDialog.dialogs.confirm(
+					self.i18n["dialogs.confirm.logout.title"],
+					self.i18n["dialogs.confirm.logout.msg"], 
+					function () { 
+						ShaRestful.restful.post(self.jsContext.adminJsView.adminLogin.url_logout, self.mainForm);
+					}
+				);
+			}
+	    );
+	});
     
     window.onresize = function(event) {
     	self.ajustNavi();
 	};
     
+    $buttonList = self.getObjectList(self.ID.CLASS_NM_USER_SEARCH);
     $buttonList[0].click();
     
 };

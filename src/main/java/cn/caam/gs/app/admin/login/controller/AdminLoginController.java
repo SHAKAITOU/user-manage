@@ -165,12 +165,13 @@ public class AdminLoginController extends ScreenBaseController{
 		return mav;
 	}
 
-	@RequestMapping(path=AdminLoginViewHelper.URL_C_LOGOUT, method=RequestMethod.GET)
+	@GetMapping(path=AdminLoginViewHelper.URL_C_LOGOUT)
 	public ModelAndView logout(Locale loc, 
 			HttpServletRequest request,
 			HttpServletResponse response) {
 		ModelAndView mav = new ModelAndView();
-		mav.setViewName("redirect:"+UrlConstants.ADMIN+"?lang="+loc.toLanguageTag());
+		clearSession(request);
+		mav.setViewName("redirect:"+UrlConstants.ADMIN);
 		
 		return mav;
 	}
@@ -210,4 +211,12 @@ public class AdminLoginController extends ScreenBaseController{
 			}
 		}
 	}
+	
+	private void clearSession(HttpServletRequest request) {
+        for(SessionConstants field : SessionConstants.values()) {
+            if(field.getLogoutClearFLg()) {
+                request.getSession().setAttribute(field.getValue(), null);
+            }
+        }
+    }
 }

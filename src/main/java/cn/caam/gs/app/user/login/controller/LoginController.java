@@ -208,7 +208,8 @@ public class LoginController extends ScreenBaseController{
 			HttpServletRequest request,
 			HttpServletResponse response) {
 		ModelAndView mav = new ModelAndView();
-		mav.setViewName("redirect:"+UrlConstants.USER+"?lang="+loc.toLanguageTag());
+		clearSession(request);
+		mav.setViewName("redirect:"+UrlConstants.INDEX);
 		
 		return mav;
 	}
@@ -229,4 +230,12 @@ public class LoginController extends ScreenBaseController{
 			}
 		}
 	}
+	
+	private void clearSession(HttpServletRequest request) {
+        for(SessionConstants field : SessionConstants.values()) {
+            if(field.getLogoutClearFLg()) {
+                request.getSession().setAttribute(field.getValue(), null);
+            }
+        }
+    }
 }

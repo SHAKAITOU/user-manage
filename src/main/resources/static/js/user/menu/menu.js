@@ -21,6 +21,8 @@ Menu.prototype.ID = {
 	
 	CLASS_NM_MESSAGE      			: 'menu9001',
 	
+	CLASS_NM_LOGOUT      			: 'menu9003',
+	
 	BTN_LOGOUT						: 'menu7',
 	
     NAVI_FOR_PC                     : "bigScreenNav",
@@ -107,18 +109,21 @@ Menu.prototype.initEvent = function(){
 	});
 	
 	//init event to BTN_LOGOUT
-	ShaInput.button.onClick(self.getObject(self.ID.BTN_LOGOUT), 
-		function(event) {
-			var param = [{name:'lang', value:self.getObject(self.ID.ITEM_LANGUAGE).val()}];
-			ShaDialog.dialogs.confirm(
-				self.getJsContext().jsView.login.btn_logout,
-				self.getJsContext().jsView.login.msg_logout_confirm,
-		    	function(){
-		    		ShaRestful.restful.get(self.getJsContext().jsView.login.url_logout, param);
-		    	}
-		    );
-		}
-	);
+	//退出登录
+	$buttonList = self.getObjectList(self.ID.CLASS_NM_LOGOUT);
+    $buttonList.each(function(i, elem){
+	    ShaInput.button.onClick($(elem),
+	    	function(event) {
+				ShaDialog.dialogs.confirm(
+					self.i18n["dialogs.confirm.logout.title"],
+					self.i18n["dialogs.confirm.logout.msg"], 
+					function () { 
+						ShaRestful.restful.post(self.jsContext.jsView.login.url_logout, self.mainForm);
+					}
+				);
+			}
+	    );
+	});
 };
 
 Menu.prototype.ajustNavi = function(){
