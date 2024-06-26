@@ -35,6 +35,7 @@ public class LoginViewHelper extends HtmlViewBaseHelper {
     public static final String URL_C_LOGIN_INIT  = UrlConstants.INIT;
     // init url
     public static final String URL_C_USER_LOGIN  = UrlConstants.USER_LOGIN;
+    public static final String URL_C_USER_LOGIN_REFRESH_IMG = "/refeshImg";
     // logout url
     public static final String URL_C_LOGOUT      =  UrlConstants.LOGOUT;
 
@@ -338,6 +339,7 @@ public class LoginViewHelper extends HtmlViewBaseHelper {
         js.put("url_login",           URL_BASE);
         js.put("url_login_init",      URL_BASE + URL_C_LOGIN_INIT);
         js.put("url_user_login",      URL_BASE + URL_C_USER_LOGIN);
+        js.put("url_refreshImg",      URL_BASE + URL_C_USER_LOGIN_REFRESH_IMG);
         js.put("url_logout",          URL_BASE + URL_C_LOGOUT);
         js.put("url_userRegist",      URL_BASE + URL_C_USER_REGIST);
         js.put("url_userRegist_commit",  URL_BASE + URL_C_USER_REGIST_COMMIT);

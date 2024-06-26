@@ -18,6 +18,9 @@ public class AdminLoginViewHelper extends HtmlViewBaseHelper {
     public static final String URL_C_LOGIN_INIT = UrlConstants.INIT;
     //init url
     public static final String URL_C_USER_LOGIN = UrlConstants.USER_LOGIN;
+    
+    //init url
+    public static final String URL_C_USER_LOGIN_REFRESH_IMG = "/refeshImg";
     //logout url
     public static final String URL_C_LOGOUT     = UrlConstants.LOGOUT;
 
@@ -33,6 +36,8 @@ public class AdminLoginViewHelper extends HtmlViewBaseHelper {
         js.put("url_login_init", URL_BASE + URL_C_LOGIN_INIT);
         js.put("url_user_login", URL_BASE + URL_C_USER_LOGIN);
         js.put("url_logout",     URL_BASE + URL_C_LOGOUT);
+        js.put("url_refreshImg", URL_BASE + URL_C_USER_LOGIN_REFRESH_IMG);
+        
         // btn
         js.put("btn_logout",     getContext("login.panel.btn.logout"));
         // title

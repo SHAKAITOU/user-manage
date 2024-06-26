@@ -29,7 +29,7 @@ public class EncryptorUtil {
 	
 	private static final String KEY = "YKo83n14SWf7o8G5";
     private static final String ALGORITHM = "AES";
-    private static final String AUTH_IMG_RANDOM = "0123456789";
+    private static final String AUTH_IMG_RANDOM = "鼠牛虎兔龙蛇马羊猴鸡狗猪我你他上下左右东西南北中来去进出好坏大小内外甲乙丙丁子丑寅卯";
     private static final String AUTH_IMG_WIDTH = "150";
     private static final String AUTH_IMG_HEIGHT = "50";
     private static final String AUTH_IMG_RANDOM_LENGTH = "4";
@@ -68,6 +68,9 @@ public class EncryptorUtil {
         properties.setProperty("kaptcha.image.height", AUTH_IMG_HEIGHT);
         properties.setProperty("kaptcha.textproducer.char.string", AUTH_IMG_RANDOM);
         properties.setProperty("kaptcha.textproducer.char.length", AUTH_IMG_RANDOM_LENGTH);
+        properties.setProperty("kaptcha.textproducer.font.size", "30");
+        properties.setProperty("kaptcha.textproducer.font.color", "red");
+        properties.setProperty("kaptcha.textproducer.font.names", "宋体");
         Config config = new Config(properties);
         DefaultKaptcha defaultKaptcha = new DefaultKaptcha();
         defaultKaptcha.setConfig(config);
@@ -78,7 +81,7 @@ public class EncryptorUtil {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         
         ImageIO.write(image, "jpg", baos);
-        return Base64.encodeBase64String(baos.toByteArray());
+        return "data:image/;base64," + Base64.encodeBase64String(baos.toByteArray());
     }
     
     public static void clearAuthWhenLogined(HttpServletRequest request) {

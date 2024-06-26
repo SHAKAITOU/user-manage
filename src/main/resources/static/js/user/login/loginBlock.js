@@ -17,12 +17,14 @@ LoginBlock.prototype.ID = {
 	BTN_LOGIN							: 'loginBtn',
 	BTN_REGIST							: 'registBtn',
 	BTN_HELP							: 'helpBtn',
+	BTN_REFRESH_IMG				    	: 'refreshImgBtn',
 	//item
 	ITEM_STORE_CODE						: 'storeCode',
 	ITEM_USER_CODE						: 'userCode',
 	ITEM_PASSWORD						: 'password',
 	ITEM_LOGIN_FORM_RETURN_ERROR_FLAG	: 'login_form_return_error_flag',
 	ITEM_LOGIN_FORM_RETURN_ERROR_MSG	: 'login_form_return_error_msg',
+	ITEM_AUTH_IMG                       : 'imgPhoto',
 };
 //------------------------------------------]
 
@@ -85,6 +87,18 @@ LoginBlock.prototype.initEvent = function(){
     ShaInput.keyPress.enterPress(self.getObject(self.ID.BTN_LOGIN), function(){
     	self.getObject(self.ID.BTN_LOGIN).click();
     });
+    
+    ShaInput.button.onClick(self.getObject(self.ID.BTN_REFRESH_IMG), 
+		function(event) {
+	        ShaAjax.ajax.post(
+                self.getJsContext().jsView.login.url_refreshImg, 
+                self.form.serializeArray(), 
+                function(data){
+					self.getObject(self.ID.ITEM_AUTH_IMG).attr("src", data);
+                }
+            ); 
+	    }
+	);
     
 	
 	//override enter key press event

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import cn.caam.gs.app.JavaScriptSet;
@@ -104,7 +105,7 @@ public class AdminLoginController extends ScreenBaseController{
 		LoginForm loginForm = new LoginForm();
 		loginForm.setUserCode("A24060914330223");
 		loginForm.setPassword("1");
-		loginForm.setAuthImg("data:image/;base64," + EncryptorUtil.generateAuthImgStr(request));
+		loginForm.setAuthImg(EncryptorUtil.generateAuthImgStr(request));
 		if(!StringUtils.isEmpty(indexForm.getLoginFormJson())) {
 			loginForm = JsonUtility.toObject(indexForm.getLoginFormJson(), LoginForm.class);
 		}
@@ -180,6 +181,15 @@ public class AdminLoginController extends ScreenBaseController{
 		}
 		mav.addObject("loginForm", loginForm);
 		return mav;
+	}
+	
+	@PostMapping(path=AdminLoginViewHelper.URL_C_USER_LOGIN_REFRESH_IMG)
+	@ResponseBody
+    public String refreshImg(
+            HttpServletRequest request,
+            HttpServletResponse response) throws IOException {
+	    
+	    return EncryptorUtil.generateAuthImgStr(request);
 	}
 
 	@GetMapping(path=AdminLoginViewHelper.URL_C_LOGOUT)
