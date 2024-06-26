@@ -127,7 +127,7 @@ public class BillViewHelper extends HtmlViewHelper {
         contextList = new ArrayList<String>();
         //订单金额
         labelName = T200MOrder.getColumnInfo(T200MOrder.COL_ORDER_AMOUNT).getLabelName() + UtilConstants.COLON;
-        context   = orderInfo.getOrder().getOrderAmount().toString();
+        context   = formatCurrencyZH(orderInfo.getOrder().getOrderAmount());
         contextList.add(DivAlertSet.builder().gridFlexType(GridFlexType.LEFT)
                 .grids(CssGridsType.G12).classType(CssClassType.INFO)
                 .contexts(new String[] {labelName, context}).build().html());

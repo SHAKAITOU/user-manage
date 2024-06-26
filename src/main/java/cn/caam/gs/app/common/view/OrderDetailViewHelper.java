@@ -192,7 +192,7 @@ public class OrderDetailViewHelper extends HtmlViewHelper {
         contextList = new ArrayList<String>();
         //订单金额選択
         labelName = T200MOrder.getColumnInfo(T200MOrder.COL_ORDER_AMOUNT).getLabelName() + UtilConstants.COLON;
-        context   = orderInfo.getOrder().getOrderAmount().toString();
+        context   = formatCurrencyZH(orderInfo.getOrder().getOrderAmount()).toString();
         contextList.add(DivAlertSet.builder().gridFlexType(GridFlexType.LEFT)
                 .grids(CssGridsType.G6).classType(CssClassType.INFO)
                 .contexts(new String[] {labelName, context}).build().html());
@@ -373,7 +373,7 @@ public class OrderDetailViewHelper extends HtmlViewHelper {
             //实收金额選択
             labelName = T200MOrder.getColumnInfo(T200MOrder.COL_PAY_AMOUNT).getLabelName() + UtilConstants.COLON;
             context   = Objects.nonNull(orderInfo.getOrder().getPayAmount()) ? 
-                    orderInfo.getOrder().getPayAmount().toString() : 
+                    formatCurrencyZH(orderInfo.getOrder().getPayAmount()) : 
                         PTextSet.builder()
                         .context(getContext("common.page.toBeConfirm"))
                         .classType(CssClassType.DANGER).build().html();

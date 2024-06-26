@@ -34,6 +34,7 @@ import com.google.code.kaptcha.util.Config;
 
 import cn.caam.gs.app.JavaScriptSet;
 import cn.caam.gs.app.UrlConstants;
+import cn.caam.gs.app.admin.login.view.AdminLoginViewHelper;
 import cn.caam.gs.app.user.login.form.IndexForm;
 import cn.caam.gs.app.user.login.form.LoginForm;
 import cn.caam.gs.app.user.login.view.LoginViewHelper;
@@ -62,6 +63,8 @@ import cn.caam.gs.service.impl.UserService;
 @Controller
 @RequestMapping(path=LoginViewHelper.URL_BASE)
 public class LoginController extends ScreenBaseController{
+    
+    private static final String PARAM_INVALID_LOGIN = "inVlidLogin"; 
 	
 	@Autowired
 	MessageSourceUtil messageSourceUtil;
@@ -83,6 +86,10 @@ public class LoginController extends ScreenBaseController{
 			@RequestParam Map<String,String> allRequestParams,
 			HttpServletRequest request,
 			HttpServletResponse response)  {
+	    
+	    if (allRequestParams.isEmpty()) {
+            request.getSession().setAttribute(SessionConstants.LOGIN_ERROR_MSG.getValue(), null);
+        }
 
 		ModelAndView mav = new ModelAndView();
 		//if(!LoginInfoHelper.isLogined(request)) {
@@ -135,7 +142,10 @@ public class LoginController extends ScreenBaseController{
 		UserInfo userInfo = userService.getLoginUserInfo(loginForm.getUserCode());
 		
 		String ePw = EncryptorUtil.encrypt(loginForm.getPassword());
-		if (userInfo == null) {
+		if (request.getSession().getAttribute(SessionConstants.AUTH_CODE.getValue()) == null) {
+            okFlag = false;
+            loginForm.setErrorMsg(messageSourceUtil.getContext("login.fail.msg.notRightLogin"));
+        } else if (userInfo == null) {
 		    loginForm.setErrorMsg(messageSourceUtil.getContext("login.fail.msg.notexist"));
 		    okFlag = false;
 		} else if(!userInfo.getUser().getPassword().equals(ePw)) {
@@ -145,18 +155,25 @@ public class LoginController extends ScreenBaseController{
 			okFlag = true;
 		}
 		
+		// TODO auth check
+        String authCode = (String)request.getSession().getAttribute(SessionConstants.AUTH_CODE.getValue());
+		
 		ModelAndView mav = new ModelAndView();
 		if(noSession) {
 			mav = new ModelAndView("redirect:"+LoginViewHelper.URL_BASE);
 		}
 		else if(!okFlag) {
+		    clearSession(request);
 			loginForm.setReturnType(ExecuteReturnType.NG.getId());
 			request.getSession().setAttribute(SessionConstants.LOGIN_INFO.getValue(), null);
 			IndexForm indexForm = new IndexForm();
 			indexForm.setLoginFormJson(JsonUtility.toJson(loginForm));
 			mav.addObject("indexForm", indexForm);
-			mav.setViewName(LoginViewHelper.HTML_INDEX);
+			request.getSession().setAttribute(SessionConstants.LOGIN_ERROR_MSG.getValue(), 
+                    loginForm.getErrorMsg());
+			mav = new ModelAndView("redirect:"+LoginViewHelper.URL_BASE + "?"+PARAM_INVALID_LOGIN+"=true");
 		} else {
+		    request.getSession().setAttribute(SessionConstants.LOGIN_ERROR_MSG.getValue(), null);
 			loginForm.setReturnType(ExecuteReturnType.OK.getId());
 			request.getSession().setAttribute(SessionConstants.LOGIN_INFO.getValue(), userInfo);
 			JavaScriptSet javaScriptSetInfo = new JavaScriptSet(request, environment, messageSourceUtil);
@@ -167,6 +184,8 @@ public class LoginController extends ScreenBaseController{
 			
 			request.getSession().setAttribute(SessionConstants.UN_READ_MESSAGE_CNT.getValue(), 
 			        messageService.getUnReadCnt(userInfo.getId()));
+			
+			EncryptorUtil.clearAuthWhenLogined(request);
 			
 			mav.setViewName(LoginViewHelper.HTML_MENU_MENU);
 		}

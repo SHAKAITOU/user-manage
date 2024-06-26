@@ -27,22 +27,21 @@ import cn.caam.gs.common.enums.CssGridsType;
 import cn.caam.gs.common.enums.FixedValueType;
 import cn.caam.gs.common.enums.GridFlexType;
 import cn.caam.gs.common.enums.MsgType;
-import cn.caam.gs.common.enums.OrderType;
 import cn.caam.gs.common.html.element.HtmlRadio;
 import cn.caam.gs.common.html.element.TrSet;
 import cn.caam.gs.common.html.element.bs5.BreadCrumbSet;
 import cn.caam.gs.common.html.element.bs5.ButtonSet;
 import cn.caam.gs.common.html.element.bs5.ButtonSet.ButtonSetType;
-import cn.caam.gs.common.html.element.bs5.IconSet.IconSetCss;
-import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
 import cn.caam.gs.common.html.element.bs5.DivChevronSet;
 import cn.caam.gs.common.html.element.bs5.IconSet;
+import cn.caam.gs.common.html.element.bs5.IconSet.IconSetCss;
+import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
 import cn.caam.gs.common.html.element.bs5.LabelDateInputSet;
 import cn.caam.gs.common.html.element.bs5.LabelDateInputSet.LabelDateInputSetType;
 import cn.caam.gs.common.html.element.bs5.LabelInputSet;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet;
-import cn.caam.gs.common.html.element.bs5.PTextSet;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet.LabelSelectSetType;
+import cn.caam.gs.common.html.element.bs5.PTextSet;
 import cn.caam.gs.common.html.element.bs5.SpanTextSet;
 import cn.caam.gs.domain.db.custom.entity.FixValueInfo;
 import cn.caam.gs.domain.db.custom.entity.MessageInfo;
@@ -78,10 +77,10 @@ public class AdminMessageSearchViewHelper extends HtmlViewHelper {
     public static final String HID_HIDE_SEARCH                = "hideSearch";
     public static final String HID_LIMIT                      = "limit";
     public static final String HID_OFFSET                     = "offset";
-    public static final int    HEADER_HEIGHT                  = 450;
+    public static final int    HEADER_HEIGHT                  = 360;
     public static final int    SEARCH_PANEL_HEIGHT            = 180;
     
-    public static final int PHONE_TD_HEIGHT = 45;
+    public static final int PHONE_TD_HEIGHT = 70;
     
 	
     public static final CssFontSizeType font = GlobalConstants.INPUT_FONT_SIZE;
@@ -287,24 +286,33 @@ public class AdminMessageSearchViewHelper extends HtmlViewHelper {
             List<CssAlignType> aligs = new ArrayList<>();
             aligs.add(CssAlignType.LEFT);
             aligs.add(CssAlignType.RIGHT);
-            String subRow1 = divRow().get(CellWidthType.TWO_4_8, aligs, T203MMessage.getColumnInfo(T203MMessage.COL_MSG_TYPE).getLabelName(), 
-                                                                        T203MMessage.getColumnInfo(T203MMessage.COL_REGIST_DATE).getLabelName());
-            String subRow2 = divRow().get(CellWidthType.ONE,     aligs, T203MMessage.getColumnInfo(T203MMessage.COL_TITLE).getLabelName());
-            headTr.addTh(th().get(PHONE_TD_HEIGHT, CssGridsType.G10, CssAlignType.LEFT, subRow1, subRow2));
-            String context         = getContext("common.page.do");
-            headTr.addTh(th().get(PHONE_TD_HEIGHT, CssGridsType.G2, CssAlignType.CENTER, context));
+            String subRow1 = divRow().get(CellWidthType.ONE,     aligs, T203MMessage.getColumnInfo(T203MMessage.COL_TITLE).getLabelName());
+            List<GridFlexType> flexs = new ArrayList<>();
+            flexs.add(GridFlexType.LEFT);
+            flexs.add(GridFlexType.RIGHT);
+            String subRow2 = divRow().getFlex(CellWidthType.TWO_4_8, flexs, T203MMessage.getColumnInfo(T203MMessage.COL_MSG_TYPE).getLabelName(), 
+                                                                        T203MMessage.getColumnInfo(T203MMessage.COL_USER_ID).getLabelName());
+            flexs = new ArrayList<>();
+            flexs.add(GridFlexType.LEFT);
+            flexs.add(GridFlexType.RIGHT);
+            String subRow3 = divRow().getFlex(CellWidthType.TWO_6_6, flexs, T203MMessage.getColumnInfo(T203MMessage.COL_REGIST_DATE).getLabelName(),
+                                                                        getContext("common.page.do"));
+            headTr.addTh(th().get(PHONE_TD_HEIGHT, CssGridsType.G12, CssAlignType.LEFT, subRow1, subRow2, subRow3));
         } else {
             // --[
-            // --col1--站内消息类型(F0021)
-            String context  = T203MMessage.getColumnInfo(T203MMessage.COL_MSG_TYPE).getLabelName();
+            // --col1--标题
+            String context  = T203MMessage.getColumnInfo(T203MMessage.COL_TITLE).getLabelName();
+            headTr.addTh(th().get(CssGridsType.G6, CssAlignType.LEFT, context));
+            // --col2--站内消息类型(F0021)
+            context         = T203MMessage.getColumnInfo(T203MMessage.COL_MSG_TYPE).getLabelName();
             headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, context));
-            // --col2--标题
-            context         = T203MMessage.getColumnInfo(T203MMessage.COL_TITLE).getLabelName();
-            headTr.addTh(th().get(CssGridsType.G7, CssAlignType.CENTER, context));
-            // --col3--消息时间(yyyy-MM-dd HH
+            // --col3--会员号(M/TYYMMDDHHmmSSR2)
+            context         = T203MMessage.getColumnInfo(T203MMessage.COL_USER_ID).getLabelName();
+            headTr.addTh(th().get(CssGridsType.G2, CssAlignType.CENTER, context));
+            // --col4--消息时间(yyyy-MM-dd HH
             context         = T203MMessage.getColumnInfo(T203MMessage.COL_REGIST_DATE).getLabelName();
-            headTr.addTh(th().get(CssGridsType.G3, CssAlignType.CENTER, context));
-            // --col4--操作
+            headTr.addTh(th().get(CssGridsType.G2, CssAlignType.CENTER, context));
+            // --col5--操作
             context         = getContext("common.page.do");
             headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, context));
             // --]
@@ -320,26 +328,34 @@ public class AdminMessageSearchViewHelper extends HtmlViewHelper {
                 String msgType = PTextSet.builder()
                         .context(info.getMsgTypeName())
                         .classType(MsgType.keyOf(info.getMessage().getMsgType()).getClassType()).build().html();
+                String userId = nonNull(info.getMessage().getUserId());
                 String registDt = info.getMessage().getRegistDate();
-                String title = trimFitForTd(CssGridsType.G10.getKey(), info.getMessage().getTitle(), true);
+                String title = trimFitForTd(CssGridsType.G12.getKey(), info.getMessage().getTitle(), true);
                 String btnDetail = button().forTableBorderNameRight(IconSetType.DETAIL, CssClassType.INFO, 
                         "", getContext("admin.userList.btn.detail"), info.getId(), TABLE_BTN_DETAIL);
                 if (isPhoneMode(request)) {
                     List<CssAlignType> aligs = new ArrayList<>();
                     aligs.add(CssAlignType.LEFT);
                     aligs.add(CssAlignType.RIGHT);
-                    String subRow1 = divRow().get(CellWidthType.TWO_4_8, aligs, msgType, registDt);
-                    String subRow2 = divRow().get(CellWidthType.ONE,     aligs, title);
-                    tr.addTd(td().get(PHONE_TD_HEIGHT, CssGridsType.G10, CssAlignType.LEFT, subRow1, subRow2));
-                    // --col4--
-                    tr.addTd(td().get(PHONE_TD_HEIGHT, CssGridsType.G2, CssAlignType.CENTER, btnDetail));
+                    String subRow1 = divRow().get(CellWidthType.ONE,     aligs, title);
+                    List<GridFlexType> flexs = new ArrayList<>();
+                    flexs.add(GridFlexType.LEFT);
+                    flexs.add(GridFlexType.RIGHT);
+                    String subRow2 = divRow().getFlex(CellWidthType.TWO_4_8, flexs, msgType, userId);
+                    flexs = new ArrayList<>();
+                    flexs.add(GridFlexType.LEFT);
+                    flexs.add(GridFlexType.RIGHT);
+                    String subRow3 = divRow().getFlex(CellWidthType.TWO_6_6, flexs, registDt, btnDetail);
+                    tr.addTd(td().get(PHONE_TD_HEIGHT, CssGridsType.G12, CssAlignType.LEFT, subRow1, subRow2, subRow3));
                 } else {
                     // --col1--
-                    tr.addTd(td().get(CssGridsType.G1, CssAlignType.CENTER, msgType));
+                    tr.addTd(td().get(CssGridsType.G6, CssAlignType.LEFT, title));
                     // --col2--
-                    tr.addTd(td().get(CssGridsType.G7, CssAlignType.LEFT, title));
+                    tr.addTd(td().get(CssGridsType.G1, CssAlignType.CENTER, msgType));
+                 // --col3--
+                    tr.addTd(td().withTrim(CssGridsType.G2, CssAlignType.CENTER, userId));
                     // --col3--
-                    tr.addTd(td().withTrim(CssGridsType.G3, CssAlignType.CENTER, registDt));
+                    tr.addTd(td().withTrim(CssGridsType.G2, CssAlignType.CENTER, registDt));
                     // --col4--
                     tr.addTd(td().get(CssGridsType.G1, CssAlignType.CENTER, btnDetail));
                 }

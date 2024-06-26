@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 import cn.caam.gs.common.enums.CellWidthType;
 import cn.caam.gs.common.enums.CssAlignType;
+import cn.caam.gs.common.enums.GridFlexType;
 
 @Builder
 @AllArgsConstructor
@@ -23,6 +24,7 @@ public class DivRowSet {
     private CellWidthType cellWidthType;
     private CellWidthType mCellWidthType;
     private List<CssAlignType> cellAligns;
+    private List<GridFlexType> cellFlexs;
     private String[] cellIds;
     private String[] components;
     private DivRowSetType outPutType;
@@ -75,6 +77,11 @@ public class DivRowSet {
                             cellWidthType.getValue()[index], 
                             Objects.nonNull(mCellWidthType.getValue()[index]) ? mCellWidthType.getValue()[index] : cellWidthType.getValue()[index],
                             cellAligns.get(index), components[index]));
+                } else if(Objects.nonNull(cellFlexs) && index < cellFlexs.size()) {
+                    sb.append(getCell(cellIds[index], 
+                            cellWidthType.getValue()[index], 
+                            Objects.nonNull(mCellWidthType.getValue()[index]) ? mCellWidthType.getValue()[index] : cellWidthType.getValue()[index],
+                            cellFlexs.get(index), components[index]));
                 } else {
                     sb.append(getCell(cellIds[index], 
                             cellWidthType.getValue()[index], 
@@ -121,13 +128,18 @@ public class DivRowSet {
                             cellWidthType.getValue()[index], 
                             Objects.nonNull(mCellWidthType.getValue()[index]) ? mCellWidthType.getValue()[index] : cellWidthType.getValue()[index],
                             cellAligns.get(index), components[index]));
-                } else {
+                } else if (Objects.nonNull(cellFlexs) && index < cellFlexs.size()) {
+                    sb.append(getCell(cellIds[index], 
+                            cellWidthType.getValue()[index], 
+                            Objects.nonNull(mCellWidthType.getValue()[index]) ? mCellWidthType.getValue()[index] : cellWidthType.getValue()[index],
+                            cellFlexs.get(index), components[index]));
+                }  else {
                     sb.append(getCell(cellIds[index], 
                             cellWidthType.getValue()[index], 
                             Objects.nonNull(mCellWidthType.getValue()[index]) ? mCellWidthType.getValue()[index] : cellWidthType.getValue()[index],
                             CssAlignType.LEFT, components[index]));
                 }
-            }else {
+            } else {
                 sb.append(getCell(null, 
                         cellWidthType.getValue()[index], 
                         Objects.nonNull(mCellWidthType.getValue()[index]) ? mCellWidthType.getValue()[index] : cellWidthType.getValue()[index],
@@ -166,6 +178,11 @@ public class DivRowSet {
                             cellWidthType.getValue()[index], 
                             Objects.nonNull(mCellWidthType.getValue()[index]) ? mCellWidthType.getValue()[index] : cellWidthType.getValue()[index],
                             cellAligns.get(index), components[index]));
+                } else if(Objects.nonNull(cellFlexs) && index < cellFlexs.size()) {
+                    sb.append(getCell(cellIds[index], 
+                            cellWidthType.getValue()[index], 
+                            Objects.nonNull(mCellWidthType.getValue()[index]) ? mCellWidthType.getValue()[index] : cellWidthType.getValue()[index],
+                            cellFlexs.get(index), components[index]));
                 } else {
                     sb.append(getCell(cellIds[index], 
                             cellWidthType.getValue()[index], 
@@ -208,7 +225,27 @@ public class DivRowSet {
             return "";
         }
         StringBuffer sb = new StringBuffer();
-        sb.append("<div class='col-"+cellWidth+" col-"+mCellWidth+" text-"+align.getKey()+"' ");
+        sb.append("<div class='col-"+cellWidth+" col-"+mCellWidth+" text-"+align.getKey()+" ");
+        sb.append("' ");
+        if(StringUtils.isNotEmpty(id)) {
+            sb.append("id='"+id+"'");
+        }
+        sb.append(">");
+        sb.append(component);
+        sb.append("</div>");
+        return sb.toString();
+    }
+    
+    private String getCell(String id, int cellWidth, int mCellWidth, GridFlexType cellFlex, String component) {
+        if(cellWidth == 0) {
+            return "";
+        }
+        StringBuffer sb = new StringBuffer();
+        sb.append("<div class='col-"+cellWidth+" col-"+mCellWidth+" ");
+        if (Objects.nonNull(cellFlex.getKey())) {
+            sb.append(cellFlex.getKey());
+        }
+        sb.append("' ");
         if(StringUtils.isNotEmpty(id)) {
             sb.append("id='"+id+"'");
         }

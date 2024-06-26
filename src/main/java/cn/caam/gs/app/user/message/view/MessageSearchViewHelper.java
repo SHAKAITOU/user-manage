@@ -24,17 +24,13 @@ import cn.caam.gs.common.enums.CssFontSizeType;
 import cn.caam.gs.common.enums.CssGridsType;
 import cn.caam.gs.common.enums.GridFlexType;
 import cn.caam.gs.common.enums.MsgType;
-import cn.caam.gs.common.html.element.SpanSet.SpanSetType;
 import cn.caam.gs.common.html.element.SpanSet;
+import cn.caam.gs.common.html.element.SpanSet.SpanSetType;
 import cn.caam.gs.common.html.element.TrSet;
 import cn.caam.gs.common.html.element.bs5.BreadCrumbSet;
-import cn.caam.gs.common.html.element.bs5.ButtonSet;
-import cn.caam.gs.common.html.element.bs5.IconSet;
+import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
 import cn.caam.gs.common.html.element.bs5.PTextSet;
 import cn.caam.gs.common.html.element.bs5.SpanTextSet;
-import cn.caam.gs.common.html.element.bs5.ButtonSet.ButtonSetType;
-import cn.caam.gs.common.html.element.bs5.IconSet.IconSetCss;
-import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
 import cn.caam.gs.domain.db.custom.entity.MessageInfo;
 import cn.caam.gs.domain.tabledef.impl.T203MMessage;
 
@@ -62,9 +58,9 @@ public class MessageSearchViewHelper extends HtmlViewHelper {
     public static final String HID_HIDE_SEARCH                = "hideSearch";
     public static final String HID_LIMIT                      = "limit";
     public static final String HID_OFFSET                     = "offset";
-    public static final int    HEADER_HEIGHT                  = 200;
+    public static final int    HEADER_HEIGHT                  = 280;
     
-    public static final int PHONE_TD_HEIGHT = 45;
+    public static final int PHONE_TD_HEIGHT = 55;
     
 	
     public static final CssFontSizeType font = GlobalConstants.INPUT_FONT_SIZE;
@@ -184,20 +180,23 @@ public class MessageSearchViewHelper extends HtmlViewHelper {
             List<CssAlignType> aligs = new ArrayList<>();
             aligs.add(CssAlignType.LEFT);
             aligs.add(CssAlignType.RIGHT);
-            String subRow1 = divRow().get(CellWidthType.TWO_4_8, aligs, T203MMessage.getColumnInfo(T203MMessage.COL_MSG_TYPE).getLabelName(), 
-                                                                        T203MMessage.getColumnInfo(T203MMessage.COL_REGIST_DATE).getLabelName());
-            String subRow2 = divRow().get(CellWidthType.ONE,     aligs, T203MMessage.getColumnInfo(T203MMessage.COL_TITLE).getLabelName());
-            headTr.addTh(th().get(PHONE_TD_HEIGHT, CssGridsType.G10, CssAlignType.LEFT, subRow1, subRow2));
-            String context         = getContext("common.page.do");
-            headTr.addTh(th().get(PHONE_TD_HEIGHT, CssGridsType.G2, CssAlignType.CENTER, context));
+            String subRow1 = divRow().get(CellWidthType.ONE,     aligs, T203MMessage.getColumnInfo(T203MMessage.COL_TITLE).getLabelName());
+            List<GridFlexType> flexs = new ArrayList<>();
+            flexs.add(GridFlexType.LEFT);
+            flexs.add(GridFlexType.CENTER);
+            flexs.add(GridFlexType.RIGHT);
+            String subRow2 = divRow().getFlex(CellWidthType.THREE_3_6_3, flexs, T203MMessage.getColumnInfo(T203MMessage.COL_MSG_TYPE).getLabelName(), 
+                                                                        T203MMessage.getColumnInfo(T203MMessage.COL_REGIST_DATE).getLabelName(),
+                                                                        getContext("common.page.do"));
+            headTr.addTh(th().get(PHONE_TD_HEIGHT, CssGridsType.G12, CssAlignType.LEFT, subRow1, subRow2));
         } else {
             // --[
             // --col1--站内消息类型(F0021)
-            String context  = T203MMessage.getColumnInfo(T203MMessage.COL_MSG_TYPE).getLabelName();
-            headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, context));
-            // --col2--标题
-            context         = T203MMessage.getColumnInfo(T203MMessage.COL_TITLE).getLabelName();
+            String context  = T203MMessage.getColumnInfo(T203MMessage.COL_TITLE).getLabelName();
             headTr.addTh(th().get(CssGridsType.G7, CssAlignType.CENTER, context));
+            // --col2--标题
+            context         = T203MMessage.getColumnInfo(T203MMessage.COL_MSG_TYPE).getLabelName();
+            headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, context));
             // --col3--消息时间(yyyy-MM-dd HH
             context         = T203MMessage.getColumnInfo(T203MMessage.COL_REGIST_DATE).getLabelName();
             headTr.addTh(th().get(CssGridsType.G3, CssAlignType.CENTER, context));
@@ -222,23 +221,25 @@ public class MessageSearchViewHelper extends HtmlViewHelper {
                 if (!info.isReadSts()) {
                     title += SpanSet.builder().context("未读").outPutType(SpanSetType.PILL).type(CssClassType.DANGER).build().html();
                 }
-                title += trimFitForTd(CssGridsType.G10.getKey(), info.getMessage().getTitle(), true);
+                title += trimFitForTd(CssGridsType.G12.getKey(), info.getMessage().getTitle(), true);
                 String btnDetail = button().forTableBorderNameRight(IconSetType.DETAIL, CssClassType.INFO, 
                         "", getContext("admin.userList.btn.detail"), info.getId(), TABLE_BTN_DETAIL);
                 if (isPhoneMode(request)) {
                     List<CssAlignType> aligs = new ArrayList<>();
                     aligs.add(CssAlignType.LEFT);
                     aligs.add(CssAlignType.RIGHT);
-                    String subRow1 = divRow().get(CellWidthType.TWO_4_8, aligs, msgType, registDt);
-                    String subRow2 = divRow().get(CellWidthType.ONE,     aligs, title);
-                    tr.addTd(td().get(PHONE_TD_HEIGHT, CssGridsType.G10, CssAlignType.LEFT, subRow1, subRow2));
-                    // --col4--
-                    tr.addTd(td().get(PHONE_TD_HEIGHT, CssGridsType.G2, CssAlignType.CENTER, btnDetail));
+                    String subRow1 = divRow().get(CellWidthType.ONE,     aligs, title);
+                    List<GridFlexType> flexs = new ArrayList<>();
+                    flexs.add(GridFlexType.LEFT);
+                    flexs.add(GridFlexType.CENTER);
+                    flexs.add(GridFlexType.RIGHT);
+                    String subRow2 = divRow().getFlex(CellWidthType.THREE_3_6_3, flexs, msgType, registDt, btnDetail);
+                    tr.addTd(td().get(PHONE_TD_HEIGHT, CssGridsType.G12, CssAlignType.LEFT, subRow1, subRow2));
                 } else {
                     // --col1--
-                    tr.addTd(td().get(CssGridsType.G1, CssAlignType.CENTER, msgType));
-                    // --col2--
                     tr.addTd(td().get(CssGridsType.G7, CssAlignType.LEFT, title));
+                    // --col2--
+                    tr.addTd(td().get(CssGridsType.G1, CssAlignType.CENTER, msgType));
                     // --col3--
                     tr.addTd(td().withTrim(CssGridsType.G3, CssAlignType.CENTER, registDt));
                     // --col4--

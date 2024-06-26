@@ -115,6 +115,7 @@ OrderList.prototype.initEvent = function(){
 		}
     );
     
+    ShaInput.table.adjustCellWidthToFitHead(self.getForm(), self.ID.ORDER_LIST_TABLE_ID);
     ShaInput.table.addClickActiveToTr(self.getForm(), self.ID.ORDER_LIST_TABLE_ID);
     
     $tableBtnList = self.getObject(self.ID.ORDER_LIST_TABLE_ID).find(self.ID.TABLE_BTN_DETAIL);

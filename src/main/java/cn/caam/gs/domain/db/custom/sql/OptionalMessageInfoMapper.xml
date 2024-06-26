@@ -27,6 +27,24 @@
     <sql id="baseJoin">
 		LEFT JOIN m_fixed_value F0021   ON mm.msg_type        = F0021.value   AND F0021.code   = 'F0021'
     </sql>
+    <sql id="baseCondition">
+    	<if test="message != null and message.msgType != null and message.msgType != '' and message.msgType != '00' " >
+	        and mm.msg_type = #{message.msgType, jdbcType=NVARCHAR}
+		</if>
+		<if test="message != null and message.userId != null and message.userId != ''" >
+	        and mm.user_id like concat(concat('%', #{message.userId, jdbcType=NVARCHAR}), '%') 
+		</if>
+    	<if test="registDateFrom != null and registDateFrom != ''" >
+	        <![CDATA[
+	        	and STR_TO_DATE(mm.regist_date, '%Y-%m-%d %T') >= STR_TO_DATE(concat(#{registDateFrom, jdbcType=NVARCHAR}, ' 00:00:00'), '%Y-%m-%d %T')
+	        ]]>
+		</if>
+		<if test="registDateTo != null and registDateTo != ''" >
+	        <![CDATA[
+	        	and STR_TO_DATE(mm.regist_date, '%Y-%m-%d %T') <= STR_TO_DATE(concat(#{registDateTo, jdbcType=NVARCHAR}, ' 23:59:59'), '%Y-%m-%d %T')
+	        ]]>
+		</if>
+	</sql>
     <!-- SQL CHIP -->
 	<select id="getMessageListCount" resultType="int">
 		SELECT COUNT(mm.id)
@@ -34,6 +52,7 @@
 		    m_message mm 
 		WHERE
 		    1=1
+		    <include refid="baseCondition"/>
 	</select>
 	
 	<!-- SQL CHIP -->
@@ -54,6 +73,7 @@
 			<include refid="baseJoin"/>
 			WHERE
 		    1=1
+		    <include refid="baseCondition"/>
 		ORDER BY mm.regist_date DESC
 		LIMIT #{limit} OFFSET #{offset}
     </select>

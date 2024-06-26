@@ -142,6 +142,7 @@ AdminUserSearch.prototype.initEvent = function(){
     	
     });
     
+    ShaInput.table.adjustCellWidthToFitHead(self.getForm(), self.ID.USER_LIST_TABLE_ID);
     ShaInput.table.addClickActiveToTr(self.getForm(), self.ID.USER_LIST_TABLE_ID);
     
     ShaInput.button.onClick(self.getObject(self.ID.SEARCH_BTN_ID),

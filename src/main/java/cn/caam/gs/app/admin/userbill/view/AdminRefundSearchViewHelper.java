@@ -19,7 +19,6 @@ import cn.caam.gs.app.util.HtmlViewHelper;
 import cn.caam.gs.app.util.LoginInfoHelper;
 import cn.caam.gs.app.util.SessionConstants;
 import cn.caam.gs.common.bean.ViewData;
-import cn.caam.gs.common.enums.BillStatusType;
 import cn.caam.gs.common.enums.CellWidthType;
 import cn.caam.gs.common.enums.CheckStatusType;
 import cn.caam.gs.common.enums.CssAlignType;
@@ -49,7 +48,6 @@ import cn.caam.gs.domain.db.custom.entity.FixValueInfo;
 import cn.caam.gs.domain.db.custom.entity.OrderInfo;
 import cn.caam.gs.domain.tabledef.impl.T100MUser;
 import cn.caam.gs.domain.tabledef.impl.T200MOrder;
-import cn.caam.gs.domain.tabledef.impl.T201MBill;
 
 @Component
 public class AdminRefundSearchViewHelper extends HtmlViewHelper {
@@ -345,6 +343,8 @@ public class AdminRefundSearchViewHelper extends HtmlViewHelper {
                 String checkStatusName = PTextSet.builder()
                         .context(orderInfo.getCheckStatusName())
                         .classType(CheckStatusType.keyOf(orderInfo.getOrder().getCheckStatus()).getClassType()).build().html();
+                String amount = formatCurrencyZH(orderInfo.getOrder().getOrderAmount());
+                String payDate = orderInfo.getOrder().getPayDate();
                 String btn = button().forTableBorderNameRight(IconSetType.DETAIL, CssClassType.INFO, 
                         "", getContext("common.page.info"), orderInfo.getId(), TABLE_BTN_DETAIL);
                 btn += "&nbsp;";
@@ -358,7 +358,7 @@ public class AdminRefundSearchViewHelper extends HtmlViewHelper {
                     List<CssAlignType> aligs = new ArrayList<>();
                     aligs.add(CssAlignType.LEFT);
                     aligs.add(CssAlignType.RIGHT);
-                    String subRow1 = divRow().get(CellWidthType.TWO_8_4, aligs, orderInfo.getId(), orderInfo.getOrder().getOrderAmount().toString());
+                    String subRow1 = divRow().get(CellWidthType.TWO_8_4, aligs, orderInfo.getId(), amount);
                     aligs = new ArrayList<>();
                     aligs.add(CssAlignType.LEFT);
                     aligs.add(CssAlignType.CENTER);
@@ -367,14 +367,14 @@ public class AdminRefundSearchViewHelper extends HtmlViewHelper {
                     aligs = new ArrayList<>();
                     aligs.add(CssAlignType.LEFT);
                     aligs.add(CssAlignType.RIGHT);
-                    String subRow3 = divRow().get(CellWidthType.TWO_6_6, aligs, orderInfo.getOrder().getPayDate(), btn);
+                    String subRow3 = divRow().get(CellWidthType.TWO_6_6, aligs, payDate, btn);
                             
                     tr.addTd(td().get(PHONE_TD_HEIGHT, CssGridsType.G12, CssAlignType.LEFT, subRow1, subRow2, subRow3));
                 } else {
                     // --col1--
                     tr.addTd(td().get(CssGridsType.G2, CssAlignType.LEFT, orderInfo.getId()));
                     // --col2--
-                    tr.addTd(td().get(CssGridsType.G1, CssAlignType.CENTER, orderInfo.getOrder().getOrderAmount().toString()));
+                    tr.addTd(td().get(CssGridsType.G1, CssAlignType.CENTER, amount));
                     // --col3--
                     tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, orderTypeName));
                     // --col4--
@@ -382,7 +382,7 @@ public class AdminRefundSearchViewHelper extends HtmlViewHelper {
                     // --col5--
                     tr.addTd(td().get(CssGridsType.G1, CssAlignType.CENTER, refundStatusName));
                     // --col6--
-                    tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, orderInfo.getOrder().getPayDate()));
+                    tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, payDate));
                     // --col7--
                     tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, btn));
                 }

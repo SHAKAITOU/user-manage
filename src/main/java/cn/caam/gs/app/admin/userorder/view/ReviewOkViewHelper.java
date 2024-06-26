@@ -138,7 +138,7 @@ public class ReviewOkViewHelper extends HtmlViewHelper {
         
         //订单金额選択
         labelName = T200MOrder.getColumnInfo(T200MOrder.COL_ORDER_AMOUNT).getLabelName() + UtilConstants.COLON;
-        context   = orderInfo.getOrder().getOrderAmount().toString();
+        context   = formatCurrencyZH(orderInfo.getOrder().getOrderAmount());
         contextList.add(DivAlertSet.builder().gridFlexType(GridFlexType.LEFT)
                 .grids(CssGridsType.G12).classType(CssClassType.SUCCESS)
                 .contexts(new String[] {labelName, context}).build().html());

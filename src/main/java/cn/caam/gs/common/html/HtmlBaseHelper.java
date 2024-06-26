@@ -1,5 +1,6 @@
 package cn.caam.gs.common.html;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 import javax.annotation.PostConstruct;
@@ -116,7 +117,7 @@ public class HtmlBaseHelper {
     
     public static int getMaxLengthByGrids(int grids) {
         int scale = LoginInfoHelper.getMediaWidth(request)/12;
-        return grids*scale/10;
+        return grids*scale/11;
     }
     
     public static int getMaxLengthByWidth(int width) {
@@ -129,6 +130,10 @@ public class HtmlBaseHelper {
         } else {
             return grids*6;
         }
+    }
+    
+    public static String formatCurrencyZH(BigDecimal amount) {
+        return StringUtility.formatCurrencyZH(amount);
     }
     
     public static String filterSpecialCharacters(String context) {

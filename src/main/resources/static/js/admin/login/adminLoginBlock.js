@@ -34,9 +34,12 @@ AdminLoginBlock.prototype.init = function(){
 	
 	self.initFocus();
 	
-	if(self.getObject(self.ID.ITEM_LOGIN_FORM_RETURN_ERROR_FLAG).val() == 'true'){
-		ShaDialog.dialogs.alert(
-			self.getObject(self.ID.ITEM_LOGIN_FORM_RETURN_ERROR_MSG).val()
+	if(self.dataMap.errorMsg != null){
+		ShaDialog.dialogs.alertWithCallBack(
+			self.dataMap.errorMsg,
+			function() {
+				ShaRestful.restful.get(self.jsContext.adminJsView.adminLogin.url_logout, null);
+			}
         );
 	}
 	

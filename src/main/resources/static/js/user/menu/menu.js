@@ -118,7 +118,7 @@ Menu.prototype.initEvent = function(){
 					self.i18n["dialogs.confirm.logout.title"],
 					self.i18n["dialogs.confirm.logout.msg"], 
 					function () { 
-						ShaRestful.restful.post(self.jsContext.jsView.login.url_logout, self.mainForm);
+						ShaRestful.restful.get(self.jsContext.jsView.login.url_logout, null);
 					}
 				);
 			}

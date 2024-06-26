@@ -21,6 +21,7 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.google.code.kaptcha.util.Config;
 
+import cn.caam.gs.app.util.SessionConstants;
 import cn.caam.gs.common.exception.ShaApiException;
 import cn.caam.gs.common.util.LocalDateUtility.DateTimePattern;
 
@@ -72,12 +73,17 @@ public class EncryptorUtil {
         defaultKaptcha.setConfig(config);
         String text = defaultKaptcha.createText();
         HttpSession session = request.getSession();
-        session.setAttribute("verify_code", text);
+        session.setAttribute(SessionConstants.AUTH_CODE.getValue(), text);
         BufferedImage image = defaultKaptcha.createImage(text);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         
         ImageIO.write(image, "jpg", baos);
         return Base64.encodeBase64String(baos.toByteArray());
+    }
+    
+    public static void clearAuthWhenLogined(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        session.setAttribute(SessionConstants.AUTH_CODE.getValue(), null);
     }
     
     public static String generateOrderId() {

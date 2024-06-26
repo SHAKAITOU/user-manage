@@ -1,6 +1,10 @@
 package cn.caam.gs.app.util;
 
 public enum SessionConstants {
+    
+    AUTH_CODE("verify_code", true),
+    
+    LOGIN_ERROR_MSG("loginErrorMsg", true),
 	
 	LOGIN_INFO("loginInfo", true),
 	

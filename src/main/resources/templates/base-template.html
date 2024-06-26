@@ -20,76 +20,16 @@
     
     <th:block th:if="${mainKind == 'admin'}">
 		<link rel="stylesheet" th:href="@{/css/bootstrapJournal.css}"/>
-		<style>
-		 .dialog-boder{
-		    background: #eb6864;
-		    color: #FFFFFF;
-		    font-weight: bold;
-		    font-size: 14px;
-		}
-		
-		 .subDialog-boder{
-		    background: #eb6864;
-		    color: #FFFFFF;
-		    font-weight: bold;
-		    font-size: 14px;
-		}
-		
-		 .subSubDialog-boder{
-		    background: #eb6864;
-		    color: #FFFFFF;
-		    font-weight: bold;
-		    font-size: 14px;
-		}
-		
-		 .subSubSubDialog-boder{
-		    background: #eb6864;
-		    color: #FFFFFF;
-		    font-weight: bold;
-		    font-size: 14px;
-		}
-		.btn_com_tb:hover {
-			color:rgb(255, 255, 255);
-		    text-decoration: underline;
-		}
-		</style>
     </th:block>
     <th:block th:if="${mainKind == 'app'}">
     	<link rel="stylesheet" th:href="@{/css/bootstrap-cerulean.css}"/>
-    	<style>
-		 .dialog-boder{
-		    background: #008BBB;
-		    color: #FFFFFF;
-		    font-weight: bold;
-		    font-size: 14px;
-		}
-		
-		 .subDialog-boder{
-		    background: #008BBB;
-		    color: #FFFFFF;
-		    font-weight: bold;
-		    font-size: 14px;
-		}
-		
-		 .subSubDialog-boder{
-		    background: #008BBB;
-		    color: #FFFFFF;
-		    font-weight: bold;
-		    font-size: 14px;
-		}
-		
-		 .subSubSubDialog-boder{
-		    background: #008BBB;
-		    color: #FFFFFF;
-		    font-weight: bold;
-		    font-size: 14px;
-		}
-		.btn_com_tb:hover {
-			color:rgb(255, 255, 255);
-		    text-decoration: underline;
-		}
-		</style>
     </th:block>
+	<style>
+		body {
+		  background-image: url('/img/20240626113220.png');
+		  background-size: auto;
+		}
+	</style>
 	<link rel="stylesheet" th:href="@{/css/base.css}"/>
     <link rel="stylesheet" th:href="@{/css/icon.css}"/>
     <link rel="stylesheet" th:href="@{/css/jsgantt.css}"/>

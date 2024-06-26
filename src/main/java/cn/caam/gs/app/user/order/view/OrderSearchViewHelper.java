@@ -83,7 +83,7 @@ public class OrderSearchViewHelper extends HtmlViewHelper {
     public static final int    SEARCH_PANEL_HEIGHT            = 90;
 	
     public static final CssFontSizeType font = GlobalConstants.INPUT_FONT_SIZE;
-    public static final int PHONE_TD_HEIGHT = 65;
+    public static final int PHONE_TD_HEIGHT = 70;
 	   /**
      * main画面用
      * @param request
@@ -289,12 +289,14 @@ public class OrderSearchViewHelper extends HtmlViewHelper {
                                                                         T200MOrder.getColumnInfo(T200MOrder.COL_ORDER_AMOUNT).getLabelName());
             String subRow2 = divRow().get(CellWidthType.TWO_6_6, aligs, T200MOrder.getColumnInfo(T200MOrder.COL_ORDER_TYPE).getLabelName(), 
                                                                         T200MOrder.getColumnInfo(T200MOrder.COL_CHECK_STATUS).getLabelName());
-            String subRow3 = divRow().get(CellWidthType.TWO_4_8, aligs, T200MOrder.getColumnInfo(T200MOrder.COL_BILL_STATUS).getLabelName(),
-                                                                        T200MOrder.getColumnInfo(T200MOrder.COL_PAY_DATE).getLabelName());
-            headTr.addTh(th().get(PHONE_TD_HEIGHT, CssGridsType.G9, CssAlignType.LEFT, subRow1, subRow2, subRow3));
-            // --col2--
-            String context         = getContext("common.page.do");
-            headTr.addTh(th().get(PHONE_TD_HEIGHT, CssGridsType.G3, CssAlignType.CENTER, context));
+            List<GridFlexType> flexs = new ArrayList<>();
+            flexs.add(GridFlexType.LEFT);
+            flexs.add(GridFlexType.CENTER);
+            flexs.add(GridFlexType.RIGHT);
+            String subRow3 = divRow().getFlex(CellWidthType.THREE_3_6_3, flexs, T200MOrder.getColumnInfo(T200MOrder.COL_BILL_STATUS).getLabelName(),
+                                                                        T200MOrder.getColumnInfo(T200MOrder.COL_PAY_DATE).getLabelName(),
+                                                                        getContext("common.page.do"));
+            headTr.addTh(th().get(PHONE_TD_HEIGHT, CssGridsType.G12, CssAlignType.LEFT, subRow1, subRow2, subRow3));
             // --]
         } else {
             // --col1--
@@ -350,24 +352,30 @@ public class OrderSearchViewHelper extends HtmlViewHelper {
                 String checkStatusName = PTextSet.builder()
                         .context(orderInfo.getCheckStatusName())
                         .classType(CheckStatusType.keyOf(orderInfo.getOrder().getCheckStatus()).getClassType()).build().html();
+                
+                String amount = formatCurrencyZH(orderInfo.getOrder().getOrderAmount());
+                String payDate = orderInfo.getOrder().getPayDate();
+             // --col2--
+                String btnContext = button().forTableBorderNameLeft(IconSetType.DETAIL, CssClassType.INFO, 
+                        "", getContext("common.page.info"), orderInfo.getId(), "detail");
                 if (isPhoneMode(request)) {
                     // --col1--
                     List<CssAlignType> aligs = new ArrayList<>();
                     aligs.add(CssAlignType.LEFT);
                     aligs.add(CssAlignType.RIGHT);
-                    String subRow1 = divRow().get(CellWidthType.TWO_8_4, aligs, orderInfo.getId(), orderInfo.getOrder().getOrderAmount().toString());
+                    String subRow1 = divRow().get(CellWidthType.TWO_8_4, aligs, orderInfo.getId(), amount);
                     String subRow2 = divRow().get(CellWidthType.TWO_7_5, aligs, orderTypeName, checkStatusName);
-                    String subRow3 = divRow().get(CellWidthType.TWO_4_8, aligs, billStatusName, orderInfo.getOrder().getPayDate());
-                    tr.addTd(td().get(PHONE_TD_HEIGHT, CssGridsType.G9, CssAlignType.LEFT, subRow1, subRow2, subRow3));
-                    // --col2--
-                    String btnContext = button().forTableBorderNameLeft(IconSetType.DETAIL, CssClassType.INFO, 
-                            "", getContext("common.page.info"), orderInfo.getId(), "detail");
-                    tr.addTd(td().get(PHONE_TD_HEIGHT, CssGridsType.G3, CssAlignType.CENTER, btnContext));
+                    List<GridFlexType> flexs = new ArrayList<>();
+                    flexs.add(GridFlexType.LEFT);
+                    flexs.add(GridFlexType.CENTER);
+                    flexs.add(GridFlexType.RIGHT);
+                    String subRow3 = divRow().getFlex(CellWidthType.THREE_3_6_3, flexs, billStatusName, payDate, btnContext);
+                    tr.addTd(td().get(PHONE_TD_HEIGHT, CssGridsType.G12, CssAlignType.LEFT, subRow1, subRow2, subRow3));
                 } else {
                     // --col1--
                     tr.addTd(td().get(CssGridsType.G2, CssAlignType.LEFT, orderInfo.getId()));
                     // --col2--
-                    tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, orderInfo.getOrder().getOrderAmount().toString()));
+                    tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, amount));
                     // --col3--
                     tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, orderTypeName));
                     // --col4--
@@ -375,11 +383,9 @@ public class OrderSearchViewHelper extends HtmlViewHelper {
                     // --col5--
                     tr.addTd(td().get(CssGridsType.G1, CssAlignType.CENTER, billStatusName));
                     // --col6--
-                    tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, orderInfo.getOrder().getPayDate()));
+                    tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, payDate));
                     // --col7--
-                    String context = button().forTableBorderNameRight(IconSetType.DETAIL, CssClassType.INFO, 
-                            "", getContext("common.page.info"), orderInfo.getId(), "detail");
-                    tr.addTd(td().get(CssGridsType.G1, CssAlignType.CENTER, context));
+                    tr.addTd(td().get(CssGridsType.G1, CssAlignType.CENTER, btnContext));
                 }
                 bodyList.add(tr);
             }

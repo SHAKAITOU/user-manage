@@ -10447,6 +10447,38 @@ a.text-dark:hover, a.text-dark:focus {
   color: #fff;
 }
 
+/*custom */
 .dropdown-menu .dropdown-header {
   color: #868e96;
+}
+.dialog-boder{
+    background: #008BBB;
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+ .subDialog-boder{
+    background: #008BBB;
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+ .subSubDialog-boder{
+    background: #008BBB;
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+ .subSubSubDialog-boder{
+    background: #008BBB;
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 14px;
+}
+.btn_com_tb:hover {
+	color:rgb(255, 255, 255);
+    text-decoration: underline;
 }

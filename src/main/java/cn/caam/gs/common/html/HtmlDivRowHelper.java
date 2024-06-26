@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import cn.caam.gs.common.enums.CellWidthType;
 import cn.caam.gs.common.enums.CssAlignType;
+import cn.caam.gs.common.enums.GridFlexType;
 import cn.caam.gs.common.html.element.DivRowSet;
 import cn.caam.gs.common.html.element.DivRowSet.DivRowSetType;
 import cn.caam.gs.common.html.element.bs5.DivContainerSet;
@@ -112,6 +113,15 @@ public class HtmlDivRowHelper extends HtmlBaseHelper {
                 .cellWidthType(cellWidthType)
                 .mCellWidthType(cellWidthType)
                 .cellAligns(alignTypes)
+                .components(contexts)
+                .build().html();
+    }
+    
+    public String getFlex(CellWidthType cellWidthType, List<GridFlexType> alignTypes, String... contexts) {
+        return DivRowSet.builder().outPutType(DivRowSetType.NORMAL)
+                .cellWidthType(cellWidthType)
+                .mCellWidthType(cellWidthType)
+                .cellFlexs(alignTypes)
                 .components(contexts)
                 .build().html();
     }

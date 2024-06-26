@@ -53,12 +53,13 @@
     </div>
 </form>
 <!-- /script -->
-<script type="text/javascript" th:inline="javascript">
+<script type="text/javascript" th:inline="javascript" >
 /*<![CDATA[*/
     $(document).ready(function(){
         //--------------------------------------------------------[
+        var dataMap = {errorMsg : /*[[${session.loginErrorMsg}]]*/};
         //init component
-        var adminLoginBlock = new AdminLoginBlock(); 
+        var adminLoginBlock = new AdminLoginBlock(dataMap); 
         //init bond event to btn
     	adminLoginBlock.init();
     });

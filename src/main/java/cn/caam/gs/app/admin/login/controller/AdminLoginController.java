@@ -15,7 +15,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -32,7 +31,6 @@ import cn.caam.gs.common.util.EncryptorUtil;
 import cn.caam.gs.common.util.JsonUtility;
 import cn.caam.gs.common.util.MessageSourceUtil;
 import cn.caam.gs.domain.db.base.entity.MAdmin;
-import cn.caam.gs.domain.db.custom.entity.LoginResult;
 import cn.caam.gs.service.impl.FixedValueService;
 import cn.caam.gs.service.impl.OrderService;
 import cn.caam.gs.service.impl.UserService;
@@ -45,6 +43,8 @@ import cn.caam.gs.service.impl.UserService;
 @Controller
 @RequestMapping(path=AdminLoginViewHelper.URL_BASE)
 public class AdminLoginController extends ScreenBaseController{
+    
+    private static final String PARAM_INVALID_LOGIN = "inVlidLogin"; 
 	
 	@Autowired
 	MessageSourceUtil messageSourceUtil;
@@ -60,6 +60,8 @@ public class AdminLoginController extends ScreenBaseController{
 	
     @Autowired
     OrderService orderService;
+    
+    
 
 	@GetMapping("")
 	public ModelAndView index(
@@ -67,6 +69,9 @@ public class AdminLoginController extends ScreenBaseController{
 			HttpServletRequest request,
 			HttpServletResponse response)  {
 
+	    if (allRequestParams.isEmpty()) {
+	        request.getSession().setAttribute(SessionConstants.LOGIN_ERROR_MSG.getValue(), null);
+	    }
 		ModelAndView mav = new ModelAndView();
 		//if(!LoginInfoHelper.isLogined(request)) {
 			IndexForm indexForm = new IndexForm();
@@ -120,7 +125,11 @@ public class AdminLoginController extends ScreenBaseController{
 		MAdmin userInfo = userService.getLoginAdminInfo(loginForm.getUserCode());
 		
 		String ePw = EncryptorUtil.encrypt(loginForm.getPassword());
-        if (userInfo == null) {
+		
+		if (request.getSession().getAttribute(SessionConstants.AUTH_CODE.getValue()) == null) {
+		    okFlag = false;
+		    loginForm.setErrorMsg(messageSourceUtil.getContext("login.fail.msg.notRightLogin"));
+		} else if (userInfo == null) {
             loginForm.setErrorMsg(messageSourceUtil.getContext("login.fail.msg.notexist"));
             okFlag = false;
         } else if(!userInfo.getPassword().equals(ePw)) {
@@ -130,18 +139,24 @@ public class AdminLoginController extends ScreenBaseController{
             okFlag = true;
         }
 		
+		// TODO auth check
+        String authCode = (String)request.getSession().getAttribute(SessionConstants.AUTH_CODE.getValue());
+		
 		ModelAndView mav = new ModelAndView();
 		if(noSession) {
 			mav = new ModelAndView("redirect:"+AdminLoginViewHelper.URL_BASE);
 		}
 		else if(!okFlag) {
+		    clearSession(request);
 			loginForm.setReturnType(ExecuteReturnType.NG.getId());
-			request.getSession().setAttribute(SessionConstants.LOGIN_INFO.getValue(), null);
 			IndexForm indexForm = new IndexForm();
 			indexForm.setLoginFormJson(JsonUtility.toJson(loginForm));
 			mav.addObject("indexForm", indexForm);
-			mav.setViewName(AdminLoginViewHelper.HTML_INDEX);
+			request.getSession().setAttribute(SessionConstants.LOGIN_ERROR_MSG.getValue(), 
+			        loginForm.getErrorMsg());
+			mav = new ModelAndView("redirect:"+AdminLoginViewHelper.URL_BASE + "?"+PARAM_INVALID_LOGIN+"=true");
 		} else {
+		    request.getSession().setAttribute(SessionConstants.LOGIN_ERROR_MSG.getValue(), null);
 			loginForm.setReturnType(ExecuteReturnType.OK.getId());
 			request.getSession().setAttribute(SessionConstants.LOGIN_INFO.getValue(), userInfo);
 			JavaScriptSet javaScriptSetInfo = new JavaScriptSet(request, environment, messageSourceUtil);
@@ -158,6 +173,8 @@ public class AdminLoginController extends ScreenBaseController{
 	        
 	        request.getSession().setAttribute(SessionConstants.ORDER_NOT_FINISH_CNT.getValue(), 
 	                orderWaitCnt + orderReviewCnt);
+	        
+	        EncryptorUtil.clearAuthWhenLogined(request);
 			
 			mav.setViewName(AdminMenuViewHelper.HTML_MENU_MENU);
 		}

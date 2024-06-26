@@ -4,7 +4,7 @@
  */
 @font-face {
 	font-family: 'NotoSansSC-Regular';
-	src: url('../ttl/仿宋_GB2312.ttf')  format('truetype');
+	src: url('../ttl/STXIHEI.TTF')  format('truetype');
 }
 html {
 	-webkit-box-sizing: border-box;

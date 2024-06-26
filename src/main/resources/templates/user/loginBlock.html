@@ -80,8 +80,9 @@
 /*<![CDATA[*/
     $(document).ready(function(){
         //--------------------------------------------------------[
+        var dataMap = {errorMsg : /*[[${session.loginErrorMsg}]]*/};
         //init component
-        var loginBlock = new LoginBlock(); 
+        var loginBlock = new LoginBlock(dataMap); 
         //init bond event to btn
     	loginBlock.init();
     });
