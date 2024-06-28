@@ -23,14 +23,14 @@ CREATE TABLE m_fixed_value
     PRIMARY KEY (code, value)
 ) COMMENT='固定值管理' ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---管理员类型
+-- 管理员类型 --
 INSERT INTO m_fixed_value VALUES ('F0000', '01', '超级管理员', 1);
 INSERT INTO m_fixed_value VALUES ('F0000', '02', '高级管理员', 2);
 INSERT INTO m_fixed_value VALUES ('F0000', '03', '一般管理员', 3);
---性别
+-- 性别 --
 INSERT INTO m_fixed_value VALUES ('F0001', '01', '男', 1);
 INSERT INTO m_fixed_value VALUES ('F0001', '02', '女', 2);
---会员类型
+-- 会员类型 --
 INSERT INTO m_fixed_value VALUES ('F0002', '01', '个人会员',         1);
 INSERT INTO m_fixed_value VALUES ('F0002', '0101', '普通会员',       1);
 INSERT INTO m_fixed_value VALUES ('F0002', '0102', '普通会员(学生)', 2);
@@ -39,7 +39,7 @@ INSERT INTO m_fixed_value VALUES ('F0002', '0104', '会士会员',       4);
 INSERT INTO m_fixed_value VALUES ('F0002', '02', '团体会员单位',   2);
 INSERT INTO m_fixed_value VALUES ('F0002', '0201', '团体会员单位',   1);
 
---政治面貌
+-- 政治面貌 --
 INSERT INTO m_fixed_value VALUES ('F0003', '01', '中共党员',       1);
 INSERT INTO m_fixed_value VALUES ('F0003', '02', '中共预备党员',   2);
 INSERT INTO m_fixed_value VALUES ('F0003', '03', '共青团员',       3);
@@ -54,7 +54,7 @@ INSERT INTO m_fixed_value VALUES ('F0003', '11', '台盟盟员',      11);
 INSERT INTO m_fixed_value VALUES ('F0003', '12', '无党派人士',    12);
 INSERT INTO m_fixed_value VALUES ('F0003', '13', '群众',          13);
 INSERT INTO m_fixed_value VALUES ('F0003', '14', '其他',          14);
---学历
+-- 学历 --
 INSERT INTO m_fixed_value VALUES ('F0004', '01', '博士后',         1);
 INSERT INTO m_fixed_value VALUES ('F0004', '02', '博士',           2);
 INSERT INTO m_fixed_value VALUES ('F0004', '03', '硕士',           3);
@@ -63,7 +63,7 @@ INSERT INTO m_fixed_value VALUES ('F0004', '05', '大专',           5);
 INSERT INTO m_fixed_value VALUES ('F0004', '06', '高中',           6);
 INSERT INTO m_fixed_value VALUES ('F0004', '07', '中专',           7);
 INSERT INTO m_fixed_value VALUES ('F0004', '08', '其他',           8);
---民族
+-- 民族 --
 INSERT INTO m_fixed_value VALUES ('F0005', '01', '汉族',           1);
 INSERT INTO m_fixed_value VALUES ('F0005', '02', '壮族',           2);
 INSERT INTO m_fixed_value VALUES ('F0005', '03', '满族',           3);
@@ -121,12 +121,12 @@ INSERT INTO m_fixed_value VALUES ('F0005', '54', '塔塔尔族',      54);
 INSERT INTO m_fixed_value VALUES ('F0005', '55', '赫哲族',        55);
 INSERT INTO m_fixed_value VALUES ('F0005', '56', '珞巴族',        56);
 INSERT INTO m_fixed_value VALUES ('F0005', '57', '其他族',        57);
---学位
+-- 学位 --
 INSERT INTO m_fixed_value VALUES ('F0006', '01', '博士学位',       1);
 INSERT INTO m_fixed_value VALUES ('F0006', '02', '硕士学位',       2);
 INSERT INTO m_fixed_value VALUES ('F0006', '03', '学士学位',       3);
 INSERT INTO m_fixed_value VALUES ('F0006', '04', '其他',           4);
---职务
+-- 职务 --
 INSERT INTO m_fixed_value VALUES ('F0007', '01', '部长',           1);
 INSERT INTO m_fixed_value VALUES ('F0007', '02', '副部长',         2);
 INSERT INTO m_fixed_value VALUES ('F0007', '03', '局(司)长',       3);
@@ -155,13 +155,13 @@ INSERT INTO m_fixed_value VALUES ('F0007', '25', '副总监',        25);
 INSERT INTO m_fixed_value VALUES ('F0007', '26', '经理',          26);
 INSERT INTO m_fixed_value VALUES ('F0007', '27', '主管',          27);
 INSERT INTO m_fixed_value VALUES ('F0007', '28', '其他',          28);
---单位性质
+-- 单位性质 --
 INSERT INTO m_fixed_value VALUES ('F0008', '01', '高校',           1);
 INSERT INTO m_fixed_value VALUES ('F0008', '02', '科研院所',       2);
 INSERT INTO m_fixed_value VALUES ('F0008', '03', '企业',           3);
 INSERT INTO m_fixed_value VALUES ('F0008', '04', '医院',           4);
 INSERT INTO m_fixed_value VALUES ('F0008', '05', '其他',           5);
---职称
+-- 职称 --
 INSERT INTO m_fixed_value VALUES ('F0009', '01', '高级职称',       1);
 INSERT INTO m_fixed_value VALUES ('F0009', '02', '副高级职称',     2);
 INSERT INTO m_fixed_value VALUES ('F0009', '03', '中级职称',       3);
@@ -226,12 +226,12 @@ INSERT INTO m_fixed_value VALUES ('F0009', '0417', '助理实验师',  17);
 INSERT INTO m_fixed_value VALUES ('F0009', '0418', '实验员',      18);
 INSERT INTO m_fixed_value VALUES ('F0009', '0419', '助理经济师',  19);
 INSERT INTO m_fixed_value VALUES ('F0009', '0420', '其他(初级)',  20);
---证件类型
+-- 证件类型 --
 INSERT INTO m_fixed_value VALUES ('F0010', '01', '身份证',           1);
 INSERT INTO m_fixed_value VALUES ('F0010', '02', '港澳台居民居住证', 2);
 INSERT INTO m_fixed_value VALUES ('F0010', '03', '军官证',           3);
 INSERT INTO m_fixed_value VALUES ('F0010', '04', '护照',             4);
---所在地区
+-- 所在地区 --
 INSERT INTO m_fixed_value VALUES ('F0011', '01', '北京',       1);
 INSERT INTO m_fixed_value VALUES ('F0011', '0101', '东城区',       1);
 INSERT INTO m_fixed_value VALUES ('F0011', '0102', '西城区',       2);
@@ -326,7 +326,7 @@ INSERT INTO m_fixed_value VALUES ('F0011', '31', '新疆',       31);
 INSERT INTO m_fixed_value VALUES ('F0011', '32', '台湾',       32);
 INSERT INTO m_fixed_value VALUES ('F0011', '33', '香港特别行政区', 33);
 INSERT INTO m_fixed_value VALUES ('F0011', '34', '澳门',       34);
---入会途径
+-- 入会途径 --
 INSERT INTO m_fixed_value VALUES ('F0012', '001', '中国针灸学会',       1);
 INSERT INTO m_fixed_value VALUES ('F0012', '002', '北京针灸学会',       2);
 INSERT INTO m_fixed_value VALUES ('F0012', '003', '上海市针灸学会',       3);
@@ -429,47 +429,43 @@ INSERT INTO m_fixed_value VALUES ('F0012', '099', '中国针灸学会针灸整�
 INSERT INTO m_fixed_value VALUES ('F0012', '100', '中国针灸学会电针专业委员会',       100);
 INSERT INTO m_fixed_value VALUES ('F0012', '101', '中国针灸学会风湿免疫分会',       101);
 INSERT INTO m_fixed_value VALUES ('F0012', '102', '中国针灸学会平衡针专业委员会',       102);
---审核状态
+-- 审核状态 --
 INSERT INTO m_fixed_value VALUES ('F0013', '01', '等待审核',  1);
 INSERT INTO m_fixed_value VALUES ('F0013', '02', '审核中',    2);
 INSERT INTO m_fixed_value VALUES ('F0013', '03', '已审核',    3);
 INSERT INTO m_fixed_value VALUES ('F0013', '04', '审核通过',  4);
 INSERT INTO m_fixed_value VALUES ('F0013', '05', '审核拒否',  5);
 
---缴费类型
+-- 缴费类型 --
 INSERT INTO m_fixed_value VALUES ('F0014', '01', '线上支付',    1);
 INSERT INTO m_fixed_value VALUES ('F0014', '02', '线下支付',    2);
---订单类型
+-- 订单类型 --
 INSERT INTO m_fixed_value VALUES ('F0015', '01', '入会订单',    1);
 INSERT INTO m_fixed_value VALUES ('F0015', '02', '续费订单',    2);
 INSERT INTO m_fixed_value VALUES ('F0015', '03', '入会订单(详情添加)',    3);
 INSERT INTO m_fixed_value VALUES ('F0015', '04', '续费订单(详情添加)',    4);
 INSERT INTO m_fixed_value VALUES ('F0015', '05', '续费订单(系统导入)',    5);
---退款状态
+-- 退款状态 --
 INSERT INTO m_fixed_value VALUES ('F0016', '01', '未定',    1);
 INSERT INTO m_fixed_value VALUES ('F0016', '02', '退款中',  2);
 INSERT INTO m_fixed_value VALUES ('F0016', '03', '已退款',  3);
---发票类型
+-- 发票类型 --
 INSERT INTO m_fixed_value VALUES ('F0017', '01', '全国性社会团体会费统一收据',    1);
 INSERT INTO m_fixed_value VALUES ('F0017', '02', '增值税专用发票',                2);
 INSERT INTO m_fixed_value VALUES ('F0017', '03', '增值税普通发票',                3);
---开票状态
+-- 开票状态 --
 INSERT INTO m_fixed_value VALUES ('F0018', '01', '待开票',    1);
 INSERT INTO m_fixed_value VALUES ('F0018', '02', '已开票',    2);
---取票方式
+-- 取票方式 --
 INSERT INTO m_fixed_value VALUES ('F0019', '01', '电子票据',    1);
---订单方式
+-- 订单方式 --
 INSERT INTO m_fixed_value VALUES ('F0020', '01', '个人订单',    1);
 INSERT INTO m_fixed_value VALUES ('F0020', '02', '推荐订单',    2);
---站内消息类型
+-- 站内消息类型 --
 INSERT INTO m_fixed_value VALUES ('F0021', '01', '全体消息',    1);
 INSERT INTO m_fixed_value VALUES ('F0021', '02', '个人消息',    2);
 
---站内消息类型
-INSERT INTO m_fixed_value VALUES ('F0021', '01', '全体消息',    1);
-INSERT INTO m_fixed_value VALUES ('F0021', '02', '个人消息',    2);
-
---会费计算方式类型
+-- 会费计算方式类型 --
 INSERT INTO m_fixed_value VALUES ('F0022', '01', '月额型计算',    1);
 INSERT INTO m_fixed_value VALUES ('F0022', '02', '日额型计算',    2);
 INSERT INTO m_fixed_value VALUES ('F0022', '03', '年额型计算',    3);
