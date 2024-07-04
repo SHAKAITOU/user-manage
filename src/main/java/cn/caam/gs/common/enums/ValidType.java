@@ -2,8 +2,8 @@ package cn.caam.gs.common.enums;
 
 public enum ValidType implements EnumImpl {
 
-	INVALID	(EnumIndex.startIndex(0), 	"invalid", 	true, "ValidType.INVALID", CssClassType.LIGHT),
-	VALID	(EnumIndex.getNext(), 		"valid", 	true, "ValidType.VALID", CssClassType.SUCCESS),
+	INVALID	(EnumIndex.startIndex(0), 	"0", 	true, "ValidType.INVALID", CssClassType.LIGHT),
+	VALID	(EnumIndex.getNext(), 		"1", 	true, "ValidType.VALID", CssClassType.SUCCESS),
 	ALL		(EnumIndex.getNext(), 		"all", 		false, "ValidType.ALL", CssClassType.PRIMARY);
     
 
