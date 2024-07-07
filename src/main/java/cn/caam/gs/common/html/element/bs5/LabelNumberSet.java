@@ -31,6 +31,8 @@ public class LabelNumberSet {
     private boolean notBlank = false;
     @Default
     private int maxlength = 0;
+    @Default
+    private boolean integerOnly = false;
 
     public String html() {
         return get();
@@ -46,7 +48,11 @@ public class LabelNumberSet {
             sb.append("<span class='label-14b-red'>*</span>");
         }
         sb.append("</span>");
-        sb.append("<input type='number' ");
+        if (integerOnly) {
+        	sb.append("<input type='text' oninput=\"value=value.replace(/[^\\d]/g,'')\"");
+        }else {
+        	sb.append("<input type='number' ");
+        }
         sb.append(" class='form-control "); 
         sb.append((Objects.nonNull(fontSize) ? fontSize.getKey() : "label-14" ) + "'");
         if (Objects.nonNull(placeholder)) {

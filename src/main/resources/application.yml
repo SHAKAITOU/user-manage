@@ -27,14 +27,20 @@ spring:
     mode: local-MySQL
     local-MySQL:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: jdbc:mysql://localhost/shatest
+      #jdbc-url: jdbc:mysql://localhost/shatest
+      #password: admin
+      #password: admin
+      jdbc-url: jdbc:mysql://afa397eca7da454e925b9a637c954bbfin01.internal.cn-north-4.mysql.rds.myhuaweicloud.com:3306/shatest
       username: root
-      password: admin
+      password: XHT2024Pass1
     cloud-MySQL:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: jdbc:mysql://localhost/shatest
+      #jdbc-url: jdbc:mysql://localhost/shatest
+      #username: root
+      #password: admin
+      jdbc-url: jdbc:mysql://afa397eca7da454e925b9a637c954bbfin01.internal.cn-north-4.mysql.rds.myhuaweicloud.com:3306/shatest
       username: root
-      password: admin
+      password: XHT2024Pass1
     
   session:
     store-type: none

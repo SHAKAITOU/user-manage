@@ -32,7 +32,7 @@ try{
 		
 		_WATCH_INPUT_LIST : [],
 		
-		checkNotBlank : function(inputCheckItemList){
+		checkNotBlank : function(inputCheckItemList, isToFocus=false){
 			for( var i = 0; i < inputCheckItemList.length; i++ ){
 				var inputCheckItem = inputCheckItemList[i][1];
 				var id = inputCheckItem.attr('id');
@@ -51,7 +51,12 @@ try{
 					inputCheckItem.after('<div id="'+ errorId +'" class="invalid-feedback">' + errorMsg + '</div>'); 
 					inputCheckItem.addClass('alert-input');
 					inputCheckItem.addClass('is-invalid');
-					ngFlag = true;
+					if (!ngFlag){
+						if (isToFocus){
+							inputCheckItem.focus();
+						}
+						ngFlag = true;
+					}
 				}else{
 					inputCheckItem.removeClass('alert-input');
 					inputCheckItem.removeClass('is-invalid');

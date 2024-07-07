@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -27,18 +28,19 @@ import cn.caam.gs.common.html.HtmlViewBaseHelper;
 import cn.caam.gs.common.html.element.HtmlRadio;
 import cn.caam.gs.common.html.element.bs5.BreadCrumbSet;
 import cn.caam.gs.common.html.element.bs5.DivChevronSet;
+import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
 import cn.caam.gs.common.html.element.bs5.LabelDateInputSet;
 import cn.caam.gs.common.html.element.bs5.LabelDateInputSet.LabelDateInputSetType;
 import cn.caam.gs.common.html.element.bs5.LabelFileSet;
 import cn.caam.gs.common.html.element.bs5.LabelImageSet;
 import cn.caam.gs.common.html.element.bs5.LabelInputSet;
+import cn.caam.gs.common.html.element.bs5.LabelNumberSet;
 import cn.caam.gs.common.html.element.bs5.LabelRadioGroupSet;
 import cn.caam.gs.common.html.element.bs5.LabelSelectGroupSet;
 import cn.caam.gs.common.html.element.bs5.LabelSelectGroupSet.LabelSelectGroupSetType;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet.LabelSelectSetType;
 import cn.caam.gs.common.html.element.bs5.LabelTextAreaSet;
-import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
 import cn.caam.gs.common.html.element.bs5.LabelTextAreaSet.LabelTextAreaSetType;
 import cn.caam.gs.domain.db.base.entity.MFixedValue;
 import cn.caam.gs.domain.db.custom.entity.FixValueInfo;
@@ -55,6 +57,9 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
     public static final String URL_BASE = "/userDetail";  
     // init url
     public static final String URL_USER_DETAIL_INIT = UrlConstants.INIT;
+    //edit url
+    public static final String URL_USER_DETAIL_EDIT = UrlConstants.EDIT;
+    
     
 
     public static final String USER_DETAIL_JS_CLASS          = "UserDetail";
@@ -231,6 +236,10 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
                 getContext("userDetail.card2"),
                 divContainer().get(sb.toString()));
     }
+    
+    private static String getValue(String value) {
+    	return Objects.isNull(value) ? "":value;
+    }
 
     private static String buildSelfDetail(Map<FixedValueType, List<FixValueInfo>> fixedValueMap, UserDetailForm userDetailForm) {
         StringBuffer sb = new StringBuffer();
@@ -253,13 +262,13 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
 
         //------row1----------[
         
-        //会员名称(max64)
+        //会员名称(max70)
         ColumnInfoForm clmForm = T100MUser.getColumnInfo(T100MUser.COL_NAME);
         String name      = clmForm.getPageName(PREFIX_NAME);
         id        = convertNameDotForId(name);
         String labelName = clmForm.getLabelName();
         String placeholder = clmForm.getPlaceholder();
-        String value = userDetailForm.getUserInfo().getUser().getName();
+        String value = getValue(userDetailForm.getUserInfo().getUser().getName());
         contextList.add(LabelInputSet.builder()
                 .id(id).name(name).labelName(labelName).value(value)
                 .notBlank(true).maxlength(GlobalConstants.USER_NAME_MAX_L).placeholder(placeholder)
@@ -270,7 +279,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         name      = clmForm.getPageName(PREFIX_NAME);
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
-        value = userDetailForm.getUserInfo().getUser().getSex();
+        value = getValue(userDetailForm.getUserInfo().getUser().getSex());
         List<HtmlRadio> radios = new ArrayList<>();
         List<FixValueInfo> sexList = fixedValueMap.get(FixedValueType.SEX);
         for (FixValueInfo fValueInfo : sexList) {
@@ -293,7 +302,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value = userDetailForm.getUserInfo().getUser().getBirth();
+        value = getValue(userDetailForm.getUserInfo().getUser().getBirth());
         contextList.add(LabelDateInputSet.builder()
                 .id(id).name(name).labelName(labelName).value(value)
                 .placeholder(placeholder).notBlank(true)
@@ -305,7 +314,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value = userDetailForm.getUserInfo().getUser().getNationality();
+        value = getValue(userDetailForm.getUserInfo().getUser().getNationality());
         radios = new ArrayList<>();
         List<FixValueInfo> nationalityList = fixedValueMap.get(FixedValueType.NATIONALITY);
         for (FixValueInfo fValueInfo : nationalityList) {
@@ -328,7 +337,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value = userDetailForm.getUserInfo().getUser().getPolitical();
+        value = getValue(userDetailForm.getUserInfo().getUser().getPolitical());
         radios = new ArrayList<>();
         List<FixValueInfo> politicalList = fixedValueMap.get(FixedValueType.POLITICAL);
         for (FixValueInfo fValueInfo : politicalList) {
@@ -346,7 +355,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value = userDetailForm.getUserInfo().getUser().getEduDegree();
+        value = getValue(userDetailForm.getUserInfo().getUser().getEduDegree());
         radios = new ArrayList<>();
         List<FixValueInfo> eduDegreeList = fixedValueMap.get(FixedValueType.EDU_DEGREE);
         for (FixValueInfo fValueInfo : eduDegreeList) {
@@ -369,7 +378,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value = userDetailForm.getUserInfo().getUser().getBachelor();
+        value = getValue(userDetailForm.getUserInfo().getUser().getBachelor());
         radios = new ArrayList<>();
         List<FixValueInfo> bachelorList = fixedValueMap.get(FixedValueType.BACHELOR);
         for (FixValueInfo fValueInfo : bachelorList) {
@@ -386,7 +395,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value = userDetailForm.getUserInfo().getUser().getPosition();
+        value = getValue(userDetailForm.getUserInfo().getUser().getPosition());
         radios = new ArrayList<>();
         List<FixValueInfo> positionList = fixedValueMap.get(FixedValueType.POSITION);
         for (FixValueInfo fValueInfo : positionList) {
@@ -409,7 +418,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value = userDetailForm.getUserInfo().getUser().getEmployer();
+        value = getValue(userDetailForm.getUserInfo().getUser().getEmployer());
         contextList.add(LabelInputSet.builder()
                 .id(id).name(name).labelName(labelName).value(value)
                 .notBlank(true).maxlength(GlobalConstants.EMPLOYER_MAX_L).placeholder(placeholder)
@@ -421,7 +430,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value = userDetailForm.getUserInfo().getUser().getEmployerType();
+        value = getValue(userDetailForm.getUserInfo().getUser().getEmployerType());
         radios = new ArrayList<>();
         List<FixValueInfo> employerTypeList = fixedValueMap.get(FixedValueType.EMPLOYER_TYPE);
         for (FixValueInfo fValueInfo : employerTypeList) {
@@ -444,7 +453,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value = userDetailForm.getUserInfo().getUser().getJobTitle();
+        value = getValue(userDetailForm.getUserInfo().getUser().getJobTitle());
         radios = new ArrayList<>();
         List<FixValueInfo> jobTitleList = fixedValueMap.get(FixedValueType.JOB_TITLE);
         Map<HtmlRadio, List<HtmlRadio>> radioMap = new LinkedHashMap<HtmlRadio, List<HtmlRadio>>();
@@ -471,7 +480,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value = userDetailForm.getUserInfo().getUser().getCertificateType();
+        value = getValue(userDetailForm.getUserInfo().getUser().getCertificateType());
         radios = new ArrayList<>();
         List<FixValueInfo> certificateTypeList = fixedValueMap.get(FixedValueType.CERTIFICATE_TYPE);
         for (FixValueInfo fValueInfo : certificateTypeList) {
@@ -493,7 +502,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value = userDetailForm.getUserInfo().getUser().getCertificateCode();
+        value = getValue(userDetailForm.getUserInfo().getUser().getCertificateCode());
         contextList.add(LabelInputSet.builder()
                 .id(id).name(name).labelName(labelName).value(value)
                 .notBlank(true).maxlength(GlobalConstants.CERTIFICATE_CODE_MAX_L).placeholder(placeholder)
@@ -505,7 +514,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value = userDetailForm.getUserInfo().getUser().getArea();
+        value = getValue(userDetailForm.getUserInfo().getUser().getArea());
         radios = new ArrayList<>();
         List<FixValueInfo> areaList = fixedValueMap.get(FixedValueType.AREA);
         radioMap = new LinkedHashMap<HtmlRadio, List<HtmlRadio>>();
@@ -536,9 +545,9 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value = userDetailForm.getUserInfo().getUser().getPostalCode();
-        contextList.add(LabelInputSet.builder()
-                .id(id).name(name).labelName(labelName).value(value)
+        value = getValue(userDetailForm.getUserInfo().getUser().getPostalCode());
+        contextList.add(LabelNumberSet.builder()
+                .id(id).name(name).labelName(labelName).value(value).integerOnly(true)
                 .notBlank(true).maxlength(GlobalConstants.POST_CODE_MAX_L).placeholder(placeholder)
                 .fontSize(font).grids(CssGridsType.G6).build().html());
         
@@ -548,7 +557,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value = userDetailForm.getUserInfo().getUser().getAddress();
+        value = getValue(userDetailForm.getUserInfo().getUser().getAddress());
         contextList.add(LabelInputSet.builder()
                 .id(id).name(name).labelName(labelName).value(value)
                 .notBlank(true).maxlength(GlobalConstants.ADDRESS_MAX_L).placeholder(placeholder)
@@ -566,7 +575,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value = userDetailForm.getUserInfo().getUser().getMembershipPath();
+        value = getValue(userDetailForm.getUserInfo().getUser().getMembershipPath());
         radios = new ArrayList<>();
         List<FixValueInfo> membershipPathList = fixedValueMap.get(FixedValueType.MEMBERSHIP_PATH);
         for (FixValueInfo fValueInfo : membershipPathList) {
@@ -583,7 +592,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value = userDetailForm.getUserInfo().getUser().getFocusOn();
+        value = getValue(userDetailForm.getUserInfo().getUser().getFocusOn());
         radios = new ArrayList<>();
         List<FixValueInfo> focusOnList = fixedValueMap.get(FixedValueType.MEMBERSHIP_PATH);
         for (FixValueInfo fValueInfo : focusOnList) {
@@ -992,6 +1001,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         Map<String, String> js = new HashMap<String, String>();
         // url
         js.put("url_user_detail_init",      URL_BASE + URL_USER_DETAIL_INIT);
+        js.put("url_user_detail_edit",      URL_BASE + URL_USER_DETAIL_EDIT);
         return js;
     }
     

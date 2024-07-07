@@ -4,6 +4,7 @@
 
 //------------constructor define------------[
 UserDetail = function(dataMap){
+	this.mainForm = $('#main_form');
     this.form = $('#userDetailForm');
     this.jsContext = Pos.constants.setInfo;
     this.i18n = JSON.parse(this.jsContext.i18n);
@@ -86,6 +87,9 @@ UserDetail.prototype.ID = {
 	BTN_OPEN_EDIT_EXTEND          : "btnOpenEditExtend",
 	BTN_CLOSE_EDIT_EXTEND         : "btnCloseEditExtend",
 	BTN_OPEN_PHOTO                : "btnOpenPhoto",
+	BTN_OK              		  : "btnOk",
+	
+	DIV_MAINBODY                  : "mainBody",
 
 };
 //------------------------------------------]
@@ -134,6 +138,7 @@ UserDetail.prototype.initEvent = function(){
 	self.setReadonlyBaseDetail();
 	self.setReadonlySelfDetail();
 	self.setReadonlyExtendDetail();
+	self.changeOkButtonEnable();
 	
 	ShaInput.button.onClick(self.getObject(self.ID.BTN_OPEN_EDIT_BASE), 
 		function(event) {
@@ -301,8 +306,73 @@ UserDetail.prototype.initEvent = function(){
 			}
 	    }
 	);
+	
+	//init event to BTN_OK
+	ShaInput.button.onClick(self.getObject(self.ID.BTN_OK), 
+		function(event) {
+			if(self.check()) {
+	            return;
+	        }
+			console.log(self.getForm().serializeArray());
+	        ShaDialog.dialogs.confirm(
+				self.i18n["dialogs.confirm.edit.title"], 
+				self.i18n["dialogs.confirm.edit.msg"], 
+				function () {
+					ShaAjax.ajax.postWithUploadFile(
+						self.jsContext.jsView.userDetail.url_user_detail_edit,
+						"userDetailForm", 
+						function (data) {
+							ShaDialog.dialogs.success(self.i18n["dialogs.add.success.msg"]);
+							self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
+							window.scrollTo(0, 0);
+						}
+					);
+				}
+			);
+	    }
+	);
 
 };
+
+//checkValue
+UserDetail.prototype.check = function(){
+	var self = this;
+	var inputCheckItemList = [];
+	if (ShaInput.obj.isEnabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_USER_NAME))){
+		inputCheckItemList = inputCheckItemList.concat([
+	       [ self.i18n["m_user.name"], 	            self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_USER_NAME)], 
+	       [ self.i18n["m_user.birth"], 	        self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_BIRTH)], 
+		   [ self.i18n["m_user.employer"],       	self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_EMPLOYER)], 
+		   [ self.i18n["m_user.certificate_code"], 	self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_CERTIFICATE_CODE)], 
+		   [ self.i18n["m_user.postal_code"], 	    self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_POSTAL_CODE)], 
+		   [ self.i18n["m_user.address"], 	        self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_ADDRESS)], 
+	   ]);
+	}
+	if (ShaInput.obj.isEnabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_MAJOR))){
+		inputCheckItemList = inputCheckItemList.concat([
+	       [ self.i18n["m_user_extend.major"], 	            self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_MAJOR)], 
+	       [ self.i18n["m_user_extend.learn_experience"], 	self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_LEARN_EXPERIENCE)], 
+		   [ self.i18n["m_user_extend.work_experience"],     self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_WORK_EXPERIENCE)], 
+	   ]);
+	}
+	
+	if (inputCheckItemList.length == 0 || ShaCheck.check.checkNotBlank(inputCheckItemList, true)) {
+		return true;
+	}
+	
+	return false;
+};
+
+UserDetail.prototype.changeOkButtonEnable = function(){
+	var self = this;
+	if (ShaInput.obj.isEnabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_USER_NAME)) ||
+		ShaInput.obj.isEnabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_MAJOR))){
+		ShaInput.obj.enabled(self.getObject(self.ID.BTN_OK));
+	}else{
+		ShaInput.obj.disabled(self.getObject(self.ID.BTN_OK));
+	}
+};
+
 UserDetail.prototype.setReadonlyBaseDetail = function(){
 	var self = this;
 	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_USER_ID_SHOW));
@@ -335,6 +405,7 @@ UserDetail.prototype.setEditableSelfDetail = function(){
 	ShaInput.obj.enabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_MEMBERSHIP_PATH));
 	ShaInput.obj.enabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_FOCUS_ON));
 	
+	self.changeOkButtonEnable();
 };
 
 UserDetail.prototype.setReadonlySelfDetail = function(){
@@ -360,7 +431,8 @@ UserDetail.prototype.setReadonlySelfDetail = function(){
 	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_ADDRESS));
 	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_MEMBERSHIP_PATH));
 	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_FOCUS_ON));
-	
+
+	self.changeOkButtonEnable();
 };
 
 UserDetail.prototype.setEditableExtendDetail = function(){
@@ -385,6 +457,8 @@ UserDetail.prototype.setEditableExtendDetail = function(){
 	ShaInput.obj.enabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_WORK_EXPERIENCE));
 	ShaInput.obj.enabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_PAPERS));
 	ShaInput.obj.enabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_HONORS));
+
+	self.changeOkButtonEnable();
 };
 
 UserDetail.prototype.setReadonlyExtendDetail = function(){
@@ -412,6 +486,9 @@ UserDetail.prototype.setReadonlyExtendDetail = function(){
 	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_LEARN_EXPERIENCE));
 	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_WORK_EXPERIENCE));	
 	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_PAPERS));
-	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_HONORS));			
+	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_HONORS));	
+	
+
+	self.changeOkButtonEnable();		
 };
 //----------------------------------------------------------------------------]
