@@ -119,6 +119,12 @@ try{
 			ShaConstants.constants.NUMBER_ONLY_MSG 	= Pos.constants.setInfo.common.checkNumberOnlyMsg;
 			ShaConstants.constants.MAX_LENGTH_MSG 	= Pos.constants.setInfo.common.checkMaxLengthMsg;
 			ShaConstants.constants.MIN_LENGTH_MSG 	= Pos.constants.setInfo.common.checkMinLengthMsg;
+			ShaConstants.constants.MAX_VALUE_MSG 	= Pos.constants.setInfo.common.checkMaxValueMsg;
+			ShaConstants.constants.MIN_VALUE_MSG 	= Pos.constants.setInfo.common.checkMinValueMsg;
+			ShaConstants.constants.REQUIRED_NUMBER_VAL_MSG 	= Pos.constants.setInfo.common.checkRequiredNumberValMsg;
+			
+			ShaConstants.constants.MAX_BILL_AMOUNT 	= Pos.constants.setInfo.common.max_bill_amount;
+			ShaConstants.constants.MIN_BILL_AMOUNT 	= Pos.constants.setInfo.common.min_bill_amount;
 			
 			//date time format
 			ShaConstants.constants.DATETIME_FORMAT = Pos.constants.setInfo.common.datetimeFormat;

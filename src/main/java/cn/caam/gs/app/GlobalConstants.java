@@ -47,4 +47,9 @@ public class GlobalConstants {
     public static final int AMOUNT_MAX_L               = 10;
     public static final int BILL_CODE_MAX_L            = 50;
     public static final int BILL_TITLE_MAX_L           = 20;
+    
+    public static final int MAX_BILL_AMOUNT            = 500;
+    public static final int MIN_BILL_AMOUNT            = 500;
+    
+    public static final int ADD_USER_VLID_MONTHS       = 60;
 }

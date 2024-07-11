@@ -94,6 +94,49 @@ try{
 			
 			return ngFlag;
 		},
+		checkNumberRange : function(inputCheckItemList){
+			for( var i = 0; i < inputCheckItemList.length; i++ ){
+				var inputCheckItem = inputCheckItemList[i][1];
+				var id = inputCheckItem.attr('id');
+				var errorId = id + "_error";
+				$("#"+errorId).remove();
+			}
+			
+			var ngFlag = false;
+			for( var i = 0; i < inputCheckItemList.length; i++ ){
+				var errorItemName = inputCheckItemList[i][0];
+				var inputCheckItem = inputCheckItemList[i][1];
+				var maxValue = parseFloat(inputCheckItemList[i][2]);
+				var minValue = parseFloat(inputCheckItemList[i][3]);
+				var inputValue = inputCheckItem.val();
+				var id = inputCheckItem.attr('id');
+				var errorId = id + "_error";
+				if (inputValue !=''){
+					inputValue = parseFloat(inputValue);
+					var errorMsg = '';
+					if(minValue != maxValue){
+						if (inputValue < minValue){
+							errorMsg = ShaUtil.util.format(errorItemName + ShaConstants.constants.MIN_VALUE_MSG, minValue);
+						}else if (inputValue > maxValue){
+							errorMsg = ShaUtil.util.format(errorItemName + ShaConstants.constants.MAX_VALUE_MSG, maxValue);
+						}
+					}else if (inputValue != minValue){
+						errorMsg = ShaUtil.util.format(errorItemName + ShaConstants.constants.REQUIRED_NUMBER_VAL_MSG, minValue);
+					}
+					if (errorMsg != ''){
+						inputCheckItem.after('<div id="'+ errorId +'" class="invalid-feedback">' + errorMsg + '</div>'); 
+						inputCheckItem.addClass('alert-input');
+						inputCheckItem.addClass('is-invalid');
+						ngFlag = true;
+					}else{
+						inputCheckItem.removeClass('alert-input');
+						inputCheckItem.removeClass('is-invalid');
+					}
+				}
+			}
+			
+			return ngFlag;
+		},
 		
 		checkDuplicate : function(inputCheckItemList, itemNameList){
 			var numMap = [];

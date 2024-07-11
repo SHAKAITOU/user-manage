@@ -116,7 +116,9 @@ public class JavaScriptSet {
 		common.put("checkNumberOnlyMsg", getContext("common.check.msg.numberOnly"));
 		common.put("checkMaxLengthMsg", getContext("common.check.msg.maxLength"));
 		common.put("checkMinLengthMsg", getContext("common.check.msg.minLength"));
+		common.put("checkMaxNumberMsg", getContext("common.check.msg.maxNumber"));
 		common.put("checkMinNumberMsg", getContext("common.check.msg.minNumber"));
+		common.put("checkRequiredNumberValMsg", getContext("common.check.msg.requiredNumberVal"));
 
 		// enum
 		common.put("executeReturnTypeOk", ExecuteReturnType.OK.getId());
@@ -141,6 +143,9 @@ public class JavaScriptSet {
 		common.put("common",        CommonViewHelper.getJsProperties());
 		common.put("orderDetail",   OrderDetailViewHelper.getJsProperties());
 		common.put("messageDetail", MessageDetailViewHelper.getJsProperties());
+		
+		common.put("max_bill_amount", GlobalConstants.MAX_BILL_AMOUNT);
+		common.put("min_bill_amount", GlobalConstants.MIN_BILL_AMOUNT);
 		
 		
 

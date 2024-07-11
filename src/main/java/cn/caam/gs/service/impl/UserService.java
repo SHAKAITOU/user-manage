@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.caam.gs.app.admin.usersearch.form.UserSearchForm;
 import cn.caam.gs.app.admin.usersearch.output.UserListOutput;
@@ -12,7 +13,6 @@ import cn.caam.gs.app.user.detail.form.UserDetailForm;
 import cn.caam.gs.common.util.LocalDateUtility;
 import cn.caam.gs.common.util.LocalDateUtility.DatePattern;
 import cn.caam.gs.domain.db.base.entity.MAdmin;
-import cn.caam.gs.domain.db.base.entity.MImage;
 import cn.caam.gs.domain.db.base.entity.MUser;
 import cn.caam.gs.domain.db.base.entity.MUserExtend;
 import cn.caam.gs.domain.db.base.mapper.MAdminMapper;
@@ -65,6 +65,7 @@ public class UserService extends BaseService {
         return adminMapper.selectByPrimaryKey(userCode);
     }
 	
+	@Transactional
 	public void updateUserInfo(UserDetailForm userDetailForm) throws IOException{
 		UserInfo userInfo = userDetailForm.getUserInfo();
 		if (userInfo.getUser() != null && !StringUtils.isBlank(userInfo.getUser().getName())) {

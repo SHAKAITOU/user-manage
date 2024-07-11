@@ -144,7 +144,18 @@ Order.prototype.check = function(){
         [ self.i18n["m_order.order_amount"], 	self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_ORDER_AMOUNT)]
     ];
     
-    return ShaCheck.check.checkNotNumber(inputCheckItemList);
+	if (ShaCheck.check.checkNotNumber(inputCheckItemList)) {
+		return true;
+	}
+		
+	inputCheckItemList = [
+        [ self.i18n["m_order.order_amount"], 	self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_ORDER_AMOUNT), ShaConstants.constants.MIN_BILL_AMOUNT, ShaConstants.constants.MAX_BILL_AMOUNT]
+    ];
+    
+	if (ShaCheck.check.checkNumberRange(inputCheckItemList)) {
+		return true;
+	}
+	return false;
 };
 
 

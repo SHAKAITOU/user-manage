@@ -178,8 +178,8 @@ public class ReviewOkViewHelper extends HtmlViewHelper {
     }
     
     private static String addVlidDate(String oldValidDt, BigDecimal amount) {
-       int mounths = (amount.divide(new BigDecimal("50"))).intValue();
-       return LocalDateUtility.addMonthsZH(oldValidDt, mounths);
+//       int mounths = (amount.divide(new BigDecimal("50"))).intValue();
+       return LocalDateUtility.addMonthsZH(oldValidDt, GlobalConstants.ADD_USER_VLID_MONTHS);
     }
     
     private static String buildFooter() {
