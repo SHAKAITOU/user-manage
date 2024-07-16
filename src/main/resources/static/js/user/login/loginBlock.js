@@ -13,6 +13,12 @@ ShaUtil.other.inherits(LoginBlock, BaseJsController);
 
 //------------properties define-------------[
 LoginBlock.prototype.ID = {
+	
+	TAB_ID                   : "loginTab",
+	TAB_TITLE_BY_PASS_ID     : "loginByPassTab",
+	TAB_TITLE_BY_AUTH_ID     : "loginByAuthCodeTab",
+	TAB_BODY_BY_PASS_ID      : "loginByPassTabBody",
+    TAB_BODY_BY_AUTH_ID      : "loginByAuthCodeTabBody",
 	//btn
 	BTN_LOGIN							: 'loginBtn',
 	BTN_REGIST							: 'registBtn',
@@ -53,6 +59,17 @@ LoginBlock.prototype.initEvent = function(){
 	
 	//keep self instance for call back
 	var self = this;
+	
+    ShaInput.button.onClick(self.getObject(self.ID.TAB_TITLE_BY_PASS_ID), 
+    	function(event) {
+			ShaInput.tab.activeTab(self.getForm(), self.ID.TAB_ID, self.ID.TAB_TITLE_BY_PASS_ID, self.ID.TAB_BODY_BY_PASS_ID);
+		}
+	);
+	ShaInput.button.onClick(self.getObject(self.ID.TAB_TITLE_BY_AUTH_ID), 
+    	function(event) {
+			ShaInput.tab.activeTab(self.getForm(), self.ID.TAB_ID, self.ID.TAB_TITLE_BY_AUTH_ID, self.ID.TAB_BODY_BY_AUTH_ID);
+		}
+	);
 	
 	//init event to loginBtn
 	ShaInput.button.onClick(self.getObject(self.ID.BTN_LOGIN), 

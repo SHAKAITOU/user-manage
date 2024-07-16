@@ -28,4 +28,8 @@ public class LoginForm {
 	private String authImg;
 	
 	private String authImgNumber;
+	
+	private String phoneAuthCode;
+	
+	private String phoneUserCode;
 }

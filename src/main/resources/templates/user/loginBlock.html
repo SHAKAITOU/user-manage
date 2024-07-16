@@ -7,20 +7,14 @@
     <input type="hidden" id="login_form_return_error_flag" th:value="${(loginForm != null && 
             loginForm.returnType == T(cn.caam.gs.common.enums.ExecuteReturnType).NG.getId())}">
     <input type="hidden" id="login_form_return_error_msg" th:value="${loginForm.errorMsg}">
+    <div>
+        <div class="col-12 text-center" style="height: 20px">
+		</div>
+    </div>
     <div class="row">
-        <div class="col-4 text-left">
-
-        </div>
-        <div class="col-4 text-right">
-            <span id="helpBtn" class='a-a1'> 
-			<i class="fa fa-bullhorn" aria-hidden="true"></i>&nbsp; [[#{common.helpGuide}]]
-			</span>
-        </div>
-        
-        <div class="col-4 text-right">
-            <span id="registBtn" class='a-a1'>
-            <i class="fa fa-user-plus" aria-hidden="true"></i>&nbsp;
-                [[#{login.panel.btn.regist}]]
+        <div class="col-12 text-center">
+            <span  class='label-18b'>
+            	会员登录
             </span>
         </div>
     </div>
@@ -28,52 +22,117 @@
         <div class="col-12 text-center" style="height: 20px">
 		</div>
     </div>
-    <div class="row" style="margin: 10px;">
-        <div class="col-12 d-flex justify-content-center input-group" style="height: 50px">
-            <input type="text" maxlength="20" style="background-color: #FFFAF0;"
-                th:placeholder="#{login.panel.placeholder.user}" class="form-control label-16"
-                th:field="${loginForm.userCode}"/>
-        </div>
+    <div id="loginTab">
+      <ul class="nav nav-tabs" role="tablist">
+	    <li class="nav-item" role="presentation">
+	      <a class="nav-link label-16b a-tab active" id="loginByPassTab" data-bs-toggle="tab" href="#" role="tab">密码登录</a>
+	    </li>
+	    <li class="nav-item" role="presentation">
+	      <a class="nav-link label-16b a-tab " id="loginByAuthCodeTab" data-bs-toggle="tab" href="#" role="tab">验证码登录</a>
+	    </li>
+	  </ul>
+	  <div>
+        <div class="col-12 text-center" style="height: 5px">
+		</div>
     </div>
-    <div class="row" style="margin: 10px;">
-        <div class="col-12 d-flex justify-content-center input-group" style="height: 50px">
-			 <input id="password" name="password" type="password" style="background-color: #FFFAF0;"
-                th:placeholder="#{login.panel.placeholder.pw}" class="form-control label-16"
-                th:field="${loginForm.password}"/>
-        </div>
-    </div>
-    <div class="row" style="margin: 10px;">
-        <div class="col-4 input-group" style="height: 50px">
-			 <input id="authCode" name="authCode" type="text" style="background-color: #FFFAF0;"
-                placeholder="输入验证码" class="form-control label-16"
-                th:field="${loginForm.authImgNumber}"/>
-        </div>
-        <div class="col-4" style="height: 40px">
-			 <img id="imgPhoto" style='width:100px;height:33px' th:src="${loginForm.authImg}"> 
-        </div>
-        <div class="col-4 d-flex justify-content-start">
-			<span id="refreshImgBtn" class='a-a1'>
-            <i class="fa fa-retweet" aria-hidden="true"></i>&nbsp;看不清
-            </span>
-        </div>
-    </div>
-	<div class="row">
-		<div class="col-12" style="height: 20px"><hr style="color: #e9e5e5;border: 1px solid;width: 100%;"></div>
-	</div>
-    <div class="row">
-        <div class="col-12 text-right">
-        	<span id="passFindBtn" class='a-a1'>
-            <i class="fa fa-frown" aria-hidden="true"></i>&nbsp;
-                [[#{login.panel.btn.passFind}]]
-            </span>
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <button id="loginBtn" type="button" name="loginBtn" 
-                class="btn btn-outline-success btn_com pull-right">
-                <i class="fa fa-sign-in-alt" aria-hidden="true"></i>&nbsp;&nbsp;
-                [[#{login.panel.btn.login}]]
-                </button>
-        </div>
-    </div>
+	  <div class="tab-content">
+	    <div class="tab-pane  active show" id="loginByPassTabBody" role="tabpanel">
+	      <div class="row" style="margin: 10px;">
+		        <div class="col-12 d-flex justify-content-center input-group" style="height: 50px">
+		            <input type="text" maxlength="20" style="background-color: #FFFAF0;"
+		                th:placeholder="#{login.panel.placeholder.user}" class="form-control label-16"
+		                th:field="${loginForm.userCode}"/>
+		        </div>
+		    </div>
+		    <div class="row" style="margin: 10px;">
+		        <div class="col-12 d-flex justify-content-center input-group" style="height: 50px">
+					 <input id="password" name="password" type="password" style="background-color: #FFFAF0;"
+		                th:placeholder="#{login.panel.placeholder.pw}" class="form-control label-16"
+		                th:field="${loginForm.password}"/>
+		        </div>
+		    </div>
+		    <div class="row" style="margin: 10px;">
+		        <div class="col-4 input-group" style="height: 50px">
+					 <input id="authCode" name="authCode" type="text" style="background-color: #FFFAF0;"
+		                placeholder="输入验证码" class="form-control label-16"
+		                th:field="${loginForm.authImgNumber}"/>
+		        </div>
+		        <div class="col-4" style="height: 40px">
+					 <img id="imgPhoto" style='width:100px;height:33px' th:src="${loginForm.authImg}"> 
+		        </div>
+		        <div class="col-4 d-flex justify-content-start">
+					<span id="refreshImgBtn" class='a-a1'>
+		            <i class="fa fa-retweet" aria-hidden="true"></i>&nbsp;看不清
+		            </span>
+		        </div>
+		    </div>
+		    <div class="row">
+				<div class="col-12" style="height: 20px"><hr style="color: #e9e5e5;border: 1px solid;width: 100%;"></div>
+			</div>
+		    <div class="row">
+		        <div class="col-12 text-right">
+		            <button id="loginBtn" type="button" name="loginBtn" 
+		                class="btn btn-outline-success btn_com pull-right">
+		                <i class="fa fa-sign-in-alt" aria-hidden="true"></i>&nbsp;&nbsp;
+		                [[#{login.panel.btn.login}]]
+		                </button>
+		        </div>
+		    </div>
+	    </div>
+	    <div class="tab-pane" id="loginByAuthCodeTabBody" role="tabpanel">
+	      <div class="row" style="margin: 10px;">
+		        <div class="col-12 d-flex justify-content-center input-group" style="height: 50px">
+		            <input type="text" maxlength="20" style="background-color: #FFFAF0;"
+		                th:placeholder="#{login.panel.placeholder.user}" class="form-control label-16"
+		                th:field="${loginForm.phoneUserCode}"/>
+		        </div>
+		    </div>
+		    <div class="row" style="margin: 10px;">
+		        <div class="col-12 d-flex justify-content-center input-group" style="height: 50px">
+					 <input id="phoneAuthCode" name="phoneAuthCode" type="text" style="background-color: #FFFAF0;"
+		                th:placeholder="手机验证码" class="form-control label-16"
+		                th:field="${loginForm.phoneAuthCode}"/>
+		        </div>
+		    </div>
+		    <div class="row">
+				<div class="col-12" style="height: 20px"><hr style="color: #e9e5e5;border: 1px solid;width: 100%;"></div>
+			</div>
+		    <div class="row">
+				<div class="col-6 text-left">
+		            <button id="loginBtn" type="button" name="loginBtn" 
+		                class="btn btn-outline-success btn_com pull-left">
+		                <i class="fa fa-paper-plane" aria-hidden="true"></i>&nbsp;&nbsp;
+		                发送手机验证码
+		                </button>
+		        </div>
+		        <div class="col-6 text-right">
+		            <button id="loginBtn" type="button" name="loginBtn" 
+		                class="btn btn-outline-success btn_com pull-right">
+		                <i class="fa fa-sign-in-alt" aria-hidden="true"></i>&nbsp;&nbsp;
+		                [[#{login.panel.btn.login}]]
+		                </button>
+		        </div>
+		    </div>
+	    </div>
+	  </div>
+	  <div class="row">
+			<div class="col-12" style="height: 20px"><hr style="color: #e9e5e5;border: 1px solid;width: 100%;"></div>
+		</div>
+	    <div class="row">
+			<div class="col-6 text-left">
+	        	<span id="passFindBtn" class='a-a1'>
+	            <i class="fa fa-frown" aria-hidden="true"></i>&nbsp;
+	                [[#{login.panel.btn.passFind}]]
+	            </span>
+	        </div>
+	        <div class="col-6 text-right">
+	        	<span id="registBtn" class='a-a1'>
+	            	<i class="fa fa-user-plus" aria-hidden="true"></i>&nbsp;
+	                [[#{login.panel.btn.regist}]]
+	            </span>
+	        </div>
+	    </div>
+	</div> 
 </form>
 <!-- /script -->
 <script type="text/javascript" th:inline="javascript">
