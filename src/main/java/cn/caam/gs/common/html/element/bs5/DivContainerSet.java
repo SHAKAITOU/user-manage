@@ -35,7 +35,7 @@ public class DivContainerSet {
         sb.append(">");
         for(String context : contexts) {
             if (Objects.nonNull(context)) {
-                context  += "<div class='col12'>";
+                context  += "<div class='col-12'>";
                 sb.append(context);
                 sb.append("</div>");
             }
@@ -52,7 +52,7 @@ public class DivContainerSet {
         }
         sb.append(" style='min-width: 100%;max-width: 100%; max-height:"+scrollHeight+"px; min-height:"+scrollHeight+"px;'>");
         for(String context : contexts) {
-            context  += "<div class='col12'>";
+            context  += "<div class='col-12'>";
             sb.append(context);
             sb.append("</div>");
         }

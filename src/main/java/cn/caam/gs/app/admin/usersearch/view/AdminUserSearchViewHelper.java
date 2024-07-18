@@ -407,7 +407,7 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
             200, //入会时间
             200, //有效结束日期
             120, //有效状态
-            200  //操作
+            240  //操作
         };
         int index = 0;
         //head

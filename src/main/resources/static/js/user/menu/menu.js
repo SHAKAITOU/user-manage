@@ -15,7 +15,9 @@ ShaUtil.other.inherits(Menu, BaseJsController);
 //------------properties define-------------[
 Menu.prototype.ID = {
 	
-	CLASS_NM_USEr_DETAIL         	: 'menu1001',
+	CLASS_NM_USER_DETAIL         	: 'menu1001',
+	
+	CLASS_NM_USER_CERTI         	: 'menu1002',
 	
 	CLASS_NM_ORDER      			: 'menu2001',
 	
@@ -61,12 +63,28 @@ Menu.prototype.initEvent = function(){
 	self.ajustNavi();
 	
     //会员信息
-    $buttonList = self.getObjectList(self.ID.CLASS_NM_USEr_DETAIL);
+    $buttonList = self.getObjectList(self.ID.CLASS_NM_USER_DETAIL);
     $buttonList.each(function(i, elem){
 	    ShaInput.button.onClick($(elem),
 	    	function(event) {
 				ShaAjax.ajax.get(
 	                self.jsContext.jsView.userDetail.url_user_detail_init, 
+	                null, 
+	                function(data){
+	                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
+	                }
+	            ); 
+			}
+	    );
+	});
+	
+	//电子会员证
+    $buttonList = self.getObjectList(self.ID.CLASS_NM_USER_CERTI);
+    $buttonList.each(function(i, elem){
+	    ShaInput.button.onClick($(elem),
+	    	function(event) {
+				ShaAjax.ajax.get(
+	                self.jsContext.jsView.userCerti.url_user_certi_init, 
 	                null, 
 	                function(data){
 	                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);

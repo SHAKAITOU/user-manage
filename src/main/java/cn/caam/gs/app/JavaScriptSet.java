@@ -25,6 +25,7 @@ import cn.caam.gs.app.admin.usersearch.view.AdminUserSearchViewHelper;
 import cn.caam.gs.app.common.view.MessageDetailViewHelper;
 import cn.caam.gs.app.common.view.OrderDetailViewHelper;
 import cn.caam.gs.app.common.view.CommonViewHelper;
+import cn.caam.gs.app.user.certi.view.UserCertiViewHelper;
 import cn.caam.gs.app.user.detail.view.UserDetailViewHelper;
 import cn.caam.gs.app.user.login.view.LoginViewHelper;
 import cn.caam.gs.app.user.menu.view.MenuViewHelper;
@@ -162,6 +163,7 @@ public class JavaScriptSet {
 	    // login
 		jsView.put("login",                LoginViewHelper.getJsProperties());
 		jsView.put("userDetail",           UserDetailViewHelper.getJsProperties());
+		jsView.put("userCerti",            UserCertiViewHelper.getJsProperties());
 
 		jsView.put("orderSearch",          OrderSearchViewHelper.getJsProperties());
 		jsView.put("order",                OrderViewHelper.getJsProperties());

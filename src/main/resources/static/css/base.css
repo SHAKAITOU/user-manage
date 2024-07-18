@@ -278,6 +278,12 @@ html {
 	font-style: italic;
 }
 
+.label-22b{
+	font-size: 22px;
+	font-weight: bold;
+	vertical-align: middle;
+}
+
 .label-lh2{
 	color: white;
 	font-size: 12px;
@@ -641,7 +647,7 @@ html {
 
 .a-a1{
 	color: #1e50a2;
-	font-size: 14px;
+	font-size: 16px;
 	cursor:pointer;
 	text-decoration: underline;
 }
@@ -1157,4 +1163,36 @@ html {
 .marginLR {
 	margin-left: 5px;
 	margin-right: 5px;
+}
+
+/*!--------------------------
+ * certi bgimg
+ * --------------------------
+ */
+.certi-china-bgImg1 {
+	width: 650px;
+	height: 500px;
+	background-size:650px 500px;
+	background-image: url('/img/certi/chinaCertiPage1.png');
+}
+
+.certi-china-bgImg2 {
+	width: 650px;
+	height: 500px;
+	background-size:650px 500px;
+	background-image: url('/img/certi/chinaCertiPage2.png');
+}
+
+.certi-china-bgImg3 {
+	width: 650px;
+	height: 500px;
+	background-size:650px 500px;
+	background-image: url('/img/certi/chinaCertiPage3.png');
+}
+
+.certi-china-bgImg4 {
+	width: 650px;
+	height: 500px;
+	background-size:650px 500px;
+	background-image: url('/img/certi/chinaCertiPage4.png');
 }
