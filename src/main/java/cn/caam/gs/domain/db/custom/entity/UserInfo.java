@@ -51,5 +51,7 @@ public class UserInfo {
     private String areaSubName;
     /** 审核状态(F0013)*/
     private String checkStatusName;
+    /** 学会区分(F0023)*/
+    private String societyTypeName;
 
 }

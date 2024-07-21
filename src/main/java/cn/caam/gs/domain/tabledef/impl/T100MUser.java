@@ -42,6 +42,9 @@ public class T100MUser extends BaseTableDef implements BaseDdl{
     public static final String COL_REGIST_DATE      = "regist_date";
     public static final String COL_VALID_START_DATE = "valid_start_date";
     public static final String COL_VALID_END_DATE   = "valid_end_date";
+    public static final String COL_SOCIETY_TYPE     = "society_type";
+    public static final String COL_GROUP_NAME       = "group_name";
+    public static final String COL_CREDIT_CODE      = "credit_code";
     
     public static final ColumnInfoForm[] cols = new ColumnInfoForm[] {
         // name | pk | type | charMaxLength | numPrecision | numScale | nullable | default | label
@@ -75,6 +78,9 @@ public class T100MUser extends BaseTableDef implements BaseDdl{
         new ColumnInfoForm(COL_REGIST_DATE,      false,    MySqlType.CHARACTER_VARYING.getType(), 20 , null, null, false, "", getLabelName(TABLE_NAME, COL_REGIST_DATE),      getPlaceholder(TABLE_NAME, COL_REGIST_DATE)),
         new ColumnInfoForm(COL_VALID_START_DATE, false,    MySqlType.CHARACTER_VARYING.getType(), 20 , null, null, false, "", getLabelName(TABLE_NAME, COL_VALID_START_DATE), getPlaceholder(TABLE_NAME, COL_VALID_START_DATE)),
         new ColumnInfoForm(COL_VALID_END_DATE,   false,    MySqlType.CHARACTER_VARYING.getType(), 20 , null, null, false, "", getLabelName(TABLE_NAME, COL_VALID_END_DATE),   getPlaceholder(TABLE_NAME, COL_VALID_END_DATE)),
+        new ColumnInfoForm(COL_SOCIETY_TYPE,     false,    MySqlType.CHARACTER_VARYING.getType(), 6 , null, null, false, "",  getLabelName(TABLE_NAME, COL_SOCIETY_TYPE),     getPlaceholder(TABLE_NAME, COL_SOCIETY_TYPE)),
+        new ColumnInfoForm(COL_VALID_STATUS,     false,    MySqlType.CHARACTER_VARYING.getType(), 120 , null, null, false, "",  getLabelName(TABLE_NAME, COL_GROUP_NAME),     getPlaceholder(TABLE_NAME, COL_GROUP_NAME)),
+        new ColumnInfoForm(COL_CREDIT_CODE,      false,    MySqlType.CHARACTER_VARYING.getType(), 1206 , null, null, false, "",  getLabelName(TABLE_NAME, COL_CREDIT_CODE),   getPlaceholder(TABLE_NAME, COL_CREDIT_CODE)),
     };
     
     public ColumnInfoForm[] columnInfos() {

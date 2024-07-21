@@ -48,6 +48,8 @@ public enum FixedValueType {
 	MSG_TYPE        ("F0021"),
     /** 会费计算方式类型(F0022) */
     FEE_TYPE        ("F0022"),
+    /** 学会区分(F0023) */
+    SOCIETY_TYPE    ("F0023"),
 	;
 	
     /** type. */

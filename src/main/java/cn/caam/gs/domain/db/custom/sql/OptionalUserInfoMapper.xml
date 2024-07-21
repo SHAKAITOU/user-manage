@@ -19,6 +19,7 @@
         <result property="areaName"           column="areaName"/>
         <result property="areaSubName"        column="areaSubName"/>
         <result property="checkStatusName"    column="checkStatusName"/>
+        <result property="societyTypeName"    column="societyTypeName"/>
         <association property="user" 
             resultMap="cn.caam.gs.domain.db.base.mapper.MUserMapper.BaseResultMap">
             <id column="id" property="id" />
@@ -63,7 +64,7 @@
 	    F0010.name   AS certificateTypeName,
 	    F0011_1.name AS areaName,
 	    F0011_2.name AS areaSubName,
-	    F0013.name   AS checkStatusName
+	    F0023.name   AS societyTypeName
     </sql>
     <sql id="baseJoin">
     	LEFT JOIN m_fixed_value F0002   ON mu.user_type       = F0002.value   AND F0002.code   = 'F0002'
@@ -81,6 +82,7 @@
 		LEFT JOIN m_fixed_value F0011_1 ON mu.area            = F0011_1.value AND F0011_1.code   = 'F0011'
 		LEFT JOIN m_fixed_value F0011_2 ON mu.area_sub        = F0011_2.value AND F0011_2.code   = 'F0011'
 		LEFT JOIN m_fixed_value F0013   ON mu.check_status    = F0013.value   AND F0013.code   = 'F0013'
+		LEFT JOIN m_fixed_value F0023   ON mu.society_type    = F0023.value   AND F0023.code   = 'F0023'
     </sql>
     <sql id="baseConition">
     	<if test="user != null and user.name != null and user.name != ''" >

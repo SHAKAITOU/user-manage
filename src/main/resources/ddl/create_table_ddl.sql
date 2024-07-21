@@ -228,9 +228,10 @@ INSERT INTO m_fixed_value VALUES ('F0009', '0419', '助理经济师',  19);
 INSERT INTO m_fixed_value VALUES ('F0009', '0420', '其他(初级)',  20);
 -- 证件类型 --
 INSERT INTO m_fixed_value VALUES ('F0010', '01', '身份证',           1);
-INSERT INTO m_fixed_value VALUES ('F0010', '02', '港澳台居民居住证', 2);
+INSERT INTO m_fixed_value VALUES ('F0010', '02', '港澳台居民居住证',   2);
 INSERT INTO m_fixed_value VALUES ('F0010', '03', '军官证',           3);
 INSERT INTO m_fixed_value VALUES ('F0010', '04', '护照',             4);
+INSERT INTO m_fixed_value VALUES ('F0010', '05', '团体证',           5);
 -- 所在地区 --
 INSERT INTO m_fixed_value VALUES ('F0011', '01', '北京',       1);
 INSERT INTO m_fixed_value VALUES ('F0011', '0101', '东城区',       1);
@@ -470,6 +471,10 @@ INSERT INTO m_fixed_value VALUES ('F0022', '01', '月额型计算',    1);
 INSERT INTO m_fixed_value VALUES ('F0022', '02', '日额型计算',    2);
 INSERT INTO m_fixed_value VALUES ('F0022', '03', '年额型计算',    3);
 
+-- 中国，甘肃区分 --
+INSERT INTO m_fixed_value VALUES ('F0023', '01', '中国学会',    1);
+INSERT INTO m_fixed_value VALUES ('F0023', '02', '甘肃学会',    2);
+
 -- 会员基本信息 --
 DROP TABLE IF EXISTS m_user;
 CREATE TABLE m_user
@@ -504,6 +509,9 @@ CREATE TABLE m_user
     regist_date      VARCHAR(20)           COMMENT '入会时间(yyyy-MM-dd HH:mm:ss)',
     valid_start_date VARCHAR(20)           COMMENT '有效开始日期(yyyy-MM-dd HH:mm:ss)',
     valid_end_date   VARCHAR(20)           COMMENT '有效结束日期(yyyy-MM-dd HH:mm:ss)',
+    society_type     VARCHAR(6)            COMMENT '学会区分(F0023)',
+    group_name       VARCHAR(120)          COMMENT '团体证名称',
+    credit_code      VARCHAR(120)          COMMENT '统一社会信用代码',
     PRIMARY KEY (id)
 ) COMMENT='会员基本信息' ENGINE=InnoDB DEFAULT CHARSET=utf8;
 CREATE INDEX m_user_idx1 ON m_user (name);

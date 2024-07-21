@@ -36,6 +36,9 @@
     <result column="regist_date" property="registDate" jdbcType="VARCHAR" />
     <result column="valid_start_date" property="validStartDate" jdbcType="VARCHAR" />
     <result column="valid_end_date" property="validEndDate" jdbcType="VARCHAR" />
+    <result column="society_type" property="societyType" jdbcType="VARCHAR" />
+    <result column="group_name" property="groupName" jdbcType="VARCHAR" />
+    <result column="credit_code" property="creditCode" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     <!--
@@ -45,7 +48,8 @@
     id, name, user_type, password, membership_path, focus_on, sex, birth, nationality, 
     political, edu_degree, bachelor, position, employer, employer_type, job_title, certificate_type, 
     certificate_code, area, area_sub, address, postal_code, phone, mail, check_date, 
-    check_status, valid_status, regist_date, valid_start_date, valid_end_date
+    check_status, valid_status, regist_date, valid_start_date, valid_end_date, society_type, 
+    group_name, credit_code
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     <!--
@@ -79,7 +83,8 @@
       area, area_sub, address, 
       postal_code, phone, mail, 
       check_date, check_status, valid_status, 
-      regist_date, valid_start_date, valid_end_date
+      regist_date, valid_start_date, valid_end_date, 
+      society_type, group_name, credit_code
       )
     values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{userType,jdbcType=VARCHAR}, 
       #{password,jdbcType=VARCHAR}, #{membershipPath,jdbcType=VARCHAR}, #{focusOn,jdbcType=VARCHAR}, 
@@ -90,7 +95,8 @@
       #{area,jdbcType=VARCHAR}, #{areaSub,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
       #{postalCode,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{mail,jdbcType=VARCHAR}, 
       #{checkDate,jdbcType=VARCHAR}, #{checkStatus,jdbcType=VARCHAR}, #{validStatus,jdbcType=VARCHAR}, 
-      #{registDate,jdbcType=VARCHAR}, #{validStartDate,jdbcType=VARCHAR}, #{validEndDate,jdbcType=VARCHAR}
+      #{registDate,jdbcType=VARCHAR}, #{validStartDate,jdbcType=VARCHAR}, #{validEndDate,jdbcType=VARCHAR}, 
+      #{societyType,jdbcType=VARCHAR}, #{groupName,jdbcType=VARCHAR}, #{creditCode,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="cn.caam.gs.domain.db.base.entity.MUser" >
@@ -190,6 +196,15 @@
       <if test="validEndDate != null" >
         valid_end_date,
       </if>
+      <if test="societyType != null" >
+        society_type,
+      </if>
+      <if test="groupName != null" >
+        group_name,
+      </if>
+      <if test="creditCode != null" >
+        credit_code,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -281,6 +296,15 @@
       </if>
       <if test="validEndDate != null" >
         #{validEndDate,jdbcType=VARCHAR},
+      </if>
+      <if test="societyType != null" >
+        #{societyType,jdbcType=VARCHAR},
+      </if>
+      <if test="groupName != null" >
+        #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="creditCode != null" >
+        #{creditCode,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -378,6 +402,15 @@
       <if test="validEndDate != null" >
         valid_end_date = #{validEndDate,jdbcType=VARCHAR},
       </if>
+      <if test="societyType != null" >
+        society_type = #{societyType,jdbcType=VARCHAR},
+      </if>
+      <if test="groupName != null" >
+        group_name = #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="creditCode != null" >
+        credit_code = #{creditCode,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -415,7 +448,10 @@
       valid_status = #{validStatus,jdbcType=VARCHAR},
       regist_date = #{registDate,jdbcType=VARCHAR},
       valid_start_date = #{validStartDate,jdbcType=VARCHAR},
-      valid_end_date = #{validEndDate,jdbcType=VARCHAR}
+      valid_end_date = #{validEndDate,jdbcType=VARCHAR},
+      society_type = #{societyType,jdbcType=VARCHAR},
+      group_name = #{groupName,jdbcType=VARCHAR},
+      credit_code = #{creditCode,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>
