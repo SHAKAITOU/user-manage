@@ -254,7 +254,7 @@ public class LocalDateUtility {
      */
     public static String formatDateZH(final String dateTime) {
         if (StringUtils.isEmpty(dateTime)) {
-            return null;
+            return "";
         }
 
         LocalDateTime orgDt = parseLocalDateTime(dateTime, DateTimePattern.UUUUHMMHDDHHQMIQSS);

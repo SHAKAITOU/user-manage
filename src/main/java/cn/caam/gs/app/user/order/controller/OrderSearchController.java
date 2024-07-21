@@ -40,7 +40,6 @@ public class OrderSearchController extends JcbcBaseController{
 			HttpServletResponse response) {
 	    
 	    OrderListOutput orderListOutput = new OrderListOutput();
-	    request.getSession().setAttribute(SessionConstants.ORDER_LIST_OUT_PUT.getValue(), orderListOutput);
 
 		return ControllerHelper.getModelAndView(
 		        OrderSearchViewHelper.getMainPage(request, pageForm, orderListOutput));
@@ -54,11 +53,9 @@ public class OrderSearchController extends JcbcBaseController{
 	    
 	    UserInfo userInfo = (UserInfo)request.getSession().getAttribute(SessionConstants.LOGIN_INFO.getValue());
 	    pageForm.getOrder().setUserId(userInfo.getId());
-	    pageForm.setOffset(0);
+	    pageForm.setOrderPageLinkIdPrefixIndex(0);
+	    pageForm.setOffset(pageForm.getLimit()*pageForm.getOrderPageLinkIdPrefixIndex());
 	    OrderListOutput orderListOutput = orderService.getOrderList(pageForm);
-	    pageForm.setOffset(orderListOutput.getOrderList().size());
-	    request.getSession().setAttribute(SessionConstants.ORDER_LIST_OUT_PUT.getValue(), orderListOutput);
-	    
 
         return ControllerHelper.getModelAndView(
                 OrderSearchViewHelper.refeshTable(request, pageForm, orderListOutput));
@@ -71,14 +68,9 @@ public class OrderSearchController extends JcbcBaseController{
             HttpServletResponse response) {
         
         UserInfo userInfo = (UserInfo)request.getSession().getAttribute(SessionConstants.LOGIN_INFO.getValue());
-        OrderListOutput orderListOutput = 
-                (OrderListOutput)request.getSession().getAttribute(SessionConstants.ORDER_LIST_OUT_PUT.getValue());
+        pageForm.setOffset(pageForm.getLimit()*pageForm.getOrderPageLinkIdPrefixIndex());
         pageForm.getOrder().setUserId(userInfo.getId());
-        OrderListOutput growing = orderService.getOrderList(pageForm);
-        orderListOutput.setCount(growing.getCount());
-        orderListOutput.getOrderList().addAll(growing.getOrderList());
-        pageForm.setOffset(orderListOutput.getOrderList().size());
-        request.getSession().setAttribute(SessionConstants.ORDER_LIST_OUT_PUT.getValue(), orderListOutput);
+        OrderListOutput orderListOutput = orderService.getOrderList(pageForm);
 
         return ControllerHelper.getModelAndView(
                 OrderSearchViewHelper.refeshTable(request, pageForm, orderListOutput));

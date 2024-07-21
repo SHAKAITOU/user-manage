@@ -34,6 +34,7 @@ public enum CellWidthType {
     THREE_6_2_4(new int[]{6, 2, 4}),
     THREE_6_4_2(new int[]{6, 4, 2}),
     THREE_7_1_4(new int[]{7, 1, 4}),
+    THREE_7_3_2(new int[]{7, 3, 2}),
     THREE_8_2_2(new int[]{8, 2, 2}),
     THREE_3_3_6(new int[]{3, 3, 6}),
     THREE_3_6_3(new int[]{3, 6, 3}),
@@ -43,7 +44,13 @@ public enum CellWidthType {
     FOUR_4_1_2_5(new int[]{4, 1, 2, 5}),
     FOUR_3_3_3_3(new int[]{3, 3, 3, 3}),
     FOUR_4_3_1_4(new int[]{4, 3, 1, 4}),
+    FOUR_4_4_2_2(new int[]{4, 4, 2, 2}),
+    FOUR_6_3_1_2(new int[]{6, 3, 1, 2}),
+    FIVE_2_1_1_3_5(new int[]{2, 1, 1, 3, 5}),
+    FIVE_5_1_1_2_3(new int[]{5, 1, 1, 2, 3}),
     SIX_4_1_1_4_1_1(new int[]{4, 1, 1, 4, 1, 1}),
+    SIX_221115(new int[]{2, 2, 1, 1, 1, 5}),
+    SEVEN_2212222(new int[]{2, 2, 1, 2, 2, 2, 2}),
     ;
     
     private int[] value;

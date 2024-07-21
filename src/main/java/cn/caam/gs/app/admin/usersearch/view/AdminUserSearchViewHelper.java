@@ -30,6 +30,7 @@ import cn.caam.gs.common.enums.FixedValueType;
 import cn.caam.gs.common.enums.GridFlexType;
 import cn.caam.gs.common.enums.UserExpiredType;
 import cn.caam.gs.common.enums.UserType;
+import cn.caam.gs.common.html.HtmlPageLinkedHelper;
 import cn.caam.gs.common.html.element.CheckBoxSet;
 import cn.caam.gs.common.html.element.CheckBoxSet.CheckBoxSetType;
 import cn.caam.gs.common.html.element.HtmlRadio;
@@ -49,11 +50,13 @@ import cn.caam.gs.common.html.element.bs5.LabelSelectSet.LabelSelectSetType;
 import cn.caam.gs.common.html.element.bs5.PTextSet;
 import cn.caam.gs.common.html.element.bs5.SpanTextSet;
 import cn.caam.gs.common.util.LocalDateUtility;
+import cn.caam.gs.common.util.PaginationHolder;
 import cn.caam.gs.common.util.LocalDateUtility.DateTimePattern;
 import cn.caam.gs.domain.db.base.entity.MFixedValue;
 import cn.caam.gs.domain.db.custom.entity.FixValueInfo;
 import cn.caam.gs.domain.db.custom.entity.UserInfo;
 import cn.caam.gs.domain.tabledef.impl.T100MUser;
+import cn.caam.gs.domain.tabledef.impl.T200MOrder;
 
 @Component
 public class AdminUserSearchViewHelper extends HtmlViewHelper {
@@ -90,6 +93,11 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
     public static final int    HEADER_HEIGHT                  = 450;
     public static final int    SEARCH_PANEL_HEIGHT            = 180;
     
+    public static final int PHONE_TD_HEIGHT                   = 50;
+    
+    /** 頁LINK接頭辞ID */
+    public static final String PAGE_LINK_ID_PREFIX = "userPageLinkIdPrefix";
+    
 	
     public static final CssFontSizeType font = GlobalConstants.INPUT_FONT_SIZE;
 	   /**
@@ -121,7 +129,7 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         dataMap.put(TABLE_HEIGHT_WHEN_HIDE_SEARCH, calcTableHeightWhenHideSearch(request));
         dataMap.put(TABLE_HEIGHT_WHEN_SHOW_SEARCH, calcTableHeightWhenShowSearch(request));
         ViewData viewData = ViewData.builder()
-                .pageContext(setCardForTable(request, pageForm, userListOutput))
+                .pageContext(getMainPageContext(request, pageForm, userListOutput))
                 .jsClassName(MAIN_JS_CLASS)
                 .dataMap(dataMap)
                 .build();
@@ -353,13 +361,19 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         StringBuffer sbBody = new StringBuffer();
         StringBuffer cardBody = new StringBuffer();
         cardBody.append(setHidden(pageForm));
-        cardBody.append(setShowMore(request, userListOutput));
         cardBody.append(divRow().cellBlank(5));
         cardBody.append(setUserListTable(request, userListOutput.getUserList()));
+        String cardTitle = getContext("admin.userList.table.title");
+        int startIndex = pageForm.getLimit()*(pageForm.getUserPageLinkIdPrefixIndex());
+        int endIndex = startIndex + userListOutput.getUserList().size();
+        cardTitle += userListOutput.getCount() > 0 ? 
+                "(" + (startIndex + 1) + " - " + endIndex + "/" + 
+                userListOutput.getCount() + ")" : "";
         sbBody.append(borderCard().withTitleWithScroll("", CssClassType.INFO, "", 
-                getContext("admin.userList.table.title"),
+                cardTitle,
                 divRow().cellBlank(5),cardBody.toString()));
-        
+        sbBody.append(getPageLinked(request, pageForm, userListOutput));
+        sbBody.append(divRow().cellBlank(5));
         return sbBody.toString();
     }
     
@@ -371,139 +385,136 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         sb.append(hidden().get(HID_OFFSET, String.valueOf(pageForm.getOffset())));
         return sb.toString();
     }
-
-    private static String setShowMore(
-            HttpServletRequest request, 
-            UserListOutput userListOutput) {
-        StringBuffer sbBody = new StringBuffer();
-        
-        
-        List<CssAlignType> aligs = new ArrayList<>();
-        String id = SHOW_MORE_BTN_ID;
-        String context = getContext("common.page.showMore");
-        String comp1 = button().getBorder(IconSetType.BAR, CssClassType.INFO, id, context, 
-                userListOutput.getUserList().size() >= userListOutput.getCount());
-        
-        context = getContext("common.page.btn.close");
-        context = "[" + userListOutput.getUserList().size() + "/" + userListOutput.getCount() + "]";
-        String comp2 = SpanTextSet.builder().classType(CssClassType.CONTEXT).fontSize(font).context(context).build().html();
-        aligs.add(CssAlignType.LEFT);
-        sbBody.append(divRow().get(CellWidthType.ONE, aligs, concactWithSpace(comp1, comp2)));
-        //-----row 3-------------]
-        
-        return sbBody.toString();
+    
+    private static String getPageLinked(HttpServletRequest request, UserSearchForm pageForm, UserListOutput userListOutput) {
+        PaginationHolder paginationHolder = new PaginationHolder(userListOutput.getCount(), 
+                pageForm.getUserPageLinkIdPrefixIndex(), 
+                GlobalConstants.DEFAULT_GROWING_CNT, 
+                isPhoneMode(request)? GlobalConstants.SP_LINKCNT : GlobalConstants.PC_LINKCNT);
+        paginationHolder.setPageLinkIdPrefix(PAGE_LINK_ID_PREFIX);
+        return HtmlPageLinkedHelper.getPageLinkedHtml(paginationHolder);
     }
     
     private static String setUserListTable(HttpServletRequest request, 
             List<UserInfo> userList) {
-        int [] widths = new int[] {
-            40,  //check
-            150, //会员ID
-            140, //会员名称
-            100, //会员类型
-            120, //手机号
-            150, //电子邮箱
-            250, //工作单位
-            200, //入会时间
-            200, //有效结束日期
-            120, //有效状态
-            240  //操作
-        };
-        int index = 0;
         //head
         TrSet headTr = tr().head(CssClassType.INFO);
-        // --[
-        // --col1--
-        String context = CheckBoxSet.builder()
-                .id(USER_LIST_CHECK_ALL_ID).name(USER_LIST_CHECK_ALL_ID)
-                .outPutType(CheckBoxSetType.SINGLE_FOR_TABLE).build().html();
-        headTr.addTh(th().get(widths[index++], CssAlignType.CENTER, context));
-        // --col2--
-        context         = T100MUser.getColumnInfo(T100MUser.COL_ID).getLabelName();
-        headTr.addTh(th().get(widths[index++], CssAlignType.CENTER, context));
-        // --col3--
-        context         = T100MUser.getColumnInfo(T100MUser.COL_NAME).getLabelName();
-        headTr.addTh(th().get(widths[index++], CssAlignType.CENTER, context));
-        // --col4--
-        context         = T100MUser.getColumnInfo(T100MUser.COL_USER_TYPE).getLabelName();
-        headTr.addTh(th().get(widths[index++], CssAlignType.CENTER, context));
-        // --col5--
-        context         = T100MUser.getColumnInfo(T100MUser.COL_PHONE).getLabelName();;
-        headTr.addTh(th().get(widths[index++], CssAlignType.CENTER, context));
-        // --col6--
-        context         = T100MUser.getColumnInfo(T100MUser.COL_MAIL).getLabelName();
-        headTr.addTh(th().get(widths[index++], CssAlignType.CENTER, context));
-        // --col7--
-        context         = T100MUser.getColumnInfo(T100MUser.COL_EMPLOYER).getLabelName();
-        headTr.addTh(th().get(widths[index++], CssAlignType.CENTER, context));
-        // --col8--
-        context         = T100MUser.getColumnInfo(T100MUser.COL_REGIST_DATE).getLabelName();
-        headTr.addTh(th().get(widths[index++], CssAlignType.CENTER, context));
-        // --col9--
-        context         = T100MUser.getColumnInfo(T100MUser.COL_VALID_END_DATE).getLabelName();
-        headTr.addTh(th().get(widths[index++], CssAlignType.CENTER, context));
-        // --col10--
-        context         = getContext("admin.userList.validStatus");
-        headTr.addTh(th().get(widths[index++], CssAlignType.CENTER, context));
-        // --col11--
-        context         = getContext("common.page.do");
-        headTr.addTh(th().get(widths[index++], CssAlignType.CENTER, context));
-        // --]
+     // --[
+        if (isPhoneMode(request)) {
+            List<CssAlignType> aligs = new ArrayList<>();
+            aligs.add(CssAlignType.LEFT);
+            aligs.add(CssAlignType.LEFT);
+            String subRow1 = divRow().get(CellWidthType.TWO_6_6, aligs, 
+                    T100MUser.getColumnInfo(T100MUser.COL_ID).getLabelName(), 
+                    T100MUser.getColumnInfo(T100MUser.COL_NAME).getLabelName());
+            
+            aligs = new ArrayList<>();
+            aligs.add(CssAlignType.LEFT);
+            aligs.add(CssAlignType.LEFT);
+            String subRow2 = divRow().get(CellWidthType.TWO_6_6, aligs, 
+                    getContext("admin.userList.validStatus"),
+                    getContext("common.page.do"));
+            headTr.addTh(th().get(PHONE_TD_HEIGHT, CssGridsType.G12, CssAlignType.LEFT, subRow1, subRow2));
+        } else {
+         // --col1--
+            List<CssAlignType> aligs = new ArrayList<>();
+            aligs.add(CssAlignType.LEFT);
+            aligs.add(CssAlignType.LEFT);
+            aligs.add(CssAlignType.LEFT);
+            aligs.add(CssAlignType.LEFT);
+            aligs.add(CssAlignType.LEFT);
+            aligs.add(CssAlignType.LEFT);
+            String subRow1 = divRow().get(CellWidthType.SIX_221115, aligs, 
+                    T100MUser.getColumnInfo(T100MUser.COL_ID).getLabelName(), 
+                    T100MUser.getColumnInfo(T100MUser.COL_NAME).getLabelName(),
+                    T100MUser.getColumnInfo(T100MUser.COL_USER_TYPE).getLabelName(),
+                    T100MUser.getColumnInfo(T100MUser.COL_REGIST_DATE).getLabelName(),
+                    T100MUser.getColumnInfo(T100MUser.COL_VALID_END_DATE).getLabelName(),
+                    T100MUser.getColumnInfo(T100MUser.COL_PHONE).getLabelName());
+            
+            aligs = new ArrayList<>();
+            aligs.add(CssAlignType.LEFT);
+            aligs.add(CssAlignType.LEFT);
+            aligs.add(CssAlignType.LEFT);
+            aligs.add(CssAlignType.CENTER);
+            String subRow2 = divRow().get(CellWidthType.FOUR_6_3_1_2, aligs, 
+                    T100MUser.getColumnInfo(T100MUser.COL_EMPLOYER).getLabelName(),
+                    T100MUser.getColumnInfo(T100MUser.COL_MAIL).getLabelName(),
+                    getContext("admin.userList.validStatus"),
+                    getContext("common.page.do"));
+
+            headTr.addTh(th().get(PHONE_TD_HEIGHT, CssGridsType.G12, CssAlignType.LEFT, subRow1, subRow2));
+            // --]
+        }
         
         //body
         List<TrSet> bodyList = new ArrayList<>();
         if(Objects.nonNull(userList)) {
             for(int i=0; i<userList.size(); i++) {
-                index = 0;
                 UserInfo userInfo = userList.get(i);
                 Map<String, String> properties = new HashMap<String, String>();
                 properties.put("rowDataKey", String.valueOf(userInfo.getId()));
                 TrSet tr = tr().row(properties);
-                // --col1--
-                context = CheckBoxSet.builder()
-                        .id(USER_CHECK_PREF_ID + i).name(USER_CHECK_PREF_ID)
-                        .outPutType(CheckBoxSetType.SINGLE_FOR_TABLE).build().html();
-                tr.addTd(td().get(widths[index++], CssAlignType.CENTER, context));
-                // --col2--
-                context = nonNull(userInfo.getId());
-                tr.addTd(td().withTrimWidth(widths[index++], CssAlignType.CENTER, context));
-                // --col3--
-                context = nonNull(userInfo.getUser().getName());
-                tr.addTd(td().withTrimWidth(widths[index++], CssAlignType.CENTER, context));
-                // --col4--
-                context = nonNull(userInfo.getUserTypeName());
-                tr.addTd(td().withTrimWidth(widths[index++], CssAlignType.CENTER, context));
-                // --col5--
-                context = nonNull(userInfo.getUser().getPhone());
-                tr.addTd(td().withTrimWidth(widths[index++], CssAlignType.CENTER, context));
-                // --col6--
-                context = nonNull(userInfo.getUser().getMail());
-                tr.addTd(td().withTrimWidth(widths[index++], CssAlignType.LEFT, context));
-                // --col7--
-                context = nonNull(userInfo.getUser().getEmployer());
-                tr.addTd(td().withTrimWidth(widths[index++], CssAlignType.LEFT, context));
-                // --col8--
-                context = nonNull(userInfo.getUser().getRegistDate());
-                tr.addTd(td().withTrimWidth(widths[index++], CssAlignType.CENTER, context));
-                // --col9--
-                context = nonNull(userInfo.getUser().getValidEndDate());
-                tr.addTd(td().withTrimWidth(widths[index++], CssAlignType.CENTER, context));
-                // --col10--
-                context = nonNull(getValidStatus(userInfo.getUser().getValidEndDate()));
-                tr.addTd(td().get(widths[index++], CssAlignType.CENTER, context));
-                // --col11--
-                context = button().forTableBorderNameLeft(IconSetType.REFRESH, CssClassType.SUCCESS, 
+                
+                String userId = nonNull(userInfo.getId());
+                String userName = nonNull(userInfo.getUser().getName());
+                String userTypeName = nonNull(userInfo.getUserTypeName());
+                String phone = nonNull(userInfo.getUser().getPhone());
+                String mail = nonNull(userInfo.getUser().getMail());
+                String employer = nonNull(userInfo.getUser().getEmployer());
+                String registDate = LocalDateUtility.formatDateZH(nonNull(userInfo.getUser().getRegistDate()));
+                String validEndDate = LocalDateUtility.formatDateZH(nonNull(userInfo.getUser().getValidEndDate()));
+                String validStatus = nonNull(getValidStatus(userInfo.getUser().getValidEndDate()));
+                String button = button().forTableBorderNameLeft(IconSetType.REFRESH, CssClassType.SUCCESS, 
                         "", getContext("admin.userList.btn.resetPw"), userInfo.getId(), TABLE_BTN_RESETPW);
-                context += "&nbsp;&nbsp;";
-                context += button().forTableBorderNameLeft(IconSetType.DETAIL, CssClassType.INFO, 
+                button += "&nbsp;&nbsp;";
+                button += button().forTableBorderNameLeft(IconSetType.DETAIL, CssClassType.INFO, 
                         "", getContext("admin.userList.btn.detail"), userInfo.getId(), TABLE_BTN_DETAIL);
-                tr.addTd(td().get(widths[index++], CssAlignType.CENTER, context));
+                if (isPhoneMode(request)) {
+                    List<CssAlignType> aligs = new ArrayList<>();
+                    aligs.add(CssAlignType.LEFT);
+                    aligs.add(CssAlignType.LEFT);
+                    String subRow1 = divRow().get(CellWidthType.TWO_6_6, aligs, 
+                            userId, userName);
+                    
+                    aligs = new ArrayList<>();
+                    aligs.add(CssAlignType.LEFT);
+                    aligs.add(CssAlignType.LEFT);
+                    String subRow2 = divRow().get(CellWidthType.TWO_6_6, aligs,
+                            validStatus, button);
+                    
+                    tr.addTd(td().get(PHONE_TD_HEIGHT, CssGridsType.G12, CssAlignType.LEFT, subRow1, subRow2));
+                } else {
+                    
+                    List<CssAlignType> aligs = new ArrayList<>();
+                    aligs.add(CssAlignType.LEFT);
+                    aligs.add(CssAlignType.LEFT);
+                    aligs.add(CssAlignType.LEFT);
+                    aligs.add(CssAlignType.LEFT);
+                    aligs.add(CssAlignType.LEFT);
+                    aligs.add(CssAlignType.LEFT);
+                    String subRow1 = divRow().get(CellWidthType.SIX_221115, aligs, 
+                            userId, userName, userTypeName, 
+                            registDate, validEndDate, 
+                            trimFitForTd(CssGridsType.G4.getKey(), phone));
+
+                    aligs = new ArrayList<>();
+                    aligs.add(CssAlignType.LEFT);
+                    aligs.add(CssAlignType.LEFT);
+                    aligs.add(CssAlignType.LEFT);
+                    aligs.add(CssAlignType.CENTER);
+                    String subRow2 = divRow().get(CellWidthType.FOUR_6_3_1_2, aligs, 
+                            trimFitForTd(CssGridsType.G5.getKey(), employer), 
+                            trimFitForTd(CssGridsType.G5.getKey(), mail), validStatus, button);
+                    
+                    tr.addTd(td().get(PHONE_TD_HEIGHT, CssGridsType.G12, CssAlignType.LEFT, subRow1, subRow2));
+                }
                 
                 bodyList.add(tr);
             }
         }
         
-        return table().get(USER_LIST_TABLE_ID, calcTableWidth(widths), calcTableHeightWhenShowSearch(request), headTr, bodyList);
+        return table().get(USER_LIST_TABLE_ID, calcTableHeightWhenShowSearch(request), headTr, bodyList);
     }
     
     private static String getValidStatus(String validEndDateStr) {

@@ -5,6 +5,7 @@
 //------------constructor define------------[
 AdminUserSearch = function(dataMap){
     this.form = $('#userSearchForm');
+    this.mainForm = $('#main_form');
     this.jsContext = Pos.constants.setInfo;
     this.i18n = JSON.parse(this.jsContext.i18n);
     this.dataMap = dataMap;
@@ -23,7 +24,6 @@ AdminUserSearch.prototype.ID = {
     VALID_END_DATE_FROM_INPT : "validEndDateFrom",
     VALID_END_DATE_TO_INPT   : "validEndDateTo",
     
-    SHOW_MORE_BTN_ID         : "showMore",
     SEARCH_BTN_ID            : "searchBtn",
     SHOW_SEARCH_PANEL_BTN_ID : "showSearchPanelBtn",
     HIDE_SEARCH_PANEL_BTN_ID : "hideSearchPanelBtn",
@@ -39,6 +39,9 @@ AdminUserSearch.prototype.ID = {
     SEARCH_PANEL_ID          : "searchPanel",
     USER_LIST_TABLE_ID       : "userListTable",
     
+    PAGE_LINK_ID_PREFIX      : "userPageLinkIdPrefix",
+    //div
+    DIV_MAINBODY             : "mainBody",
 
 };
 //------------------------------------------]
@@ -151,26 +154,35 @@ AdminUserSearch.prototype.initEvent = function(){
                 self.jsContext.adminJsView.adminUserSearch.url_user_list, 
                 self.getForm().serializeArray(), 
                 function(data){
-                    self.getObjectInForm(self.getForm(), self.ID.DIV_REFRESH_BODY).html(data);
+                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
                     $('[data-toggle="tooltip"]').tooltip();
                 }
             ); 
 		}
     );
     
-    ShaInput.button.onClick(self.getObject(self.ID.SHOW_MORE_BTN_ID),
-    	function(event) {
-			ShaAjax.ajax.post(
-                self.jsContext.adminJsView.adminUserSearch.url_user_list_growing, 
-                self.getForm().serializeArray(), 
-                function(data){
-                    self.getObjectInForm(self.getForm(), self.ID.DIV_REFRESH_BODY).html(data);
-                    $('[data-toggle="tooltip"]').tooltip();
-                }
-            ); 
-		}
-    );
+    //initPageLink
+    ShaPage.pageLink.initPageLink(self.ID.PAGE_LINK_ID_PREFIX,
+    	function(){return true;},
+    	function(){
+    		self.doPageLink();
+    	}
+    ); 
     
+};
+
+//doPageLink
+AdminUserSearch.prototype.doPageLink = function(){
+	//keep self instance for call back
+	var self = this;
+	ShaAjax.ajax.post(
+        self.jsContext.adminJsView.adminUserSearch.url_user_list_growing, 
+        self.getForm().serializeArray(), 
+        function(data){
+            self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
+            $('[data-toggle="tooltip"]').tooltip();
+        }
+    ); 
 };
 
 AdminUserSearch.prototype.setTableBtnStatus = function(rowIdx, enabled){

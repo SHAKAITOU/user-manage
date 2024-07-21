@@ -45,7 +45,6 @@ public class AdminBillSearchController extends JcbcBaseController{
         order.setCheckStatus(GlobalConstants.DFL_SELECT_ALL);
         pageForm.setOrder(order);
 	    OrderListOutput listOutput = new OrderListOutput();
-	    request.getSession().setAttribute(SessionConstants.ORDER_LIST_OUT_PUT.getValue(), listOutput);
 
 		return ControllerHelper.getModelAndView(
 		        AdminBillSearchViewHelper.getMainPage(request, pageForm, listOutput));
@@ -57,11 +56,11 @@ public class AdminBillSearchController extends JcbcBaseController{
             HttpServletRequest request,
             HttpServletResponse response) {
 	    
-        pageForm.setOffset(0);
+	    pageForm.setBillPageLinkIdPrefixIndex(0);
+	    pageForm.setOffset(pageForm.getLimit()*pageForm.getBillPageLinkIdPrefixIndex());
         pageForm.getOrder().setCheckStatus(CheckStatusType.PASS.getKey());
         OrderListOutput listOutput = orderService.getBillList(pageForm);
         pageForm.setOffset(listOutput.getOrderList().size());
-        request.getSession().setAttribute(SessionConstants.ORDER_LIST_OUT_PUT.getValue(), listOutput);
         return ControllerHelper.getModelAndView(
                 AdminBillSearchViewHelper.refeshTable(request, pageForm, listOutput));
     }
@@ -72,13 +71,8 @@ public class AdminBillSearchController extends JcbcBaseController{
             HttpServletRequest request,
             HttpServletResponse response) {
         
-	    OrderListOutput listOutput = 
-                (OrderListOutput)request.getSession().getAttribute(SessionConstants.ORDER_LIST_OUT_PUT.getValue());
-	    OrderListOutput growing = orderService.getBillList(pageForm);
-	    listOutput.setCount(growing.getCount());
-	    listOutput.getOrderList().addAll(growing.getOrderList());
-        pageForm.setOffset(listOutput.getOrderList().size());
-        request.getSession().setAttribute(SessionConstants.ORDER_LIST_OUT_PUT.getValue(), listOutput);
+	    pageForm.setOffset(pageForm.getLimit()*pageForm.getBillPageLinkIdPrefixIndex());
+	    OrderListOutput listOutput = orderService.getBillList(pageForm);
         return ControllerHelper.getModelAndView(
                 AdminBillSearchViewHelper.refeshTable(request, pageForm, listOutput));
     }

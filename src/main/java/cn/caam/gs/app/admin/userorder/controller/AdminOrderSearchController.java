@@ -48,7 +48,6 @@ public class AdminOrderSearchController extends JcbcBaseController{
         order.setCheckStatus(GlobalConstants.DFL_SELECT_ALL);
         pageForm.setOrder(order);
 	    OrderListOutput listOutput = new OrderListOutput();
-	    request.getSession().setAttribute(SessionConstants.ORDER_LIST_OUT_PUT.getValue(), listOutput);
 
 		return ControllerHelper.getModelAndView(
 		        AdminOrderSearchViewHelper.getMainPage(request, pageForm, listOutput));
@@ -60,11 +59,11 @@ public class AdminOrderSearchController extends JcbcBaseController{
             HttpServletRequest request,
             HttpServletResponse response) {
 	    
-        pageForm.setOffset(0);
+	    pageForm.setOrderPageLinkIdPrefixIndex(0);
+	    pageForm.setOffset(pageForm.getLimit()*pageForm.getOrderPageLinkIdPrefixIndex());
         pageForm.getOrder().setCheckStatus(GlobalConstants.DFL_SELECT_ALL);
         OrderListOutput listOutput = orderService.getOrderList(pageForm);
         pageForm.setOffset(listOutput.getOrderList().size());
-        request.getSession().setAttribute(SessionConstants.ORDER_LIST_OUT_PUT.getValue(), listOutput);
         return ControllerHelper.getModelAndView(
                 AdminOrderSearchViewHelper.refeshTable(request, pageForm, listOutput));
     }
@@ -75,7 +74,8 @@ public class AdminOrderSearchController extends JcbcBaseController{
             HttpServletRequest request,
             HttpServletResponse response) {
         
-        pageForm.setOffset(0);
+	    pageForm.setOrderPageLinkIdPrefixIndex(0);
+	    pageForm.setOffset(pageForm.getLimit()*pageForm.getOrderPageLinkIdPrefixIndex());
         MOrder order = new MOrder();
         order.setCheckStatus(CheckStatusType.WAIT_FOR_REVIEW.getKey());
         order.setOrderType(GlobalConstants.DFL_SELECT_ALL);
@@ -84,9 +84,8 @@ public class AdminOrderSearchController extends JcbcBaseController{
         pageForm.setPayDateFrom(null);
         pageForm.setPayDateTo(null);
         pageForm.setInVisableSearch(true);
+        pageForm.setOffset(pageForm.getLimit()*pageForm.getOrderPageLinkIdPrefixIndex());
         OrderListOutput listOutput = orderService.getOrderList(pageForm);
-        pageForm.setOffset(listOutput.getOrderList().size());
-        request.getSession().setAttribute(SessionConstants.ORDER_LIST_OUT_PUT.getValue(), listOutput);
         return ControllerHelper.getModelAndView(
                 AdminOrderSearchViewHelper.getMainPage(request, pageForm, listOutput));
     }
@@ -97,7 +96,8 @@ public class AdminOrderSearchController extends JcbcBaseController{
             HttpServletRequest request,
             HttpServletResponse response) {
         
-        pageForm.setOffset(0);
+	    pageForm.setOrderPageLinkIdPrefixIndex(0);
+	    pageForm.setOffset(pageForm.getLimit()*pageForm.getOrderPageLinkIdPrefixIndex());
         MOrder order = new MOrder();
         order.setCheckStatus(CheckStatusType.REVIEW.getKey());
         order.setOrderType(GlobalConstants.DFL_SELECT_ALL);
@@ -107,8 +107,6 @@ public class AdminOrderSearchController extends JcbcBaseController{
         pageForm.setPayDateTo(null);
         pageForm.setInVisableSearch(true);
         OrderListOutput listOutput = orderService.getOrderList(pageForm);
-        pageForm.setOffset(listOutput.getOrderList().size());
-        request.getSession().setAttribute(SessionConstants.ORDER_LIST_OUT_PUT.getValue(), listOutput);
         return ControllerHelper.getModelAndView(
                 AdminOrderSearchViewHelper.getMainPage(request, pageForm, listOutput));
     }
@@ -119,7 +117,8 @@ public class AdminOrderSearchController extends JcbcBaseController{
             HttpServletRequest request,
             HttpServletResponse response) {
         
-        pageForm.setOffset(0);
+	    pageForm.setOrderPageLinkIdPrefixIndex(0);
+        pageForm.setOffset(pageForm.getLimit()*pageForm.getOrderPageLinkIdPrefixIndex());
         MOrder order = new MOrder();
         order.setCheckStatus(CheckStatusType.PASS.getKey());
         order.setOrderType(GlobalConstants.DFL_SELECT_ALL);
@@ -129,8 +128,6 @@ public class AdminOrderSearchController extends JcbcBaseController{
         pageForm.setPayDateTo(null);
         pageForm.setInVisableSearch(true);
         OrderListOutput listOutput = orderService.getOrderList(pageForm);
-        pageForm.setOffset(listOutput.getOrderList().size());
-        request.getSession().setAttribute(SessionConstants.ORDER_LIST_OUT_PUT.getValue(), listOutput);
         return ControllerHelper.getModelAndView(
                 AdminOrderSearchViewHelper.getMainPage(request, pageForm, listOutput));
     }
@@ -141,13 +138,8 @@ public class AdminOrderSearchController extends JcbcBaseController{
             HttpServletRequest request,
             HttpServletResponse response) {
         
-	    OrderListOutput listOutput = 
-                (OrderListOutput)request.getSession().getAttribute(SessionConstants.ORDER_LIST_OUT_PUT.getValue());
-	    OrderListOutput growing = orderService.getOrderList(pageForm);
-	    listOutput.setCount(growing.getCount());
-	    listOutput.getOrderList().addAll(growing.getOrderList());
-        pageForm.setOffset(listOutput.getOrderList().size());
-        request.getSession().setAttribute(SessionConstants.ORDER_LIST_OUT_PUT.getValue(), listOutput);
+	    pageForm.setOffset(pageForm.getLimit()*pageForm.getOrderPageLinkIdPrefixIndex());
+	    OrderListOutput listOutput = orderService.getOrderList(pageForm);
         return ControllerHelper.getModelAndView(
                 AdminOrderSearchViewHelper.refeshTable(request, pageForm, listOutput));
     }

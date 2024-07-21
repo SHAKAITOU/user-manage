@@ -17,6 +17,7 @@ ShaUtil.other.inherits(UserCerti, BaseJsController);
 //------------properties define-------------[
 UserCerti.prototype.ID = {
 	
+	PAGE3_QR_IMG_DIV_ID           : "page3QrImgDiv",
 	DIV_MAINBODY                  : "mainBody",
 
 };
@@ -38,6 +39,14 @@ UserCerti.prototype.initEvent = function(){
 	
 	//keep self instance for call back
 	var self = this;
+	var qrcode = new QRCode(document.getElementById(self.ID.PAGE3_QR_IMG_DIV_ID), {
+		text: "https://github.com/KeeeX/qrcodejs",
+		width: 60,
+		height: 60,
+		colorDark : "#000000",
+		colorLight : "#ffffff",
+		correctLevel : QRCode.CorrectLevel.H
+	});
 };
 
 

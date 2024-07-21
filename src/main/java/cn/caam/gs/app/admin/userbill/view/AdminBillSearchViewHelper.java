@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 import cn.caam.gs.app.GlobalConstants;
 import cn.caam.gs.app.UrlConstants;
 import cn.caam.gs.app.admin.userbill.form.BillSearchForm;
+import cn.caam.gs.app.common.form.MessageSearchForm;
+import cn.caam.gs.app.common.output.MessageListOutput;
 import cn.caam.gs.app.common.output.OrderListOutput;
 import cn.caam.gs.app.dbmainten.form.ColumnInfoForm;
 import cn.caam.gs.app.util.HtmlViewHelper;
@@ -29,6 +31,7 @@ import cn.caam.gs.common.enums.CssGridsType;
 import cn.caam.gs.common.enums.FixedValueType;
 import cn.caam.gs.common.enums.GridFlexType;
 import cn.caam.gs.common.enums.OrderType;
+import cn.caam.gs.common.html.HtmlPageLinkedHelper;
 import cn.caam.gs.common.html.element.HtmlRadio;
 import cn.caam.gs.common.html.element.TrSet;
 import cn.caam.gs.common.html.element.bs5.BreadCrumbSet;
@@ -42,6 +45,7 @@ import cn.caam.gs.common.html.element.bs5.LabelDateInputSet;
 import cn.caam.gs.common.html.element.bs5.LabelDateInputSet.LabelDateInputSetType;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet.LabelSelectSetType;
+import cn.caam.gs.common.util.PaginationHolder;
 import cn.caam.gs.common.html.element.bs5.PTextSet;
 import cn.caam.gs.common.html.element.bs5.SpanTextSet;
 import cn.caam.gs.domain.db.custom.entity.FixValueInfo;
@@ -91,6 +95,9 @@ public class AdminBillSearchViewHelper extends HtmlViewHelper {
     
     public static final int PHONE_TD_HEIGHT = 70;
     
+    /** 頁LINK接頭辞ID */
+    public static final String PAGE_LINK_ID_PREFIX = "billPageLinkIdPrefix";
+    
 	
     public static final CssFontSizeType font = GlobalConstants.INPUT_FONT_SIZE;
 	   /**
@@ -122,7 +129,7 @@ public class AdminBillSearchViewHelper extends HtmlViewHelper {
         dataMap.put(TABLE_HEIGHT_WHEN_HIDE_SEARCH, calcTableHeightWhenHideSearch(request));
         dataMap.put(TABLE_HEIGHT_WHEN_SHOW_SEARCH, calcTableHeightWhenShowSearch(request));
         ViewData viewData = ViewData.builder()
-                .pageContext(setCardForTable(request, pageForm, listOutput))
+                .pageContext(getMainPageContext(request, pageForm, listOutput))
                 .jsClassName(MAIN_JS_CLASS)
                 .dataMap(dataMap)
                 .build();
@@ -227,13 +234,19 @@ public class AdminBillSearchViewHelper extends HtmlViewHelper {
         StringBuffer sbBody = new StringBuffer();
         StringBuffer cardBody = new StringBuffer();
         cardBody.append(setHidden(pageForm));
-        cardBody.append(setShowMore(request, listOutput));
         cardBody.append(divRow().cellBlank(5));
         cardBody.append(setListTable(request, pageForm, listOutput.getOrderList()));
+        String cardTitle = getContext("admin.orderList.table.title");
+        int startIndex = pageForm.getLimit()*(pageForm.getBillPageLinkIdPrefixIndex());
+        int endIndex = startIndex + listOutput.getOrderList().size();
+        cardTitle += listOutput.getCount() > 0 ? 
+                "(" + (startIndex + 1) + " - " + endIndex + "/" + 
+                listOutput.getCount() + ")" : "";
         sbBody.append(borderCard().withTitleWithScroll("", CssClassType.INFO, "", 
-                getContext("admin.orderList.table.title"),
+                cardTitle,
                 divRow().cellBlank(5),cardBody.toString()));
-        
+        sbBody.append(getPageLinked(request, pageForm, listOutput));
+        sbBody.append(divRow().cellBlank(5));
         return sbBody.toString();
     }
     
@@ -249,27 +262,14 @@ public class AdminBillSearchViewHelper extends HtmlViewHelper {
         sb.append(hidden().get(name, String.valueOf(pageForm.getOrder().getCheckStatus())));
         return sb.toString();
     }
-
-    private static String setShowMore(
-            HttpServletRequest request, 
-            OrderListOutput listOutput) {
-        StringBuffer sbBody = new StringBuffer();
-        
-        
-        List<CssAlignType> aligs = new ArrayList<>();
-        String context = getContext("common.page.showMore");
-        String comp1 = button().getBorder(IconSetType.BAR, CssClassType.INFO, SHOW_MORE_BTN_ID, context, 
-                listOutput.getOrderList().size() >= listOutput.getCount());
-        
-        context = getContext("common.page.btn.close");
-        context = "[" + listOutput.getOrderList().size() + "/" + listOutput.getCount() + "]";
-        String comp2 = SpanTextSet.builder().classType(CssClassType.CONTEXT).fontSize(font).context(context).build().html();
-        aligs.add(CssAlignType.LEFT);
-        
-        sbBody.append(divRow().get(CellWidthType.TWO_6_6, aligs, concactWithSpace(comp1, comp2)));
-        //-----row 3-------------]
-        
-        return sbBody.toString();
+    
+    private static String getPageLinked(HttpServletRequest request, BillSearchForm pageForm, OrderListOutput listOutput) {
+        PaginationHolder paginationHolder = new PaginationHolder(listOutput.getCount(), 
+                pageForm.getBillPageLinkIdPrefixIndex(), 
+                GlobalConstants.DEFAULT_GROWING_CNT, 
+                isPhoneMode(request)? GlobalConstants.SP_LINKCNT : GlobalConstants.PC_LINKCNT);
+        paginationHolder.setPageLinkIdPrefix(PAGE_LINK_ID_PREFIX);
+        return HtmlPageLinkedHelper.getPageLinkedHtml(paginationHolder);
     }
     
     private static String setListTable(

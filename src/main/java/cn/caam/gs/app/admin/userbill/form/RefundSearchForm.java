@@ -26,5 +26,6 @@ public class RefundSearchForm {
 	private int limit = GlobalConstants.DEFAULT_GROWING_CNT;
 	@Default
 	private int offset = 0;
-	
+    @Default
+    private int billPageLinkIdPrefixIndex = 0;
 }

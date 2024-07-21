@@ -24,11 +24,13 @@ import cn.caam.gs.common.enums.CssFontSizeType;
 import cn.caam.gs.common.enums.CssGridsType;
 import cn.caam.gs.common.enums.GridFlexType;
 import cn.caam.gs.common.enums.MsgType;
+import cn.caam.gs.common.html.HtmlPageLinkedHelper;
 import cn.caam.gs.common.html.element.SpanSet;
 import cn.caam.gs.common.html.element.SpanSet.SpanSetType;
 import cn.caam.gs.common.html.element.TrSet;
 import cn.caam.gs.common.html.element.bs5.BreadCrumbSet;
 import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
+import cn.caam.gs.common.util.PaginationHolder;
 import cn.caam.gs.common.html.element.bs5.PTextSet;
 import cn.caam.gs.common.html.element.bs5.SpanTextSet;
 import cn.caam.gs.domain.db.custom.entity.MessageInfo;
@@ -58,9 +60,12 @@ public class MessageSearchViewHelper extends HtmlViewHelper {
     public static final String HID_HIDE_SEARCH                = "hideSearch";
     public static final String HID_LIMIT                      = "limit";
     public static final String HID_OFFSET                     = "offset";
-    public static final int    HEADER_HEIGHT                  = 280;
+    public static final int    HEADER_HEIGHT                  = 320;
     
     public static final int PHONE_TD_HEIGHT = 55;
+    
+    /** 頁LINK接頭辞ID */
+    public static final String PAGE_LINK_ID_PREFIX = "messagePageLinkIdPrefix";
     
 	
     public static final CssFontSizeType font = GlobalConstants.INPUT_FONT_SIZE;
@@ -89,7 +94,7 @@ public class MessageSearchViewHelper extends HtmlViewHelper {
             MessageListOutput listOutput) {
         Map<String, Object> dataMap = new HashMap<>();
         ViewData viewData = ViewData.builder()
-                .pageContext(setCardForTable(request, pageForm, listOutput))
+                .pageContext(getMainPageContext(request, pageForm, listOutput))
                 .jsClassName(MAIN_JS_CLASS)
                 .dataMap(dataMap)
                 .build();
@@ -127,10 +132,17 @@ public class MessageSearchViewHelper extends HtmlViewHelper {
         cardBody.append(setShowMore(request, listOutput));
         cardBody.append(divRow().cellBlank(5));
         cardBody.append(setUserListTable(request, listOutput.getMessageList()));
+        String cardTitle = getContext("admin.messageList.table.title");
+        int startIndex = pageForm.getLimit()*(pageForm.getMessagePageLinkIdPrefixIndex());
+        int endIndex = startIndex + listOutput.getMessageList().size();
+        cardTitle += listOutput.getCount() > 0 ? 
+                "(" + (startIndex + 1) + " - " + endIndex + "/" + 
+                listOutput.getCount() + ")" : "";
         sbBody.append(borderCard().withTitleWithScroll("", CssClassType.INFO, "", 
-                getContext("admin.messageList.table.title"),
+                cardTitle,
                 divRow().cellBlank(5),cardBody.toString()));
-        
+        sbBody.append(getPageLinked(request, pageForm, listOutput));
+        sbBody.append(divRow().cellBlank(5));
         return sbBody.toString();
     }
     
@@ -150,23 +162,24 @@ public class MessageSearchViewHelper extends HtmlViewHelper {
         
         
         List<CssAlignType> aligs = new ArrayList<>();
-        String context = getContext("common.page.showMore");
-        String comp1 = button().getBorder(IconSetType.BAR, CssClassType.INFO, SHOW_MORE_BTN_ID, context, 
-                listOutput.getMessageList().size() >= listOutput.getCount());
-        
-        context = getContext("common.page.btn.close");
-        context = "[" + listOutput.getMessageList().size() + "/" + listOutput.getCount() + "]";
-        String comp2 = SpanTextSet.builder().classType(CssClassType.CONTEXT).fontSize(font).context(context).build().html();
-        aligs.add(CssAlignType.LEFT);
-        
-        context = getContext("common.page.refresh");
+       
+        String context = getContext("common.page.refresh");
         String comp3 = button().getBorder(IconSetType.REFRESH , CssClassType.INFO, SEARCH_BTN_ID, context, false);
         aligs.add(CssAlignType.RIGHT);
 
-        sbBody.append(divRow().get(CellWidthType.TWO_6_6, aligs, concactWithSpace(comp1, comp2), comp3));
+        sbBody.append(divRow().get(CellWidthType.ONE, aligs, comp3));
         //-----row 3-------------]
         
         return sbBody.toString();
+    }
+    
+    private static String getPageLinked(HttpServletRequest request, MessageSearchForm pageForm, MessageListOutput listOutput) {
+        PaginationHolder paginationHolder = new PaginationHolder(listOutput.getCount(), 
+                pageForm.getMessagePageLinkIdPrefixIndex(), 
+                GlobalConstants.DEFAULT_GROWING_CNT, 
+                isPhoneMode(request)? GlobalConstants.SP_LINKCNT : GlobalConstants.PC_LINKCNT);
+        paginationHolder.setPageLinkIdPrefix(PAGE_LINK_ID_PREFIX);
+        return HtmlPageLinkedHelper.getPageLinkedHtml(paginationHolder);
     }
     
     private static String setUserListTable(

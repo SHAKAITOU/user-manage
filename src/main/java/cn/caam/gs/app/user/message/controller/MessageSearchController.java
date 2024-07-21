@@ -57,13 +57,8 @@ public class MessageSearchController extends JcbcBaseController{
             HttpServletResponse response) {
         
 	    UserInfo userInfo = (UserInfo)request.getSession().getAttribute(SessionConstants.LOGIN_INFO.getValue());
-	    MessageListOutput userListOutput = 
-                (MessageListOutput)request.getSession().getAttribute(SessionConstants.MESSAGE_LIST_OUT_PUT.getValue());
-	    MessageListOutput growing = messageService.getMessageList(userInfo.getId(), pageForm.getLimit(), pageForm.getOffset());
-	    userListOutput.setCount(growing.getCount());
-	    userListOutput.getMessageList().addAll(growing.getMessageList());
-        pageForm.setOffset(userListOutput.getMessageList().size());
-        request.getSession().setAttribute(SessionConstants.MESSAGE_LIST_OUT_PUT.getValue(), userListOutput);
+        pageForm.setOffset(pageForm.getLimit()*pageForm.getMessagePageLinkIdPrefixIndex());
+	    MessageListOutput userListOutput = messageService.getMessageList(userInfo.getId(), pageForm.getLimit(), pageForm.getOffset());
         return ControllerHelper.getModelAndView(
                 MessageSearchViewHelper.refeshTable(request, pageForm, userListOutput));
     }
@@ -73,11 +68,12 @@ public class MessageSearchController extends JcbcBaseController{
             HttpServletRequest request,
             HttpServletResponse response,
             boolean init) {
-        pageForm.setOffset(0);
+
         UserInfo userInfo = (UserInfo)request.getSession().getAttribute(SessionConstants.LOGIN_INFO.getValue());
+        pageForm.setMessagePageLinkIdPrefixIndex(0);
+        pageForm.setOffset(pageForm.getLimit()*pageForm.getMessagePageLinkIdPrefixIndex());
         MessageListOutput userListOutput = messageService.getMessageList(userInfo.getId(), pageForm.getLimit(), pageForm.getOffset());
         pageForm.setOffset(userListOutput.getMessageList().size());
-        request.getSession().setAttribute(SessionConstants.MESSAGE_LIST_OUT_PUT.getValue(), userListOutput);
         if (init) {
             return ControllerHelper.getModelAndView(
                 MessageSearchViewHelper.getMainPage(request, pageForm, userListOutput));

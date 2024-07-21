@@ -33,10 +33,6 @@ public enum SessionConstants {
 	RECEIPT_IMG_ANALYSIS_RESULT("receiptImgAnalysisResult", true),
 	
 	FIXED_VALUE("fixedValue", true),
-	   
-    USER_LIST_OUT_PUT("userListOutput", true),
-	
-	ORDER_LIST_OUT_PUT("orderListOutput", true),
     
     UN_READ_MESSAGE_CNT("unReadMsgCnt", true),
     
@@ -45,8 +41,6 @@ public enum SessionConstants {
     ORDER_WAIT_CNT("orderWaitCnt", true),
     
     ORDER_REVIEW_CNT("orderReviewCnt", true),
-	
-	MESSAGE_LIST_OUT_PUT("messageListOutput", true),
 	
 	
 	;

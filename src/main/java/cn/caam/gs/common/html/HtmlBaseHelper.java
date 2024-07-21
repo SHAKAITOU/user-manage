@@ -102,7 +102,10 @@ public class HtmlBaseHelper {
         return name.replace(".", "_").replace("[", "").replace("]", "");
     }
     
-
+    public static String trimFitForTd(int grids, String context) {
+        return trimStringByByte(context, getMaxLengthByGrids(grids), true);
+    }
+    
     public static String trimFitForTd(int grids, String context, boolean addDot) {
         return trimStringByByte(context, getMaxLengthByGrids(grids), addDot);
     }

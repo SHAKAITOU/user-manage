@@ -27,4 +27,7 @@ public class OrderSearchForm {
 	@Default
 	private int offset = 0;
 	
+    @Default
+    private int orderPageLinkIdPrefixIndex = 0;
+	
 }

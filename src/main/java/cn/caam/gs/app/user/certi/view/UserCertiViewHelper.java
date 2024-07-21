@@ -74,6 +74,7 @@ public class UserCertiViewHelper extends HtmlViewBaseHelper {
     public static final String PAGE1_PANEL_CARD_ID            = "page1PanelCard";
     public static final String PAGE2_PANEL_CARD_ID            = "page2PanelCard";
     public static final String PAGE3_PANEL_CARD_ID            = "page3PanelCard";
+    public static final String PAGE3_QR_IMG_DIV_ID            = "page3QrImgDiv";
     public static final String PAGE4_PANEL_CARD_ID            = "page4PanelCard";
     public static final int    IMG_CARD_HEIGHT               = 530;
     public static final int    IMG_HEIGHT                    = 500;
@@ -213,7 +214,7 @@ public class UserCertiViewHelper extends HtmlViewBaseHelper {
                 .userId(userDetailForm.getUserInfo().getUser().getId())
                 .registDate(userDetailForm.getUserInfo().getUser().getRegistDate())
                 .validEndDate(userDetailForm.getUserInfo().getUser().getValidEndDate())
-                .qrImg("/img/2weima.png")
+                .qrImgDivId(PAGE3_QR_IMG_DIV_ID)
                 .name(userDetailForm.getUserInfo().getUser().getName())
                 .sex(userDetailForm.getUserInfo().getSexName())
                 .birth(userDetailForm.getUserInfo().getUser().getBirth())

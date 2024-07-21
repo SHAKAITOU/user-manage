@@ -21,7 +21,7 @@ public class CertiImg3DivSet {
     private String userId;
     private String registDate;
     private String validEndDate;
-    private String qrImg;
+    private String qrImgDivId;
     private String name;
     private String sex;
     private String birth;
@@ -104,7 +104,7 @@ public class CertiImg3DivSet {
         sb.append("<div class='row'>");
         sb.append("<div class='col-12'>");
         sb.append("<div style='padding-left:122px; padding-top:10px;'>");
-        sb.append("<img style='width:60px;height:60px;' src='" + qrImg +"'>");
+        sb.append("<div style='width:60px;height:60px;' id='"+qrImgDivId+"'></div>");
         sb.append("</div>");
         sb.append("</div>");
         sb.append("</div>");

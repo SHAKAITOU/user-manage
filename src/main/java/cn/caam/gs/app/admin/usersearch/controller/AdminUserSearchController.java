@@ -39,7 +39,6 @@ public class AdminUserSearchController extends JcbcBaseController{
 			HttpServletResponse response) {
 	    
 	    UserListOutput userListOutput = new UserListOutput();
-	    request.getSession().setAttribute(SessionConstants.USER_LIST_OUT_PUT.getValue(), userListOutput);
 
 		return ControllerHelper.getModelAndView(
 		        AdminUserSearchViewHelper.getMainPage(request, pageForm, userListOutput));
@@ -51,10 +50,8 @@ public class AdminUserSearchController extends JcbcBaseController{
             HttpServletRequest request,
             HttpServletResponse response) {
 	    
-        pageForm.setOffset(0);
+        pageForm.setUserPageLinkIdPrefixIndex(0);
         UserListOutput userListOutput = userService.getUserList(pageForm);
-        pageForm.setOffset(userListOutput.getUserList().size());
-        request.getSession().setAttribute(SessionConstants.USER_LIST_OUT_PUT.getValue(), userListOutput);
         return ControllerHelper.getModelAndView(
                 AdminUserSearchViewHelper.refeshTable(request, pageForm, userListOutput));
     }
@@ -64,14 +61,9 @@ public class AdminUserSearchController extends JcbcBaseController{
             UserSearchForm pageForm,
             HttpServletRequest request,
             HttpServletResponse response) {
-        
-	    UserListOutput userListOutput = 
-                (UserListOutput)request.getSession().getAttribute(SessionConstants.USER_LIST_OUT_PUT.getValue());
-	    UserListOutput growing = userService.getUserList(pageForm);
-	    userListOutput.setCount(growing.getCount());
-	    userListOutput.getUserList().addAll(growing.getUserList());
-        pageForm.setOffset(userListOutput.getUserList().size());
-        request.getSession().setAttribute(SessionConstants.ORDER_LIST_OUT_PUT.getValue(), userListOutput);
+
+	    pageForm.setOffset(pageForm.getLimit()*pageForm.getUserPageLinkIdPrefixIndex());
+	    UserListOutput userListOutput = userService.getUserList(pageForm);
         return ControllerHelper.getModelAndView(
                 AdminUserSearchViewHelper.refeshTable(request, pageForm, userListOutput));
     }

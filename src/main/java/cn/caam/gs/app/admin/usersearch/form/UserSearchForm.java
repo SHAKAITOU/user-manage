@@ -28,4 +28,7 @@ public class UserSearchForm {
     private int limit = GlobalConstants.DEFAULT_GROWING_CNT;
     @Default
     private int offset = 0;
+    
+    @Default
+    private int userPageLinkIdPrefixIndex = 0;
 }

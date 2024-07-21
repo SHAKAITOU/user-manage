@@ -38,8 +38,9 @@ AdminOrderList.prototype.ID = {
     //div
     ORDER_LIST_REFRESH_BODY_ID  : "orderListRefreshBody",
     
+    PAGE_LINK_ID_PREFIX         : "orderPageLinkIdPrefix",
     //div
-    DIV_MAINBODY                    : 'mainBody',
+    DIV_MAINBODY                : 'mainBody',
 
 };
 //------------------------------------------]
@@ -102,20 +103,7 @@ AdminOrderList.prototype.initEvent = function(){
                 self.jsContext.adminJsView.adminOrderSearch.url_order_list, 
                 self.getForm().serializeArray(), 
                 function(data){
-                    self.getObjectInForm(self.getForm(), self.ID.ORDER_LIST_REFRESH_BODY_ID).html(data);
-                    $('[data-toggle="tooltip"]').tooltip();
-                }
-            ); 
-		}
-    );
-    
-    ShaInput.button.onClick(self.getObject(self.ID.SHOW_MORE_BTN_ID),
-    	function(event) {
-			ShaAjax.ajax.post(
-                self.jsContext.adminJsView.adminOrderSearch.url_order_list_growing, 
-                self.getForm().serializeArray(), 
-                function(data){
-                    self.getObjectInForm(self.getForm(), self.ID.ORDER_LIST_REFRESH_BODY_ID).html(data);
+                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
                     $('[data-toggle="tooltip"]').tooltip();
                 }
             ); 
@@ -195,6 +183,28 @@ AdminOrderList.prototype.initEvent = function(){
 	    );
     	
     });
+    
+    //initPageLink
+    ShaPage.pageLink.initPageLink(self.ID.PAGE_LINK_ID_PREFIX,
+    	function(){return true;},
+    	function(){
+    		self.doPageLink();
+    	}
+    );
+};
+
+//doPageLink
+AdminOrderList.prototype.doPageLink = function(){
+	//keep self instance for call back
+	var self = this;
+	ShaAjax.ajax.post(
+        self.jsContext.adminJsView.adminOrderSearch.url_order_list_growing, 
+        self.getForm().serializeArray(), 
+        function(data){
+            self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
+            $('[data-toggle="tooltip"]').tooltip();
+        }
+    ); 
 };
 
 //----------------------------------------------------------------------------]

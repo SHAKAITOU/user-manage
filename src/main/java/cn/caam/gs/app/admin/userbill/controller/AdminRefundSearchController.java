@@ -45,7 +45,6 @@ public class AdminRefundSearchController extends JcbcBaseController{
         order.setCheckStatus(GlobalConstants.DFL_SELECT_ALL);
         pageForm.setOrder(order);
 	    OrderListOutput listOutput = new OrderListOutput();
-	    request.getSession().setAttribute(SessionConstants.ORDER_LIST_OUT_PUT.getValue(), listOutput);
 
 		return ControllerHelper.getModelAndView(
 		        AdminRefundSearchViewHelper.getMainPage(request, pageForm, listOutput));
@@ -57,11 +56,10 @@ public class AdminRefundSearchController extends JcbcBaseController{
             HttpServletRequest request,
             HttpServletResponse response) {
 	    
-        pageForm.setOffset(0);
+	    pageForm.setBillPageLinkIdPrefixIndex(0);
+        pageForm.setOffset(pageForm.getLimit()*pageForm.getBillPageLinkIdPrefixIndex());
         pageForm.getOrder().setCheckStatus(CheckStatusType.REFUSED.getKey());
         OrderListOutput listOutput = orderService.getRefundList(pageForm);
-        pageForm.setOffset(listOutput.getOrderList().size());
-        request.getSession().setAttribute(SessionConstants.ORDER_LIST_OUT_PUT.getValue(), listOutput);
         return ControllerHelper.getModelAndView(
                 AdminRefundSearchViewHelper.refeshTable(request, pageForm, listOutput));
     }
@@ -71,14 +69,9 @@ public class AdminRefundSearchController extends JcbcBaseController{
             RefundSearchForm pageForm,
             HttpServletRequest request,
             HttpServletResponse response) {
-        
-	    OrderListOutput listOutput = 
-                (OrderListOutput)request.getSession().getAttribute(SessionConstants.ORDER_LIST_OUT_PUT.getValue());
-	    OrderListOutput growing = orderService.getRefundList(pageForm);
-	    listOutput.setCount(growing.getCount());
-	    listOutput.getOrderList().addAll(growing.getOrderList());
-        pageForm.setOffset(listOutput.getOrderList().size());
-        request.getSession().setAttribute(SessionConstants.ORDER_LIST_OUT_PUT.getValue(), listOutput);
+	    
+	    pageForm.setOffset(pageForm.getLimit()*pageForm.getBillPageLinkIdPrefixIndex());
+	    OrderListOutput listOutput = orderService.getRefundList(pageForm);
         return ControllerHelper.getModelAndView(
                 AdminRefundSearchViewHelper.refeshTable(request, pageForm, listOutput));
     }

@@ -39,7 +39,6 @@ public class AdminMessageSearchController extends JcbcBaseController{
 			HttpServletResponse response) {
 	    
 	    MessageListOutput userListOutput = new MessageListOutput();
-	    request.getSession().setAttribute(SessionConstants.MESSAGE_LIST_OUT_PUT.getValue(), userListOutput);
 
 		return ControllerHelper.getModelAndView(
 		        AdminMessageSearchViewHelper.getMainPage(request, pageForm, userListOutput));
@@ -51,10 +50,9 @@ public class AdminMessageSearchController extends JcbcBaseController{
             HttpServletRequest request,
             HttpServletResponse response) {
 	    
-        pageForm.setOffset(0);
+        pageForm.setMessagePageLinkIdPrefixIndex(0);
+        pageForm.setOffset(pageForm.getLimit()*pageForm.getMessagePageLinkIdPrefixIndex());
         MessageListOutput userListOutput = messageService.getMessageList(pageForm);
-        pageForm.setOffset(userListOutput.getMessageList().size());
-        request.getSession().setAttribute(SessionConstants.MESSAGE_LIST_OUT_PUT.getValue(), userListOutput);
         return ControllerHelper.getModelAndView(
                 AdminMessageSearchViewHelper.refeshTable(request, pageForm, userListOutput));
     }
@@ -65,13 +63,8 @@ public class AdminMessageSearchController extends JcbcBaseController{
             HttpServletRequest request,
             HttpServletResponse response) {
         
-	    MessageListOutput userListOutput = 
-                (MessageListOutput)request.getSession().getAttribute(SessionConstants.MESSAGE_LIST_OUT_PUT.getValue());
-	    MessageListOutput growing = messageService.getMessageList(pageForm);
-	    userListOutput.setCount(growing.getCount());
-	    userListOutput.getMessageList().addAll(growing.getMessageList());
-        pageForm.setOffset(userListOutput.getMessageList().size());
-        request.getSession().setAttribute(SessionConstants.MESSAGE_LIST_OUT_PUT.getValue(), userListOutput);
+        pageForm.setOffset(pageForm.getLimit()*pageForm.getMessagePageLinkIdPrefixIndex());
+	    MessageListOutput userListOutput = messageService.getMessageList(pageForm);
         return ControllerHelper.getModelAndView(
                 AdminMessageSearchViewHelper.refeshTable(request, pageForm, userListOutput));
     }

@@ -5,6 +5,7 @@
 //------------constructor define------------[
 AdminMessageSearch = function(dataMap){
     this.form = $('#AdminMessageSearchForm');
+    this.mainForm = $('#main_form');
     this.jsContext = Pos.constants.setInfo;
     this.i18n = JSON.parse(this.jsContext.i18n);
     this.dataMap = dataMap;
@@ -34,7 +35,9 @@ AdminMessageSearch.prototype.ID = {
     DIV_REFRESH_BODY         : "messageListRefreshBody",
     SEARCH_PANEL_ID          : "searchPanel",
     LIST_TABLE_ID            : "messageListTable",
-    
+    PAGE_LINK_ID_PREFIX      : "messagePageLinkIdPrefix",
+    //div
+    DIV_MAINBODY             : 'mainBody',
 
 };
 //------------------------------------------]
@@ -102,20 +105,7 @@ AdminMessageSearch.prototype.initEvent = function(){
                 self.jsContext.adminJsView.adminMessageSearch.url_message_list, 
                 self.getForm().serializeArray(), 
                 function(data){
-                    self.getObjectInForm(self.getForm(), self.ID.DIV_REFRESH_BODY).html(data);
-                    $('[data-toggle="tooltip"]').tooltip();
-                }
-            ); 
-		}
-    );
-    
-    ShaInput.button.onClick(self.getObject(self.ID.SHOW_MORE_BTN_ID),
-    	function(event) {
-			ShaAjax.ajax.post(
-                self.jsContext.adminJsView.adminMessageSearch.url_message_list_growing, 
-                self.getForm().serializeArray(), 
-                function(data){
-                    self.getObjectInForm(self.getForm(), self.ID.DIV_REFRESH_BODY).html(data);
+                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
                     $('[data-toggle="tooltip"]').tooltip();
                 }
             ); 
@@ -145,6 +135,28 @@ AdminMessageSearch.prototype.initEvent = function(){
     	
     });
     
+    //initPageLink
+    ShaPage.pageLink.initPageLink(self.ID.PAGE_LINK_ID_PREFIX,
+    	function(){return true;},
+    	function(){
+    		self.doPageLink();
+    	}
+    );
+    
+};
+
+//doPageLink
+AdminMessageSearch.prototype.doPageLink = function(){
+	//keep self instance for call back
+	var self = this;
+	ShaAjax.ajax.post(
+        self.jsContext.adminJsView.adminMessageSearch.url_message_list_growing, 
+        self.getForm().serializeArray(), 
+        function(data){
+            self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
+            $('[data-toggle="tooltip"]').tooltip();
+        }
+    );  
 };
 
 //----------------------------------------------------------------------------]

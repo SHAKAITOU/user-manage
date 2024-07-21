@@ -24,4 +24,6 @@ public class MessageSearchForm {
 	@Default
 	private int offset = 0;
 	
+    @Default
+    private int messagePageLinkIdPrefixIndex = 0;
 }

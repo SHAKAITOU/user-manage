@@ -1,6 +1,7 @@
 package cn.caam.gs.app;
 
 import cn.caam.gs.common.enums.CssFontSizeType;
+import cn.caam.gs.common.enums.RowCntType;
 
 public class GlobalConstants {
     
@@ -16,7 +17,7 @@ public class GlobalConstants {
     public static final int DEFAULT_MEDIA_WIDTH            = 1100;
     public static final int TD_DEFAULT_HEIGHT              = 30;
     public static final int TH_DEFAULT_HEIGHT              = 30;
-    public static final int DEFAULT_GROWING_CNT            = 10;
+    public static final int DEFAULT_GROWING_CNT            = RowCntType.ROW_10.getId();
     public static final String INPUT_BG_COLOER             = "#FFFAF0";
     public static final int TABLE_TD_HEIGHT                = 30;
     
@@ -52,4 +53,9 @@ public class GlobalConstants {
     public static final int MIN_BILL_AMOUNT            = 500;
     
     public static final int ADD_USER_VLID_MONTHS       = 60;
+    
+    /** 頁LINK表示数(PC) */
+    public static final int PC_LINKCNT = 10;
+    /** 頁LINK表示数(SP) */
+    public static final int SP_LINKCNT = 5;
 }

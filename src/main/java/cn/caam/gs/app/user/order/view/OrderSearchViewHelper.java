@@ -30,6 +30,7 @@ import cn.caam.gs.common.enums.FixedValueType;
 import cn.caam.gs.common.enums.GridFlexType;
 import cn.caam.gs.common.enums.OrderType;
 import cn.caam.gs.common.enums.ReFundStatusType;
+import cn.caam.gs.common.html.HtmlPageLinkedHelper;
 import cn.caam.gs.common.html.element.HtmlRadio;
 import cn.caam.gs.common.html.element.TrSet;
 import cn.caam.gs.common.html.element.bs5.BreadCrumbSet;
@@ -43,6 +44,7 @@ import cn.caam.gs.common.html.element.bs5.LabelDateInputSet;
 import cn.caam.gs.common.html.element.bs5.LabelDateInputSet.LabelDateInputSetType;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet.LabelSelectSetType;
+import cn.caam.gs.common.util.PaginationHolder;
 import cn.caam.gs.common.html.element.bs5.PTextSet;
 import cn.caam.gs.common.html.element.bs5.SpanTextSet;
 import cn.caam.gs.domain.db.custom.entity.FixValueInfo;
@@ -79,8 +81,11 @@ public class OrderSearchViewHelper extends HtmlViewHelper {
     public static final String HID_HIDE_SEARCH                = "hideSearch";
     public static final String HID_LIMIT                      = "limit";
     public static final String HID_OFFSET                     = "offset";
-    public static final int    HEADER_HEIGHT                  = 360;
+    public static final int    HEADER_HEIGHT                  = 390;
     public static final int    SEARCH_PANEL_HEIGHT            = 90;
+    
+    /** 頁LINK接頭辞ID */
+    public static final String PAGE_LINK_ID_PREFIX = "orderPageLinkIdPrefix";
 	
     public static final CssFontSizeType font = GlobalConstants.INPUT_FONT_SIZE;
     public static final int PHONE_TD_HEIGHT = 70;
@@ -111,7 +116,7 @@ public class OrderSearchViewHelper extends HtmlViewHelper {
         dataMap.put(TABLE_HEIGHT_WHEN_HIDE_SEARCH, calcTableHeightWhenHideSearch(request));
         dataMap.put(TABLE_HEIGHT_WHEN_SHOW_SEARCH, calcTableHeightWhenShowSearch(request));
         ViewData viewData = ViewData.builder()
-                .pageContext(setCardForTable(request, pageForm, orderListOutput))
+                .pageContext(getMainPageContext(request, pageForm, orderListOutput))
                 .jsClassName(MAIN_JS_CLASS)
                 .dataMap(dataMap)
                 .build();
@@ -233,11 +238,17 @@ public class OrderSearchViewHelper extends HtmlViewHelper {
         cardBody.append(setShowMore(request, orderListOutput));
         cardBody.append(divRow().cellBlank(5));
         cardBody.append(setListTable(request, orderListOutput.getOrderList()));
-
+        String cardTitle = getContext("admin.userList.table.title");
+        int startIndex = pageForm.getLimit()*(pageForm.getOrderPageLinkIdPrefixIndex());
+        int endIndex = startIndex + orderListOutput.getOrderList().size();
+        cardTitle += orderListOutput.getCount() > 0 ? 
+                "(" + (startIndex + 1) + " - " + endIndex + "/" + 
+                orderListOutput.getCount() + ")" : "";
         sbBody.append(borderCard().withTitleWithScroll("", CssClassType.INFO, "", 
-                getContext("admin.userList.table.title"),
+                cardTitle,
                 divRow().cellBlank(5),cardBody.toString()));
-        
+        sbBody.append(getPageLinked(request, pageForm, orderListOutput));
+        sbBody.append(divRow().cellBlank(5)); 
         return sbBody.toString();
     }
     
@@ -255,24 +266,25 @@ public class OrderSearchViewHelper extends HtmlViewHelper {
         
         
         List<CssAlignType> aligs = new ArrayList<>();
-        String id = SHOW_MORE_BTN_ID;
-        String context = getContext("common.page.showMore");
-        String comp1 = button().getBorder(IconSetType.BAR, CssClassType.INFO, id, context, 
-                orderListOutput.getOrderList().size() >= orderListOutput.getCount());
         
-        context = "[" + orderListOutput.getOrderList().size() + "/" + orderListOutput.getCount() + "]";
-        String comp2 = SpanTextSet.builder().classType(CssClassType.CONTEXT).fontSize(font).context(context).build().html();
-        aligs.add(CssAlignType.LEFT);
-        
-        id = ADD_BTN_ID;
-        context = getContext("order.addPayBtn");
+        String id = ADD_BTN_ID;
+        String context = getContext("order.addPayBtn");
         String comp3 = button().getBorder(IconSetType.SEND, CssClassType.SUCCESS, id, context);
 
         aligs.add(CssAlignType.RIGHT);
-        sbBody.append(divRow().get(CellWidthType.TWO_7_5, aligs, concactWithSpace(comp1, comp2), comp3));
+        sbBody.append(divRow().get(CellWidthType.ONE, aligs, comp3));
         //-----row 3-------------]
         
         return sbBody.toString();
+    }
+    
+    private static String getPageLinked(HttpServletRequest request, OrderSearchForm pageForm, OrderListOutput listOutput) {
+        PaginationHolder paginationHolder = new PaginationHolder(listOutput.getCount(), 
+                pageForm.getOrderPageLinkIdPrefixIndex(), 
+                GlobalConstants.DEFAULT_GROWING_CNT, 
+                isPhoneMode(request)? GlobalConstants.SP_LINKCNT : GlobalConstants.PC_LINKCNT);
+        paginationHolder.setPageLinkIdPrefix(PAGE_LINK_ID_PREFIX);
+        return HtmlPageLinkedHelper.getPageLinkedHtml(paginationHolder);
     }
     
     private static String setListTable(HttpServletRequest request, 
