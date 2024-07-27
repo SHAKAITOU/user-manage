@@ -31,6 +31,10 @@ public class CommonViewHelper extends HtmlViewBaseHelper {
     public static final String URL_WINDOW_RESIZE = "/winResize";
     // init url
     public static final String URL_SHOW_PHOTO = "/showPhoto";
+    // init url
+    public static final String URL_CHECK_USER_PHONE_NUMBER = "/checkPhoneNumberExist";
+    // init url
+    public static final String URL_CHECK_USER_EMAIL = "/checkEmailExist";
     
     // js class
     public static final String JS_CLASS = "ShowPhoto";
@@ -124,6 +128,9 @@ public class CommonViewHelper extends HtmlViewBaseHelper {
         // url
         js.put("url_com_win_resize",      URL_BASE + URL_WINDOW_RESIZE);
         js.put("url_com_show_photo",      URL_BASE + URL_SHOW_PHOTO);
+        js.put("url_com_check_phone_number_exist",      URL_BASE + URL_CHECK_USER_PHONE_NUMBER);
+        js.put("url_com_check_email_exist",      URL_BASE + URL_CHECK_USER_EMAIL);
+   
         return js;
     }
 }

@@ -355,12 +355,12 @@ public class RegistStep2ViewHelper extends HtmlViewBaseHelper {
         String comp1 = button().getBorder(IconSetType.TO_UP, CssClassType.DANGER, id, context);
         aligs.add(CssAlignType.LEFT);
         
-        id = "btnNext";
-        context = getContext("common.page.next");
+        id = "btnOk";
+        context = getContext("common.page.ok");
         String comp2 = button().getBorder(IconSetType.TO_RIGHT, CssClassType.SUCCESS, id, context);
 
         aligs.add(CssAlignType.RIGHT);
-        sb.append(divRow().get(CellWidthType.ONE, aligs, comp1, comp2));
+        sb.append(divRow().get(CellWidthType.TWO_6_6, aligs, comp1, comp2));
         
         return sb.toString();
     }

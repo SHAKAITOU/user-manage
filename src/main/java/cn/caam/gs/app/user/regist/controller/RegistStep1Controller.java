@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import cn.caam.gs.app.GlobalConstants;
 import cn.caam.gs.app.user.login.view.LoginViewHelper;
 import cn.caam.gs.app.user.regist.form.RegistForm;
 import cn.caam.gs.app.user.regist.view.RegistStep1ViewHelper;
@@ -20,6 +22,7 @@ import cn.caam.gs.app.util.ControllerHelper;
 import cn.caam.gs.app.util.SessionConstants;
 import cn.caam.gs.common.controller.ScreenBaseController;
 import cn.caam.gs.common.util.MessageSourceUtil;
+import cn.caam.gs.config.SmsConfig;
 import cn.caam.gs.domain.db.base.entity.MAuthCode;
 import cn.caam.gs.domain.db.base.entity.MUser;
 import cn.caam.gs.service.impl.AuthCodeService;
@@ -45,7 +48,10 @@ public class RegistStep1Controller extends ScreenBaseController{
 	
     @Autowired
     FixedValueService fixedValueService;
-	
+    
+    @Autowired
+    SmsConfig smsConfig;
+    
 	private static final String FROMREDIRECT = "fromRedirect";
 	
 	@PostMapping(path=LoginViewHelper.URL_C_USER_REGIST)
@@ -70,21 +76,55 @@ public class RegistStep1Controller extends ScreenBaseController{
 	    }
     }
 	
-	@PostMapping(path=LoginViewHelper.URL_C_USER_REGIST_COMMIT)
-    public ModelAndView registCommit(
+	@PostMapping(path=LoginViewHelper.URL_C_USER_REGIST_SEND_AUTH_CODE)
+	@ResponseBody
+    public String sendAuthCode(
             RegistForm pageForm,
             HttpServletRequest request,
-            HttpServletResponse response)  {
-	    
+            HttpServletResponse response) throws Exception {
+		
 	    RegistForm registForm = (RegistForm)request.getSession().getAttribute(SessionConstants.USER_REGIST.getValue());
 	    registForm.setUser(pageForm.getUser());
-	    registForm.setAuthCode(pageForm.getAuthCode());
+	    
+	    //X分钟以内只允许发送一次
+	    if (registForm.getMauthCode() != null && !StringUtil.isBlank(registForm.getMauthCode().getRecievedBy()) && 
+	    		!authCodeService.isCanSendSms(registForm.getMauthCode().getRecievedBy(), GlobalConstants.USER_REGIST_EXPIRED_MINUTE, GlobalConstants.USER_REGIST_SMS_SEND_INTERVAL)){
+            return LoginViewHelper.STEP_STS_STEP1_NG_SEND_SMS;
+	    }
+	    
+	    boolean result = false;
 	    if (StringUtils.isEmpty(request.getParameter(FROMREDIRECT))) {
 	        //入力エラーじゃない場合
 	        MAuthCode mauthCode = authCodeService.addAuthCode(pageForm);
 	        registForm.setMauthCode(mauthCode);
 	        request.getSession().setAttribute(SessionConstants.USER_REGIST.getValue(), registForm);
+	        result = authCodeService.sendAuthCode(mauthCode);
 	    }
+
+	    if (result) {
+	    	//验证码送信成功
+            return LoginViewHelper.STEP_STS_STEP2_INIT;
+	    }else{
+            //验证码送信失败
+            return LoginViewHelper.STEP_STS_STEP1_NG;
+        }
+    }	
+	
+	@PostMapping(path=LoginViewHelper.URL_C_USER_REGIST_COMMIT)
+    public ModelAndView registCommit(
+            RegistForm pageForm,
+            HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+		
+	    RegistForm registForm = (RegistForm)request.getSession().getAttribute(SessionConstants.USER_REGIST.getValue());
+//	    registForm.setUser(pageForm.getUser());
+//	    if (StringUtils.isEmpty(request.getParameter(FROMREDIRECT))) {
+//	        //入力エラーじゃない場合
+//	        MAuthCode mauthCode = authCodeService.addAuthCode(pageForm);
+//	        registForm.setMauthCode(mauthCode);
+//	        request.getSession().setAttribute(SessionConstants.USER_REGIST.getValue(), registForm);
+//	        boolean result = authCodeService.sendAuthCode(mauthCode);
+//	    }
 
 	    return ControllerHelper.getModelAndView(RegistStep1ViewHelper.getRegist1ConfirmPage(registForm));
     }
@@ -97,11 +137,16 @@ public class RegistStep1Controller extends ScreenBaseController{
             HttpServletResponse response)  {
         
 	    RegistForm registForm = (RegistForm)request.getSession().getAttribute(SessionConstants.USER_REGIST.getValue());
-        //if (!pageForm.getAuthCode().equals(registForm.getMauthCode().getAuthCode())) {
-	    if (false) {
+	    if (registForm == null || registForm.getMauthCode() == null) {
+	    	//認証コード不正
+            return LoginViewHelper.STEP_STS_STEP1_NG;
+	    }else if (!pageForm.getAuthCode().equals(registForm.getMauthCode().getAuthCode())) {
             //認証コード不正
             return LoginViewHelper.STEP_STS_STEP1_NG;
-        } else {
+        } else if (authCodeService.isAuthCodeExpired(registForm.getMauthCode())) {
+        	 //認証コード过期
+            return LoginViewHelper.STEP_STS_STEP1_NG_EXPIRED;
+    	}else{
             //go to STEP2
             return LoginViewHelper.STEP_STS_STEP2_INIT;
         }

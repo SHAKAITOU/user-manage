@@ -123,7 +123,7 @@ try{
 		//------------------------------------------------------------------------------
 		// execute post ajax
 		//------------------------------------------------------------------------------
-		post : function (url, formData, callBackOk) { 
+		post : function (url, formData, callBackOk, async=true) { 
 			
 			ShaDialog.dialogs.progress(true);
 			
@@ -131,6 +131,7 @@ try{
 				   type: "POST",
 				   url: ShaUtil.util.getFullUrl(url),
 				   data: formData,
+				   async:async,
 				   statusCode: {
 					    200: function(data){
 					    	ShaDialog.dialogs.progress(false);

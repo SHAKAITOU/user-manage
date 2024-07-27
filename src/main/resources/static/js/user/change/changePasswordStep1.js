@@ -69,35 +69,13 @@ RegistStep1.prototype.initEvent = function(){
 	            return;
 	        }
 	        
-			self.getObject(self.ID.ITEM_STEP_STS).val("STEP1_COMMIT");  //go step2
-	        ShaAjax.ajax.post(
-				Pos.constants.setInfo.jsView.login.url_userRegist_sendAuthCode,
-				self.getForm().serializeArray(),
-				function(data){
-					if (data === "STEP1_NG") {
-						//验证码发送失败
-						ShaDialog.dialogs.alert(self.i18n["login.regist.step1.authCode.send.error"]);
-					}else if (data === "STEP1_NG_SEND_SMS") {
-						//X分钟以内只允许发送一次
-						ShaDialog.dialogs.alert(ShaUtil.util.format(self.i18n["login.regist.step1.authCode.send.prohibit"], Pos.constants.setInfo.common.user_regist_sms_send_interval));
-					}else {
-						// go to step2
-						self.getObject(self.ID.ITEM_STEP_STS).val("STEP1_COMMIT"); //go confirm
-									
-			    		ShaAjax.pop.postDialogMiddleCenter(
-			    			Pos.constants.setInfo.jsView.login.userRegist_confirm_title,
-			    			Pos.constants.setInfo.jsView.login.url_userRegist_commit, 
-			    			self.getForm().serializeArray());
-					}
-				}
-			)
-	       /* //
+	        //
 	        self.getObject(self.ID.ITEM_STEP_STS).val("STEP1_COMMIT"); //go confirm
 			
     		ShaAjax.pop.postDialogMiddleCenter(
     			Pos.constants.setInfo.jsView.login.userRegist_confirm_title,
     			Pos.constants.setInfo.jsView.login.url_userRegist_commit, 
-    			self.getForm().serializeArray()); */
+    			self.getForm().serializeArray()); 
 	    }
 	);
 	
@@ -110,25 +88,12 @@ RegistStep1.prototype.check = function(){
 	//keep self instance for call back
 	var self = this;
 
-	const checkMultiItemsMap = new Map();
-	var inputCheckItemList = [
+    var inputCheckItemList = [
         [ self.i18n["m_user.phone"], 			self.getObject(self.ID.ITEM_PHONE)], 
         [ self.i18n["m_user.mail"], 			self.getObject(self.ID.ITEM_MAIL)], 
     ];
-	checkMultiItemsMap.set('checkNotBlank', inputCheckItemList);
-
-	if (!ShaCheck.check.isBlank(self.getObject(self.ID.ITEM_PHONE).val())){
-		checkMultiItemsMap.set('checkPhoneNumber', [[ self.i18n["m_user.phone"], 	self.getObject(self.ID.ITEM_PHONE)]]);
-	}
-	if (!ShaCheck.check.isBlank(self.getObject(self.ID.ITEM_MAIL).val())){
-		checkMultiItemsMap.set('checkEmail', [[ self.i18n["m_user.mail"], 			self.getObject(self.ID.ITEM_MAIL)]]);
-	}
-	
-	ShaCheck.check.setFirstItemFocus(true);
-	if (ShaCheck.check.checkMultiItems(checkMultiItemsMap)){
-		return true;
-	}
-	return false;
+    
+    return ShaCheck.check.checkNotBlank(inputCheckItemList);
 };
 
 //initFocus

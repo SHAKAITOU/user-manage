@@ -30,9 +30,24 @@ try{
 	
 	$shaCheck.check = {
 		
+		isMoveToFirstItem : false,
+		_isAlreadyMoveToFistItem : false,
+		
 		_WATCH_INPUT_LIST : [],
 		
-		checkNotBlank : function(inputCheckItemList, isToFocus=false){
+		setFirstItemFocus : function(isMoveToFirstItem){
+			ShaCheck.check.isMoveToFirstItem = isMoveToFirstItem;
+			ShaCheck.check._isAlreadyMoveToFistItem = false;
+		},
+		
+		moveToFirstItem : function(inputCheckItem){
+			if (ShaCheck.check.isMoveToFirstItem && !ShaCheck.check._isAlreadyMoveToFistItem){
+				ShaCheck.check._isAlreadyMoveToFistItem = true;
+				inputCheckItem.focus();
+			}
+		},
+		
+		checkNotBlank : function(inputCheckItemList){
 			for( var i = 0; i < inputCheckItemList.length; i++ ){
 				var inputCheckItem = inputCheckItemList[i][1];
 				var id = inputCheckItem.attr('id');
@@ -51,12 +66,8 @@ try{
 					inputCheckItem.after('<div id="'+ errorId +'" class="invalid-feedback">' + errorMsg + '</div>'); 
 					inputCheckItem.addClass('alert-input');
 					inputCheckItem.addClass('is-invalid');
-					if (!ngFlag){
-						if (isToFocus){
-							inputCheckItem.focus();
-						}
-						ngFlag = true;
-					}
+					ngFlag = true;
+					ShaCheck.check.moveToFirstItem(inputCheckItem);
 				}else{
 					inputCheckItem.removeClass('alert-input');
 					inputCheckItem.removeClass('is-invalid');
@@ -86,6 +97,7 @@ try{
 					inputCheckItem.addClass('alert-input');
 					inputCheckItem.addClass('is-invalid');
 					ngFlag = true;
+					ShaCheck.check.moveToFirstItem(inputCheckItem);
 				}else{
 					inputCheckItem.removeClass('alert-input');
 					inputCheckItem.removeClass('is-invalid');
@@ -128,6 +140,7 @@ try{
 						inputCheckItem.addClass('alert-input');
 						inputCheckItem.addClass('is-invalid');
 						ngFlag = true;
+						ShaCheck.check.moveToFirstItem(inputCheckItem);
 					}else{
 						inputCheckItem.removeClass('alert-input');
 						inputCheckItem.removeClass('is-invalid');
@@ -173,7 +186,7 @@ try{
 					inputCheckItem.addClass('alert-input');
 					inputCheckItem.addClass('is-invalid');
 					ngFlag = true;
-
+					ShaCheck.check.moveToFirstItem(inputCheckItem);
 				}else{
 					inputCheckItem.removeClass('alert-input');
 					inputCheckItem.removeClass('is-invalid');
@@ -203,6 +216,7 @@ try{
 					inputCheckItem.addClass('alert-input');
 					inputCheckItem.addClass('is-invalid');
 					ngFlag = true;
+					ShaCheck.check.moveToFirstItem(inputCheckItem);
 				}else{
 					inputCheckItem.removeClass('alert-input');
 					inputCheckItem.removeClass('is-invalid');
@@ -232,6 +246,7 @@ try{
 					inputCheckItem.addClass('alert-input');
 					inputCheckItem.addClass('is-invalid');
 					ngFlag = true;
+					ShaCheck.check.moveToFirstItem(inputCheckItem);
 				}else{
 					inputCheckItem.removeClass('alert-input');
 					inputCheckItem.removeClass('is-invalid');
@@ -308,6 +323,167 @@ try{
 			return false;
 		},
 		
+		checkConfirmPassword : function(inputCheckItemList){
+			for( var i = 0; i < inputCheckItemList.length; i++ ){
+				var inputCheckItem = inputCheckItemList[i][1];
+				var id = inputCheckItem.attr('id');
+				var errorId = id + "_error";
+				$("#"+errorId).remove();
+			}
+			
+			var ngFlag = false;
+			for( var i = 0; i < inputCheckItemList.length; i++ ){
+				var errorItemName = inputCheckItemList[i][0];
+				var inputCheckItem = inputCheckItemList[i][1];
+				var inputCheckItemConfirm = inputCheckItemList[i][2];
+				var id = inputCheckItem.attr('id');
+				var errorId = id + "_error";
+				if(inputCheckItem.val() != inputCheckItemConfirm.val()){
+					var errorMsg = errorItemName + Pos.constants.setInfo.jsView.login.msg_regist_pwNotSameError;
+					inputCheckItem.after('<div id="'+ errorId +'" class="invalid-feedback">' + errorMsg + '</div>'); 
+					inputCheckItem.addClass('alert-input');
+					inputCheckItem.addClass('is-invalid');
+					ngFlag = true;
+					ShaCheck.check.moveToFirstItem(inputCheckItem);
+				}else{
+					inputCheckItem.removeClass('alert-input');
+					inputCheckItem.removeClass('is-invalid');
+				}
+			}
+			
+			return ngFlag;
+		},
+		
+		checkPhoneNumber : function(inputCheckItemList){
+			for( var i = 0; i < inputCheckItemList.length; i++ ){
+				var inputCheckItem = inputCheckItemList[i][1];
+				var id = inputCheckItem.attr('id');
+				var errorId = id + "_error";
+				$("#"+errorId).remove();
+			}
+			var ngFlag = false;
+			for( var i = 0; i < inputCheckItemList.length; i++ ){
+				var errorItemName = inputCheckItemList[i][0];
+				var inputCheckItem = inputCheckItemList[i][1];
+				var id = inputCheckItem.attr('id');
+				var errorId = id + "_error";
+				var isError = false;
+				var errorMsg = '';
+				if(ShaCheck.check._checkPhoneNumber(inputCheckItem)){
+					errorMsg = errorItemName + ShaConstants.constants.IPHONE_NUMBER_MSG;
+					isError = true;
+				}else{
+					ShaAjax.ajax.post(
+						Pos.constants.setInfo.common.common.url_com_check_phone_number_exist,
+						"phoneNumber="+inputCheckItem.val(),
+						function(data){
+							if (data =='existed'){
+								errorMsg = errorItemName + ShaConstants.constants.IPHONE_NUMBER_EXISTED_MSG;
+								isError = true;
+							}
+						},
+						false,
+					)
+				}
+				if (isError){
+					inputCheckItem.after('<div id="'+ errorId +'" class="invalid-feedback">' + errorMsg + '</div>'); 
+					inputCheckItem.addClass('alert-input');
+					inputCheckItem.addClass('is-invalid');
+					ngFlag = true;
+					ShaCheck.check.moveToFirstItem(inputCheckItem);
+				}else{
+					inputCheckItem.removeClass('alert-input');
+					inputCheckItem.removeClass('is-invalid');
+				}
+			}
+			
+			return ngFlag;
+		},
+		
+		checkEmail : function(inputCheckItemList){
+			for( var i = 0; i < inputCheckItemList.length; i++ ){
+				var inputCheckItem = inputCheckItemList[i][1];
+				var id = inputCheckItem.attr('id');
+				var errorId = id + "_error";
+				$("#"+errorId).remove();
+			}
+			var ngFlag = false;
+			for( var i = 0; i < inputCheckItemList.length; i++ ){
+				var errorItemName = inputCheckItemList[i][0];
+				var inputCheckItem = inputCheckItemList[i][1];
+				var id = inputCheckItem.attr('id');
+				var errorId = id + "_error";
+				var isError = false;
+				var errorMsg = '';
+				if(ShaCheck.check._checkEmail(inputCheckItem)){
+					errorMsg = errorItemName + ShaConstants.constants.EMAIL_MSG;
+					isError = true;
+				}else{
+					ShaAjax.ajax.post(
+						Pos.constants.setInfo.common.common.url_com_check_email_exist,
+						"email="+inputCheckItem.val(),
+						function(data){
+							if (data =='existed'){
+								errorMsg = errorItemName + ShaConstants.constants.EMAIL_EXISTED_MSG;
+								isError = true;
+							}
+						},
+						false
+					)
+				}
+				if (isError){
+					inputCheckItem.after('<div id="'+ errorId +'" class="invalid-feedback">' + errorMsg + '</div>'); 
+					inputCheckItem.addClass('alert-input');
+					inputCheckItem.addClass('is-invalid');
+					ngFlag = true;
+					ShaCheck.check.moveToFirstItem(inputCheckItem);
+				}else{
+					inputCheckItem.removeClass('alert-input');
+					inputCheckItem.removeClass('is-invalid');
+				}
+			}
+			
+			return ngFlag;
+		},
+		
+		checkMultiItems : function(inputCheckItemMap){
+			var ngFlag = false;
+			for (let [method, inputCheckItemList] of inputCheckItemMap) {
+			//inputCheckItemMap.forEach((inputCheckItemList, method) => {
+				var lowerCaseMethod = method.toLowerCase();
+				switch (lowerCaseMethod) {
+				  case 'checknotblank':
+					ngFlag = ShaCheck.check.checkNotBlank(inputCheckItemList) || ngFlag;
+				    continue;
+				  case 'checknotnumber':
+				    ngFlag = ShaCheck.check.checkNotNumber(inputCheckItemList) || ngFlag;
+				    continue;
+				  case 'checknumberrange':
+				    ngFlag = ShaCheck.check.checkNumberRange(inputCheckItemList) || ngFlag;
+				    continue;
+				  case 'checkmaxlength':
+				    ngFlag = ShaCheck.check.checkMaxLength(inputCheckItemList) || ngFlag;
+				    continue;
+				  case 'checkminlength':
+				    ngFlag = ShaCheck.check.checkMinLength(inputCheckItemList) || ngFlag;
+				    continue;
+				  case 'checkphonenumber':
+					ngFlag = ShaCheck.check.checkPhoneNumber(inputCheckItemList) || ngFlag;
+					continue;
+				  case 'checkemail':
+					ngFlag = ShaCheck.check.checkEmail(inputCheckItemList) || ngFlag;
+					continue;
+				  case 'checkconfirmpassword':
+					ngFlag = ShaCheck.check.checkConfirmPassword(inputCheckItemList) || ngFlag;
+					continue;
+				  default:
+				    console.log('Unknown check method:'+method);
+				}
+			};
+			
+			return ngFlag;
+		},
+				
 		_checkNotBlank : function(inputCheckItem){
 			var type = inputCheckItem.attr('type');
 			if(type == 'text' || type == 'password' ||type == 'number'|| inputCheckItem.is('textarea') ||
@@ -350,7 +526,7 @@ try{
 			return false;
 		},
 		
-		_checkNotNumber : function(inputCheckItem, minLength){
+		_checkNotNumber : function(inputCheckItem){
 			var type = inputCheckItem.attr('type');
 			if(type == 'text' || type == 'password' || type == 'number'||
 					inputCheckItem.is('textarea')) {
@@ -364,6 +540,46 @@ try{
 			
 			return false;
 		}, 
+		
+		_checkPhoneNumber : function(inputCheckItem){
+			var type = inputCheckItem.attr('type');
+			if(type == 'text' || type == 'password' || type == 'number'||
+					inputCheckItem.is('textarea')) {
+				var reg = new RegExp(/^1[3-9]\d{9}$/);
+	            if (!inputCheckItem.val().match(reg)) {
+	                return true;
+				} else {
+					return false;
+				}
+			}
+			
+			return false;
+		},
+		//
+		_checkEmail : function(inputCheckItem){
+			var type = inputCheckItem.attr('type');
+			if(type == 'text' || type == 'password' || type == 'number'||
+					inputCheckItem.is('textarea')) {
+				var reg = new RegExp(/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/);
+	            if (!inputCheckItem.val().match(reg)) {
+	                return true;
+				} else {
+					return false;
+				}
+			}
+			
+			return false;
+		},
+		
+		isBlank : function(str){
+		    if (typeof str == 'undefined' || !str || str.length === 0 || str === "" || !/[^\s]/.test(str) || /^\s*$/.test(str) || str.replace(/\s/g,"") === ""){
+		        return true;
+		    }
+		    else{
+		        return false;
+		    }
+		},
+		
 	}
 	
 })(ShaCheck);

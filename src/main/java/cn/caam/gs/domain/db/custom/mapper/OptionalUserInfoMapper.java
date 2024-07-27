@@ -22,4 +22,8 @@ public interface OptionalUserInfoMapper {
 	UserInfo getBaseUserInfo(@Param("userId") String userId);
 	
 	MUserExtend getUserPhoto(@Param("userId") String userId);
+	
+	boolean isPhoneNumberExist(@Param("phone") String phone);
+	
+	boolean isEmailExist(@Param("mail") String mail);
 }

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.codec.binary.Hex;
@@ -22,11 +23,14 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import cn.caam.gs.config.SmsConfig;
+import lombok.extern.slf4j.Slf4j;
 
-//如果JDK版本是1.8,可使用原生Base64类
-
+@Slf4j
 public class HuaWeiSMSUtil {
 
     //无需修改,用于格式化鉴权头域,给"X-WSSE"参数赋值
@@ -42,7 +46,7 @@ public class HuaWeiSMSUtil {
     	config.setSender("1069368924410007625");
     	config.setTemplateId("ab64fbafe4c94426aa91e15b9f17a9c1");
     	config.setSignature("华为云短信测试");
-        sendSms(config, "[\""+ (int)((Math.random()*9+1)*100000)+"\"]","13336276767");
+        sendSms(config,"13336276767", ""+ (int)((Math.random()*9+1)*100000)+"", 1);
         //response:
         //{"result":[{"total":1,"originTo":"+8613336276767","createTime":"2024-07-06T01:55:32Z","from":"1069368924410007625","smsMsgId":"502d816a-432e-46e3-8d0a-755f6572c883_246592933","countryId":"CN","status":"000000"}],"code":"000000","description":"Success"}
         
@@ -56,7 +60,7 @@ public class HuaWeiSMSUtil {
      * @param templateId  必填:模板ID
      * @throws Exception
      */
-    public static void sendSms(SmsConfig config,String code,String phone) throws Exception{
+    public static boolean sendSms(SmsConfig config,String phone, String code, int validMinute) throws Exception{
     	//APP接入地址+接口访问URI
         String url = config.getApiUrl();
         //APP_Key
@@ -82,20 +86,19 @@ public class HuaWeiSMSUtil {
          * ${DATE}${TIME}变量不允许取值为空,${TXT_20}变量可以使用英文空格或点号替代空值,${NUM_6}变量可以使用0替代空值
          * 查看更多模板和变量规范:产品介绍>模板和变量规范
          */
-        String templateParas = code; //模板变量
+        String templateParas = "[\""+ code+"\"]"; //模板变量
+//        String templateParas = "[\""+ code+"\",\""+validMinute+"\"]"; //模板变量
 
         //请求Body,不携带签名名称时,signature请填null
         String body = buildRequestBody(sender, receiver, templateId, templateParas, statusCallBack, signature);
         if (null == body || body.isEmpty()) {
-            System.out.println("body is null.");
-            return;
+            throw new Exception("body is null.");
         }
 
         //请求Headers中的X-WSSE参数值
         String wsseHeader = buildWsseHeader(appKey, appSecret);
         if (null == wsseHeader || wsseHeader.isEmpty()) {
-            System.out.println("wsse header is null.");
-            return;
+            throw new Exception("wsse header is null.");
         }
 
         //如果JDK版本低于1.8,可使用如下代码
@@ -123,8 +126,16 @@ public class HuaWeiSMSUtil {
                 .addHeader("X-WSSE", wsseHeader)
                 .setEntity(new StringEntity(body)).build());
 
-        System.out.println(response.toString()); //打印响应头域信息
-        System.out.println(EntityUtils.toString(response.getEntity())); //打印响应消息实体
+        String jsonString = EntityUtils.toString(response.getEntity());
+        log.info(response.toString());
+        log.info(jsonString);
+        
+      //response:
+        //{"result":[{"total":1,"originTo":"+8613336276767","createTime":"2024-07-06T01:55:32Z","from":"1069368924410007625","smsMsgId":"502d816a-432e-46e3-8d0a-755f6572c883_246592933","countryId":"CN","status":"000000"}]
+        //,"code":"000000","description":"Success"}
+        JSONObject jsonObject = new JSONObject(jsonString);
+        Map<String, Object> map = jsonObject.toMap();
+        return "000000".equals(map.get("code"));
     }
 
     /**

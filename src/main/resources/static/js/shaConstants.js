@@ -36,6 +36,10 @@ try{
 			NOT_DUPLICATE_MSG 	: ' is duplicated.',
 			MAX_LENGTH_MSG 		: ' should not longer than {0} char.',
 			MIN_LENGTH_MSG		: ' should not less than {0} char.',
+			MIN_LENGTH_MSG		: ' should not less than {0} char.',
+			MIN_LENGTH_MSG		: ' should not less than {0} char.',
+			IPHONE_NUMBER_MSG	: ' phone number is invalid.',
+			EMAIL_MSG		    : ' email is invalid.',
 			
 			//date time format
 			DATETIME_FORMAT : 'yyyy/MM/dd HH:mm:ss',

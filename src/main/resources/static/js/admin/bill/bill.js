@@ -27,7 +27,6 @@ Bill.prototype.ID = {
 	BTN_BILL_PHOTO_OPEN          : "billPhotoFileOpen",
 	ITEM_BILL_PHOTO_LBL          : "billPhotoFileLbl",
 	ITEM_BILL_PHOTO_NAME         : "billPhotoFileName",
-
 };
 //------------------------------------------]
 
@@ -142,7 +141,18 @@ Bill.prototype.check = function(){
         [ self.i18n["m_bill.bill_amount"], 	self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_BILL_AMOUNT)]
     ];
     
-    return ShaCheck.check.checkNotNumber(inputCheckItemList);
+	if (ShaCheck.check.checkNotNumber(inputCheckItemList)) {
+		return true;
+	}
+		
+	inputCheckItemList = [
+        [ self.i18n["m_bill.bill_amount"], 	self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_BILL_AMOUNT), ShaConstants.constants.MIN_BILL_AMOUNT, ShaConstants.constants.MAX_BILL_AMOUNT]
+    ];
+    
+	if (ShaCheck.check.checkNumberRange(inputCheckItemList)) {
+		return true;
+	}
+	return false;
 };
 
 

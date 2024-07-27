@@ -150,7 +150,8 @@ public class MailUtil {
             // 件名
             message.setSubject(mailDataSet.subject, charset);
             // 本文
-            message.setText(mailDataSet.content, charset);
+           // message.setText(mailDataSet.content, charset);
+            message.setContent(mailDataSet.content, "text/html; charset=utf-8");
             // ヘッダー
             message.setHeader("Content-Transfer-Encoding", encoding);
             // 送信
@@ -254,5 +255,70 @@ public class MailUtil {
             e.printStackTrace();
             return MailSendResultType.NG_OTHER;
         }
+    }
+    
+    public static void main(String[] args) throws Exception{
+    	MailDataSet mailDataSet = new MailDataSet();
+    	  /** 送信者の表示名. */
+//        mailDataSet.setFromName("guokedong7821@163.com");
+        /** 送信アドレス. */
+        mailDataSet.setFrom("guokedong7821@163.com");
+        /** 宛先(TO). */
+        mailDataSet.setToArray(new String[] {"guokedong7821@163.com"});
+        /** 宛先(CC). */
+        mailDataSet.setCcArray(new String[0]);
+        /** 宛先(BCC). */
+        mailDataSet.setBccArray(new String[0]);
+        /** 認証(ユーザー名). */
+        mailDataSet.setAuthUsername("guokedong7821");
+        /** 認証(パスワード). */
+        mailDataSet.setAuthPassword("RXSQESCNXNAUCSOS");
+        /** ホスト名. */
+        mailDataSet.setHost("smtp.163.com");
+        /** ポート. */
+        mailDataSet.setPort(25);
+        /** 暗号化(TLS保護接続への接続). */
+        mailDataSet.setStarttls(true);
+        /** 件名. */
+        mailDataSet.setSubject("test");
+        /** 本文*/
+        mailDataSet.setContent("test");
+        /** 附件 */
+        
+        /** 附件名 */
+    	
+    	
+//    	MailDataSet mailDataSet = new MailDataSet();
+//  	  /** 送信者の表示名. */
+//      mailDataSet.setFrom("syakt@jcbc.jp");
+//      /** 送信アドレス. */
+//      mailDataSet.setFrom("syakt@jcbc.jp");
+//      /** 宛先(TO). */
+//      mailDataSet.setToArray(new String[] {"guokedong7821@163.com"});
+//      /** 宛先(CC). */
+//      mailDataSet.setCcArray(new String[0]);
+//      /** 宛先(BCC). */
+//      mailDataSet.setBccArray(new String[0]);
+//      /** 認証(ユーザー名). */
+//      mailDataSet.setAuthUsername("syakt@jcbc.jp");
+//      /** 認証(パスワード). */
+//      mailDataSet.setAuthPassword("Tuf1xrrzyb2p3DBB7JOnjg==");
+//      /** ホスト名. */
+//      mailDataSet.setHost("mail.jcbc.jp");
+//      /** ポート. */
+//      mailDataSet.setPort(587);
+//      /** 暗号化(TLS保護接続への接続). */
+//      mailDataSet.setStarttls(true);
+//      /** 件名. */
+//      mailDataSet.setSubject("test");
+//      /** 本文*/
+//      mailDataSet.setContent("test");
+//      /** 附件 */
+//      
+//      /** 附件名 */
+//      
+     
+        
+    	MailUtil.send(mailDataSet);
     }
 }

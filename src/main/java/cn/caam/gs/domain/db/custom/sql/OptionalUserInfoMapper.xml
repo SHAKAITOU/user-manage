@@ -227,4 +227,22 @@
 			mue.id = #{userId, jdbcType=NVARCHAR}
     </select>
     
+    <select id="isPhoneNumberExist" resultType="boolean">
+		SELECT COUNT(1) FROM 
+		(SELECT 1
+		FROM
+		    m_user mu 
+		WHERE
+			mu.phone = #{phone, jdbcType=NVARCHAR} limit 1) mu
+	</select>
+	
+	<select id="isEmailExist" resultType="boolean">
+		SELECT COUNT(1) FROM 
+		(SELECT 1
+		FROM
+		    m_user mu 
+		WHERE
+			mu.mail = #{mail, jdbcType=NVARCHAR} limit 1) mu
+	</select>
+    
 </mapper>

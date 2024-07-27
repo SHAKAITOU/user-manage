@@ -1,6 +1,7 @@
 package cn.caam.gs.service.impl;
 
 import java.io.IOException;
+import java.time.LocalTime;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +11,14 @@ import org.springframework.transaction.annotation.Transactional;
 import cn.caam.gs.app.admin.usersearch.form.UserSearchForm;
 import cn.caam.gs.app.admin.usersearch.output.UserListOutput;
 import cn.caam.gs.app.user.detail.form.UserDetailForm;
+import cn.caam.gs.app.user.regist.form.RegistForm;
+import cn.caam.gs.common.enums.CheckStatusType;
+import cn.caam.gs.common.enums.UserType;
+import cn.caam.gs.common.enums.ValidType;
+import cn.caam.gs.common.util.EncryptorUtil;
 import cn.caam.gs.common.util.LocalDateUtility;
 import cn.caam.gs.common.util.LocalDateUtility.DatePattern;
+import cn.caam.gs.common.util.LocalDateUtility.TimePattern;
 import cn.caam.gs.domain.db.base.entity.MAdmin;
 import cn.caam.gs.domain.db.base.entity.MUser;
 import cn.caam.gs.domain.db.base.entity.MUserExtend;
@@ -64,6 +71,14 @@ public class UserService extends BaseService {
 	public MAdmin getLoginAdminInfo(String userCode) {
         return adminMapper.selectByPrimaryKey(userCode);
     }
+	
+	public boolean isPhoneNumberExist(String phoneNumber) {
+		 return optionalUserInfoMapper.isPhoneNumberExist(phoneNumber);
+	}
+	
+	public boolean isEmailExist(String email) {
+		return optionalUserInfoMapper.isEmailExist(email);
+	} 
 	
 	@Transactional
 	public void updateUserInfo(UserDetailForm userDetailForm) throws IOException{
@@ -157,6 +172,31 @@ public class UserService extends BaseService {
 			}else {
 				userExtendMapper.insert(userExtend);
 			}
+		}
+	}
+	
+	@Transactional
+	public void insertUserInfo(RegistForm ｇegistForm) throws IOException{
+		MUser userInput = ｇegistForm.getUser();
+		if (userInput != null && !StringUtils.isBlank(userInput.getName())) {
+			//G20240704000001
+			userInput.setId("G"+LocalDateUtility.getCurrentDateString(DatePattern.UUUUMMDD)+LocalDateUtility.formatTime(LocalTime.now(), TimePattern.HHMISS));
+			//密码加密
+			userInput.setPassword(EncryptorUtil.encrypt(userInput.getPassword()));
+			//审核状态：待审核
+			userInput.setCheckStatus(CheckStatusType.WAIT_FOR_REVIEW.getKey());
+			//申请时间
+			userInput.setApplicationDate(LocalDateUtility.getCurrentDateString());
+			//会员类型
+			userInput.setUserType(UserType.PERSON_REGULAR.getKey());
+			//有效状态
+			userInput.setValidStatus(ValidType.INVALID.getKey());
+			
+			userMapper.insert(userInput);
+			
+			MUserExtend userExtendInput = new MUserExtend();
+			userExtendInput.setId(userInput.getId());
+			userExtendMapper.insert(userExtendInput);
 		}
 	}
 }

@@ -20,8 +20,6 @@ RegistStep2.prototype.ID = {
 	//btn
 	BTN_NEXT							: 'btnNext',
 	BTN_BACK							: 'btnBack',
-	BTN_CANCEL							: 'btnCancel',
-	BTN_OK							    : 'btnOk',
 
 	//item
 	ITEM_ERROR_MSG						: 'errorMsg',
@@ -29,8 +27,6 @@ RegistStep2.prototype.ID = {
 	ITEM_PW  						    : 'user_password',
 	ITEM_PWREP  					    : 'user_passwordRep',
 	ITEM_BIRTH  					    : 'user_birth',
-	ITEM_EMPLOYER                       : "user_employer",
-	
 	
 	ITEM_PW_SHOW_BTN  				    : 'user_passwordShow',
 	ITEM_PWREP_SHOW_BTN   	    	    : 'user_passwordRepShow',
@@ -100,40 +96,27 @@ RegistStep2.prototype.initEvent = function(){
         clearBtn : self.clearBtn
     });
 	
-	ShaInput.button.onClick(self.getObject(self.ID.BTN_CANCEL), 
-			function(event) {
-				
-				//self.getObject(self.ID.ITEM_STEP_STS).val("STEP1_OUT");  //go out
-	    		ShaAjax.pop.postDialogMiddleCenter(
-	    			Pos.constants.setInfo.loginTitle,
-	    			Pos.constants.setInfo.jsView.login.url_login_init, 
-	    			$('#index_form').serializeArray()); 
-		    }
-		);
+	//init event to BTN_BACK
+	ShaInput.button.onClick(self.getObject(self.ID.BTN_BACK), 
+		function(event) {
+    		ShaAjax.pop.postDialogMiddleCenter(
+    			Pos.constants.setInfo.loginTitle,
+    			Pos.constants.setInfo.jsView.login.url_login_init, 
+    			$('#index_form').serializeArray()); 
+	    }
+	);
 	
-	//init event to BTN_OK
-	ShaInput.button.onClick(self.getObject(self.ID.BTN_OK), 
+	//init event to BTN_NEXT
+	ShaInput.button.onClick(self.getObject(self.ID.BTN_NEXT), 
 		function(event) {
 			if(self.check()) {
 	            return;
 	        }
-	        
-	        //self.getObject(self.ID.ITEM_STEP_STS).val("STEP2");  //go step2
-	        ShaAjax.ajax.post(
-				Pos.constants.setInfo.jsView.login.url_userRegistFinal,
-				self.getForm().serializeArray(),
-				function(data){
-					if (data == Pos.constants.setInfo.common.executeReturnTypeOk) {
-						ShaDialog.dialogs.success(self.i18n["dialogs.add.success.msg"]);
-						ShaAjax.pop.postDialogMiddleCenter(
-				    			Pos.constants.setInfo.loginTitle,
-				    			Pos.constants.setInfo.jsView.login.url_login_init, 
-				    			$('#index_form').serializeArray()); 
-					} else {
-						ShaDialog.dialogs.success(self.i18n["dialogs.fail.title"]);
-					}
-				}
-			)
+			
+    		ShaAjax.pop.postDialogMiddleCenter(
+    			Pos.constants.setInfo.jsView.login.userRegist_confirm_title,
+    			Pos.constants.setInfo.jsView.login.url_userRegist_commit, 
+    			self.getForm().serializeArray()); 
 	    }
 	);
 	
@@ -145,36 +128,13 @@ RegistStep2.prototype.initEvent = function(){
 RegistStep2.prototype.check = function(){
 	//keep self instance for call back
 	var self = this;
-	var result = false;
+
     var inputCheckItemList = [
         [ self.i18n["m_user.name"], 			self.getObject(self.ID.ITEM_NAME)], 
         [ self.i18n["m_user.password"], 		self.getObject(self.ID.ITEM_PW)], 
-		[ self.i18n["m_user.passwordRep"], 		self.getObject(self.ID.ITEM_PWREP)], 
-		[ self.i18n["m_user.birth"], 		    self.getObject(self.ID.ITEM_BIRTH)],
-		[ self.i18n["m_user.employer"], 		self.getObject(self.ID.ITEM_EMPLOYER)],
     ];
-    if (ShaCheck.check.checkNotBlank(inputCheckItemList)){
-		return true;
-	}
-	
-	if (ShaCheck.check.checkMinLength(			[
-				       [ self.i18n["m_user.password"],self.getObject(self.ID.ITEM_PW), Pos.constants.setInfo.common.user_pw_min_l], 
-					   [ self.i18n["m_user.passwordRep"],self.getObject(self.ID.ITEM_PWREP), Pos.constants.setInfo.common.user_pw_min_l], ]) || 
-		ShaCheck.check.checkMaxLength(			[
-				       [ self.i18n["m_user.password"],self.getObject(self.ID.ITEM_PW), Pos.constants.setInfo.common.user_pw_max_l], 
-					   [ self.i18n["m_user.passwordRep"],self.getObject(self.ID.ITEM_PWREP), Pos.constants.setInfo.common.user_pw_max_l],
-				     ])){
-		result = true;
-	}else{
-		inputCheckItemList = [
-			       [ "",self.getObject(self.ID.ITEM_PW), self.getObject(self.ID.ITEM_PWREP)], 
-	    ];
-		if (ShaCheck.check.checkConfirmPassword(inputCheckItemList)){
-			result = true;
-		}
-	}
-	
-	return result;
+    
+    return ShaCheck.check.checkNotBlank(inputCheckItemList);
 };
 
 //initFocus

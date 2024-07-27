@@ -88,10 +88,6 @@ RegistStep1Confirm.prototype.initEvent = function(){
 						//認証ERROR
 						var errorMsgC = self.i18n["login.regist.step1.confirm.wrongAuthCode"];
 						ShaCheck.check.checkItem(self.getObject(self.ID.ITEM_AUTH_CODE), true, errorMsgC)
-					}else if (data === "STEP1_NG_EXPIRED") {
-						//認証过期ERROR
-						var errorMsgC = self.i18n["login.regist.step1.confirm.authCodeExpired"];
-						ShaCheck.check.checkItem(self.getObject(self.ID.ITEM_AUTH_CODE), true, errorMsgC)
 					} else {
 						// go to step2
 						ShaAjax.pop.postDialogMiddleCenter(
@@ -101,6 +97,8 @@ RegistStep1Confirm.prototype.initEvent = function(){
 					}
 				}
 			)
+			
+    		
 	    }
 	);
 	

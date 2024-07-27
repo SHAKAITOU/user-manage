@@ -30,6 +30,7 @@
     <result column="postal_code" property="postalCode" jdbcType="VARCHAR" />
     <result column="phone" property="phone" jdbcType="VARCHAR" />
     <result column="mail" property="mail" jdbcType="VARCHAR" />
+    <result column="application_date" property="applicationDate" jdbcType="VARCHAR" />
     <result column="check_date" property="checkDate" jdbcType="VARCHAR" />
     <result column="check_status" property="checkStatus" jdbcType="VARCHAR" />
     <result column="valid_status" property="validStatus" jdbcType="VARCHAR" />
@@ -47,7 +48,7 @@
     -->
     id, name, user_type, password, membership_path, focus_on, sex, birth, nationality, 
     political, edu_degree, bachelor, position, employer, employer_type, job_title, certificate_type, 
-    certificate_code, area, area_sub, address, postal_code, phone, mail, check_date, 
+    certificate_code, area, area_sub, address, postal_code, phone, mail, application_date,check_date, 
     check_status, valid_status, regist_date, valid_start_date, valid_end_date, society_type, 
     group_name, credit_code
   </sql>
@@ -82,7 +83,7 @@
       job_title, certificate_type, certificate_code, 
       area, area_sub, address, 
       postal_code, phone, mail, 
-      check_date, check_status, valid_status, 
+      application_date,check_date, check_status, valid_status, 
       regist_date, valid_start_date, valid_end_date, 
       society_type, group_name, credit_code
       )
@@ -94,7 +95,7 @@
       #{jobTitle,jdbcType=VARCHAR}, #{certificateType,jdbcType=VARCHAR}, #{certificateCode,jdbcType=VARCHAR}, 
       #{area,jdbcType=VARCHAR}, #{areaSub,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
       #{postalCode,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{mail,jdbcType=VARCHAR}, 
-      #{checkDate,jdbcType=VARCHAR}, #{checkStatus,jdbcType=VARCHAR}, #{validStatus,jdbcType=VARCHAR}, 
+      #{applicationDate,jdbcType=VARCHAR},#{checkDate,jdbcType=VARCHAR}, #{checkStatus,jdbcType=VARCHAR}, #{validStatus,jdbcType=VARCHAR}, 
       #{registDate,jdbcType=VARCHAR}, #{validStartDate,jdbcType=VARCHAR}, #{validEndDate,jdbcType=VARCHAR}, 
       #{societyType,jdbcType=VARCHAR}, #{groupName,jdbcType=VARCHAR}, #{creditCode,jdbcType=VARCHAR}
       )
@@ -177,6 +178,9 @@
       </if>
       <if test="mail != null" >
         mail,
+      </if>
+      <if test="applicationDate != null" >
+        application_date,
       </if>
       <if test="checkDate != null" >
         check_date,
@@ -384,6 +388,9 @@
       <if test="mail != null" >
         mail = #{mail,jdbcType=VARCHAR},
       </if>
+      <if test="applicationDate != null" >
+        application_date = #{applicationDate,jdbcType=VARCHAR},
+      </if>
       <if test="checkDate != null" >
         check_date = #{checkDate,jdbcType=VARCHAR},
       </if>
@@ -443,6 +450,7 @@
       postal_code = #{postalCode,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
       mail = #{mail,jdbcType=VARCHAR},
+      application_date = #{applicationDate,jdbcType=VARCHAR},
       check_date = #{checkDate,jdbcType=VARCHAR},
       check_status = #{checkStatus,jdbcType=VARCHAR},
       valid_status = #{validStatus,jdbcType=VARCHAR},

@@ -49,6 +49,8 @@ public class LoginViewHelper extends HtmlViewBaseHelper {
     public static final String URL_C_USER_REGIST_STEP2 = UrlConstants.USER_REGIST + "/step2";
     public static final String URL_C_USER_REGIST_STEP3 = UrlConstants.USER_REGIST + "/step3";
     public static final String URL_C_USER_REGIST_STEP_FINAL = UrlConstants.USER_REGIST + "/stepFinal";
+    
+    public static final String URL_C_USER_REGIST_SEND_AUTH_CODE = UrlConstants.USER_REGIST + "/sendAuthCode";
 
     public static final String HTML_INDEX      = "user/index";
     public static final String HTML_LOGIN      = "user/loginBlock";
@@ -64,6 +66,8 @@ public class LoginViewHelper extends HtmlViewBaseHelper {
     public static final String STEP_STS_STEP1_COMMIT = "STEP1_COMMIT";
     public static final String STEP_STS_STEP1_OUT    = "STEP1_OUT";
     public static final String STEP_STS_STEP1_NG     = "STEP1_NG";
+    public static final String STEP_STS_STEP1_NG_EXPIRED  = "STEP1_NG_EXPIRED";
+    public static final String STEP_STS_STEP1_NG_SEND_SMS  = "STEP1_NG_SEND_SMS";
     public static final String STEP_STS_STEP2_INIT   = "STEP2";
 
     public static final int MAIL_LENGTH = 40;
@@ -344,6 +348,7 @@ public class LoginViewHelper extends HtmlViewBaseHelper {
         js.put("url_userRegist",      URL_BASE + URL_C_USER_REGIST);
         js.put("url_userRegist_commit",  URL_BASE + URL_C_USER_REGIST_COMMIT);
         js.put("url_userRegist_confirm", URL_BASE + URL_C_USER_REGIST_COMMIT_CONFIRM);
+        js.put("url_userRegist_sendAuthCode", URL_BASE + URL_C_USER_REGIST_SEND_AUTH_CODE);
         
         js.put("url_userRegist2",        URL_BASE + URL_C_USER_REGIST_STEP2);
         js.put("url_userRegist3",        URL_BASE + URL_C_USER_REGIST_STEP3);

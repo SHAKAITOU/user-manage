@@ -120,6 +120,10 @@ public class JavaScriptSet {
 		common.put("checkMaxNumberMsg", getContext("common.check.msg.maxNumber"));
 		common.put("checkMinNumberMsg", getContext("common.check.msg.minNumber"));
 		common.put("checkRequiredNumberValMsg", getContext("common.check.msg.requiredNumberVal"));
+		common.put("checkPhoneNumberMsg", getContext("common.check.msg.phoneNumberMsg"));
+		common.put("checkEmailMsg", getContext("common.check.msg.emailMsg"));
+		common.put("checkPhoneNumberExistedMsg", getContext("common.check.msg.phoneNumberExistedMsg"));
+		common.put("checkEmailExistedMsg", getContext("common.check.msg.emailExistedMsg"));
 
 		// enum
 		common.put("executeReturnTypeOk", ExecuteReturnType.OK.getId());
@@ -148,7 +152,26 @@ public class JavaScriptSet {
 		common.put("max_bill_amount", GlobalConstants.MAX_BILL_AMOUNT);
 		common.put("min_bill_amount", GlobalConstants.MIN_BILL_AMOUNT);
 		
+		common.put("user_regist_sms_send_interval", GlobalConstants.USER_REGIST_SMS_SEND_INTERVAL);
 		
+		common.put("user_id_max_l", GlobalConstants.USER_ID_MAX_L);
+		common.put("user_name_max_l", GlobalConstants.USER_NAME_MAX_L);
+		common.put("user_pw_max_l", GlobalConstants.USER_PW_MAX_L);
+		common.put("user_pw_min_l", GlobalConstants.USER_PW_MIN_L);
+		common.put("phone_max_l", GlobalConstants.PHONE_MAX_L);
+		common.put("mail_max_l", GlobalConstants.MAIL_MAX_L);
+		common.put("auth_code_max_l", GlobalConstants.AUTH_CODE_MAX_L);
+		common.put("employer_max_l", GlobalConstants.EMPLOYER_MAX_L);
+		common.put("certificate_code_max_l", GlobalConstants.CERTIFICATE_CODE_MAX_L);
+		common.put("post_code_max_l", GlobalConstants.POST_CODE_MAX_L);
+		common.put("address_max_l", GlobalConstants.ADDRESS_MAX_L);
+		common.put("introducer1_max_l", GlobalConstants.INTRODUCER1_MAX_L);
+		common.put("research_dir_max_l", GlobalConstants.RESEARCH_DIR_MAX_L);
+		common.put("major_max_l", GlobalConstants.MAJOR_MAX_L);
+		common.put("learn_experience_max_l", GlobalConstants.LEARN_EXPERIENCE_MAX_L);
+		common.put("amount_max_l", GlobalConstants.AMOUNT_MAX_L);
+		common.put("bill_code_max_l", GlobalConstants.BILL_CODE_MAX_L);
+		common.put("bill_title_max_l", GlobalConstants.BILL_TITLE_MAX_L);
 
 		JSONObject msgObj = new JSONObject();
         for (String key : messageSourceUtil.getKeys()) {

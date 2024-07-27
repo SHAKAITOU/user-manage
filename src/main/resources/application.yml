@@ -46,15 +46,18 @@ spring:
     store-type: none
 
   mail:
-    host: mail.jcbc.jp
-    port: 587
-    username: syakt@jcbc.jp
-    password: Tuf1xrrzyb2p3DBB7JOnjg==
+    host: smtp.163.com
+    port: 25
+    username: guokedong7821
+    password: RXSQESCNXNAUCSOS
+    from: guokedong7821@163.com
     properties:
       smtp:
        auth: true
        starttls:
          enable: true
+    templates:
+      regist_authcode_template: mail/regist_authcode.html
 
   #### SMS ####
   sms:

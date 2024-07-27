@@ -33,6 +33,7 @@ public class GlobalConstants {
     
     public static final int USER_ID_MAX_L              = 20;
     public static final int USER_NAME_MAX_L            = 70;
+    public static final int USER_PW_MIN_L              = 8;
     public static final int USER_PW_MAX_L              = 40;
     public static final int PHONE_MAX_L                = 11;
     public static final int MAIL_MAX_L                 = 60;
@@ -53,6 +54,9 @@ public class GlobalConstants {
     public static final int MIN_BILL_AMOUNT            = 500;
     
     public static final int ADD_USER_VLID_MONTHS       = 60;
+    
+    public static final int USER_REGIST_EXPIRED_MINUTE  = 10;
+    public static final int USER_REGIST_SMS_SEND_INTERVAL = 1;
     
     /** 頁LINK表示数(PC) */
     public static final int PC_LINKCNT = 10;

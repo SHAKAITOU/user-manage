@@ -503,6 +503,7 @@ CREATE TABLE m_user
     postal_code      VARCHAR(10)           COMMENT '邮政编码(max10)',
     phone            VARCHAR(20)           COMMENT '手机号(max11)',
     mail             VARCHAR(70)           COMMENT '电子邮箱(max64)',
+    application_date VARCHAR(20)           COMMENT '审请时间(yyyy-MM-dd)',
     check_date       VARCHAR(20)           COMMENT '审核时间(yyyy-MM-dd)',
     check_status     VARCHAR(20)           COMMENT '审核状态(F0013)',
     valid_status     VARCHAR(6)            COMMENT '有效状态',

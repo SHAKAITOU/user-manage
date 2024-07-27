@@ -1,33 +1,26 @@
 package cn.caam.gs.app.common.controller;
 
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import cn.caam.gs.app.GlobalConstants;
 import cn.caam.gs.app.common.view.CommonViewHelper;
 import cn.caam.gs.app.user.login.form.LoginForm;
-import cn.caam.gs.app.user.login.view.LoginViewHelper;
 import cn.caam.gs.app.util.ControllerHelper;
 import cn.caam.gs.app.util.SessionConstants;
 import cn.caam.gs.common.controller.ScreenBaseController;
-import cn.caam.gs.common.html.HtmlViewBaseHelper;
 import cn.caam.gs.domain.db.base.entity.MUserExtend;
 import cn.caam.gs.domain.db.custom.entity.UserInfo;
 import cn.caam.gs.domain.db.custom.mapper.OptionalUserInfoMapper;
+import cn.caam.gs.service.impl.UserService;
 
 /**
  * S002 Thymeleaf 
@@ -40,6 +33,9 @@ public class CommonController extends ScreenBaseController{
     
     @Autowired
     OptionalUserInfoMapper optionalUserInfoMapper;
+    
+    @Autowired
+	UserService userService;
     
     @PostMapping(path=CommonViewHelper.URL_WINDOW_RESIZE)
     @ResponseBody
@@ -64,5 +60,31 @@ public class CommonController extends ScreenBaseController{
 
         return ControllerHelper.getModelAndView(CommonViewHelper.getShowPhotoPage(request, userInfo));
     }
+    
+    @PostMapping(path=CommonViewHelper.URL_CHECK_USER_PHONE_NUMBER)
+    @ResponseBody
+	public String checkPhoneNumber(
+			@RequestParam("phoneNumber") String phoneNumber,
+			HttpServletRequest request,
+			HttpServletResponse response) {
+
+		if (userService.isPhoneNumberExist(phoneNumber)) {
+			return "existed";
+		}
+		return "";
+	}
+    
+    @PostMapping(path=CommonViewHelper.URL_CHECK_USER_EMAIL)
+    @ResponseBody
+	public String checkEmail(
+			@RequestParam("email") String email,
+			HttpServletRequest request,
+			HttpServletResponse response) {
+
+    	if (userService.isEmailExist(email)) {
+			return "existed";
+		}
+		return "";
+	}
 }
 

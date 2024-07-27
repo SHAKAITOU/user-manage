@@ -16,3 +16,6 @@ INSERT INTO m_fixed_value VALUES ('F0010', '05', '团体证',      5);
 INSERT INTO m_fixed_value VALUES ('F0023', '01', '中国学会',    1);
 INSERT INTO m_fixed_value VALUES ('F0023', '02', '甘肃学会',    2);
 -- --------------
+
+-- 20240727 --
+ALTER TABLE m_user add COLUMN application_date  VARCHAR(20);

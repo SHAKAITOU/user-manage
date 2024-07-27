@@ -125,7 +125,10 @@ try{
 			
 			ShaConstants.constants.MAX_BILL_AMOUNT 	= Pos.constants.setInfo.common.max_bill_amount;
 			ShaConstants.constants.MIN_BILL_AMOUNT 	= Pos.constants.setInfo.common.min_bill_amount;
-			
+			ShaConstants.constants.IPHONE_NUMBER_MSG= Pos.constants.setInfo.common.checkPhoneNumberMsg;
+			ShaConstants.constants.EMAIL_MSG 	    = Pos.constants.setInfo.common.checkEmailMsg;
+			ShaConstants.constants.IPHONE_NUMBER_EXISTED_MSG= Pos.constants.setInfo.common.checkPhoneNumberExistedMsg;
+			ShaConstants.constants.EMAIL_EXISTED_MSG= Pos.constants.setInfo.common.checkEmailExistedMsg;
 			//date time format
 			ShaConstants.constants.DATETIME_FORMAT = Pos.constants.setInfo.common.datetimeFormat;
 			

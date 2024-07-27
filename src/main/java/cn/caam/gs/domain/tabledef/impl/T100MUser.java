@@ -36,6 +36,7 @@ public class T100MUser extends BaseTableDef implements BaseDdl{
     public static final String COL_POSTAL_CODE      = "postal_code";
     public static final String COL_PHONE            = "phone";
     public static final String COL_MAIL             = "mail";
+    public static final String COL_APPLICATION_DATE = "application_date";
     public static final String COL_CHECK_DATE       = "check_date";
     public static final String COL_CHECK_STATUS     = "check_status";
     public static final String COL_VALID_STATUS     = "valid_status";
@@ -81,6 +82,7 @@ public class T100MUser extends BaseTableDef implements BaseDdl{
         new ColumnInfoForm(COL_SOCIETY_TYPE,     false,    MySqlType.CHARACTER_VARYING.getType(), 6 , null, null, false, "",  getLabelName(TABLE_NAME, COL_SOCIETY_TYPE),     getPlaceholder(TABLE_NAME, COL_SOCIETY_TYPE)),
         new ColumnInfoForm(COL_VALID_STATUS,     false,    MySqlType.CHARACTER_VARYING.getType(), 120 , null, null, false, "",  getLabelName(TABLE_NAME, COL_GROUP_NAME),     getPlaceholder(TABLE_NAME, COL_GROUP_NAME)),
         new ColumnInfoForm(COL_CREDIT_CODE,      false,    MySqlType.CHARACTER_VARYING.getType(), 1206 , null, null, false, "",  getLabelName(TABLE_NAME, COL_CREDIT_CODE),   getPlaceholder(TABLE_NAME, COL_CREDIT_CODE)),
+        new ColumnInfoForm(COL_APPLICATION_DATE, false,    MySqlType.CHARACTER_VARYING.getType(), 20 , null, null, false, "", getLabelName(TABLE_NAME, COL_APPLICATION_DATE), getPlaceholder(TABLE_NAME, COL_APPLICATION_DATE)),
     };
     
     public ColumnInfoForm[] columnInfos() {
