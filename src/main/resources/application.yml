@@ -9,6 +9,7 @@ server:
   servlet:
     session:
       timeout: 86400
+  port : 80
 #### SPRING ####
 spring:
   application:

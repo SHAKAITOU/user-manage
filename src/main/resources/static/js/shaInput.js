@@ -611,13 +611,23 @@ try{
 			$activeBody.addClass('active');
 			$activeBody.addClass('show');
 		},
-				
+		/*		
 		getActivedTab : function (form, tabId){
 			$tab = form.find(ShaUtil.util.convertToJqueryId(tabId));
 			var activeId;
 			$tab.find('label').each(function(i, elem) {
 				if($(elem).hasClass('active')){
 					activeId = $(elem).attr('for');
+				}
+			});
+			return activeId;
+		},*/
+		getActivedTab : function (form, tabId){
+			$tab = form.find(ShaUtil.util.convertToJqueryId(tabId));
+			var activeId;
+			$tab.find('a').each(function(i, elem) {
+				if($(elem).hasClass('active')){
+					activeId = $(elem).attr('id');
 				}
 			});
 			return activeId;

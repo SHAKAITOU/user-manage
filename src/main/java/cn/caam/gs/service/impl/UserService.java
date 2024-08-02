@@ -64,6 +64,10 @@ public class UserService extends BaseService {
         return optionalUserInfoMapper.getLoginUserInfo(userCode);
     }
 	
+	public UserInfo getLoginUserInfoByPhone(String phone) {
+        return optionalUserInfoMapper.getLoginUserInfoByPhone(phone);
+    }
+	
 	public UserInfo getBaseUserInfo(String userId) {
         return optionalUserInfoMapper.getBaseUserInfo(userId);
     }
@@ -186,7 +190,7 @@ public class UserService extends BaseService {
 			//审核状态：待审核
 			userInput.setCheckStatus(CheckStatusType.WAIT_FOR_REVIEW.getKey());
 			//申请时间
-			userInput.setApplicationDate(LocalDateUtility.getCurrentDateString());
+			userInput.setApplicationDate(LocalDateUtility.getCurrentDateTimeString());
 			//会员类型
 			userInput.setUserType(UserType.PERSON_REGULAR.getKey());
 			//有效状态

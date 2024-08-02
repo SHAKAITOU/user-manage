@@ -128,7 +128,9 @@ try{
 			ShaConstants.constants.IPHONE_NUMBER_MSG= Pos.constants.setInfo.common.checkPhoneNumberMsg;
 			ShaConstants.constants.EMAIL_MSG 	    = Pos.constants.setInfo.common.checkEmailMsg;
 			ShaConstants.constants.IPHONE_NUMBER_EXISTED_MSG= Pos.constants.setInfo.common.checkPhoneNumberExistedMsg;
+			ShaConstants.constants.IPHONE_NUMBER_NOT_EXISTED_MSG= Pos.constants.setInfo.common.checkPhoneNumberNotExistedMsg;
 			ShaConstants.constants.EMAIL_EXISTED_MSG= Pos.constants.setInfo.common.checkEmailExistedMsg;
+			ShaConstants.constants.AUTHCODE_ERROR_MSG= Pos.constants.setInfo.common.checkAuthCodeErrorMsg;
 			//date time format
 			ShaConstants.constants.DATETIME_FORMAT = Pos.constants.setInfo.common.datetimeFormat;
 			

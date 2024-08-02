@@ -21,6 +21,8 @@ AdminMenu.prototype.ID = {
     NAVI_FOR_PC                     : "bigScreenNav",
     NAVI_FOR_PHONE                  : "smallScreenNav",
     
+	CLASS_NM_PERSONAL_REVIEW_SEARCH : "menu1001",
+	CLASS_NM_ORGANIZATION_REVIEW_SEARCH : "menu1002",
     CLASS_NM_ORDER_SEARCH           : "menu2001",
     CLASS_NM_ORDER_WAIT_SEARCH      : "menu2002",
     CLASS_NM_ORDER_REVIEW           : "menu2003",
@@ -68,6 +70,22 @@ AdminMenu.prototype.initEvent = function(){
     
 	self.ajustNavi();
 	
+	
+	//个人会员审核查询
+    $buttonList = self.getObjectList(self.ID.CLASS_NM_PERSONAL_REVIEW_SEARCH);
+    $buttonList.each(function(i, elem){
+	    ShaInput.button.onClick($(elem),
+	    	function(event) {
+				ShaAjax.ajax.get(
+	                self.jsContext.adminJsView.adminUserReviewSearch.url_init, 
+	                null, 
+	                function(data){
+	                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
+	                }
+	            ); 
+			}
+	    );
+	});
 	
 	//缴费订单查询
     $buttonList = self.getObjectList(self.ID.CLASS_NM_ORDER_SEARCH);

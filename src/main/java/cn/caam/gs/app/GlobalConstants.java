@@ -58,6 +58,8 @@ public class GlobalConstants {
     public static final int USER_REGIST_EXPIRED_MINUTE  = 10;
     public static final int USER_REGIST_SMS_SEND_INTERVAL = 1;
     
+    public static final int USER_LOGIN_AUTH_CODE_EXPIRED_MINUTE	= 1;
+    
     /** 頁LINK表示数(PC) */
     public static final int PC_LINKCNT = 10;
     /** 頁LINK表示数(SP) */

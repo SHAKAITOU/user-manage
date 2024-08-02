@@ -32,4 +32,6 @@ public class LoginForm {
 	private String phoneAuthCode;
 	
 	private String phoneUserCode;
+	
+	private String loginBy;
 }

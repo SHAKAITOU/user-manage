@@ -1,4 +1,4 @@
-package cn.caam.gs.app.admin.usersearch.form;
+package cn.caam.gs.app.admin.userreview.form;
 
 import cn.caam.gs.domain.db.base.entity.MUser;
 import cn.caam.gs.app.GlobalConstants;
@@ -12,7 +12,7 @@ import lombok.Builder.Default;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserSearchForm {
+public class UserReviewSearchForm {
 	private MUser         user;
 	private String        validStatus;
 	private String        registDateFrom;
@@ -31,6 +31,4 @@ public class UserSearchForm {
     
     @Default
     private int userPageLinkIdPrefixIndex = 0;
-    
-    private String searchMode;
 }

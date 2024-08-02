@@ -81,6 +81,8 @@ public class UrlConstants {
 
 	public static final String USER_LIST        = "/userList";
 	
+	public static final String USER_REVIEW_LIST = "/userReviewList";
+	
 	/* ===================USER ROLE URL========================= */
 	//USER
 	public static final String USER 			= "/user";

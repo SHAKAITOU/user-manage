@@ -4,6 +4,7 @@
 <form id="login_form" name="login_form" role="form" method="POST" class="form-horizontal">
 	<!-- hidden values -->
 	<input type="hidden" id="lang" name="lang" th:value="${lang}">
+	<input type="hidden" id="loginBy" name="loginBy" th:value="${loginForm.loginBy}">
     <input type="hidden" id="login_form_return_error_flag" th:value="${(loginForm != null && 
             loginForm.returnType == T(cn.caam.gs.common.enums.ExecuteReturnType).NG.getId())}">
     <input type="hidden" id="login_form_return_error_msg" th:value="${loginForm.errorMsg}">
@@ -82,16 +83,16 @@
 	    <div class="tab-pane" id="loginByAuthCodeTabBody" role="tabpanel">
 	      <div class="row" style="margin: 10px;">
 		        <div class="col-12 d-flex justify-content-center input-group" style="height: 50px">
-		            <input type="text" maxlength="20" style="background-color: #FFFAF0;"
+		            <input type="text" maxlength="11" style="background-color: #FFFAF0;"
 		                placeholder="手机号" class="form-control label-16"
-		                th:field="${loginForm.phoneUserCode}"/>
+		                th:field="${loginForm.phoneUserCode}" inputmode="numeric" oninput = "value=value.replace(/[^\d]/g,'')"/>
 		        </div>
 		    </div>
 		    <div class="row" style="margin: 10px;">
 		        <div class="col-12 d-flex justify-content-center input-group" style="height: 50px">
-					 <input id="phoneAuthCode" name="phoneAuthCode" type="text" style="background-color: #FFFAF0;"
+					 <input id="phoneAuthCode" name="phoneAuthCode" type="text" style="background-color: #FFFAF0;" minlength="6" maxlength="6" 
 		                th:placeholder="手机验证码" class="form-control label-16"
-		                th:field="${loginForm.phoneAuthCode}"/>
+		                th:field="${loginForm.phoneAuthCode}" inputmode="numeric" oninput = "value=value.replace(/[^\d]/g,'')"/>
 		        </div>
 		    </div>
 		    <div class="row">
@@ -99,14 +100,13 @@
 			</div>
 		    <div class="row">
 				<div class="col-6 text-left">
-		            <button id="loginBtn" type="button" name="loginBtn" 
+		            <button id="sendAuthCodeBtn" type="button" name="sendAuthCodeBtn" 
 		                class="btn btn-outline-success btn_com pull-left">
-		                <i class="fa fa-paper-plane" aria-hidden="true"></i>&nbsp;&nbsp;
-		                发送手机验证码
+		                <i class="fa fa-paper-plane" aria-hidden="true">&nbsp;&nbsp;发送手机验证码</i>
 		                </button>
 		        </div>
 		        <div class="col-6 text-right">
-		            <button id="loginBtn" type="button" name="loginBtn" 
+		            <button id="loginByPhoneBtn" type="button" name="loginByPhoneBtn" 
 		                class="btn btn-outline-success btn_com pull-right">
 		                <i class="fa fa-sign-in-alt" aria-hidden="true"></i>&nbsp;&nbsp;
 		                [[#{login.panel.btn.login}]]

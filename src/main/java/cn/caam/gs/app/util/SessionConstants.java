@@ -2,11 +2,13 @@ package cn.caam.gs.app.util;
 
 public enum SessionConstants {
     
-    AUTH_CODE("verify_code", true),
+    VERIFY_CODE("verify_code", true),
     
     LOGIN_ERROR_MSG("loginErrorMsg", true),
 	
 	LOGIN_INFO("loginInfo", true),
+	
+	LOGIN_FORM("loginForm", false),
 	
 	JAVASCRIPT_SET_INFO("javaScriptSetInfo", true),
 	
@@ -42,7 +44,7 @@ public enum SessionConstants {
     
     ORDER_REVIEW_CNT("orderReviewCnt", true),
 	
-	
+    AUTH_CODE("auth_code", false),
 	;
 	
 	private String value;

@@ -142,6 +142,8 @@ Menu.prototype.initEvent = function(){
 			}
 	    );
 	});
+	
+	self.getObjectList(self.ID.CLASS_NM_USER_DETAIL).click();
 };
 
 Menu.prototype.ajustNavi = function(){

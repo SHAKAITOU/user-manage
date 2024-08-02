@@ -3,6 +3,7 @@ package cn.caam.gs.app.user.login.controller;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.Map;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import cn.caam.gs.app.GlobalConstants;
 import cn.caam.gs.app.JavaScriptSet;
 import cn.caam.gs.app.UrlConstants;
 import cn.caam.gs.app.user.login.form.IndexForm;
@@ -34,7 +37,9 @@ import cn.caam.gs.common.enums.ExecuteReturnType;
 import cn.caam.gs.common.util.EncryptorUtil;
 import cn.caam.gs.common.util.JsonUtility;
 import cn.caam.gs.common.util.MessageSourceUtil;
+import cn.caam.gs.domain.db.base.entity.MAuthCode;
 import cn.caam.gs.domain.db.custom.entity.UserInfo;
+import cn.caam.gs.service.impl.AuthCodeService;
 import cn.caam.gs.service.impl.FixedValueService;
 import cn.caam.gs.service.impl.MessageService;
 import cn.caam.gs.service.impl.UserService;
@@ -45,7 +50,7 @@ import cn.caam.gs.service.impl.UserService;
  *
  */
 @Controller
-@RequestMapping(path=LoginViewHelper.URL_BASE)
+@RequestMapping(value = { "/", LoginViewHelper.URL_BASE})
 public class LoginController extends ScreenBaseController{
     
     private static final String PARAM_INVALID_LOGIN = "inVlidLogin"; 
@@ -64,6 +69,9 @@ public class LoginController extends ScreenBaseController{
 	
    @Autowired
    MessageService messageService;
+   
+   @Autowired
+   AuthCodeService authCodeService;
 
 	@GetMapping("")
 	public ModelAndView index(
@@ -102,9 +110,13 @@ public class LoginController extends ScreenBaseController{
 		request.getSession().setAttribute(SessionConstants.MEDIA_WIDTH.getValue(), indexForm.getMediaWidth());
 		request.getSession().setAttribute(SessionConstants.IS_MOBILE.getValue(), indexForm.getMobileDisplay());
 		ModelAndView mav = new ModelAndView();
-		LoginForm loginForm = new LoginForm();
-		loginForm.setUserCode("M24060914330223");
-		loginForm.setPassword("1");
+		LoginForm loginForm = (LoginForm)request.getSession().getAttribute(SessionConstants.LOGIN_FORM.getValue());
+		if (loginForm == null ) {
+			loginForm = new LoginForm();
+			loginForm.setUserCode("M24060914330223");
+			loginForm.setPassword("1");
+		}
+		
 		loginForm.setAuthImg(EncryptorUtil.generateAuthImgStr(request));
 		if(!StringUtils.isEmpty(indexForm.getLoginFormJson())) {
 			loginForm = JsonUtility.toObject(indexForm.getLoginFormJson(), LoginForm.class);
@@ -113,6 +125,37 @@ public class LoginController extends ScreenBaseController{
 		mav.setViewName(LoginViewHelper.HTML_LOGIN);
 		return mav;
 	}
+	
+	@PostMapping(path=LoginViewHelper.URL_C_USER_SEND_AUTH_CODE)
+	@ResponseBody
+    public String sendAuthCode(
+    		LoginForm loginForm,
+            HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+		String result = "";
+		if (!StringUtil.isBlank(loginForm.getPhoneUserCode())) {
+			if (!userService.isPhoneNumberExist(loginForm.getPhoneUserCode())) {
+				result = messageSourceUtil.getContext("login.fail.msg.notexistphone");
+			}
+		    //X分钟以内只允许发送一次
+			else if (loginForm.getPhoneAuthCode() != null && !StringUtil.isBlank(loginForm.getPhoneUserCode()) && 
+		    		!authCodeService.isCanSendSms(loginForm.getPhoneUserCode(), GlobalConstants.USER_LOGIN_AUTH_CODE_EXPIRED_MINUTE, GlobalConstants.USER_LOGIN_AUTH_CODE_EXPIRED_MINUTE)){
+		    	result = MessageFormat.format(messageSourceUtil.getContext("login.authCode.send.prohibit"), GlobalConstants.USER_LOGIN_AUTH_CODE_EXPIRED_MINUTE);
+		    }else {
+			    //入力エラーじゃない場合
+		        MAuthCode mauthCode = authCodeService.addPhoneAuthCode(loginForm.getPhoneUserCode(), GlobalConstants.USER_LOGIN_AUTH_CODE_EXPIRED_MINUTE);
+		        request.getSession().setAttribute(SessionConstants.AUTH_CODE.getValue(), mauthCode);
+		        boolean isOk = authCodeService.sendAuthCode(mauthCode);
+		        if (!isOk) {
+		        	result = messageSourceUtil.getContext("login.authCode.send.error");
+		        }
+		    }
+		}else {
+			result = messageSourceUtil.getContext("notinputphone");
+		}
+	        
+	    return result;
+    }	
 	
 
 	@PostMapping(path=LoginViewHelper.URL_C_USER_LOGIN)
@@ -123,24 +166,50 @@ public class LoginController extends ScreenBaseController{
 		boolean okFlag = false;
 		boolean noSession = false;
 		
-		UserInfo userInfo = userService.getLoginUserInfo(loginForm.getUserCode());
-		
-		String ePw = EncryptorUtil.encrypt(loginForm.getPassword());
-		if (request.getSession().getAttribute(SessionConstants.AUTH_CODE.getValue()) == null) {
-            okFlag = false;
-            loginForm.setErrorMsg(messageSourceUtil.getContext("login.fail.msg.notRightLogin"));
-        } else if (userInfo == null) {
-		    loginForm.setErrorMsg(messageSourceUtil.getContext("login.fail.msg.notexist"));
-		    okFlag = false;
-		} else if(!userInfo.getUser().getPassword().equals(ePw)) {
-		    loginForm.setErrorMsg(messageSourceUtil.getContext("login.fail.msg.wrongPw"));
-		    okFlag = false;
-		} else {
-			okFlag = true;
+		UserInfo userInfo = null;
+		if (LoginViewHelper.LOGIN_BY_AUTH_CODE_TAB.equals(loginForm.getLoginBy())) {//手机号+验证码登录
+			MAuthCode mauthCode = (MAuthCode)request.getSession().getAttribute(SessionConstants.AUTH_CODE.getValue());
+			if (!userService.isPhoneNumberExist(loginForm.getPhoneUserCode())) {
+				loginForm.setErrorMsg(messageSourceUtil.getContext("login.fail.msg.notexistphon"));
+			    okFlag = false;
+		    }else if (mauthCode == null || StringUtil.isBlank(mauthCode.getAuthCode())) {
+		    	loginForm.setErrorMsg(messageSourceUtil.getContext("login.authCode.request.send.msg"));
+			    okFlag = false;
+		    }else if (authCodeService.isAuthCodeExpired(mauthCode)){
+		    	loginForm.setErrorMsg(messageSourceUtil.getContext("login.confirm.authCodeExpired"));
+			    okFlag = false;
+		    }else if (!mauthCode.getAuthCode().equals(loginForm.getPhoneAuthCode())) {
+		    	loginForm.setErrorMsg(messageSourceUtil.getContext("login.confirm.wrongAuthCode"));
+			    okFlag = false;
+		    }else {
+				 userInfo = userService.getLoginUserInfoByPhone(loginForm.getPhoneUserCode());
+				 if (userInfo == null) {
+				    loginForm.setErrorMsg(messageSourceUtil.getContext("login.fail.msg.notexist"));
+				    okFlag = false;
+				}  else {
+					okFlag = true;
+				}
+		    }
+		}else {//会员号登录
+			 userInfo = userService.getLoginUserInfo(loginForm.getUserCode());
+			 
+			 String ePw = EncryptorUtil.encrypt(loginForm.getPassword());
+			if (request.getSession().getAttribute(SessionConstants.VERIFY_CODE.getValue()) == null) {
+	            okFlag = false;
+	            loginForm.setErrorMsg(messageSourceUtil.getContext("login.fail.msg.notRightLogin"));
+	        } else if (userInfo == null) {
+			    loginForm.setErrorMsg(messageSourceUtil.getContext("login.fail.msg.notexist"));
+			    okFlag = false;
+			} else if(!userInfo.getUser().getPassword().equals(ePw)) {
+			    loginForm.setErrorMsg(messageSourceUtil.getContext("login.fail.msg.wrongPw"));
+			    okFlag = false;
+			} else {
+				okFlag = true;
+			}
 		}
 		
 		// TODO auth check
-        String authCode = (String)request.getSession().getAttribute(SessionConstants.AUTH_CODE.getValue());
+        String authCode = (String)request.getSession().getAttribute(SessionConstants.VERIFY_CODE.getValue());
 		
 		ModelAndView mav = new ModelAndView();
 		if(noSession) {
@@ -149,6 +218,8 @@ public class LoginController extends ScreenBaseController{
 		else if(!okFlag) {
 		    clearSession(request);
 			loginForm.setReturnType(ExecuteReturnType.NG.getId());
+			loginForm.setPhoneAuthCode("");
+			request.getSession().setAttribute(SessionConstants.LOGIN_FORM.getValue(), loginForm);
 			request.getSession().setAttribute(SessionConstants.LOGIN_INFO.getValue(), null);
 			IndexForm indexForm = new IndexForm();
 			indexForm.setLoginFormJson(JsonUtility.toJson(loginForm));
@@ -158,6 +229,8 @@ public class LoginController extends ScreenBaseController{
 			mav = new ModelAndView("redirect:"+LoginViewHelper.URL_BASE + "?"+PARAM_INVALID_LOGIN+"=true");
 		} else {
 		    request.getSession().setAttribute(SessionConstants.LOGIN_ERROR_MSG.getValue(), null);
+		    request.getSession().setAttribute(SessionConstants.LOGIN_FORM.getValue(), null);
+		    request.getSession().setAttribute(SessionConstants.AUTH_CODE.getValue(), null);
 			loginForm.setReturnType(ExecuteReturnType.OK.getId());
 			request.getSession().setAttribute(SessionConstants.LOGIN_INFO.getValue(), userInfo);
 			JavaScriptSet javaScriptSetInfo = new JavaScriptSet(request, environment, messageSourceUtil);

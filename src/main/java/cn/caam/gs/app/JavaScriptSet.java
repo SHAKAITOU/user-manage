@@ -6,7 +6,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONObject;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.env.Environment;
 
 import cn.caam.gs.app.admin.login.view.AdminLoginViewHelper;
@@ -21,14 +20,15 @@ import cn.caam.gs.app.admin.userorder.view.AdminOrderSearchViewHelper;
 import cn.caam.gs.app.admin.userorder.view.ReviewNgViewHelper;
 import cn.caam.gs.app.admin.userorder.view.ReviewOkViewHelper;
 import cn.caam.gs.app.admin.userorder.view.ReviewOrderViewHelper;
+import cn.caam.gs.app.admin.userreview.view.AdminUserReviewSearchViewHelper;
+import cn.caam.gs.app.admin.userreview.view.AdminUserReviewViewHelper;
 import cn.caam.gs.app.admin.usersearch.view.AdminUserSearchViewHelper;
+import cn.caam.gs.app.common.view.CommonViewHelper;
 import cn.caam.gs.app.common.view.MessageDetailViewHelper;
 import cn.caam.gs.app.common.view.OrderDetailViewHelper;
-import cn.caam.gs.app.common.view.CommonViewHelper;
 import cn.caam.gs.app.user.certi.view.UserCertiViewHelper;
 import cn.caam.gs.app.user.detail.view.UserDetailViewHelper;
 import cn.caam.gs.app.user.login.view.LoginViewHelper;
-import cn.caam.gs.app.user.menu.view.MenuViewHelper;
 import cn.caam.gs.app.user.message.view.MessageSearchViewHelper;
 import cn.caam.gs.app.user.order.view.OrderSearchViewHelper;
 import cn.caam.gs.app.user.order.view.OrderViewHelper;
@@ -123,7 +123,9 @@ public class JavaScriptSet {
 		common.put("checkPhoneNumberMsg", getContext("common.check.msg.phoneNumberMsg"));
 		common.put("checkEmailMsg", getContext("common.check.msg.emailMsg"));
 		common.put("checkPhoneNumberExistedMsg", getContext("common.check.msg.phoneNumberExistedMsg"));
+		common.put("checkPhoneNumberNotExistedMsg", getContext("common.check.msg.phoneNumberNotExistedMsg"));
 		common.put("checkEmailExistedMsg", getContext("common.check.msg.emailExistedMsg"));
+		common.put("checkAuthCodeErrorMsg", getContext("common.check.msg.authCodeErrorMsg"));
 
 		// enum
 		common.put("executeReturnTypeOk", ExecuteReturnType.OK.getId());
@@ -153,6 +155,7 @@ public class JavaScriptSet {
 		common.put("min_bill_amount", GlobalConstants.MIN_BILL_AMOUNT);
 		
 		common.put("user_regist_sms_send_interval", GlobalConstants.USER_REGIST_SMS_SEND_INTERVAL);
+		common.put("user_login_auth_code_expired_minute", GlobalConstants.USER_LOGIN_AUTH_CODE_EXPIRED_MINUTE);
 		
 		common.put("user_id_max_l", GlobalConstants.USER_ID_MAX_L);
 		common.put("user_name_max_l", GlobalConstants.USER_NAME_MAX_L);
@@ -200,6 +203,9 @@ public class JavaScriptSet {
 		Map<String, Object> jsView = new HashMap<String, Object>();
 		jsView.put("adminLogin",         AdminLoginViewHelper.getJsProperties());
 		jsView.put("adminMenu",          AdminMenuViewHelper.getJsProperties());
+		
+		jsView.put("adminUserReview",    AdminUserReviewViewHelper.getJsProperties());
+		jsView.put("adminUserReviewSearch",  AdminUserReviewSearchViewHelper.getJsProperties());
 		
 		jsView.put("adminUserSearch",    AdminUserSearchViewHelper.getJsProperties());
 		

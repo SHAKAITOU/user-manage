@@ -369,22 +369,62 @@ try{
 				var errorId = id + "_error";
 				var isError = false;
 				var errorMsg = '';
-				if(ShaCheck.check._checkPhoneNumber(inputCheckItem)){
+				if (ShaCheck.check.isBlank(inputCheckItem.val())){
+					errorMsg = errorItemName + ShaConstants.constants.NOT_BLANK_MSG;
+					isError = true;
+				}
+				if(!isError && ShaCheck.check._checkPhoneNumber(inputCheckItem)){
 					errorMsg = errorItemName + ShaConstants.constants.IPHONE_NUMBER_MSG;
 					isError = true;
+				}
+				if (isError){
+					inputCheckItem.after('<div id="'+ errorId +'" class="invalid-feedback">' + errorMsg + '</div>'); 
+					inputCheckItem.addClass('alert-input');
+					inputCheckItem.addClass('is-invalid');
+					ngFlag = true;
+					ShaCheck.check.moveToFirstItem(inputCheckItem);
 				}else{
-					ShaAjax.ajax.post(
-						Pos.constants.setInfo.common.common.url_com_check_phone_number_exist,
-						"phoneNumber="+inputCheckItem.val(),
-						function(data){
-							if (data =='existed'){
+					inputCheckItem.removeClass('alert-input');
+					inputCheckItem.removeClass('is-invalid');
+				}
+			}
+			
+			return ngFlag;
+		},
+		
+		checkPhoneNumberExisted : function(inputCheckItemList, isExistedCheck=true){
+			for( var i = 0; i < inputCheckItemList.length; i++ ){
+				var inputCheckItem = inputCheckItemList[i][1];
+				var id = inputCheckItem.attr('id');
+				var errorId = id + "_error";
+				$("#"+errorId).remove();
+			}
+			var ngFlag = false;
+			for( var i = 0; i < inputCheckItemList.length; i++ ){
+				var errorItemName = inputCheckItemList[i][0];
+				var inputCheckItem = inputCheckItemList[i][1];
+				var id = inputCheckItem.attr('id');
+				var errorId = id + "_error";
+				var isError = false;
+				var errorMsg = '';
+	
+				ShaAjax.ajax.post(
+					Pos.constants.setInfo.common.common.url_com_check_phone_number_exist,
+					"phoneNumber="+inputCheckItem.val(),
+					function(data){
+						if (data =='existed'){
+							if (isExistedCheck){
 								errorMsg = errorItemName + ShaConstants.constants.IPHONE_NUMBER_EXISTED_MSG;
 								isError = true;
 							}
-						},
-						false,
-					)
-				}
+						}else if (!isExistedCheck){
+							errorMsg = errorItemName + ShaConstants.constants.IPHONE_NUMBER_NOT_EXISTED_MSG;
+							isError = true;
+						}
+					},
+					false,
+				)
+				
 				if (isError){
 					inputCheckItem.after('<div id="'+ errorId +'" class="invalid-feedback">' + errorMsg + '</div>'); 
 					inputCheckItem.addClass('alert-input');
@@ -418,18 +458,83 @@ try{
 				if(ShaCheck.check._checkEmail(inputCheckItem)){
 					errorMsg = errorItemName + ShaConstants.constants.EMAIL_MSG;
 					isError = true;
+				}
+				if (isError){
+					inputCheckItem.after('<div id="'+ errorId +'" class="invalid-feedback">' + errorMsg + '</div>'); 
+					inputCheckItem.addClass('alert-input');
+					inputCheckItem.addClass('is-invalid');
+					ngFlag = true;
+					ShaCheck.check.moveToFirstItem(inputCheckItem);
 				}else{
-					ShaAjax.ajax.post(
-						Pos.constants.setInfo.common.common.url_com_check_email_exist,
-						"email="+inputCheckItem.val(),
-						function(data){
-							if (data =='existed'){
-								errorMsg = errorItemName + ShaConstants.constants.EMAIL_EXISTED_MSG;
-								isError = true;
-							}
-						},
-						false
-					)
+					inputCheckItem.removeClass('alert-input');
+					inputCheckItem.removeClass('is-invalid');
+				}
+			}
+			
+			return ngFlag;
+		},
+		
+		checkEmailExisted : function(inputCheckItemList){
+			for( var i = 0; i < inputCheckItemList.length; i++ ){
+				var inputCheckItem = inputCheckItemList[i][1];
+				var id = inputCheckItem.attr('id');
+				var errorId = id + "_error";
+				$("#"+errorId).remove();
+			}
+			var ngFlag = false;
+			for( var i = 0; i < inputCheckItemList.length; i++ ){
+				var errorItemName = inputCheckItemList[i][0];
+				var inputCheckItem = inputCheckItemList[i][1];
+				var id = inputCheckItem.attr('id');
+				var errorId = id + "_error";
+				var isError = false;
+				var errorMsg = '';
+
+				ShaAjax.ajax.post(
+					Pos.constants.setInfo.common.common.url_com_check_email_exist,
+					"email="+inputCheckItem.val(),
+					function(data){
+						if (data =='existed'){
+							errorMsg = errorItemName + ShaConstants.constants.EMAIL_EXISTED_MSG;
+							isError = true;
+						}
+					},
+					false
+				)
+				
+				if (isError){
+					inputCheckItem.after('<div id="'+ errorId +'" class="invalid-feedback">' + errorMsg + '</div>'); 
+					inputCheckItem.addClass('alert-input');
+					inputCheckItem.addClass('is-invalid');
+					ngFlag = true;
+					ShaCheck.check.moveToFirstItem(inputCheckItem);
+				}else{
+					inputCheckItem.removeClass('alert-input');
+					inputCheckItem.removeClass('is-invalid');
+				}
+			}
+			
+			return ngFlag;
+		},
+		
+		checkAuthCode : function(inputCheckItemList){
+			for( var i = 0; i < inputCheckItemList.length; i++ ){
+				var inputCheckItem = inputCheckItemList[i][1];
+				var id = inputCheckItem.attr('id');
+				var errorId = id + "_error";
+				$("#"+errorId).remove();
+			}
+			var ngFlag = false;
+			for( var i = 0; i < inputCheckItemList.length; i++ ){
+				var errorItemName = inputCheckItemList[i][0];
+				var inputCheckItem = inputCheckItemList[i][1];
+				var id = inputCheckItem.attr('id');
+				var errorId = id + "_error";
+				var isError = false;
+				var errorMsg = '';
+				if(ShaCheck.check.isBlank(inputCheckItem.val()) || inputCheckItem.val().length != 6){
+					errorMsg = ShaConstants.constants.AUTHCODE_ERROR_MSG;
+					isError = true;
 				}
 				if (isError){
 					inputCheckItem.after('<div id="'+ errorId +'" class="invalid-feedback">' + errorMsg + '</div>'); 
@@ -482,6 +587,14 @@ try{
 			};
 			
 			return ngFlag;
+		},
+		
+		clearErrorClass : function(inputCheckItem){
+			var id = inputCheckItem.attr('id');
+			var errorId = id + "_error";
+			$("#"+errorId).remove();
+			inputCheckItem.removeClass('alert-input');
+			inputCheckItem.removeClass('is-invalid');
 		},
 				
 		_checkNotBlank : function(inputCheckItem){

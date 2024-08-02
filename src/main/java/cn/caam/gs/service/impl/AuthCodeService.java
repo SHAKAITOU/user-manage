@@ -23,6 +23,7 @@ import cn.caam.gs.config.MailConfig;
 import cn.caam.gs.config.SmsConfig;
 import cn.caam.gs.domain.db.base.entity.MAuthCode;
 import cn.caam.gs.domain.db.base.mapper.MAuthCodeMapper;
+import cn.caam.gs.domain.db.custom.mapper.OptionalAuthCodeInfoMapper;
 import cn.caam.gs.service.BaseService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,9 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 @Slf4j
 public class AuthCodeService extends BaseService {
+	
+	@Autowired
+	OptionalAuthCodeInfoMapper optionalAuthCodeInfoMapper;
 	
 	@Autowired
 	MAuthCodeMapper mauthCodeMapper;
@@ -62,6 +66,19 @@ public class AuthCodeService extends BaseService {
     	return mauthCodeMapper.selectByPrimaryKey(uuid);
 	}
 	
+	public MAuthCode addPhoneAuthCode(String phone, int expiredMinute) {
+	    MAuthCode mauthCode = new MAuthCode();
+	    String uuid = UUID.randomUUID().toString();
+	    mauthCode.setId(uuid);
+	    mauthCode.setAuthMethod(RegistStep1ViewHelper.GET_AUTH_CODE_BY_PHONE);
+	    mauthCode.setRecievedBy(phone);
+	    mauthCode.setAuthCode(getRandomAuthCode());
+	    LocalDateTime expiredDt = LocalDateTime.now();
+	    mauthCode.setInvalidDate(LocalDateUtility.formatDateTime(expiredDt.plusMinutes(expiredMinute), DateTimePattern.UUUUMMDDHHMISS));
+	    mauthCodeMapper.insert(mauthCode);
+    	return mauthCodeMapper.selectByPrimaryKey(uuid);
+	}
+	
 	private String getRandomAuthCode() {
 	    int length = 6;
         String characters = "0123456789";
@@ -77,7 +94,7 @@ public class AuthCodeService extends BaseService {
 	}
 	
 	public boolean isCanSendSms(String receiveBy, int expiredMinute, int sendInterval) {
-		String maxInvalidDate = mauthCodeMapper.selectRecentlyInvalidDateByReceiveBy(receiveBy);
+		String maxInvalidDate = optionalAuthCodeInfoMapper.selectRecentlyInvalidDateByReceiveBy(receiveBy);
 		if (!StringUtil.isBlank(maxInvalidDate)) {
 			String invalidDate = LocalDateUtility.addMin(maxInvalidDate, DateTimePattern.UUUUMMDDHHMISS, expiredMinute*-1);
 			invalidDate = LocalDateUtility.addMin(invalidDate, DateTimePattern.UUUUMMDDHHMISS, sendInterval);

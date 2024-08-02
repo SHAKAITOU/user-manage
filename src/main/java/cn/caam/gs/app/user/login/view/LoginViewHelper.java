@@ -35,6 +35,7 @@ public class LoginViewHelper extends HtmlViewBaseHelper {
     public static final String URL_C_LOGIN_INIT  = UrlConstants.INIT;
     // init url
     public static final String URL_C_USER_LOGIN  = UrlConstants.USER_LOGIN;
+    public static final String URL_C_USER_SEND_AUTH_CODE = UrlConstants.USER_LOGIN + "/sendAuthCode";
     public static final String URL_C_USER_LOGIN_REFRESH_IMG = "/refeshImg";
     // logout url
     public static final String URL_C_LOGOUT      =  UrlConstants.LOGOUT;
@@ -61,6 +62,10 @@ public class LoginViewHelper extends HtmlViewBaseHelper {
     public static final String REGIST_JS_CLASS = "RegistStep1";
     public static final String REGIST2_JS_CLASS = "RegistStep2";
     public static final String REGIST3_JS_CLASS = "RegistStep3";
+    
+    public static final String LOGIN_BY						= "loginBy";
+    public static final String LOGIN_BY_PASS_TAB			= "loginByPassTab";
+    public static final String LOGIN_BY_AUTH_CODE_TAB		= "loginByAuthCodeTab";
     
     public static final String STEP_STS_STEP1_INIT   = "STEP1";
     public static final String STEP_STS_STEP1_COMMIT = "STEP1_COMMIT";
@@ -343,6 +348,7 @@ public class LoginViewHelper extends HtmlViewBaseHelper {
         js.put("url_login",           URL_BASE);
         js.put("url_login_init",      URL_BASE + URL_C_LOGIN_INIT);
         js.put("url_user_login",      URL_BASE + URL_C_USER_LOGIN);
+        js.put("url_send_auth_code",  URL_BASE + URL_C_USER_SEND_AUTH_CODE);
         js.put("url_refreshImg",      URL_BASE + URL_C_USER_LOGIN_REFRESH_IMG);
         js.put("url_logout",          URL_BASE + URL_C_LOGOUT);
         js.put("url_userRegist",      URL_BASE + URL_C_USER_REGIST);
@@ -366,6 +372,8 @@ public class LoginViewHelper extends HtmlViewBaseHelper {
         // label
         js.put("label_pw", getContext("login.regist.pw"));
         js.put("label_pw2", getContext("login.regist.pw2"));
+        js.put("label_phone_code", getContext("login.panel.phonecode"));
+        js.put("label_phone_auth_code", getContext("login.panel.phoneauthcode"));
         js.put("label_tel", ("store.tel"));
         // msg
         js.put("msg_stop_regist_confirm", getContext("login.confirm.cancelRegist.msg"));

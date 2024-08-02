@@ -128,6 +128,12 @@ RegistStep1.prototype.check = function(){
 	if (ShaCheck.check.checkMultiItems(checkMultiItemsMap)){
 		return true;
 	}
+	
+	if (ShaCheck.check.checkPhoneNumberExisted([[ self.i18n["m_user.phone"], 	self.getObject(self.ID.ITEM_PHONE)]]) ||
+		ShaCheck.check.checkEmailExisted([[ self.i18n["m_user.mail"], 			self.getObject(self.ID.ITEM_MAIL)]])){
+		return true;
+	}
+	
 	return false;
 };
 

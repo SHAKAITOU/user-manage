@@ -127,7 +127,7 @@ public class AdminLoginController extends ScreenBaseController{
 		
 		String ePw = EncryptorUtil.encrypt(loginForm.getPassword());
 		
-		if (request.getSession().getAttribute(SessionConstants.AUTH_CODE.getValue()) == null) {
+		if (request.getSession().getAttribute(SessionConstants.VERIFY_CODE.getValue()) == null) {
 		    okFlag = false;
 		    loginForm.setErrorMsg(messageSourceUtil.getContext("login.fail.msg.notRightLogin"));
 		} else if (userInfo == null) {
@@ -141,7 +141,7 @@ public class AdminLoginController extends ScreenBaseController{
         }
 		
 		// TODO auth check
-        String authCode = (String)request.getSession().getAttribute(SessionConstants.AUTH_CODE.getValue());
+        String authCode = (String)request.getSession().getAttribute(SessionConstants.VERIFY_CODE.getValue());
 		
 		ModelAndView mav = new ModelAndView();
 		if(noSession) {

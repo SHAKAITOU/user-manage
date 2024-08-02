@@ -64,7 +64,8 @@
 	    F0010.name   AS certificateTypeName,
 	    F0011_1.name AS areaName,
 	    F0011_2.name AS areaSubName,
-	    F0023.name   AS societyTypeName
+	    F0023.name   AS societyTypeName,
+	    F0013.name   AS checkStatusName
     </sql>
     <sql id="baseJoin">
     	LEFT JOIN m_fixed_value F0002   ON mu.user_type       = F0002.value   AND F0002.code   = 'F0002'
@@ -79,8 +80,8 @@
 		LEFT JOIN m_fixed_value F0008   ON mu.employer_type   = F0008.value   AND F0008.code   = 'F0008'
 		LEFT JOIN m_fixed_value F0009   ON mu.job_title       = F0009.value   AND F0009.code   = 'F0009'
 		LEFT JOIN m_fixed_value F0010   ON mu.certificate_type= F0010.value   AND F0010.code   = 'F0010'
-		LEFT JOIN m_fixed_value F0011_1 ON mu.area            = F0011_1.value AND F0011_1.code   = 'F0011'
-		LEFT JOIN m_fixed_value F0011_2 ON mu.area_sub        = F0011_2.value AND F0011_2.code   = 'F0011'
+		LEFT JOIN m_fixed_value F0011_1 ON mu.area            = F0011_1.value AND F0011_1.code = 'F0011'
+		LEFT JOIN m_fixed_value F0011_2 ON mu.area_sub        = F0011_2.value AND F0011_2.code = 'F0011'
 		LEFT JOIN m_fixed_value F0013   ON mu.check_status    = F0013.value   AND F0013.code   = 'F0013'
 		LEFT JOIN m_fixed_value F0023   ON mu.society_type    = F0023.value   AND F0023.code   = 'F0023'
     </sql>
@@ -146,6 +147,12 @@
 		<if test="user != null and user.political != null and user.political != '00'" >
 	        and mu.political = #{user.political, jdbcType=NVARCHAR}
 		</if>
+		<if test="searchMode != null and searchMode =='waitList'" >
+	        and mu.check_status IN ('01', '02')
+		</if>
+		<if test="searchMode != null and searchMode =='reviewedList'" >
+	        and mu.check_status IN ('03', '04', '05')
+		</if>
     </sql>
     <!-- SQL CHIP -->
 	<select id="getUserListCount" resultType="int">
@@ -164,6 +171,8 @@
 			<include refid="baseJoin"/>
 			WHERE 1=1
 			<include refid="baseConition"/>
+			
+			
 		LIMIT #{limit} OFFSET #{offset}
     </select>
     
@@ -178,6 +187,17 @@
 			mu.phone = #{userCode, jdbcType=NVARCHAR}
 			OR
 			mu.mail = #{userCode, jdbcType=NVARCHAR}
+    </select>
+    
+    <select id="getLoginUserInfoByPhone" resultMap="UserInfoForm">
+        SELECT
+			mu.*
+		FROM
+		    m_user mu
+		WHERE
+			mu.phone = #{phone, jdbcType=NVARCHAR}
+			and
+			(mu.valid_status='1' or check_status='01')
     </select>
     
     <select id="getBaseUserInfo" resultMap="UserInfoForm">
