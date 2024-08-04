@@ -4,6 +4,7 @@ package cn.caam.gs.app.admin.usersearch.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.jsoup.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import cn.caam.gs.app.admin.usersearch.view.AdminUserSearchViewHelper;
 import cn.caam.gs.app.util.ControllerHelper;
 import cn.caam.gs.app.util.SessionConstants;
 import cn.caam.gs.common.controller.JcbcBaseController;
+import cn.caam.gs.domain.db.base.entity.MUser;
 import cn.caam.gs.service.impl.UserService;
 import lombok.AllArgsConstructor;
 
@@ -37,8 +39,9 @@ public class AdminUserSearchController extends JcbcBaseController{
 	        UserSearchForm pageForm,
 			HttpServletRequest request,
 			HttpServletResponse response) {
-	    
-	    UserListOutput userListOutput = new UserListOutput();
+		if (pageForm.getUser() == null) pageForm.setUser(new MUser());
+		pageForm.setUserPageLinkIdPrefixIndex(0);
+        UserListOutput userListOutput = userService.getUserList(pageForm);
 
 		return ControllerHelper.getModelAndView(
 		        AdminUserSearchViewHelper.getMainPage(request, pageForm, userListOutput));
@@ -49,8 +52,13 @@ public class AdminUserSearchController extends JcbcBaseController{
             UserSearchForm pageForm,
             HttpServletRequest request,
             HttpServletResponse response) {
-	    
-        pageForm.setUserPageLinkIdPrefixIndex(0);
+	    if (!StringUtil.isBlank(pageForm.getSelectedUserId())) {
+	    	UserSearchForm userSearchForm = (UserSearchForm)request.getSession().getAttribute(SessionConstants.USER_SEARCH_FORM.getValue());
+	    	if (userSearchForm != null) pageForm = userSearchForm;
+	    	request.getSession().setAttribute(SessionConstants.USER_SEARCH_FORM.getValue(), null);
+	    }else {
+	    	pageForm.setUserPageLinkIdPrefixIndex(0);
+	    }
         UserListOutput userListOutput = userService.getUserList(pageForm);
         return ControllerHelper.getModelAndView(
                 AdminUserSearchViewHelper.refeshTable(request, pageForm, userListOutput));

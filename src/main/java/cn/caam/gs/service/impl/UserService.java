@@ -10,9 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cn.caam.gs.app.admin.usersearch.form.UserSearchForm;
 import cn.caam.gs.app.admin.usersearch.output.UserListOutput;
-import cn.caam.gs.app.user.detail.form.UserDetailForm;
+import cn.caam.gs.app.common.form.UserDetailForm;
 import cn.caam.gs.app.user.regist.form.RegistForm;
 import cn.caam.gs.common.enums.CheckStatusType;
+import cn.caam.gs.common.enums.UserCheckStatusType;
 import cn.caam.gs.common.enums.UserType;
 import cn.caam.gs.common.enums.ValidType;
 import cn.caam.gs.common.util.EncryptorUtil;
@@ -176,6 +177,12 @@ public class UserService extends BaseService {
 			}else {
 				userExtendMapper.insert(userExtend);
 			}
+		}
+		
+		MUser user = userMapper.selectByPrimaryKey(userInfo.getUser().getId());
+		if (UserCheckStatusType.RETURN.getKey().equals(user.getCheckStatus())) {
+			user.setCheckStatus(UserCheckStatusType.WAIT_FOR_REVIEW.getKey());
+			userMapper.updateByPrimaryKeySelective(user);
 		}
 	}
 	

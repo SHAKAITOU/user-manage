@@ -32,5 +32,7 @@ public class UserSearchForm {
     @Default
     private int userPageLinkIdPrefixIndex = 0;
     
+    private String selectedUserId;
+    //waitList:待审核列表 reviewedList:已审核列表
     private String searchMode;
 }

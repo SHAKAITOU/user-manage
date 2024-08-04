@@ -6,7 +6,7 @@
 AdminUserReview = function(dataMap){
     this.mainForm = $('#main_form');
     this.menuForm = $('#menu_form');
-    this.form = $('#ReviewOrderForm');
+    this.form = $('#AdminUserReviewForm');
     this.jsContext = Pos.constants.setInfo;
     this.i18n = JSON.parse(this.jsContext.i18n);
     this.dataMap = dataMap;
@@ -16,16 +16,19 @@ ShaUtil.other.inherits(AdminUserReview, BaseJsController);
 
 //------------properties define-------------[
 AdminUserReview.prototype.ID = {
+	TAB_ID                   : "detailTab",
+	TAB_TITLE_REVIEW_ID      : "reviewTab",
+	TAB_TITLE_USER_DETAIL_ID : "userDetailTab",
+    TAB_BODY_REVIEW_ID       : "reviewTabBody",
+    TAB_BODY_USER_DETAIL_ID  : "userDetailTabBody",
     
+	BTN_OK                   : "btnOk",
 	BTN_BACK                 : "btnBack",
-	SHOW_ORDER_IMG_BTN_ID    : "showOrderImg",
-	ORDER_IMG_ID             : "orderImg",
 	
-	ITEM_ID                  : "id",
-	
-	BTN_REVIEW_OK            : "btnReviewOk",
-	BTN_REVIEW_NG            : "btnReviewNg",
-	
+	CHECK_STATUS_PASS        : "02",
+	ITEM_CHECKSTATUS         : "checkStatus",
+	ITEM_MEMO                : "memo",
+
     //div
     DIV_MAINBODY             : 'mainBody',
 
@@ -51,54 +54,93 @@ AdminUserReview.prototype.initEvent = function(){
     
     //keep self instance for call back
     var self = this;
-    
-	ShaInput.button.onClick(self.getObject(self.ID.SHOW_ORDER_IMG_BTN_ID), 
-		function(event) {
-			var newImg = new Image();
-
-		    newImg.onload = function() {
-		    	var imgH = newImg.height;
-		    	var imgW = newImg.width;
-		    	var title = self.i18n["m_image.order_photo"];
-				var html = ShaInput.img.previewOrigImgCardHtml(770, 450, imgW, imgH,
-					"ShaDialog.dialogs.subSubDialogClose();", self.getObject(self.ID.ORDER_IMG_ID).attr("src"));
-				ShaDialog.dialogs.subSubDialogLargeCenter(title,html);
-		    }
-		    newImg.src = self.getObject(self.ID.ORDER_IMG_ID).attr("src");
-			
+	
+	ShaInput.button.onClick(self.getObject(self.ID.TAB_TITLE_REVIEW_ID), 
+	   	function(event) {
+			ShaInput.tab.activeTab(self.getForm(), self.ID.TAB_ID, self.ID.TAB_TITLE_REVIEW_ID, self.ID.TAB_BODY_REVIEW_ID);
 		}
 	);
-	    
-    ShaInput.button.onClick(self.getObject(self.ID.BTN_REVIEW_OK), 
-		function(event) {
-			ShaAjax.pop.postDialogLargeCenter(
-					self.i18n["admin.order.btn.reviewOk"],
-					self.jsContext.adminJsView.adminReviewOk.url_init,  
-					[{name:"id", value:self.getObject(self.ID.ITEM_ID).val()}]);
+	ShaInput.button.onClick(self.getObject(self.ID.TAB_TITLE_USER_DETAIL_ID), 
+	   	function(event) {
+			ShaInput.tab.activeTab(self.getForm(), self.ID.TAB_ID, self.ID.TAB_TITLE_USER_DETAIL_ID, self.ID.TAB_BODY_USER_DETAIL_ID);
 		}
 	);
 	
-	ShaInput.button.onClick(self.getObject(self.ID.BTN_REVIEW_NG), 
+	//init event to BTN_OK
+	ShaInput.button.onClick(self.getObject(self.ID.BTN_OK), 
 		function(event) {
-			ShaAjax.pop.postDialogLargeCenter(
-					self.i18n["admin.order.btn.reviewNg"],
-					self.jsContext.adminJsView.adminReviewNg.url_init,  
-					[{name:"id", value:self.getObject(self.ID.ITEM_ID).val()}]);
-		}
+			if(self.checkValue()) {
+	            return;
+	        }
+			if (self.getObject(self.ID.ITEM_CHECKSTATUS).val() === Pos.constants.setInfo.common.check_status_type_pass){//审核通过
+				self.getObject(self.ID.ITEM_MEMO).val("");
+			}
+	        ShaDialog.dialogs.confirm(
+				self.i18n["dialogs.confirm.add.title"], 
+				self.i18n["dialogs.confirm.add.msg"], 
+				function () {
+					ShaAjax.ajax.post(
+			            self.jsContext.adminJsView.adminUserReview.url_review, 
+			            self.form.serializeArray(), 
+			            function(data){
+							if (data == Pos.constants.setInfo.common.executeReturnTypeOk) {
+								ShaDialog.dialogs.success(self.i18n["dialogs.add.success.msg"]);
+								ShaAjax.ajax.post(
+					                self.jsContext.adminJsView.adminUserReviewSearch.url_user_list, 
+									null, 
+					                function(data){
+					                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
+					                }
+					            );
+							}else{
+								ShaDialog.dialogs.alert(self.i18n["dialogs.fail.title"]);
+							}
+			            }
+			        );
+				}
+			);
+	    }
 	);
 	
-    //init event to BTN_CLOSE
+    //init event to BTN_BACK
 	ShaInput.button.onClick(self.getObject(self.ID.BTN_BACK), 
 		function(event) {
 			ShaAjax.ajax.post(
-                self.jsContext.adminJsView.adminOrderSearch.url_order_list_review, 
-                null, 
+                self.jsContext.adminJsView.adminUserReviewSearch.url_user_list, 
+                //[{name:"searchMode",     value:"waitList"}],
+				null, 
                 function(data){
                     self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
                 }
-            ); 
+            );
 	    }
 	);
+	
+	ShaInput.button.onChange(self.getObject(self.ID.ITEM_CHECKSTATUS), 
+		function(event) {
+			var status = self.getObject(self.ID.ITEM_CHECKSTATUS).val();
+			if (status === Pos.constants.setInfo.common.check_status_type_pass){//审核通过
+				ShaInput.obj.disabled(self.getObject(self.ID.ITEM_MEMO));
+			}else{
+				ShaInput.obj.enabled(self.getObject(self.ID.ITEM_MEMO));
+			}
+		}
+	);
+	
+	self.getObject(self.ID.ITEM_CHECKSTATUS).change();
 };
 
+//checkValue
+AdminUserReview.prototype.checkValue = function(){
+	//keep self instance for call back
+	var self = this;
+	ShaCheck.check.setFirstItemFocus(true);
+	var status = self.getObject(self.ID.ITEM_CHECKSTATUS).val();
+	if (status != Pos.constants.setInfo.common.check_status_type_pass && 
+		ShaCheck.check.checkNotBlank([[self.i18n["admin.userReview.review.opinion"], 	self.getObject(self.ID.ITEM_MEMO)]])){
+		return true;
+	}
+
+    return false;
+};
 //----------------------------------------------------------------------------]

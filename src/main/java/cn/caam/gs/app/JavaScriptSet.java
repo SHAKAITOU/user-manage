@@ -20,19 +20,22 @@ import cn.caam.gs.app.admin.userorder.view.AdminOrderSearchViewHelper;
 import cn.caam.gs.app.admin.userorder.view.ReviewNgViewHelper;
 import cn.caam.gs.app.admin.userorder.view.ReviewOkViewHelper;
 import cn.caam.gs.app.admin.userorder.view.ReviewOrderViewHelper;
+import cn.caam.gs.app.admin.userreview.view.AdminUserReviewMultiViewHelper;
 import cn.caam.gs.app.admin.userreview.view.AdminUserReviewSearchViewHelper;
 import cn.caam.gs.app.admin.userreview.view.AdminUserReviewViewHelper;
 import cn.caam.gs.app.admin.usersearch.view.AdminUserSearchViewHelper;
 import cn.caam.gs.app.common.view.CommonViewHelper;
 import cn.caam.gs.app.common.view.MessageDetailViewHelper;
 import cn.caam.gs.app.common.view.OrderDetailViewHelper;
+import cn.caam.gs.app.common.view.UserDetailViewHelper;
 import cn.caam.gs.app.user.certi.view.UserCertiViewHelper;
-import cn.caam.gs.app.user.detail.view.UserDetailViewHelper;
 import cn.caam.gs.app.user.login.view.LoginViewHelper;
 import cn.caam.gs.app.user.message.view.MessageSearchViewHelper;
 import cn.caam.gs.app.user.order.view.OrderSearchViewHelper;
 import cn.caam.gs.app.user.order.view.OrderViewHelper;
+import cn.caam.gs.app.user.userreview.view.UserReviewSearchViewHelper;
 import cn.caam.gs.common.enums.ExecuteReturnType;
+import cn.caam.gs.common.enums.UserCheckStatusType;
 import cn.caam.gs.common.util.JsonUtility;
 import cn.caam.gs.common.util.MessageSourceUtil;
 import lombok.Data;
@@ -175,6 +178,7 @@ public class JavaScriptSet {
 		common.put("amount_max_l", GlobalConstants.AMOUNT_MAX_L);
 		common.put("bill_code_max_l", GlobalConstants.BILL_CODE_MAX_L);
 		common.put("bill_title_max_l", GlobalConstants.BILL_TITLE_MAX_L);
+		common.put("check_status_type_pass", UserCheckStatusType.PASS.getKey());
 
 		JSONObject msgObj = new JSONObject();
         for (String key : messageSourceUtil.getKeys()) {
@@ -194,6 +198,8 @@ public class JavaScriptSet {
 		jsView.put("orderSearch",          OrderSearchViewHelper.getJsProperties());
 		jsView.put("order",                OrderViewHelper.getJsProperties());
 		
+		jsView.put("userReviewSearch",     UserReviewSearchViewHelper.getJsProperties());
+		
 		jsView.put("messageSearch",        MessageSearchViewHelper.getJsProperties());
 		
 		return jsView;
@@ -204,8 +210,9 @@ public class JavaScriptSet {
 		jsView.put("adminLogin",         AdminLoginViewHelper.getJsProperties());
 		jsView.put("adminMenu",          AdminMenuViewHelper.getJsProperties());
 		
-		jsView.put("adminUserReview",    AdminUserReviewViewHelper.getJsProperties());
-		jsView.put("adminUserReviewSearch",  AdminUserReviewSearchViewHelper.getJsProperties());
+		jsView.put("adminUserReview",		AdminUserReviewViewHelper.getJsProperties());
+		jsView.put("adminUserReviewMulti",	AdminUserReviewMultiViewHelper.getJsProperties());
+		jsView.put("adminUserReviewSearch",	AdminUserReviewSearchViewHelper.getJsProperties());
 		
 		jsView.put("adminUserSearch",    AdminUserSearchViewHelper.getJsProperties());
 		

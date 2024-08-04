@@ -21,6 +21,8 @@ Menu.prototype.ID = {
 	
 	CLASS_NM_ORDER      			: 'menu2001',
 	
+	CLASS_NM_USER_REVIEW   			: 'menu4001',
+	
 	CLASS_NM_MESSAGE      			: 'menu9001',
 	
 	CLASS_NM_LOGOUT      			: 'menu9003',
@@ -101,6 +103,22 @@ Menu.prototype.initEvent = function(){
 	    	function(event) {
 				ShaAjax.ajax.get(
 	                self.jsContext.jsView.orderSearch.url_init, 
+	                null, 
+	                function(data){
+	                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
+	                }
+	            ); 
+			}
+	    );
+	});
+	
+	//审核状态
+	$buttonList = self.getObjectList(self.ID.CLASS_NM_USER_REVIEW);
+    $buttonList.each(function(i, elem){
+	    ShaInput.button.onClick($(elem),
+	    	function(event) {
+				ShaAjax.ajax.get(
+	                self.jsContext.jsView.userReviewSearch.url_init, 
 	                null, 
 	                function(data){
 	                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);

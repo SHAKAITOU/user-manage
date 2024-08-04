@@ -30,7 +30,6 @@
     <result column="postal_code" property="postalCode" jdbcType="VARCHAR" />
     <result column="phone" property="phone" jdbcType="VARCHAR" />
     <result column="mail" property="mail" jdbcType="VARCHAR" />
-    <result column="application_date" property="applicationDate" jdbcType="VARCHAR" />
     <result column="check_date" property="checkDate" jdbcType="VARCHAR" />
     <result column="check_status" property="checkStatus" jdbcType="VARCHAR" />
     <result column="valid_status" property="validStatus" jdbcType="VARCHAR" />
@@ -40,6 +39,7 @@
     <result column="society_type" property="societyType" jdbcType="VARCHAR" />
     <result column="group_name" property="groupName" jdbcType="VARCHAR" />
     <result column="credit_code" property="creditCode" jdbcType="VARCHAR" />
+    <result column="application_date" property="applicationDate" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     <!--
@@ -48,9 +48,9 @@
     -->
     id, name, user_type, password, membership_path, focus_on, sex, birth, nationality, 
     political, edu_degree, bachelor, position, employer, employer_type, job_title, certificate_type, 
-    certificate_code, area, area_sub, address, postal_code, phone, mail, application_date,check_date, 
+    certificate_code, area, area_sub, address, postal_code, phone, mail, check_date, 
     check_status, valid_status, regist_date, valid_start_date, valid_end_date, society_type, 
-    group_name, credit_code
+    group_name, credit_code, application_date
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     <!--
@@ -83,10 +83,10 @@
       job_title, certificate_type, certificate_code, 
       area, area_sub, address, 
       postal_code, phone, mail, 
-      application_date,check_date, check_status, valid_status, 
+      check_date, check_status, valid_status, 
       regist_date, valid_start_date, valid_end_date, 
-      society_type, group_name, credit_code
-      )
+      society_type, group_name, credit_code, 
+      application_date)
     values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{userType,jdbcType=VARCHAR}, 
       #{password,jdbcType=VARCHAR}, #{membershipPath,jdbcType=VARCHAR}, #{focusOn,jdbcType=VARCHAR}, 
       #{sex,jdbcType=VARCHAR}, #{birth,jdbcType=VARCHAR}, #{nationality,jdbcType=VARCHAR}, 
@@ -95,10 +95,10 @@
       #{jobTitle,jdbcType=VARCHAR}, #{certificateType,jdbcType=VARCHAR}, #{certificateCode,jdbcType=VARCHAR}, 
       #{area,jdbcType=VARCHAR}, #{areaSub,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
       #{postalCode,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{mail,jdbcType=VARCHAR}, 
-      #{applicationDate,jdbcType=VARCHAR},#{checkDate,jdbcType=VARCHAR}, #{checkStatus,jdbcType=VARCHAR}, #{validStatus,jdbcType=VARCHAR}, 
+      #{checkDate,jdbcType=VARCHAR}, #{checkStatus,jdbcType=VARCHAR}, #{validStatus,jdbcType=VARCHAR}, 
       #{registDate,jdbcType=VARCHAR}, #{validStartDate,jdbcType=VARCHAR}, #{validEndDate,jdbcType=VARCHAR}, 
-      #{societyType,jdbcType=VARCHAR}, #{groupName,jdbcType=VARCHAR}, #{creditCode,jdbcType=VARCHAR}
-      )
+      #{societyType,jdbcType=VARCHAR}, #{groupName,jdbcType=VARCHAR}, #{creditCode,jdbcType=VARCHAR}, 
+      #{applicationDate,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.caam.gs.domain.db.base.entity.MUser" >
     <!--
@@ -179,9 +179,6 @@
       <if test="mail != null" >
         mail,
       </if>
-      <if test="applicationDate != null" >
-        application_date,
-      </if>
       <if test="checkDate != null" >
         check_date,
       </if>
@@ -208,6 +205,9 @@
       </if>
       <if test="creditCode != null" >
         credit_code,
+      </if>
+      <if test="applicationDate != null" >
+        application_date,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -310,6 +310,9 @@
       <if test="creditCode != null" >
         #{creditCode,jdbcType=VARCHAR},
       </if>
+      <if test="applicationDate != null" >
+        #{applicationDate,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="cn.caam.gs.domain.db.base.entity.MUser" >
@@ -388,9 +391,6 @@
       <if test="mail != null" >
         mail = #{mail,jdbcType=VARCHAR},
       </if>
-      <if test="applicationDate != null" >
-        application_date = #{applicationDate,jdbcType=VARCHAR},
-      </if>
       <if test="checkDate != null" >
         check_date = #{checkDate,jdbcType=VARCHAR},
       </if>
@@ -417,6 +417,9 @@
       </if>
       <if test="creditCode != null" >
         credit_code = #{creditCode,jdbcType=VARCHAR},
+      </if>
+      <if test="applicationDate != null" >
+        application_date = #{applicationDate,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
@@ -450,7 +453,6 @@
       postal_code = #{postalCode,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
       mail = #{mail,jdbcType=VARCHAR},
-      application_date = #{applicationDate,jdbcType=VARCHAR},
       check_date = #{checkDate,jdbcType=VARCHAR},
       check_status = #{checkStatus,jdbcType=VARCHAR},
       valid_status = #{validStatus,jdbcType=VARCHAR},
@@ -459,7 +461,8 @@
       valid_end_date = #{validEndDate,jdbcType=VARCHAR},
       society_type = #{societyType,jdbcType=VARCHAR},
       group_name = #{groupName,jdbcType=VARCHAR},
-      credit_code = #{creditCode,jdbcType=VARCHAR}
+      credit_code = #{creditCode,jdbcType=VARCHAR},
+      application_date = #{applicationDate,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

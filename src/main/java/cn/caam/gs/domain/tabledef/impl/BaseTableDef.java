@@ -12,6 +12,11 @@ public class BaseTableDef {
     }
     
     protected static String getPlaceholder(String tableName, String columName) {
-        return HtmlBaseHelper.getContext(tableName + "." + columName + ".placeholder");
+    	try {
+    		return HtmlBaseHelper.getContext(tableName + "." + columName + ".placeholder");
+    	}catch(Error exception) {
+    		System.out.println(tableName+"."+columName+".placeholder is not existed!");
+    		throw exception;
+    	}
     }
 }

@@ -31,6 +31,8 @@ public class LabelFileSet {
     private boolean notBlank = false;
     @Default
     private int maxlength = 0;
+    @Builder.Default
+    boolean disabled = false;
 
     public String html() {
         return get();
@@ -69,10 +71,13 @@ public class LabelFileSet {
         if (Objects.nonNull(value)) {
             sb.append(" value='"+ value + "'");
         }
-        sb.append("style='background-color:" + GlobalConstants.INPUT_BG_COLOER + "' >");
+        if (disabled) {
+            sb.append(" disabled ");
+        }
+        sb.append("style='background-color:" + (disabled ? GlobalConstants.INPUT_DISABLED_BG_COLOER:GlobalConstants.INPUT_BG_COLOER) + "' >");
         sb.append("<label class='custom-file-label "
                 + ((Objects.nonNull(fontSize) ? fontSize.getKey() : "label-14") + "' ") 
-                + "style='background-color:" + GlobalConstants.INPUT_BG_COLOER + "' "
+                + "style='background-color:" + (disabled ? GlobalConstants.INPUT_DISABLED_BG_COLOER:GlobalConstants.INPUT_BG_COLOER) + "' "
                 + "id='" + idLablel + "' "
                 + " for='" + id + "'>");
         sb.append("<i class='fa fa-upload'></i>&nbsp;&nbsp;");

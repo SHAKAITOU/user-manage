@@ -11,9 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import cn.caam.gs.app.GlobalConstants;
-import cn.caam.gs.common.html.HtmlViewBaseHelper;
+import cn.caam.gs.common.enums.LoginAccountType;
 import cn.caam.gs.common.util.JsonUtility;
 import cn.caam.gs.common.util.StringUtility;
+import cn.caam.gs.domain.db.base.entity.MAdmin;
 import cn.caam.gs.domain.db.custom.entity.LoginResult;
 import cn.caam.gs.domain.db.custom.entity.UserInfo;
 
@@ -113,4 +114,13 @@ public class LoginInfoHelper {
 		return userCode;
 	}
 
+	public static LoginAccountType getLoginAccountType(HttpServletRequest request) {
+		if (request.getSession().getAttribute(SessionConstants.LOGIN_INFO.getValue()) instanceof UserInfo){
+			return LoginAccountType.USER;
+		}else if (request.getSession().getAttribute(SessionConstants.LOGIN_INFO.getValue()) instanceof MAdmin){
+			return LoginAccountType.ADMIN;
+		}
+		
+		return LoginAccountType.UNKNOWN;
+	}
 }

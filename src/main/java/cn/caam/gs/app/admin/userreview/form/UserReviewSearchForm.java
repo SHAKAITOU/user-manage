@@ -14,8 +14,8 @@ import lombok.Builder.Default;
 @NoArgsConstructor
 public class UserReviewSearchForm {
 	private MUser         user;
-	private String        validStatus;
-	private String        registDateFrom;
+	private String        userName;
+	private String        phone;
 	private String        registDateTo;
 	private String        validEndDateFrom;
     private String        validEndDateTo;

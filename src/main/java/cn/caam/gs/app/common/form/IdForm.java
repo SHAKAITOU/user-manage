@@ -13,4 +13,6 @@ public class IdForm {
 
 	private String id;
 	
+	private String[] user_check_;
+	
 }

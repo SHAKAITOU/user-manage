@@ -18,8 +18,15 @@ public class SmsConfig {
 	@Value("${spring.sms.sender}")
 	private String sender;
 	
-	@Value("${spring.sms.template_id}")
-	private String templateId;
+	@Value("${spring.sms.user_regist_template_id}")
+	private String userRegistTemplateId;
+	
+	@Value("${spring.sms.user_login_template_id}")
+	private String userLoginTemplateId;
+	
+	@Value("${spring.sms.user_review_template_id}")
+	private String userReviewTemplateId;
+	
 	
 	@Value("${spring.sms.signature}")
 	private String signature;
@@ -56,12 +63,28 @@ public class SmsConfig {
 		this.sender = sender;
 	}
 
-	public String getTemplateId() {
-		return templateId;
+	public String getUserRegistTemplateId() {
+		return userRegistTemplateId;
 	}
 
-	public void setTemplateId(String templateId) {
-		this.templateId = templateId;
+	public void setUserRegistTemplateId(String userRegistTemplateId) {
+		this.userRegistTemplateId = userRegistTemplateId;
+	}
+
+	public String getUserLoginTemplateId() {
+		return userLoginTemplateId;
+	}
+
+	public void setUserLoginTemplateId(String userLoginTemplateId) {
+		this.userLoginTemplateId = userLoginTemplateId;
+	}
+
+	public String getUserReviewTemplateId() {
+		return userReviewTemplateId;
+	}
+
+	public void setUserReviewTemplateId(String userReviewTemplateId) {
+		this.userReviewTemplateId = userReviewTemplateId;
 	}
 
 	public String getSignature() {

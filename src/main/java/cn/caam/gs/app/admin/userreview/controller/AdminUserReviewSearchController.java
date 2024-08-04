@@ -16,6 +16,7 @@ import cn.caam.gs.app.admin.userreview.view.AdminUserReviewSearchViewHelper;
 import cn.caam.gs.app.admin.usersearch.form.UserSearchForm;
 import cn.caam.gs.app.admin.usersearch.output.UserListOutput;
 import cn.caam.gs.app.util.ControllerHelper;
+import cn.caam.gs.app.util.SessionConstants;
 import cn.caam.gs.common.controller.JcbcBaseController;
 import cn.caam.gs.service.impl.UserService;
 import lombok.AllArgsConstructor;
@@ -52,6 +53,14 @@ public class AdminUserReviewSearchController extends JcbcBaseController{
             UserSearchForm pageForm,
             HttpServletRequest request,
             HttpServletResponse response) {
+//		if (request.getSession().getAttribute(SessionConstants.USER_REVIEW_SEARCH_FORM.getValue()) !=null) {
+//			pageForm = (UserSearchForm)request.getSession().getAttribute(SessionConstants.USER_REVIEW_SEARCH_FORM.getValue());
+//			request.getSession().setAttribute(SessionConstants.USER_REVIEW_SEARCH_FORM.getValue(), null);
+//		}
+		
+		if (StringUtil.isBlank(pageForm.getSearchMode())) {
+			pageForm.setSearchMode(AdminUserReviewSearchViewHelper.SEARCH_MODE_WAIT_LIST);
+		}
 	    
         pageForm.setUserPageLinkIdPrefixIndex(0);
         UserListOutput userListOutput = userService.getUserList(pageForm);

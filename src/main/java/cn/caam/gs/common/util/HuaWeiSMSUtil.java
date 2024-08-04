@@ -44,12 +44,22 @@ public class HuaWeiSMSUtil {
     	config.setAppKey("zn7A3K61J3bz808w7671r4Mw0Rl9");
     	config.setAppSecret("0x1Ey9niYOt4yEv9VvKkcxh1kOaI");
     	config.setSender("1069368924410007625");
-    	config.setTemplateId("ab64fbafe4c94426aa91e15b9f17a9c1");
+//    	config.setTemplateId("ab64fbafe4c94426aa91e15b9f17a9c1");
     	config.setSignature("华为云短信测试");
-        sendSms(config,"13336276767", ""+ (int)((Math.random()*9+1)*100000)+"", 1);
+    	sendAuthCode(config, "ab64fbafe4c94426aa91e15b9f17a9c1", "13336276767", ""+ (int)((Math.random()*9+1)*100000)+"", 1);
         //response:
         //{"result":[{"total":1,"originTo":"+8613336276767","createTime":"2024-07-06T01:55:32Z","from":"1069368924410007625","smsMsgId":"502d816a-432e-46e3-8d0a-755f6572c883_246592933","countryId":"CN","status":"000000"}],"code":"000000","description":"Success"}
         
+    }
+    
+    public static boolean sendAuthCode(SmsConfig config, String templateId, String phone, String code, int validMinute) throws Exception{
+    	String templateParas = "[\""+ code+"\"]"; //模板变量
+    	return sendSms(config, templateId, phone, templateParas);
+    }
+    
+    public static boolean sendUserReviewMessage(SmsConfig config, String templateId,String phone, String msgBody)  throws Exception{
+    	String templateParas = "[\""+ msgBody+"\"]"; //模板变量
+    	return sendSms(config, templateId, phone, templateParas);
     }
 
 	 /**
@@ -60,7 +70,7 @@ public class HuaWeiSMSUtil {
      * @param templateId  必填:模板ID
      * @throws Exception
      */
-    public static boolean sendSms(SmsConfig config,String phone, String code, int validMinute) throws Exception{
+    public static boolean sendSms(SmsConfig config, String templateId, String phone, String templateParas) throws Exception{
     	//APP接入地址+接口访问URI
         String url = config.getApiUrl();
         //APP_Key
@@ -70,7 +80,7 @@ public class HuaWeiSMSUtil {
         //必填:国内短信签名通道号或国际/港澳台短信通道号
         String sender = config.getSender();
         //条件必填,国内短信关注,当templateId指定的模板类型为通用模板时生效且必填,必须是已审核通过的,与模板类型一致的签名名称
-        String templateId = config.getTemplateId();
+//        String templateId = config.getTemplateId();
         //条件必填,国内短信关注,当templateId指定的模板类型为通用模板时生效且必填,必须是已审核通过的,与模板类型一致的签名名称
         //国际/港澳台短信不用关注该参数
         String signature = config.getSignature(); //签名名称
@@ -86,7 +96,7 @@ public class HuaWeiSMSUtil {
          * ${DATE}${TIME}变量不允许取值为空,${TXT_20}变量可以使用英文空格或点号替代空值,${NUM_6}变量可以使用0替代空值
          * 查看更多模板和变量规范:产品介绍>模板和变量规范
          */
-        String templateParas = "[\""+ code+"\"]"; //模板变量
+//        String templateParas = "[\""+ code+"\"]"; //模板变量
 //        String templateParas = "[\""+ code+"\",\""+validMinute+"\"]"; //模板变量
 
         //请求Body,不携带签名名称时,signature请填null

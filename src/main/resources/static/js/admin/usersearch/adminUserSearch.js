@@ -28,6 +28,7 @@ AdminUserSearch.prototype.ID = {
     SHOW_SEARCH_PANEL_BTN_ID : "showSearchPanelBtn",
     HIDE_SEARCH_PANEL_BTN_ID : "hideSearchPanelBtn",
     HID_HIDE_SEARCH          : "hideSearch",
+	HID_SELECTED_USER_ID     : "selectedUserId",
     
     USER_LIST_CHECK_ALL_ID   : "user_check_all",
     USER_CHECK_PREF_ID       : ".user_check_",
@@ -168,6 +169,24 @@ AdminUserSearch.prototype.initEvent = function(){
     		self.doPageLink();
     	}
     ); 
+	
+	$tableBtnList = self.getObject(self.ID.USER_LIST_TABLE_ID).find(self.ID.TABLE_BTN_DETAIL);
+	$tableBtnList.each(function(i, elem){
+		//check box init
+	   	ShaInput.button.onClick($(elem),
+	    	function(event) {
+				self.getObject(self.ID.HID_SELECTED_USER_ID).val($(elem).attr("data"));
+				ShaAjax.ajax.post(
+	                self.jsContext.jsView.userDetail.url_user_detail_from_admin_init, 
+	                //[{name:"id",     value:$(elem).attr("data")}],
+				    self.getForm().serializeArray(),  
+	                function(data){
+	                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
+	                }
+	            ); 
+			}
+	    );
+	});
     
 };
 

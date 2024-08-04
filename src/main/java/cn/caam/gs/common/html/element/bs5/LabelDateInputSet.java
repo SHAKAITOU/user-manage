@@ -30,6 +30,8 @@ public class LabelDateInputSet {
     private LabelDateInputSetType outPutType;
     private CssFontSizeType fontSize;
     private CssGridsType grids;
+    @Builder.Default
+    boolean disabled = false;
     
     public String html() {
         if(outPutType == LabelDateInputSetType.WITH_LABEL) {
@@ -127,9 +129,12 @@ public class LabelDateInputSet {
         StringBuffer sb = new StringBuffer();
         sb.append("<input type='text'");
         sb.append(" class='form-control " + (Objects.nonNull(fontSize) ? fontSize.getKey() : "label-14" ) + "'");
-        sb.append(" style='background-color:" + GlobalConstants.INPUT_BG_COLOER + "'");
+        sb.append(" style='background-color:" + (disabled ? GlobalConstants.INPUT_DISABLED_BG_COLOER:GlobalConstants.INPUT_BG_COLOER) + "'");
         if (Objects.nonNull(placeholder)) {
             sb.append(" placeholder='" + placeholder + "'");
+        }
+        if (disabled) {
+            sb.append(" disabled ");
         }
         sb.append(" id='" + id + "' name='" + name + "' value='" + (Objects.nonNull(value) ? value : "") + "' readonly/>");
         return sb.toString();

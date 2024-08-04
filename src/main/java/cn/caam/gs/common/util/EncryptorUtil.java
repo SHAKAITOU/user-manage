@@ -111,6 +111,19 @@ public class EncryptorUtil {
         
         return prefix + randomSubfix;
     }
+    
+    public static String generateUserReviewId() {
+        String prefix = LocalDateUtility.getCurrentDateTimeString(DateTimePattern.UUUUMMDDHHMISS);
+        Properties properties = new Properties();
+        properties.setProperty("kaptcha.textproducer.char.string", ORDER_ID_RANDOM);
+        properties.setProperty("kaptcha.textproducer.char.length", MSG_ID_RANDOM_LENGTH);
+        Config config = new Config(properties);
+        DefaultKaptcha defaultKaptcha = new DefaultKaptcha();
+        defaultKaptcha.setConfig(config);
+        String randomSubfix = defaultKaptcha.createText();
+        
+        return prefix + randomSubfix;
+    }
 
     /*
     public static void main(String[] args) {            

@@ -90,6 +90,8 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
     public static final String HID_HIDE_SEARCH                = "hideSearch";
     public static final String HID_LIMIT                      = "limit";
     public static final String HID_OFFSET                     = "offset";
+    public static final String HIDE_SELECTEDU_SER_ID          = "selectedUserId";
+    public static final String HIDE_LOGIN_TYPE         		  = "loginType";
     public static final int    HEADER_HEIGHT                  = 450;
     public static final int    SEARCH_PANEL_HEIGHT            = 180;
     
@@ -144,7 +146,7 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         sb.append(divRow().cellBlank(5));
         sb.append(setBreadCrumb());
         sb.append("<div id='" + SEARCH_PANEL_ID + "'>");
-        sb.append(setCardForSearchPanel(request));
+        sb.append(setCardForSearchPanel(request, pageForm));
         sb.append("</div>");
         sb.append(DivChevronSet.builder().idUp(HIDE_SEARCH_PANEL_BTN_ID).idDown(SHOW_SEARCH_PANEL_BTN_ID).build().html());
         sb.append("<div id='" + USER_LIST_REFRESH_BODY_ID + "'>");
@@ -161,15 +163,15 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
 
     //--------------------header SearchPanel -----------------
     
-    private static String setCardForSearchPanel(HttpServletRequest request) {
+    private static String setCardForSearchPanel(HttpServletRequest request, UserSearchForm pageForm) {
         StringBuffer sbBody = new StringBuffer();
         sbBody.append(borderCard().noTitleNoScroll("", CssClassType.SUCCESS, "", 
                 "",
-                setSearchPanel(request)));
+                setSearchPanel(request, pageForm)));
         
         return sbBody.toString();
     }
-    private static String setSearchPanel(HttpServletRequest request) {
+    private static String setSearchPanel(HttpServletRequest request, UserSearchForm pageForm) {
         @SuppressWarnings("unchecked")
         Map<FixedValueType, List<FixValueInfo>> fixedValueMap = 
                 (Map<FixedValueType, List<FixValueInfo>>)request.getSession().getAttribute(SessionConstants.FIXED_VALUE.getValue());
@@ -186,7 +188,7 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         String labelName = clmForm.getLabelName();
         String placeholder = clmForm.getPlaceholder();
         contextList.add(LabelInputSet.builder()
-                .id(id).name(name).labelName(labelName)
+                .id(id).name(name).labelName(labelName).value(nonNull(pageForm.getUser().getName()))
                 .maxlength(GlobalConstants.USER_NAME_MAX_L).placeholder(placeholder)
                 .fontSize(font).grids(CssGridsType.G3).build().html());
         
@@ -197,7 +199,7 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
         contextList.add(LabelInputSet.builder()
-                .id(id).name(name).labelName(labelName)
+                .id(id).name(name).labelName(labelName).value(nonNull(pageForm.getUser().getPhone()))
                 .maxlength(GlobalConstants.PHONE_MAX_L).placeholder(placeholder)
                 .fontSize(font).grids(CssGridsType.G3).build().html());
         
@@ -222,9 +224,10 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         for (UserExpiredType userExpiredType : UserExpiredType.values()) {
             radios.add(new HtmlRadio(userExpiredType.getKey(), getContext(userExpiredType.getMsg())));
         }
+        String value = nonNull(pageForm.getValidStatus());
         contextList.add(LabelSelectSet.builder()
                 .id(id).name(name).labelName(labelName)
-                .radios(radios).selectedValue(GlobalConstants.DFL_SELECT_ALL)
+                .radios(radios).selectedValue(value)
                 .fontSize(font).grids(CssGridsType.G3).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
         
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
@@ -242,14 +245,14 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         labelName = clmForm.getLabelName() + getContext("common.page.start");
         placeholder = T100MUser.getColumnInfo(T100MUser.COL_VALID_END_DATE).getPlaceholder();
         contextList.add(LabelDateInputSet.builder()
-                .id(id).name(name).labelName(labelName).placeholder(placeholder)
+                .id(id).name(name).labelName(labelName).placeholder(placeholder).value(nonNull(pageForm.getRegistDateFrom()))
                 .fontSize(font).grids(CssGridsType.G3).outPutType(LabelDateInputSetType.WITH_LABEL_FOOT).build().html());
         
         name      = clmForm.getPageName("") + "To";
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName() + getContext("common.page.end");
         contextList.add(LabelDateInputSet.builder()
-                .id(id).name(name).labelName(labelName).placeholder(placeholder)
+                .id(id).name(name).labelName(labelName).placeholder(placeholder).value(nonNull(pageForm.getRegistDateTo()))
                 .fontSize(font).grids(CssGridsType.G3).outPutType(LabelDateInputSetType.WITH_LABEL_FOOT).build().html());
         
         //valid_end_date選択
@@ -259,14 +262,14 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         labelName = clmForm.getLabelName() + getContext("common.page.start");
         placeholder = clmForm.getPlaceholder();
         contextList.add(LabelDateInputSet.builder()
-                .id(id).name(name).labelName(labelName).placeholder(placeholder)
+                .id(id).name(name).labelName(labelName).placeholder(placeholder).value(nonNull(pageForm.getValidEndDateFrom()))
                 .fontSize(font).grids(CssGridsType.G3).outPutType(LabelDateInputSetType.WITH_LABEL_FOOT).build().html());
         
         name      = clmForm.getPageName("") + "To";
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName() + getContext("common.page.end");
         contextList.add(LabelDateInputSet.builder()
-                .id(id).name(name).labelName(labelName).placeholder(placeholder)
+                .id(id).name(name).labelName(labelName).placeholder(placeholder).value(nonNull(pageForm.getValidEndDateTo()))
                 .fontSize(font).grids(CssGridsType.G3).outPutType(LabelDateInputSetType.WITH_LABEL_FOOT).build().html());
 
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
@@ -280,9 +283,10 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         name      = clmForm.getPageName(PREFIX_NAME);
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
+        value = nonNull(pageForm.getUser().getId());
         placeholder = clmForm.getPlaceholder();
         contextList.add(LabelInputSet.builder()
-                .id(convertNameDotForId(name)).name(name).labelName(labelName)
+                .id(convertNameDotForId(name)).name(name).labelName(labelName).value(value)
                 .maxlength(GlobalConstants.USER_ID_MAX_L).placeholder(placeholder)
                 .fontSize(font).grids(CssGridsType.G3).build().html());
         
@@ -291,6 +295,7 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         name      = clmForm.getPageName(PREFIX_NAME);
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
+        value = nonNull(pageForm.getUser().getUserType());
         List<FixValueInfo> userTypeList = fixedValueMap.get(FixedValueType.USER_TYPE);
         radios = new ArrayList<>();
         radios.add(new HtmlRadio(GlobalConstants.DFL_SELECT_ALL, getContext("AvailabilityType.ALL")));
@@ -304,7 +309,7 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         }
         contextList.add(LabelSelectSet.builder()
                 .id(id).name(name).labelName(labelName)
-                .radios(radios).selectedValue(GlobalConstants.DFL_SELECT_ALL)
+                .radios(radios).selectedValue(value)
                 .fontSize(font).grids(CssGridsType.G3).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
  
         //edu_degree選択
@@ -312,6 +317,7 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         name      = clmForm.getPageName(PREFIX_NAME);
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
+        value = nonNull(pageForm.getUser().getEduDegree());
         List<FixValueInfo> edu_degreeList = fixedValueMap.get(FixedValueType.EDU_DEGREE);
         radios = new ArrayList<>();
         radios.add(new HtmlRadio(GlobalConstants.DFL_SELECT_ALL, getContext("AvailabilityType.ALL")));
@@ -320,7 +326,7 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         }
         contextList.add(LabelSelectSet.builder()
                 .id(id).name(name).labelName(labelName)
-                .radios(radios).selectedValue(GlobalConstants.DFL_SELECT_ALL)
+                .radios(radios).selectedValue(value)
                 .fontSize(font).grids(CssGridsType.G2).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
 
         //political選択
@@ -328,6 +334,7 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         name      = clmForm.getPageName(PREFIX_NAME);
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
+        value = nonNull(pageForm.getUser().getPolitical());
         List<FixValueInfo> politicalList = fixedValueMap.get(FixedValueType.POLITICAL);
         radios = new ArrayList<>();
         radios.add(new HtmlRadio(GlobalConstants.DFL_SELECT_ALL, getContext("AvailabilityType.ALL")));
@@ -336,7 +343,7 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         }
         contextList.add(LabelSelectSet.builder()
                 .id(convertNameDotForId(name)).name(name).labelName(labelName)
-                .radios(radios).selectedValue(GlobalConstants.DFL_SELECT_ALL)
+                .radios(radios).selectedValue(value)
                 .fontSize(font).grids(CssGridsType.G3).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
         
         //search btn
@@ -383,6 +390,8 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         sb.append(hidden().get(HID_HIDE_SEARCH,  String.valueOf(pageForm.isHideSearch())));
         sb.append(hidden().get(HID_LIMIT,  String.valueOf(pageForm.getLimit())));
         sb.append(hidden().get(HID_OFFSET, String.valueOf(pageForm.getOffset())));
+//        sb.append(hidden().get(HIDE_LOGIN_TYPE, LoginInfoHelper.getLoginAccountType(request).getKey()));
+        sb.append(hidden().get(HIDE_SELECTEDU_SER_ID, ""));
         return sb.toString();
     }
     

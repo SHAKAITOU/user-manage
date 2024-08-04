@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,36 +12,40 @@ import org.springframework.stereotype.Component;
 
 import cn.caam.gs.app.GlobalConstants;
 import cn.caam.gs.app.UrlConstants;
+import cn.caam.gs.app.common.form.UserDetailForm;
+import cn.caam.gs.app.common.output.UserCheckHistoryListOutput;
+import cn.caam.gs.app.common.view.UserDetailViewHelper;
 import cn.caam.gs.app.dbmainten.form.ColumnInfoForm;
 import cn.caam.gs.app.util.HtmlViewHelper;
 import cn.caam.gs.app.util.SessionConstants;
 import cn.caam.gs.common.bean.ViewData;
 import cn.caam.gs.common.enums.CellWidthType;
-import cn.caam.gs.common.enums.CheckStatusType;
 import cn.caam.gs.common.enums.CssAlignType;
 import cn.caam.gs.common.enums.CssClassType;
 import cn.caam.gs.common.enums.CssFontSizeType;
 import cn.caam.gs.common.enums.CssGridsType;
 import cn.caam.gs.common.enums.FixedValueType;
 import cn.caam.gs.common.enums.GridFlexType;
-import cn.caam.gs.common.enums.UserExpiredType;
-import cn.caam.gs.common.enums.UserType;
+import cn.caam.gs.common.enums.PageModeType;
+import cn.caam.gs.common.enums.UserCheckStatusType;
 import cn.caam.gs.common.html.element.HtmlRadio;
+import cn.caam.gs.common.html.element.TabSet;
+import cn.caam.gs.common.html.element.TrSet;
 import cn.caam.gs.common.html.element.bs5.BreadCrumbSet;
 import cn.caam.gs.common.html.element.bs5.DivAlertSet;
 import cn.caam.gs.common.html.element.bs5.DivHrSet;
-import cn.caam.gs.common.html.element.bs5.LabelSelectSet;
 import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
+import cn.caam.gs.common.html.element.bs5.LabelSelectSet;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet.LabelSelectSetType;
 import cn.caam.gs.common.html.element.bs5.LabelTextAreaSet;
 import cn.caam.gs.common.html.element.bs5.LabelTextAreaSet.LabelTextAreaSetType;
 import cn.caam.gs.common.html.element.bs5.PTextSet;
 import cn.caam.gs.common.util.UtilConstants;
-import cn.caam.gs.domain.db.base.entity.MFixedValue;
 import cn.caam.gs.domain.db.custom.entity.FixValueInfo;
+import cn.caam.gs.domain.db.custom.entity.UserCheckHistoryInfo;
 import cn.caam.gs.domain.db.custom.entity.UserInfo;
 import cn.caam.gs.domain.tabledef.impl.T100MUser;
-import cn.caam.gs.domain.tabledef.impl.T201MBill;
+import cn.caam.gs.domain.tabledef.impl.T103MUserCheckHistory;
 
 @Component
 public class AdminUserReviewViewHelper extends HtmlViewHelper {
@@ -50,26 +55,32 @@ public class AdminUserReviewViewHelper extends HtmlViewHelper {
     //init url
     public static final String URL_C_INIT = UrlConstants.INIT;
     
-    public static final String URL_C_REVIEW_OK = "/ok"; 
-    public static final String URL_C_REVIEW_NG = "/ng"; 
+    public static final String URL_C_REVIEW = "/review"; 
     
     public static final String MAIN_JS_CLASS                  = "AdminUserReview";
     public static final String FORM_NAME                      = MAIN_JS_CLASS + "Form";
     
     public static final String PREFIX_NAME                    = "user.";
     
+    public static final String TAB_ID                         = "detailTab";
+    public static final String TAB_TITLE_REVIEW_ID            = "reviewTab";
+    public static final String TAB_TITLE_USER_DETAIL_ID       = "userDetailTab";
+    public static final String TAB_BODY_REVIEW_ID             = "reviewTabBody";
+    public static final String TAB_BODY_USER_DETAIL_ID        = "userDetailTabBody";
+    
     public static final String SHOW_ORDER_IMG_BTN_ID          = "showOrderImg";
     public static final String ORDER_IMG_ID                   = "orderImg";
     public static final String SHOW_BILL_IMG_BTN_ID           = "showBillImgId";
     public static final String BILL_IMG_ID                    = "billImg";
+    public static final String LIST_TABLE_ID                  = "checkHistoryListTable";
+    public static final int PHONE_TD_HEIGHT = 70;
     
-    public static final int IMG_WIDTH                      = 300;
-    public static final int IMG_HEIGHT                     = 250;
+    public static final int PHONE_CARD_HEIGHT              = 470;
+    public static final int    HEADER_HEIGHT               = 390;
     
-    public static final int PHONE_CARD_HEIGHT              = 270;
-    
-    public static final String BTN_REVIEW_OK = "btnReviewOk";
-    public static final String BTN_REVIEW_NG = "btnReviewNg";
+//    public static final String BTN_REVIEW_OK = "btnReviewOk";
+//    public static final String BTN_REVIEW_NG = "btnReviewNg";
+    public static final String BTN_OK	= "btnOk";
     public static final String BTN_BACK = "btnBack";
     
     public static final CssFontSizeType font = GlobalConstants.INPUT_FONT_SIZE;
@@ -80,11 +91,12 @@ public class AdminUserReviewViewHelper extends HtmlViewHelper {
      */
     public static ViewData getMainPage(
             HttpServletRequest request, 
-            UserInfo userInfo) {
+            UserInfo userInfo,
+            UserCheckHistoryListOutput userCheckHistoryListOutput) {
         Map<String, Object> dataMap = new HashMap<>();
 
         ViewData viewData = ViewData.builder()
-                .pageContext(getMainPageContext(request, userInfo))
+                .pageContext(getMainPageContext(request, userInfo, userCheckHistoryListOutput))
                 .jsClassName(MAIN_JS_CLASS)
                 .dataMap(dataMap)
                 .build();
@@ -93,20 +105,43 @@ public class AdminUserReviewViewHelper extends HtmlViewHelper {
     
     private static String getMainPageContext(
             HttpServletRequest request, 
-            UserInfo userInfo) {
+            UserInfo userInfo,
+            UserCheckHistoryListOutput userCheckHistoryListOutput) {
+//        StringBuffer sb = new StringBuffer();
+//        sb.append(divRow().cellBlank(5));
+//        sb.append(setHidden(userInfo));
+//        sb.append(setBreadCrumb(userInfo));
+//        sb.append(divRow().cellBlank(5));
+//        sb.append(setReviewCardPanel(request, userInfo, userCheckHistoryListOutput, calcCardHeight(request)));
+//        sb.append(buildFooter());
+//        return getForm(FORM_NAME, sb.toString());
+    	UserDetailForm userDetailForm = new UserDetailForm();
+    	userDetailForm.setUserInfo(userInfo);
+        
         StringBuffer sb = new StringBuffer();
         sb.append(divRow().cellBlank(5));
         sb.append(setHidden(userInfo));
         sb.append(setBreadCrumb(userInfo));
         sb.append(divRow().cellBlank(5));
-        sb.append(setReviewCardPanel(request, userInfo, calcCardHeight(request)));
+        String tabHtml = TabSet.builder()
+                .id(TAB_ID)
+            .tabTitleIds(new String [] {TAB_TITLE_REVIEW_ID, TAB_TITLE_USER_DETAIL_ID})
+            .tabTitles(new String [] {
+                    getContext("admin.userReview.review.tab.title"), 
+                    getContext("admin.userReview.userdetail.tab.title")})
+            .tabBodyIds(new String [] {TAB_BODY_REVIEW_ID, TAB_BODY_USER_DETAIL_ID})
+            .tabBodys(new String [] {
+            		setReviewCardPanel(request, userInfo, userCheckHistoryListOutput, calcCardHeight(request)), 
+            		UserDetailViewHelper.getDetailContext(request, userDetailForm, PageModeType.VIEW)})
+            .build().html();
+        sb.append(tabHtml);
         sb.append(buildFooter());
         return getForm(FORM_NAME, sb.toString());
     }
     
     private static String setHidden(UserInfo userInfo) {
         StringBuffer sb = new StringBuffer();
-        ColumnInfoForm clmForm = T100MUser.getColumnInfo(T100MUser.COL_ID);
+        ColumnInfoForm clmForm = T103MUserCheckHistory.getColumnInfo(T103MUserCheckHistory.COL_USER_ID);
         String name      = clmForm.getPageName("");
         sb.append(hidden().get(name, userInfo.getId()));
         return sb.toString();
@@ -123,6 +158,7 @@ public class AdminUserReviewViewHelper extends HtmlViewHelper {
     public static String setReviewCardPanel(
             HttpServletRequest request,
             UserInfo userInfo,
+            UserCheckHistoryListOutput userCheckHistoryListOutput,
             int cartHeight) {
     	@SuppressWarnings("unchecked")
         Map<FixedValueType, List<FixValueInfo>> fixedValueMap = 
@@ -154,31 +190,26 @@ public class AdminUserReviewViewHelper extends HtmlViewHelper {
                 .contexts(new String[] {labelName, context}).build().html());
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
         //-----row 1-------------]
+        
         //审核历史记录  
-        sbBody.append(divRow().get(CellWidthType.ONE, getContext("admin.userReview.review.history")));
+        //-----row 2-------------[
+        sbBody.append(setCardForTable(request, userCheckHistoryListOutput));
+        //-----row 2-------------]
         
         //------row3----------[
         contextList = new ArrayList<String>();
-        //审核意见(F0013)選択
-//        labelName = T100MUser.getColumnInfo(T100MUser.COL_CHECK_STATUS).getLabelName() + UtilConstants.COLON;
-//        context   = PTextSet.builder()
-//                .context(getContext("admin.userReview.review.opinion"))
-//                .classType(CheckStatusType.keyOf(userInfo.getUser().getCheckStatus()).getClassType()).build().html();
-//        contextList.add(DivAlertSet.builder().gridFlexType(GridFlexType.LEFT)
-//                .grids(CssGridsType.G12).classType(CssClassType.CONTEXT)
-//                .contexts(new String[] {labelName, context}).build().html());
-//        sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
-        
-        
+        //审核意见(F0024)選択    
         ColumnInfoForm clmForm = T100MUser.getColumnInfo(T100MUser.COL_CHECK_STATUS);
-        String name      = clmForm.getPageName(PREFIX_NAME);
-        String id        = convertNameDotForId(name);
+        String name        = clmForm.getPageName("");
+        String id          = convertNameDotForId(name);
         labelName = getContext("admin.userReview.review.opinion");
         List<HtmlRadio> radios = new ArrayList<>();
-        List<FixValueInfo> checkStatusList = fixedValueMap.get(FixedValueType.CHECK_STATUS);
+        List<FixValueInfo> checkStatusList = fixedValueMap.get(FixedValueType.USER_CHECK_STATUS);
         radios = new ArrayList<>();
         for (FixValueInfo fValueInfo : checkStatusList) {
-            radios.add(new HtmlRadio(fValueInfo.getValueObj().getValue(), fValueInfo.getValueObj().getName()));
+        	if (!UserCheckStatusType.WAIT_FOR_REVIEW.getKey().equals(fValueInfo.getValueObj().getValue())) {
+        		radios.add(new HtmlRadio(fValueInfo.getValueObj().getValue(), fValueInfo.getValueObj().getName()));
+        	}
         }
         contextList.add(LabelSelectSet.builder()
                 .id(id).name(name).labelName(labelName)
@@ -188,41 +219,125 @@ public class AdminUserReviewViewHelper extends HtmlViewHelper {
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
         
         contextList = new ArrayList<String>();
-      //备注(max250)
-        clmForm     = T201MBill.getColumnInfo(T201MBill.COL_BILL_MEMO);
-//        String name        = clmForm.getPageName(PREFIX_NAME);
-        name = "";
-        id          = convertNameDotForId("name");
+        //审核建议(max150)
+        clmForm     = T103MUserCheckHistory.getColumnInfo(T103MUserCheckHistory.COL_MEMO);
+        name        = clmForm.getPageName("");
+        id          = convertNameDotForId(name);
         labelName   = getContext("admin.userReview.review.opinion.memo");
-//        String placeholder = clmForm.getPlaceholder();
-        String placeholder = "审核建议";
+        String placeholder = clmForm.getPlaceholder();
         contextList.add(LabelTextAreaSet.builder()
                 .id(id).name(name).labelName(labelName)
-                .maxlength(GlobalConstants.LEARN_EXPERIENCE_MAX_L)
+                .maxlength(GlobalConstants.REVIEW_MEMO_MAX_L)
                 .placeholder(placeholder).outPutType(LabelTextAreaSetType.WITH_LABEL)
                 .fontSize(font).rows(2).grids(CssGridsType.G12).build().html());
         
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+        //------row3----------]
         
-//        //备注(max250)選択
-//        strRow1 = T100MUser.getColumnInfo(T100MUser.COL_MEMO).getLabelName() + UtilConstants.COLON;
-//        strRow2   = orderInfo.getOrder().getMemo();
-//        context = DivContainerSet.builder().contexts(new String[] {strRow1, divRow().cellBlank(5), strRow2}).outPutType(DivContainerSetType.SIMPLE).build().html();
-//        contextList.add(DivAlertSet.builder().gridFlexType(GridFlexType.LEFT)
-//                .grids(CssGridsType.G6).classType(CssClassType.INFO)
-//                .contexts(new String[] {context}).build().html());
-//
-//        sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
-        //------row4----------]
         return borderCard().noTitleWithScroll("", CssClassType.SUCCESS, "", cartHeight,
                 sbBody.toString());
+    }
+    
+    private static String setCardForTable(
+            HttpServletRequest request, 
+            UserCheckHistoryListOutput userCheckHistoryListOutput) {
+        StringBuffer sbBody = new StringBuffer();
+        StringBuffer cardBody = new StringBuffer();
+        cardBody.append(divRow().cellBlank(5));
+        cardBody.append(setUserListTable(request, userCheckHistoryListOutput.getUserCheckHistoryList()));
+        String cardTitle = getContext("admin.userReview.review.history");
+        sbBody.append(borderCard().withTitleWithScroll("", CssClassType.INFO, "", 
+                cardTitle,
+                divRow().cellBlank(5),cardBody.toString()));
+        sbBody.append(divRow().cellBlank(5));
+        return sbBody.toString();
+    }
+    
+    private static String setUserListTable(
+            HttpServletRequest request, 
+            List<UserCheckHistoryInfo> list) {
+
+        //head
+        TrSet headTr = tr().head(CssClassType.INFO);
+        // --[
+        if (isPhoneMode(request)) {
+        	 List<CssAlignType> aligs = new ArrayList<>();
+             aligs.add(CssAlignType.LEFT);
+             aligs.add(CssAlignType.RIGHT);
+             //String subRow1 = divRow().get(CellWidthType.ONE,     aligs, T100MUser.getColumnInfo(T100MUser.COL_MEMBERSHIP_PATH).getLabelName());
+             List<GridFlexType> flexs = new ArrayList<>();
+             flexs.add(GridFlexType.LEFT);
+             flexs.add(GridFlexType.RIGHT);
+             String subRow1 = divRow().getFlex(CellWidthType.TWO_6_6, flexs, T103MUserCheckHistory.getColumnInfo(T103MUserCheckHistory.COL_CHECK_STATUS).getLabelName(), 
+             		T103MUserCheckHistory.getColumnInfo(T103MUserCheckHistory.COL_CHECK_DATE).getLabelName());
+             flexs = new ArrayList<>();
+             flexs.add(GridFlexType.LEFT);
+             flexs.add(GridFlexType.RIGHT);
+             String subRow2 = divRow().get(CellWidthType.ONE,     aligs, T103MUserCheckHistory.getColumnInfo(T103MUserCheckHistory.COL_MEMO).getLabelName());
+             headTr.addTh(th().get(PHONE_TD_HEIGHT, CssGridsType.G12, CssAlignType.LEFT, subRow1, subRow2));
+         } else {
+//        } else {
+            // --[
+            // --col1--审核结果
+            String context         = T103MUserCheckHistory.getColumnInfo(T103MUserCheckHistory.COL_CHECK_STATUS).getLabelName();
+            headTr.addTh(th().get(CssGridsType.G2, CssAlignType.CENTER, context));
+            // --col2--审核时间
+            context         = T103MUserCheckHistory.getColumnInfo(T103MUserCheckHistory.COL_CHECK_DATE).getLabelName();
+            headTr.addTh(th().get(CssGridsType.G2, CssAlignType.CENTER, context));
+            // --col3--原因
+            context         = T103MUserCheckHistory.getColumnInfo(T103MUserCheckHistory.COL_MEMO).getLabelName();
+            headTr.addTh(th().get(CssGridsType.G8, CssAlignType.CENTER, context));
+            // --]
+        }
+        //body
+        List<TrSet> bodyList = new ArrayList<>();
+        if(Objects.nonNull(list)) {
+            for(int i=0; i<list.size(); i++) {
+            	UserCheckHistoryInfo info = list.get(i);
+                Map<String, String> properties = new HashMap<String, String>();
+                properties.put("rowDataKey", String.valueOf(info.getId()));
+                TrSet tr = tr().row(properties);
+                String checkStatusNmae = PTextSet.builder()
+                        .context(info.getCheckStatusName())
+                        .classType(UserCheckStatusType.keyOf(info.getUserCheckHistory().getCheckStatus()).getClassType()).build().html();
+                String checkDate = nonNull(info.getUserCheckHistory().getCheckDate());
+                String memo = nonNull(info.getUserCheckHistory().getMemo());//trimFitForTd(CssGridsType.G12.getKey(), info.getUserCheckHistory().getMemo(), true);
+                if (isPhoneMode(request)) {
+                    List<GridFlexType> flexs = new ArrayList<>();
+                    flexs.add(GridFlexType.LEFT);
+                    flexs.add(GridFlexType.RIGHT);
+                    String subRow1 = divRow().getFlex(CellWidthType.TWO_4_8, flexs, checkStatusNmae, checkDate);
+                    flexs = new ArrayList<>();
+                    flexs.add(GridFlexType.LEFT);
+                    flexs.add(GridFlexType.RIGHT);
+                    String subRow2 = divRow().getFlex(CellWidthType.ONE, flexs, memo);
+                    tr.addTd(td().get(PHONE_TD_HEIGHT, CssGridsType.G12, CssAlignType.LEFT, subRow1, subRow2));
+                } else {
+                    // --col1--
+                    tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, true, checkStatusNmae));
+                    // --col2--
+                    tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, true, checkDate));
+                    // --col3--
+                    tr.addTd(td().get(CssGridsType.G8, CssAlignType.LEFT, true, memo));
+                }
+                
+                bodyList.add(tr);
+            }
+        }
+        
+        return table().get(LIST_TABLE_ID, calcTableHeightWhenShowSearch(request), headTr, bodyList);
+    }
+    
+    private static int calcTableHeightWhenShowSearch(HttpServletRequest request) {
+//        return LoginInfoHelper.getMediaHeight(request) - HEADER_HEIGHT;
+    	return 200;
     }
     
     private static int calcCardHeight(HttpServletRequest request) {
         if (isPhoneMode(request)) {
             return PHONE_CARD_HEIGHT;
         }
-        return 470;
+        return 500;
     }
     
     private static String buildFooter() {
@@ -230,22 +345,17 @@ public class AdminUserReviewViewHelper extends HtmlViewHelper {
         List<CssAlignType> aligs = new ArrayList<>();
         // bottom button
 
-        String id = BTN_REVIEW_OK;
-        String context = getContext("admin.order.btn.reviewOk");
-        String comp1 = button().getBorder(IconSetType.CHECK, CssClassType.SUCCESS, id, context);
-        
-        id = BTN_REVIEW_NG;
-        context = getContext("admin.order.btn.reviewNg");
-        String comp2 = button().getBorder(IconSetType.CLOSE, CssClassType.DANGER, id, context);
+        String id = BTN_OK;
+        String context = getContext("common.page.ok");
+        String comp1 = button().getBorder(IconSetType.SEND, CssClassType.SUCCESS, id, context);
         
         id = BTN_BACK;
         context = getContext("common.page.btn.back");
-        String comp3 = button().getBorder(IconSetType.BACK, CssClassType.DARK, id, context);
+        String comp2 = button().getBorder(IconSetType.BACK, CssClassType.DARK, id, context);
 
-        aligs.add(CssAlignType.LEFT);
         aligs.add(CssAlignType.RIGHT);
         sb.append(DivHrSet.builder().build().html());
-        sb.append(divRow().get(CellWidthType.TWO_6_6, aligs, concactWithSpace(comp1,comp2), comp3));
+        sb.append(divRow().get(CellWidthType.ONE, aligs, concactWithSpace(comp1, comp2)));
         
         return sb.toString();
     }
@@ -253,9 +363,8 @@ public class AdminUserReviewViewHelper extends HtmlViewHelper {
     public static Map<String, String> getJsProperties() {
         Map<String, String> js = new HashMap<String, String>();
         // url
-        js.put("url_init",      URL_BASE + URL_C_INIT);
-        js.put("url_review_ok", URL_BASE + URL_C_REVIEW_OK);
-        js.put("url_review_ng", URL_BASE + URL_C_REVIEW_NG);
+        js.put("url_init",   URL_BASE + URL_C_INIT);
+        js.put("url_review", URL_BASE + URL_C_REVIEW);
         
         return js;
     }

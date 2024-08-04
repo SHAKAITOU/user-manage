@@ -50,6 +50,4 @@ public interface MAuthCodeMapper {
      * @mbggenerated
      */
     int updateByPrimaryKey(MAuthCode record);
-    
-    String selectRecentlyInvalidDateByReceiveBy(String receiveBy);
 }

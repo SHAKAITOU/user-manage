@@ -37,6 +37,7 @@ import cn.caam.gs.common.enums.ExecuteReturnType;
 import cn.caam.gs.common.util.EncryptorUtil;
 import cn.caam.gs.common.util.JsonUtility;
 import cn.caam.gs.common.util.MessageSourceUtil;
+import cn.caam.gs.config.SmsConfig;
 import cn.caam.gs.domain.db.base.entity.MAuthCode;
 import cn.caam.gs.domain.db.custom.entity.UserInfo;
 import cn.caam.gs.service.impl.AuthCodeService;
@@ -72,6 +73,9 @@ public class LoginController extends ScreenBaseController{
    
    @Autowired
    AuthCodeService authCodeService;
+   
+   @Autowired
+   SmsConfig smsConfig;
 
 	@GetMapping("")
 	public ModelAndView index(
@@ -145,7 +149,7 @@ public class LoginController extends ScreenBaseController{
 			    //入力エラーじゃない場合
 		        MAuthCode mauthCode = authCodeService.addPhoneAuthCode(loginForm.getPhoneUserCode(), GlobalConstants.USER_LOGIN_AUTH_CODE_EXPIRED_MINUTE);
 		        request.getSession().setAttribute(SessionConstants.AUTH_CODE.getValue(), mauthCode);
-		        boolean isOk = authCodeService.sendAuthCode(mauthCode);
+		        boolean isOk = authCodeService.sendAuthCode(smsConfig, smsConfig.getUserLoginTemplateId(), mauthCode);
 		        if (!isOk) {
 		        	result = messageSourceUtil.getContext("login.authCode.send.error");
 		        }

@@ -33,6 +33,8 @@ public class LabelNumberSet {
     private int maxlength = 0;
     @Default
     private boolean integerOnly = false;
+    @Builder.Default
+    boolean disabled = false;
 
     public String html() {
         return get();
@@ -72,7 +74,10 @@ public class LabelNumberSet {
         if (Objects.nonNull(value)) {
             sb.append(" value='"+ value + "'");
         }
-        sb.append("style='background-color:" + GlobalConstants.INPUT_BG_COLOER + "' ");
+        if (disabled) {
+            sb.append(" disabled ");
+        }
+        sb.append("style='background-color:" + (disabled ? GlobalConstants.INPUT_DISABLED_BG_COLOER:GlobalConstants.INPUT_BG_COLOER) + "' ");
         sb.append(">");
         if(StringUtils.isNotEmpty(footHtml)) {
             sb.append("<div class='input-group-append'>");

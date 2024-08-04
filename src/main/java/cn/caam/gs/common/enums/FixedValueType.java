@@ -50,6 +50,8 @@ public enum FixedValueType {
     FEE_TYPE        ("F0022"),
     /** 学会区分(F0023) */
     SOCIETY_TYPE    ("F0023"),
+	/** 会员审核状态(F0013) */
+	USER_CHECK_STATUS    ("F0024"),
 	;
 	
     /** type. */

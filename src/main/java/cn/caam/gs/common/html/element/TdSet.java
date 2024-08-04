@@ -32,6 +32,7 @@ public class TdSet {
     private String tooltipContext;
     private String footContext;
     private TdSetType outPutType;
+    private boolean wordWrap = false;
     
     public String html() {
         if(outPutType == TdSetType.INDEX) {
@@ -89,7 +90,9 @@ public class TdSet {
         } else {
             sb.append(" col-xs-"+grids+"'");
         }
-        if (height > 0) {
+        if (wordWrap) {
+        	sb.append(" style=\"word-wrap:break-word;\"");
+        }else if (height > 0) {
             sb.append(" height='"+height+"'");
         } else {
             sb.append(" height='"+GlobalConstants.TABLE_TD_HEIGHT+"' ");

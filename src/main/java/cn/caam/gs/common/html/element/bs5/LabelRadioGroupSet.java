@@ -22,6 +22,9 @@ public class LabelRadioGroupSet {
     private String name;
     private String selectedValue;
     private List<HtmlRadio> radios;
+    @Builder.Default
+    boolean disabled = false;
+    
     public String html() {
         return get();
     }
@@ -52,6 +55,9 @@ public class LabelRadioGroupSet {
                 if (i == 0) {
                     sb.append(" checked ");
                 }
+            }
+            if (disabled) {
+                sb.append(" disabled ");
             }
             sb.append(" >");
             sb.append(" <label class='form-check-label "

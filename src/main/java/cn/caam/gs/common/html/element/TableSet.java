@@ -57,7 +57,7 @@ public class TableSet {
         }
         sb.append("</tbody>");
         sb.append("</table>");
-        sb.append("</div>");
+//        sb.append("</div>");
         return sb.toString();
     }
     

@@ -98,7 +98,7 @@ public class RegistStep1Controller extends ScreenBaseController{
 	        MAuthCode mauthCode = authCodeService.addAuthCode(pageForm);
 	        registForm.setMauthCode(mauthCode);
 	        request.getSession().setAttribute(SessionConstants.USER_REGIST.getValue(), registForm);
-	        result = authCodeService.sendAuthCode(mauthCode);
+	        result = authCodeService.sendAuthCode(smsConfig, smsConfig.getUserRegistTemplateId(), mauthCode);
 	    }
 
 	    if (result) {

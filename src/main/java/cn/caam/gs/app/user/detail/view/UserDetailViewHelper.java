@@ -50,11 +50,12 @@ import cn.caam.gs.domain.tabledef.impl.T101MUserExtend;
 /**
  * View helper.
  */
-@Component
+@Deprecated
+@Component("FrontUserDetailViewHelper")
 public class UserDetailViewHelper extends HtmlViewBaseHelper {
     
     // base url
-    public static final String URL_BASE = "/userDetail";  
+    public static final String URL_BASE = "/frontUserDetail";  
     // init url
     public static final String URL_USER_DETAIL_INIT = UrlConstants.INIT;
     //edit url
@@ -98,7 +99,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         return viewData;
     }
 
-    private static String getDetailContext(
+    public static String getDetailContext(
             HttpServletRequest request, 
             UserDetailForm userDetailForm) {
         

@@ -45,6 +45,10 @@ public enum SessionConstants {
     ORDER_REVIEW_CNT("orderReviewCnt", true),
 	
     AUTH_CODE("auth_code", false),
+    
+    USER_REVIEW_SEARCH_FORM("userReviewSearchForm", true),
+    
+    USER_SEARCH_FORM("userSearchForm", true),
 	;
 	
 	private String value;

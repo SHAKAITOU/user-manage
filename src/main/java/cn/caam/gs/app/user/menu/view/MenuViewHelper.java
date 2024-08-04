@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
-import cn.caam.gs.app.user.detail.view.UserDetailViewHelper;
+import cn.caam.gs.app.common.view.UserDetailViewHelper;
 import cn.caam.gs.app.util.HtmlViewHelper;
 
 @Component

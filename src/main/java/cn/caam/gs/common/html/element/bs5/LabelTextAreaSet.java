@@ -24,10 +24,13 @@ public class LabelTextAreaSet {
     private boolean notBlank = false;
     @Default
     private int maxlength = 0;
+    private int height = 0;
 	private int rows;
     private CssFontSizeType fontSize;
 	private LabelTextAreaSetType outPutType;
     private CssGridsType grids;
+    @Builder.Default
+    boolean disabled = false;
 	
 	public String html() {
 		if(outPutType == LabelTextAreaSetType.WITH_LABEL) {
@@ -49,8 +52,14 @@ public class LabelTextAreaSet {
         if (maxlength > 0) {
             sb.append(" maxlength='"+ maxlength + "'");
         }
-        sb.append("style='background-color:" + GlobalConstants.INPUT_BG_COLOER + "' ");
-        sb.append(">");
+        if (disabled) {
+            sb.append(" disabled ");
+        }
+        sb.append("style='background-color:" + (disabled ? GlobalConstants.INPUT_DISABLED_BG_COLOER:GlobalConstants.INPUT_BG_COLOER) + "");
+        if (height > 0) {
+        	 sb.append(";height: "+height+"px");
+        }
+        sb.append("'>");
         if (Objects.nonNull(value)) {
             sb.append(value);
         }

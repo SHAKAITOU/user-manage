@@ -19,6 +19,7 @@ public class GlobalConstants {
     public static final int TH_DEFAULT_HEIGHT              = 30;
     public static final int DEFAULT_GROWING_CNT            = RowCntType.ROW_10.getId();
     public static final String INPUT_BG_COLOER             = "#FFFAF0";
+    public static final String INPUT_DISABLED_BG_COLOER    = "#EEEEEE";
     public static final int TABLE_TD_HEIGHT                = 30;
     
     public static final String DFL_SELECT_ALL              = "00";
@@ -49,13 +50,14 @@ public class GlobalConstants {
     public static final int AMOUNT_MAX_L               = 10;
     public static final int BILL_CODE_MAX_L            = 50;
     public static final int BILL_TITLE_MAX_L           = 20;
+    public static final int REVIEW_MEMO_MAX_L          = 150;
     
     public static final int MAX_BILL_AMOUNT            = 500;
     public static final int MIN_BILL_AMOUNT            = 500;
     
     public static final int ADD_USER_VLID_MONTHS       = 60;
     
-    public static final int USER_REGIST_EXPIRED_MINUTE  = 10;
+    public static final int USER_REGIST_EXPIRED_MINUTE  = 1;
     public static final int USER_REGIST_SMS_SEND_INTERVAL = 1;
     
     public static final int USER_LOGIN_AUTH_CODE_EXPIRED_MINUTE	= 1;
@@ -64,4 +66,6 @@ public class GlobalConstants {
     public static final int PC_LINKCNT = 10;
     /** 頁LINK表示数(SP) */
     public static final int SP_LINKCNT = 5;
+
+    
 }

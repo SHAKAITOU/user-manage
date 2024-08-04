@@ -39,8 +39,8 @@ public class AuthCodeService extends BaseService {
 	@Autowired
 	MAuthCodeMapper mauthCodeMapper;
 	
-	@Autowired
-    SmsConfig smsConfig;
+//	@Autowired
+//    SmsConfig smsConfig;
 	
 	@Autowired
     MailConfig mailConfig;
@@ -106,11 +106,11 @@ public class AuthCodeService extends BaseService {
 		return true;
 	}
 	
-	public boolean sendAuthCode(MAuthCode mauthCode) throws Exception{
+	public boolean sendAuthCode(SmsConfig smsConfig, String templateId, MAuthCode mauthCode) throws Exception{
 		boolean result = false;
 		if (mauthCode != null && !StringUtil.isBlank(mauthCode.getAuthCode())) {
 			 if (RegistStep1ViewHelper.GET_AUTH_CODE_BY_PHONE.equals(mauthCode.getAuthMethod())) {
-				 result = sendAuthCodeToPhone(mauthCode.getRecievedBy(), mauthCode.getAuthCode(), GlobalConstants.USER_REGIST_EXPIRED_MINUTE);
+				 result = sendAuthCodeToPhone(smsConfig, templateId, mauthCode.getRecievedBy(), mauthCode.getAuthCode(), GlobalConstants.USER_REGIST_EXPIRED_MINUTE);
 		    } else {
 		    	result = sendAuthCodeToMail(mauthCode.getRecievedBy(), mauthCode.getAuthCode(), GlobalConstants.USER_REGIST_EXPIRED_MINUTE);
 		    }
@@ -119,8 +119,8 @@ public class AuthCodeService extends BaseService {
 		return result;
 	}
 	
-	public boolean sendAuthCodeToPhone(String phoneNumber, String authCode, int validMinute)  throws Exception{
-		return HuaWeiSMSUtil.sendSms(smsConfig, phoneNumber, authCode, validMinute);
+	public boolean sendAuthCodeToPhone(SmsConfig smsConfig, String templateId, String phoneNumber, String authCode, int validMinute)  throws Exception{
+		return HuaWeiSMSUtil.sendAuthCode(smsConfig, templateId, phoneNumber, authCode, validMinute);
 	}
 	
 	public boolean sendAuthCodeToMail(String mail, String authCode, int validMinute)  throws Exception{

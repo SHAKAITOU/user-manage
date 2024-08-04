@@ -29,8 +29,9 @@ import lombok.extern.slf4j.Slf4j;
  * @author 000001A009A6A
  *
  */
+@Deprecated
 @Slf4j
-@Controller
+@Controller("FrontUserDetailController")
 @AllArgsConstructor
 @RequestMapping(path=UserDetailViewHelper.URL_BASE)
 public class UserDetailController extends ScreenBaseController{
@@ -65,7 +66,7 @@ public class UserDetailController extends ScreenBaseController{
             HttpServletResponse response)  throws Exception {
 	    UserInfo userInfo = (UserInfo)request.getSession().getAttribute(SessionConstants.LOGIN_INFO.getValue());
 	    
-	    userService.updateUserInfo(pageForm);
+//	    userService.updateUserInfo(pageForm);
 	    
 	    UserDetailForm userDetailForm = new UserDetailForm();
 	    userDetailForm.setId(userInfo.getUser().getId());

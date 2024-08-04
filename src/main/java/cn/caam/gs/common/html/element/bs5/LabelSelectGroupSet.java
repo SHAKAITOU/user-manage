@@ -29,6 +29,8 @@ public class LabelSelectGroupSet {
     private LabelSelectGroupSetType outPutType;
     private CssFontSizeType fontSize;
     private CssGridsType grids;
+    @Builder.Default
+    boolean disabled = false;
     
     public String html() {
         if(outPutType == LabelSelectGroupSetType.WITH_LABEL) {
@@ -55,12 +57,15 @@ public class LabelSelectGroupSet {
     
     private String get() {
         StringBuffer sb = new StringBuffer();
-        sb.append("<select style='background-color:" + GlobalConstants.INPUT_BG_COLOER + "' class='form-control ");
+        sb.append("<select style='background-color:" + (disabled ? GlobalConstants.INPUT_DISABLED_BG_COLOER:GlobalConstants.INPUT_BG_COLOER) + "' class='form-control ");
         sb.append((Objects.nonNull(fontSize) ? fontSize.getKey() : "label-14" ));
         sb.append("' name='"+name+"'");
         sb.append(" id='"+id+"'");
         if(size > 1) {
             sb.append(" size='"+size+"' style='height:"+(size+1)*20+"px;'");
+        }
+        if (disabled) {
+            sb.append(" disabled ");
         }
         sb.append(">");
         for (Map.Entry<HtmlRadio, List<HtmlRadio>> entry : radioMap.entrySet()) {

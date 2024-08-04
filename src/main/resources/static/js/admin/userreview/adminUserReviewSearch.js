@@ -23,11 +23,12 @@ AdminUserReviewSearch.prototype.ID = {
     SHOW_SEARCH_PANEL_BTN_ID : "showSearchPanelBtn",
     HIDE_SEARCH_PANEL_BTN_ID : "hideSearchPanelBtn",
     HID_HIDE_SEARCH          : "hideSearch",
+	HID_SELECTED_USER_ID     : "selectedUserId",
 	
 	SEARCH_MODE              : "searchMode",
 	WAITLIST_BTN_ID          : "waitListBtn",
 	REVIEWEDLIST_BTN_ID      : "reviewedListBtn",
-	BATCHVIEW_BTN_ID         : "batchViewBtn",
+	REVIEWMULTI_BTN_ID       : "reviewMultiBtn",
 	SEARCH_MODE_WAIT_LIST    : "waitList",
 	SEARCH_MODE_REVIEWED_LIST: "reviewedList",
     
@@ -147,6 +148,28 @@ AdminUserReviewSearch.prototype.initEvent = function(){
     	}
     ); 
 	
+	ShaInput.button.onClick(self.getObject(self.ID.REVIEWMULTI_BTN_ID),
+			function(event) {
+				var isChecked = false;
+				checkBoxList = self.getObject(self.ID.USER_LIST_TABLE_ID).find(self.ID.USER_CHECK_PREF_ID);
+				if (checkBoxList != null){
+					$checkBoxList.each(function(i, elem){
+						if ($(elem).prop('checked')){
+							isChecked = true;
+						}
+					});
+				}
+				if (!isChecked){
+					ShaDialog.dialogs.alert(self.i18n["admin.userReview.review.noSelected"]);
+					return;
+				}
+				ShaAjax.pop.postDialogMiddleCenter(
+					self.i18n["admin.userReview.review.multi.title"],
+					self.jsContext.adminJsView.adminUserReviewMulti.url_init, 
+					self.getForm().serializeArray());
+			}
+		);
+	
 	ShaInput.button.onClick(self.getObject(self.ID.WAITLIST_BTN_ID),
 		function(event) {
 			self.getObject(self.ID.SEARCH_MODE).val(self.ID.SEARCH_MODE_WAIT_LIST);
@@ -174,29 +197,17 @@ AdminUserReviewSearch.prototype.initEvent = function(){
 	        ); 
 		}
 	);
-		
-	ShaInput.button.onClick(self.getObject(self.ID.SEARCH_MODE_WAIT_LIST),
-		function(event) {
-			ShaAjax.ajax.post(
-	            self.jsContext.adminJsView.adminUserReviewSearch.url_user_list, 
-	            self.getForm().serializeArray(), 
-	            function(data){
-	                self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
-	                $('[data-toggle="tooltip"]').tooltip();
-	            }
-	        ); 
-		}
-	);
 
 	$tableBtnList = self.getObject(self.ID.USER_LIST_TABLE_ID).find(self.ID.TABLE_BTN_REVIEW);
 	$tableBtnList.each(function(i, elem){
 		//check box init
 	   	ShaInput.button.onClick($(elem),
 	    	function(event) {
-				//refresh order list
+				self.getObject(self.ID.HID_SELECTED_USER_ID).val($(elem).attr("data"));
 				ShaAjax.ajax.post(
 	                self.jsContext.adminJsView.adminUserReview.url_init, 
-	                [{name:"id",     value:$(elem).attr("data")}], 
+	                [{name:"id",     value:$(elem).attr("data")}],
+				    //self.getForm().serializeArray(),  
 	                function(data){
 	                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
 	                }

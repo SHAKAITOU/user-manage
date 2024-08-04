@@ -130,7 +130,7 @@ RegistStep2.prototype.initEvent = function(){
 				    			Pos.constants.setInfo.jsView.login.url_login_init, 
 				    			$('#index_form').serializeArray()); 
 					} else {
-						ShaDialog.dialogs.success(self.i18n["dialogs.fail.title"]);
+						ShaDialog.dialogs.alert(self.i18n["dialogs.fail.title"]);
 					}
 				}
 			)
