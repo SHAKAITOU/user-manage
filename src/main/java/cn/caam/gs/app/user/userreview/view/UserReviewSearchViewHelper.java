@@ -50,8 +50,6 @@ public class UserReviewSearchViewHelper extends HtmlViewHelper {
     
     public static final String PREFIX_NAME                    = "";
     
-    public static final String TAB_BODY_USER_DETAIL_ID        = "userDetailTabBody";
-    
     public static final String LIST_TABLE_ID                  = "checkHistoryListTable";
     public static final int PHONE_TD_HEIGHT 			= 55;
     public static final int    HEADER_HEIGHT            = 320;

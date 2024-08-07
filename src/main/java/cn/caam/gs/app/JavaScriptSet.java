@@ -13,7 +13,6 @@ import cn.caam.gs.app.admin.menu.menu.AdminMenuViewHelper;
 import cn.caam.gs.app.admin.message.view.AdminMessagePushViewHelper;
 import cn.caam.gs.app.admin.message.view.AdminMessageSearchViewHelper;
 import cn.caam.gs.app.admin.userbill.view.AdminBillSearchViewHelper;
-import cn.caam.gs.app.admin.userbill.view.AdminRefundSearchViewHelper;
 import cn.caam.gs.app.admin.userbill.view.BillViewHelper;
 import cn.caam.gs.app.admin.userbill.view.RefundViewHelper;
 import cn.caam.gs.app.admin.userorder.view.AdminOrderSearchViewHelper;
@@ -24,6 +23,7 @@ import cn.caam.gs.app.admin.userreview.view.AdminUserReviewMultiViewHelper;
 import cn.caam.gs.app.admin.userreview.view.AdminUserReviewSearchViewHelper;
 import cn.caam.gs.app.admin.userreview.view.AdminUserReviewViewHelper;
 import cn.caam.gs.app.admin.usersearch.view.AdminUserSearchViewHelper;
+import cn.caam.gs.app.admin.usertypesettings.view.UserTypeSettingsViewHelper;
 import cn.caam.gs.app.common.view.CommonViewHelper;
 import cn.caam.gs.app.common.view.MessageDetailViewHelper;
 import cn.caam.gs.app.common.view.OrderDetailViewHelper;
@@ -228,9 +228,9 @@ public class JavaScriptSet {
 		jsView.put("adminBill",          BillViewHelper.getJsProperties());
 		jsView.put("adminRefund",        RefundViewHelper.getJsProperties());
 		
+		jsView.put("adminRefund",        RefundViewHelper.getJsProperties());
 		
-		
-		jsView.put("adminRefundSearch",  AdminRefundSearchViewHelper.getJsProperties());
+		jsView.put("userTypeSettings",	UserTypeSettingsViewHelper.getJsProperties());
 		
 		
 		

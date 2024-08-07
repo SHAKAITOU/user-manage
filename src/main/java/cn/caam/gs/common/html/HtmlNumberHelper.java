@@ -18,6 +18,20 @@ public class HtmlNumberHelper extends HtmlBaseHelper {
                 .min(0).max(99999999).step(step).build().html();
     }
     
+    public static String getForTable(String id, String name, String value, String step,
+            String placeholder, boolean notBlank) {
+        return getForTable(id, name, value, step, placeholder, notBlank, false);
+    }
+    
+    public static String getForTable(String id, String name, String value, String step,
+            String placeholder, boolean notBlank, boolean integerOnly) {
+        return LabelNumberSet.builder().outPutType(LabelNumberSetType.FOR_TABLE)
+                .id(id).name(name).value(value)
+                .placeholder(placeholder)
+                .notBlank(notBlank).integerOnly(integerOnly)
+                .min(0).max(99999999).step(step).build().html();
+    }
+    
     public String withLabel(int labelWidth, String labelName, String name, 
             String value, String step, String placeholder, boolean notBlank) {
         return LabelNumberSet.builder().outPutType(LabelNumberSetType.WITH_LABEL).labelWidth(labelWidth)

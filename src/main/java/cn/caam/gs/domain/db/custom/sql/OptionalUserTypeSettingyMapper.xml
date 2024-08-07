@@ -1,0 +1,43 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.caam.gs.domain.db.custom.mapper.OptionalUserTypeSettingsInfoMapper">
+	<!-- RESULT MAP -->
+    <resultMap id="UserTypeSettingsInfoForm" 
+                type="cn.caam.gs.domain.db.custom.entity.UserTypeSettingsInfo">
+        <result property="userTypeName"   column="userTypeName"/>
+        <association property="userTypeSettings" 
+            resultMap="cn.caam.gs.domain.db.base.mapper.MUserTypeSettingsMapper.BaseResultMap">
+            <id column="id" property="id" />
+        </association>
+    </resultMap>
+    <sql id="baseSelect">
+	     F0002.value as user_type
+		,uts.fee_amount
+		,uts.effective_year
+		,uts.created_by
+		,uts.created_at
+		,uts.updated_by
+		,uts.updated_at
+	    ,F0002.name   AS userTypeName
+    </sql>
+    <sql id="baseJoin">
+		LEFT JOIN m_fixed_value F0002   ON uts.user_type        = F0002.value   AND F0002.code   = 'F0002'
+    </sql>
+    <sql id="baseCondition">
+		
+	</sql>
+    
+	<select id="getUserTypeSettingsList" resultMap="UserTypeSettingsInfoForm">
+        SELECT
+		    <include refid="baseSelect"/>
+		FROM
+		    m_fixed_value F0002
+		LEFT JOIN  m_user_type_settings uts ON uts.user_type        = F0002.value 
+			
+		WHERE
+		    F0002.code   = 'F0002'
+		    AND F0002.value NOT IN ('01','02') 
+		ORDER BY F0002.value
+    </select>
+    
+        
+</mapper>

@@ -191,12 +191,7 @@ public class AdminUserReviewViewHelper extends HtmlViewHelper {
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
         //-----row 1-------------]
         
-        //审核历史记录  
-        //-----row 2-------------[
-        sbBody.append(setCardForTable(request, userCheckHistoryListOutput));
-        //-----row 2-------------]
-        
-        //------row3----------[
+        //------row2----------[
         contextList = new ArrayList<String>();
         //审核意见(F0024)選択    
         ColumnInfoForm clmForm = T100MUser.getColumnInfo(T100MUser.COL_CHECK_STATUS);
@@ -232,7 +227,12 @@ public class AdminUserReviewViewHelper extends HtmlViewHelper {
                 .fontSize(font).rows(2).grids(CssGridsType.G12).build().html());
         
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
-        //------row3----------]
+        //------row2----------]
+        
+        //审核历史记录  
+        //-----row 3-------------[
+        sbBody.append(setCardForTable(request, userCheckHistoryListOutput));
+        //-----row 3-------------]
         
         return borderCard().noTitleWithScroll("", CssClassType.SUCCESS, "", cartHeight,
                 sbBody.toString());
@@ -245,7 +245,7 @@ public class AdminUserReviewViewHelper extends HtmlViewHelper {
         StringBuffer cardBody = new StringBuffer();
         cardBody.append(divRow().cellBlank(5));
         cardBody.append(setUserListTable(request, userCheckHistoryListOutput.getUserCheckHistoryList()));
-        String cardTitle = getContext("admin.userReview.review.history");
+        String cardTitle = getContext("admin.userReview.review.history")+"("+userCheckHistoryListOutput.getUserCheckHistoryList().size()+")";
         sbBody.append(borderCard().withTitleWithScroll("", CssClassType.INFO, "", 
                 cardTitle,
                 divRow().cellBlank(5),cardBody.toString()));

@@ -14,10 +14,14 @@ import org.springframework.web.servlet.ModelAndView;
 import cn.caam.gs.app.user.order.form.OrderForm;
 import cn.caam.gs.app.user.order.view.OrderViewHelper;
 import cn.caam.gs.app.util.ControllerHelper;
+import cn.caam.gs.app.util.SessionConstants;
 import cn.caam.gs.common.controller.JcbcBaseController;
 import cn.caam.gs.common.enums.ExecuteReturnType;
+import cn.caam.gs.domain.db.base.entity.MUserTypeSettings;
 import cn.caam.gs.domain.db.custom.entity.OrderInfo;
+import cn.caam.gs.domain.db.custom.entity.UserInfo;
 import cn.caam.gs.service.impl.OrderService;
+import cn.caam.gs.service.impl.UserTypeSettingsService;
 import lombok.AllArgsConstructor;
 
 /**
@@ -31,14 +35,18 @@ public class OrderController extends JcbcBaseController{
     
     @Autowired
     OrderService orderService;
+    
+    @Autowired
+    UserTypeSettingsService userTypeSettingsService;
 	
     @PostMapping(path=OrderViewHelper.URL_C_INIT)
 	public ModelAndView init(
 			HttpServletRequest request,
 			HttpServletResponse response) {
-
+    	UserInfo userInfo = (UserInfo)request.getSession().getAttribute(SessionConstants.LOGIN_INFO.getValue());
+    	MUserTypeSettings mUserTypeSettings = userTypeSettingsService.getMUserTypeSettings(userInfo.getUser().getUserType());
 		return ControllerHelper.getModelAndView(
-		        OrderViewHelper.getMainPage(request, new OrderInfo()));
+		        OrderViewHelper.getMainPage(request, new OrderInfo(), mUserTypeSettings));
 	}
 	
 	@PostMapping(path=OrderViewHelper.URL_C_ADD)

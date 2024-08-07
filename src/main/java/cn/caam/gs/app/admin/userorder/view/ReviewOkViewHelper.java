@@ -1,6 +1,5 @@
 package cn.caam.gs.app.admin.userorder.view;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,19 +22,17 @@ import cn.caam.gs.common.enums.CssGridsType;
 import cn.caam.gs.common.enums.GridFlexType;
 import cn.caam.gs.common.html.element.bs5.DivAlertSet;
 import cn.caam.gs.common.html.element.bs5.DivHrSet;
-import cn.caam.gs.common.html.element.bs5.LabelDateInputSet;
-import cn.caam.gs.common.html.element.bs5.LabelInputSet;
-import cn.caam.gs.common.html.element.bs5.LabelTextAreaSet;
 import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
+import cn.caam.gs.common.html.element.bs5.LabelDateInputSet;
 import cn.caam.gs.common.html.element.bs5.LabelDateInputSet.LabelDateInputSetType;
+import cn.caam.gs.common.html.element.bs5.LabelTextAreaSet;
 import cn.caam.gs.common.html.element.bs5.LabelTextAreaSet.LabelTextAreaSetType;
 import cn.caam.gs.common.util.LocalDateUtility;
-import cn.caam.gs.common.util.LocalDateUtility.DateTimePattern;
 import cn.caam.gs.common.util.UtilConstants;
+import cn.caam.gs.domain.db.base.entity.MUserTypeSettings;
 import cn.caam.gs.domain.db.custom.entity.OrderInfo;
 import cn.caam.gs.domain.db.custom.entity.UserInfo;
 import cn.caam.gs.domain.tabledef.impl.T100MUser;
-import cn.caam.gs.domain.tabledef.impl.T101MUserExtend;
 import cn.caam.gs.domain.tabledef.impl.T200MOrder;
 
 @Component
@@ -64,11 +61,12 @@ public class ReviewOkViewHelper extends HtmlViewHelper {
     public static ViewData getMainPage(
             HttpServletRequest request,
             UserInfo userInfo,
+            MUserTypeSettings mUserTypeSettings,
             OrderInfo orderInfo) {
         Map<String, Object> dataMap = new HashMap<>();
 
         ViewData viewData = ViewData.builder()
-                .pageContext(getMainPageContext(request, userInfo, orderInfo))
+                .pageContext(getMainPageContext(request, userInfo, mUserTypeSettings, orderInfo))
                 .jsClassName(MAIN_JS_CLASS)
                 .dataMap(dataMap)
                 .build();
@@ -78,11 +76,12 @@ public class ReviewOkViewHelper extends HtmlViewHelper {
     private static String getMainPageContext(
             HttpServletRequest request, 
             UserInfo userInfo,
+            MUserTypeSettings mUserTypeSettings,
             OrderInfo orderInfo) {
         StringBuffer sb = new StringBuffer();
         sb.append(divRow().cellBlank(5));
         sb.append(setHidden(orderInfo));
-        sb.append(setCardPanel(request, userInfo, orderInfo));
+        sb.append(setCardPanel(request, userInfo, mUserTypeSettings, orderInfo));
         sb.append(buildFooter());
         return getForm(FORM_NAME, sb.toString());
     }
@@ -100,6 +99,7 @@ public class ReviewOkViewHelper extends HtmlViewHelper {
     private static String setCardPanel(
             HttpServletRequest request,
             UserInfo userInfo,
+            MUserTypeSettings mUserTypeSettings,
             OrderInfo orderInfo) {
         StringBuffer sbBody = new StringBuffer();
         List<String> contextList = new ArrayList<String>();
@@ -127,7 +127,7 @@ public class ReviewOkViewHelper extends HtmlViewHelper {
         
         //旧的有效结束日期(yyyy-MM-dd HH選択
         String oldValidDt = LocalDateUtility.formatDateZH(userInfo.getUser().getValidEndDate());
-        String newValidDt = addVlidDate(oldValidDt, orderInfo.getOrder().getOrderAmount());
+        String newValidDt = addVlidDate(oldValidDt, mUserTypeSettings);
         labelName = T100MUser.getColumnInfo(T100MUser.COL_VALID_END_DATE).getLabelName() + UtilConstants.COLON;
         context   = oldValidDt;
         contextList.add(DivAlertSet.builder().gridFlexType(GridFlexType.LEFT)
@@ -177,9 +177,10 @@ public class ReviewOkViewHelper extends HtmlViewHelper {
                 sbBody.toString());
     }
     
-    private static String addVlidDate(String oldValidDt, BigDecimal amount) {
+    private static String addVlidDate(String oldValidDt, MUserTypeSettings mUserTypeSettings) {
 //       int mounths = (amount.divide(new BigDecimal("50"))).intValue();
-       return LocalDateUtility.addMonthsZH(oldValidDt, GlobalConstants.ADD_USER_VLID_MONTHS);
+//       return LocalDateUtility.addMonthsZH(oldValidDt, GlobalConstants.ADD_USER_VLID_MONTHS);
+    	return LocalDateUtility.addMonthsZH(oldValidDt, mUserTypeSettings.getEffectiveYear()*12);
     }
     
     private static String buildFooter() {

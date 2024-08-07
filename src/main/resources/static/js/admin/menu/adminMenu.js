@@ -27,6 +27,7 @@ AdminMenu.prototype.ID = {
     CLASS_NM_ORDER_WAIT_SEARCH      : "menu2002",
     CLASS_NM_ORDER_REVIEW           : "menu2003",
     CLASS_NM_ORDER_PASS             : "menu2004",
+	CLASS_NM_USER_TYPE_SETTINGS     : "menu2005",
     CLASS_NM_BILL_SEARCH            : "menu3001",
     CLASS_NM_REFUND_SEARCH          : "menu3002",
     CLASS_NM_USER_SEARCH      		: "menu4001",
@@ -142,6 +143,22 @@ AdminMenu.prototype.initEvent = function(){
 	    	function(event) {
 				ShaAjax.ajax.post(
 	                self.jsContext.adminJsView.adminOrderSearch.url_order_list_pass, 
+	                null, 
+	                function(data){
+	                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
+	                }
+	            ); 
+			}
+	    );
+	});
+	
+	//会费设定
+    $buttonList = self.getObjectList(self.ID.CLASS_NM_USER_TYPE_SETTINGS);
+    $buttonList.each(function(i, elem){
+	    ShaInput.button.onClick($(elem),
+	    	function(event) {
+				ShaAjax.ajax.get(
+	                self.jsContext.adminJsView.userTypeSettings.url_init, 
 	                null, 
 	                function(data){
 	                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);

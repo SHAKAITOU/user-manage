@@ -18,11 +18,13 @@ import cn.caam.gs.app.util.ControllerHelper;
 import cn.caam.gs.common.controller.JcbcBaseController;
 import cn.caam.gs.common.enums.ExecuteReturnType;
 import cn.caam.gs.domain.db.base.entity.MUser;
+import cn.caam.gs.domain.db.base.entity.MUserTypeSettings;
 import cn.caam.gs.domain.db.base.mapper.MMessageMapper;
 import cn.caam.gs.domain.db.custom.entity.OrderInfo;
 import cn.caam.gs.domain.db.custom.entity.UserInfo;
 import cn.caam.gs.service.impl.OrderService;
 import cn.caam.gs.service.impl.UserService;
+import cn.caam.gs.service.impl.UserTypeSettingsService;
 import lombok.AllArgsConstructor;
 
 /**
@@ -42,6 +44,9 @@ public class ReviewOkController extends JcbcBaseController{
     
     @Autowired
     MMessageMapper messageMapper;
+    
+    @Autowired
+    UserTypeSettingsService userTypeSettingsService;
 	
     @PostMapping(path=ReviewOkViewHelper.URL_C_INIT)
 	public ModelAndView init(
@@ -51,9 +56,10 @@ public class ReviewOkController extends JcbcBaseController{
         
         OrderInfo orderInfo = orderService.getOrder(idForm.getId());
         UserInfo userInfo = userService.getBaseUserInfo(orderInfo.getOrder().getUserId());
+        MUserTypeSettings mUserTypeSettings = userTypeSettingsService.getMUserTypeSettings(userInfo.getUser().getUserType());
         
 		return ControllerHelper.getModelAndView(
-		        ReviewOkViewHelper.getMainPage(request, userInfo, orderInfo));
+		        ReviewOkViewHelper.getMainPage(request, userInfo, mUserTypeSettings, orderInfo));
 	}
     
     @PostMapping(path=ReviewOkViewHelper.URL_C_COMMIT)

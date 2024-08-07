@@ -36,6 +36,7 @@ import cn.caam.gs.common.html.element.bs5.LabelTextAreaSet;
 import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet.LabelSelectSetType;
 import cn.caam.gs.common.html.element.bs5.LabelTextAreaSet.LabelTextAreaSetType;
+import cn.caam.gs.domain.db.base.entity.MUserTypeSettings;
 import cn.caam.gs.domain.db.custom.entity.FixValueInfo;
 import cn.caam.gs.domain.db.custom.entity.OrderInfo;
 import cn.caam.gs.domain.db.custom.entity.UserInfo;
@@ -69,11 +70,12 @@ public class OrderViewHelper extends HtmlViewHelper {
      * @return
      */
     public static ViewData getMainPage(HttpServletRequest request, 
-            OrderInfo orderInfo) {
+            OrderInfo orderInfo,
+            MUserTypeSettings mUserTypeSettings) {
         Map<String, Object> dataMap = new HashMap<>();
 
         ViewData viewData = ViewData.builder()
-                .pageContext(getMainPageContext(request, orderInfo))
+                .pageContext(getMainPageContext(request, orderInfo, mUserTypeSettings))
                 .jsClassName(MAIN_JS_CLASS)
                 .dataMap(dataMap)
                 .build();
@@ -81,24 +83,25 @@ public class OrderViewHelper extends HtmlViewHelper {
     }
     
     private static String getMainPageContext(HttpServletRequest request, 
-            OrderInfo orderInfo) {
+            OrderInfo orderInfo,
+            MUserTypeSettings mUserTypeSettings) {
         StringBuffer sb = new StringBuffer();
         sb.append(divRow().cellBlank(5));
-        sb.append(setCardForOrderPanel(request));
+        sb.append(setCardForOrderPanel(request, mUserTypeSettings));
         sb.append(buildFooter());
         return getForm(FORM_NAME, sb.toString());
     }
 
     //--------------------header Panel -----------------
     
-    private static String setCardForOrderPanel(HttpServletRequest request) {
+    private static String setCardForOrderPanel(HttpServletRequest request, MUserTypeSettings mUserTypeSettings) {
         StringBuffer sbBody = new StringBuffer();
         sbBody.append(borderCard().noTitleWithScroll("", CssClassType.SUCCESS, "", 350,
-                setOrderPanel(request)));
+                setOrderPanel(request, mUserTypeSettings)));
         
         return sbBody.toString();
     }
-    private static String setOrderPanel(HttpServletRequest request) {
+    private static String setOrderPanel(HttpServletRequest request, MUserTypeSettings mUserTypeSettings) {
         @SuppressWarnings("unchecked")
         Map<FixedValueType, List<FixValueInfo>> fixedValueMap = 
                 (Map<FixedValueType, List<FixValueInfo>>)request.getSession().getAttribute(SessionConstants.FIXED_VALUE.getValue());
@@ -203,8 +206,12 @@ public class OrderViewHelper extends HtmlViewHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         String placeholder = clmForm.getPlaceholder();
+        String orderAmount = "";
+        if (mUserTypeSettings != null) {
+        	orderAmount = String.valueOf(mUserTypeSettings.getFeeAmount().intValue());
+        }
         contextList.add(LabelNumberSet.builder()
-                .id(id).name(name).labelName(labelName).notBlank(true).value(String.valueOf(GlobalConstants.MAX_BILL_AMOUNT))
+                .id(id).name(name).labelName(labelName).notBlank(true).value(orderAmount)
                 .maxlength(GlobalConstants.AMOUNT_MAX_L).placeholder(placeholder)
                 .fontSize(font).grids(CssGridsType.G12).build().html());
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));

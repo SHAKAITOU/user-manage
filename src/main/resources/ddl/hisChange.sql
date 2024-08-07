@@ -61,3 +61,19 @@ CREATE TABLE m_user_check_history
     PRIMARY KEY (id)
 ) COMMENT='会员审核历史信息' ENGINE=InnoDB DEFAULT CHARSET=utf8;
 CREATE INDEX m_user_check_history_idx1 ON m_user_check_history (user_id);
+
+-- 20240805 --
+-- 会员会费相关设定 --
+DROP TABLE IF EXISTS m_user_type_settings;
+CREATE TABLE m_user_type_settings
+( 
+    user_type        VARCHAR(6)    NOT NULL COMMENT '会员类型(F0002)',
+    fee_amount       DECIMAL(10, 2)    NULL COMMENT '会费金额',
+    effective_year   int 	       NOT NULL COMMENT '会费年数',
+    created_by       VARCHAR(20)   NOT NULL COMMENT '管理员号(AYYMMDDHHmmSSR2)',
+    created_at       VARCHAR(20)   NOT NULL COMMENT '创建时间(yyyy-MM-dd HH:mm:ss)',
+    updated_by       VARCHAR(20)            COMMENT '管理员号(AYYMMDDHHmmSSR2)',
+    updated_at       VARCHAR(20)            COMMENT '更新时间(yyyy-MM-dd HH:mm:ss)',
+       
+    PRIMARY KEY (user_type)
+) COMMENT='会员会费相关设定' ENGINE=InnoDB DEFAULT CHARSET=utf8;

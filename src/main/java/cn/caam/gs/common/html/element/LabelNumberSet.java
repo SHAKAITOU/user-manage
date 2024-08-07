@@ -32,6 +32,9 @@ public class LabelNumberSet {
     private String placeholder;
     @Default
     private boolean notBlank = false;
+    @Default
+    private boolean integerOnly = false;
+    private String maxLength;
     
     public String html() {
         if(outPutType == LabelNumberSetType.WITH_LABEL) {
@@ -119,8 +122,11 @@ public class LabelNumberSet {
     
     private String get() {
         StringBuffer sb = new StringBuffer();
-
-        sb.append("<input type='number'");
+        if (integerOnly) {
+        	sb.append("<input type='text' oninput=\"value=value.replace(/[^\\d]/g,'')\"");
+        }else {
+        	sb.append("<input type='number' ");
+        }
         sb.append(" min='" + min + "' ");
         sb.append(" max='" + max + "' ");
         sb.append(" step='" + step + "' ");
@@ -147,11 +153,18 @@ public class LabelNumberSet {
     private String getForTableList() {
         StringBuffer sb = new StringBuffer();
 
-        sb.append("<input type='number'");
-        sb.append(" style='height:20px;' ");
-        sb.append(" min='" + min + "' ");
-        sb.append(" max='" + max + "' ");
+        if (integerOnly) {
+        	sb.append("<input type='text' oninput=\"value=value.replace(/[^\\d]/g,'')\"");
+        }else {
+        	sb.append("<input type='number' ");
+        }
+        sb.append(" style='height:40px;' ");
+        sb.append(" min=" + min + " ");
+        sb.append(" max=" + max + " ");
         sb.append(" step='" + step + "' ");
+        if (maxLength != null) {
+        	sb.append(" maxLength='" + maxLength + "' ");
+        }
         sb.append(" class='form-control item-input text-right' ");
         sb.append(" id='" + id + "' name='" + name + "' value='" + (Objects.nonNull(value) ? value : "") + "'/>");
         return sb.toString();
