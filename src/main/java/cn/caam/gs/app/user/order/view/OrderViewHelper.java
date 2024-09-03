@@ -96,7 +96,7 @@ public class OrderViewHelper extends HtmlViewHelper {
     
     private static String setCardForOrderPanel(HttpServletRequest request, MUserTypeSettings mUserTypeSettings) {
         StringBuffer sbBody = new StringBuffer();
-        sbBody.append(borderCard().noTitleWithScroll("", CssClassType.SUCCESS, "", 350,
+        sbBody.append(borderCard().noTitleWithScroll("", CssClassType.SUCCESS, "", 385,
                 setOrderPanel(request, mUserTypeSettings)));
         
         return sbBody.toString();
@@ -212,7 +212,7 @@ public class OrderViewHelper extends HtmlViewHelper {
         }
         contextList.add(LabelNumberSet.builder()
                 .id(id).name(name).labelName(labelName).notBlank(true).value(orderAmount)
-                .maxlength(GlobalConstants.AMOUNT_MAX_L).placeholder(placeholder)
+                .maxlength(GlobalConstants.AMOUNT_MAX_L).placeholder(placeholder).readonly(true)
                 .fontSize(font).grids(CssGridsType.G12).build().html());
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
         //-----row 5-------------]

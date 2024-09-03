@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.json.JSONObject;
 import org.springframework.core.env.Environment;
 
+import cn.caam.gs.app.admin.adminmanage.view.AdminManageSearchViewHelper;
+import cn.caam.gs.app.admin.adminmanage.view.AdminManageEditViewHelper;
 import cn.caam.gs.app.admin.login.view.AdminLoginViewHelper;
 import cn.caam.gs.app.admin.menu.menu.AdminMenuViewHelper;
 import cn.caam.gs.app.admin.message.view.AdminMessagePushViewHelper;
@@ -27,6 +29,8 @@ import cn.caam.gs.app.admin.usertypesettings.view.UserTypeSettingsViewHelper;
 import cn.caam.gs.app.common.view.CommonViewHelper;
 import cn.caam.gs.app.common.view.MessageDetailViewHelper;
 import cn.caam.gs.app.common.view.OrderDetailViewHelper;
+import cn.caam.gs.app.common.view.PasswordChangeViewHelper;
+import cn.caam.gs.app.common.view.PasswordForgetViewHelper;
 import cn.caam.gs.app.common.view.UserDetailViewHelper;
 import cn.caam.gs.app.user.certi.view.UserCertiViewHelper;
 import cn.caam.gs.app.user.login.view.LoginViewHelper;
@@ -157,8 +161,8 @@ public class JavaScriptSet {
 		common.put("max_bill_amount", GlobalConstants.MAX_BILL_AMOUNT);
 		common.put("min_bill_amount", GlobalConstants.MIN_BILL_AMOUNT);
 		
-		common.put("user_regist_sms_send_interval", GlobalConstants.USER_REGIST_SMS_SEND_INTERVAL);
-		common.put("user_login_auth_code_expired_minute", GlobalConstants.USER_LOGIN_AUTH_CODE_EXPIRED_MINUTE);
+		common.put("auth_code_send_interval_minute", GlobalConstants.AUTH_CODE_SEND_INTERVAL_MINUTE);
+//		common.put("user_login_auth_code_expired_minute", GlobalConstants.USER_LOGIN_AUTH_CODE_EXPIRED_MINUTE);
 		
 		common.put("user_id_max_l", GlobalConstants.USER_ID_MAX_L);
 		common.put("user_name_max_l", GlobalConstants.USER_NAME_MAX_L);
@@ -202,6 +206,9 @@ public class JavaScriptSet {
 		
 		jsView.put("messageSearch",        MessageSearchViewHelper.getJsProperties());
 		
+		jsView.put("passwordChange",       PasswordChangeViewHelper.getJsProperties());
+		jsView.put("passwordForget",       PasswordForgetViewHelper.getJsProperties());
+		
 		return jsView;
 	}
 	
@@ -209,6 +216,9 @@ public class JavaScriptSet {
 		Map<String, Object> jsView = new HashMap<String, Object>();
 		jsView.put("adminLogin",         AdminLoginViewHelper.getJsProperties());
 		jsView.put("adminMenu",          AdminMenuViewHelper.getJsProperties());
+		
+		jsView.put("adminManageEdit",		AdminManageEditViewHelper.getJsProperties());
+		jsView.put("adminManageSearch",		AdminManageSearchViewHelper.getJsProperties());
 		
 		jsView.put("adminUserReview",		AdminUserReviewViewHelper.getJsProperties());
 		jsView.put("adminUserReviewMulti",	AdminUserReviewMultiViewHelper.getJsProperties());

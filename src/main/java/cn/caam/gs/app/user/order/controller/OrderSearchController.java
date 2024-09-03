@@ -17,6 +17,7 @@ import cn.caam.gs.app.user.order.view.OrderSearchViewHelper;
 import cn.caam.gs.app.util.ControllerHelper;
 import cn.caam.gs.app.util.SessionConstants;
 import cn.caam.gs.common.controller.JcbcBaseController;
+import cn.caam.gs.domain.db.base.entity.MOrder;
 import cn.caam.gs.domain.db.custom.entity.UserInfo;
 import cn.caam.gs.service.impl.OrderService;
 import lombok.AllArgsConstructor;
@@ -39,7 +40,11 @@ public class OrderSearchController extends JcbcBaseController{
 			HttpServletRequest request,
 			HttpServletResponse response) {
 	    
-	    OrderListOutput orderListOutput = new OrderListOutput();
+//	    OrderListOutput orderListOutput = new OrderListOutput();
+		UserInfo userInfo = (UserInfo)request.getSession().getAttribute(SessionConstants.LOGIN_INFO.getValue());
+		pageForm.setOrder(new MOrder());
+	    pageForm.getOrder().setUserId(userInfo.getId());
+		OrderListOutput orderListOutput = orderService.getOrderList(pageForm);
 
 		return ControllerHelper.getModelAndView(
 		        OrderSearchViewHelper.getMainPage(request, pageForm, orderListOutput));

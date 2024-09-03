@@ -14,6 +14,7 @@ import cn.caam.gs.app.GlobalConstants;
 import cn.caam.gs.app.user.regist.form.RegistForm;
 import cn.caam.gs.app.user.regist.view.RegistStep1ViewHelper;
 import cn.caam.gs.common.enums.MailSendResultType;
+import cn.caam.gs.common.enums.SmsConfigType;
 import cn.caam.gs.common.util.HuaWeiSMSUtil;
 import cn.caam.gs.common.util.LocalDateUtility;
 import cn.caam.gs.common.util.LocalDateUtility.DateTimePattern;
@@ -22,8 +23,10 @@ import cn.caam.gs.common.util.MailUtil.MailDataSet;
 import cn.caam.gs.config.MailConfig;
 import cn.caam.gs.config.SmsConfig;
 import cn.caam.gs.domain.db.base.entity.MAuthCode;
+import cn.caam.gs.domain.db.base.entity.MSmsConfig;
 import cn.caam.gs.domain.db.base.mapper.MAuthCodeMapper;
 import cn.caam.gs.domain.db.custom.mapper.OptionalAuthCodeInfoMapper;
+import cn.caam.gs.domain.db.custom.mapper.OptionalSmsConfigMapper;
 import cn.caam.gs.service.BaseService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +50,9 @@ public class AuthCodeService extends BaseService {
 	
 	@Autowired
 	TemplateEngine templateEngine;
+	
+	@Autowired
+	OptionalSmsConfigMapper optionalSmsConfigMapper;
 
 	public MAuthCode addAuthCode(RegistForm pageForm) {
 	    MAuthCode mauthCode = new MAuthCode();
@@ -61,7 +67,7 @@ public class AuthCodeService extends BaseService {
 	    mauthCode.setAuthCode(getRandomAuthCode());
 //	    mauthCode.setAuthCode("123456");
 	    LocalDateTime expiredDt = LocalDateTime.now();
-	    mauthCode.setInvalidDate(LocalDateUtility.formatDateTime(expiredDt.plusMinutes(GlobalConstants.USER_REGIST_EXPIRED_MINUTE), DateTimePattern.UUUUMMDDHHMISS));
+	    mauthCode.setInvalidDate(LocalDateUtility.formatDateTime(expiredDt.plusMinutes(GlobalConstants.AUTH_CODE_EXPIRED_MINUTE), DateTimePattern.UUUUMMDDHHMISS));
 	    mauthCodeMapper.insert(mauthCode);
     	return mauthCodeMapper.selectByPrimaryKey(uuid);
 	}
@@ -106,21 +112,33 @@ public class AuthCodeService extends BaseService {
 		return true;
 	}
 	
-	public boolean sendAuthCode(SmsConfig smsConfig, String templateId, MAuthCode mauthCode) throws Exception{
+	public boolean sendAuthCode(SmsConfigType smsConfigType, MAuthCode mauthCode, int expiredMinute) throws Exception{
 		boolean result = false;
 		if (mauthCode != null && !StringUtil.isBlank(mauthCode.getAuthCode())) {
 			 if (RegistStep1ViewHelper.GET_AUTH_CODE_BY_PHONE.equals(mauthCode.getAuthMethod())) {
-				 result = sendAuthCodeToPhone(smsConfig, templateId, mauthCode.getRecievedBy(), mauthCode.getAuthCode(), GlobalConstants.USER_REGIST_EXPIRED_MINUTE);
+				 result = sendAuthCodeToPhone(smsConfigType, mauthCode.getRecievedBy(), mauthCode.getAuthCode(), expiredMinute);
 		    } else {
-		    	result = sendAuthCodeToMail(mauthCode.getRecievedBy(), mauthCode.getAuthCode(), GlobalConstants.USER_REGIST_EXPIRED_MINUTE);
+		    	result = sendAuthCodeToMail(mauthCode.getRecievedBy(), mauthCode.getAuthCode(), expiredMinute);
 		    }
 		}
 	   
 		return result;
 	}
 	
-	public boolean sendAuthCodeToPhone(SmsConfig smsConfig, String templateId, String phoneNumber, String authCode, int validMinute)  throws Exception{
-		return HuaWeiSMSUtil.sendAuthCode(smsConfig, templateId, phoneNumber, authCode, validMinute);
+	public boolean sendAuthCodeToPhone(SmsConfigType smsConfigType, String phoneNumber, String authCode, int validMinute)  throws Exception{
+		MSmsConfig mSmsConfig = optionalSmsConfigMapper.selectByTemplateType(smsConfigType.getKey());
+		if (mSmsConfig == null) {
+			throw new Exception("sms template is not existed!");
+		}
+		SmsConfig smsConfig = new SmsConfig();
+		smsConfig.setApiUrl(mSmsConfig.getApiUrl());
+		smsConfig.setAppKey(mSmsConfig.getAppKey());
+		smsConfig.setAppSecret(mSmsConfig.getAppSecret());
+		smsConfig.setSender(mSmsConfig.getSender());
+		smsConfig.setSignature(mSmsConfig.getSignature());
+		smsConfig.setTemplateId(mSmsConfig.getTemplateId());
+		smsConfig.setTemplateName(mSmsConfig.getTemplateName());
+		return HuaWeiSMSUtil.sendAuthCode(smsConfig, phoneNumber, authCode, validMinute);
 	}
 	
 	public boolean sendAuthCodeToMail(String mail, String authCode, int validMinute)  throws Exception{

@@ -126,7 +126,7 @@ public class ReviewOrderViewHelper extends HtmlViewHelper {
         if (isPhoneMode(request)) {
             return PHONE_CARD_HEIGHT;
         }
-        return 470;
+        return 515;
     }
     
     private static String buildFooter() {

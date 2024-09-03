@@ -73,7 +73,7 @@ public class OrderDetailViewHelper extends HtmlViewHelper {
     public static final int IMG_WIDTH                      = 300;
     public static final int IMG_HEIGHT                     = 250;
     
-    public static final int ORDER_BASE_CARD_HEIGHT         = 400;
+    public static final int ORDER_BASE_CARD_HEIGHT         = 515;
     public static final int PHONE_ORDER_BASE_CARD_HEIGHT   = 380;
     
     public static final String BTN_CLOSE = "btnClose";

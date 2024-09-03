@@ -7,21 +7,29 @@ import cn.caam.gs.domain.tabledef.MySqlType;
 
 public class T000MAdmin extends BaseTableDef implements BaseDdl{
     
-    public static final String  TABLE_NAME        = "m_admin";
-    public static final String  TABLE_NAME_OMT    = "T000";
-    public static final String TABLE_SEQ         = TABLE_NAME_OMT;
-    public static final String TABLE_GROUP       = GROUP_MAINTEN;
-    public static final String COL_ID              = "id";
-    public static final String COL_NAME            = "name";
-    public static final String COL_USER_TYPE       = "user_type";
-    public static final String COL_PASSWORD        = "password";
+    public static final String  TABLE_NAME			= "m_admin";
+    public static final String  TABLE_NAME_OMT		= "T000";
+    public static final String TABLE_SEQ			= TABLE_NAME_OMT;
+    public static final String TABLE_GROUP			= GROUP_MAINTEN;
+    public static final String COL_ID				= "id";
+    public static final String COL_NAME				= "name";
+    public static final String COL_USER_TYPE		= "user_type";
+    public static final String COL_PASSWORD			= "password";
+    public static final String COL_PHONE			= "phone";
+    public static final String COL_MAIL       		= "mail";
+    public static final String COL_PHOTO			= "photo";
+    public static final String COL_PHOTO_EXT		= "photo_ext";
     
     public static final ColumnInfoForm[] cols = new ColumnInfoForm[] {
         // name | pk | type | charMaxLength | numPrecision | numScale | nullable | default | comment
         new ColumnInfoForm(COL_ID,           true,     MySqlType.CHARACTER_VARYING.getType(), 20, null, null, false, "", getLabelName(TABLE_NAME, COL_ID),        getPlaceholder(TABLE_NAME, COL_ID)),
         new ColumnInfoForm(COL_NAME,         false,    MySqlType.CHARACTER_VARYING.getType(), 70, null, null, false, "", getLabelName(TABLE_NAME, COL_NAME),      getPlaceholder(TABLE_NAME, COL_NAME)),
         new ColumnInfoForm(COL_USER_TYPE,    false,    MySqlType.CHARACTER_VARYING.getType(), 3 , null, null, false, "", getLabelName(TABLE_NAME, COL_USER_TYPE), getPlaceholder(TABLE_NAME, COL_USER_TYPE)),
-        new ColumnInfoForm(COL_PASSWORD,     false,    MySqlType.CHARACTER_VARYING.getType(),200, null, null, false, "", getLabelName(TABLE_NAME, COL_PASSWORD),  getPlaceholder(TABLE_NAME, COL_PASSWORD))
+        new ColumnInfoForm(COL_PASSWORD,     false,    MySqlType.CHARACTER_VARYING.getType(),200, null, null, false, "", getLabelName(TABLE_NAME, COL_PASSWORD),  getPlaceholder(TABLE_NAME, COL_PASSWORD)),
+        new ColumnInfoForm(COL_PHONE,        false,    MySqlType.CHARACTER_VARYING.getType(),20, null, null, false, "", getLabelName(TABLE_NAME, COL_PHONE),      getPlaceholder(TABLE_NAME, COL_PHONE)),
+        new ColumnInfoForm(COL_MAIL,         false,    MySqlType.CHARACTER_VARYING.getType(),70, null, null, false, "", getLabelName(TABLE_NAME, COL_MAIL),       getPlaceholder(TABLE_NAME, COL_MAIL)),
+        new ColumnInfoForm(COL_PHOTO,        false,    MySqlType.BLOB.getType(),             null, null, null, true , "", getLabelName(TABLE_NAME, COL_PHOTO),    getPlaceholder(TABLE_NAME, COL_PHOTO)),
+        new ColumnInfoForm(COL_PHOTO_EXT,    false,    MySqlType.CHARACTER_VARYING.getType(), 10 , null, null, true , "", getLabelName(TABLE_NAME, COL_PHOTO_EXT),getPlaceholder(TABLE_NAME, COL_PHOTO_EXT)),
     };
     public ColumnInfoForm[] columnInfos() {
         

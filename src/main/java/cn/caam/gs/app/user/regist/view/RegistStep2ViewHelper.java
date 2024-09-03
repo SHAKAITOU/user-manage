@@ -25,17 +25,15 @@ import cn.caam.gs.common.enums.CssGridsType;
 import cn.caam.gs.common.enums.FixedValueType;
 import cn.caam.gs.common.html.HtmlViewBaseHelper;
 import cn.caam.gs.common.html.element.HtmlRadio;
+import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
 import cn.caam.gs.common.html.element.bs5.LabelDateInputSet;
 import cn.caam.gs.common.html.element.bs5.LabelDateInputSet.LabelDateInputSetType;
-import cn.caam.gs.common.html.element.bs5.LabelDateRangeInputSet;
 import cn.caam.gs.common.html.element.bs5.LabelInputSet;
 import cn.caam.gs.common.html.element.bs5.LabelPasswordSet;
 import cn.caam.gs.common.html.element.bs5.LabelRadioGroupSet;
 import cn.caam.gs.common.html.element.bs5.LabelSelectGroupSet;
 import cn.caam.gs.common.html.element.bs5.LabelSelectGroupSet.LabelSelectGroupSetType;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet;
-import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
-import cn.caam.gs.common.html.element.bs5.LabelDateRangeInputSet.LabelDateRangeInputSetType;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet.LabelSelectSetType;
 import cn.caam.gs.domain.db.base.entity.MFixedValue;
 import cn.caam.gs.domain.db.custom.entity.FixValueInfo;
@@ -96,7 +94,8 @@ public class RegistStep2ViewHelper extends HtmlViewBaseHelper {
     private static String buildInputBody(HttpServletRequest request, RegistForm registForm) {
         StringBuffer sb = new StringBuffer();
         
-        Map<FixedValueType, List<FixValueInfo>> fixedValueMap = 
+        @SuppressWarnings("unchecked")
+		Map<FixedValueType, List<FixValueInfo>> fixedValueMap = 
                 (Map<FixedValueType, List<FixValueInfo>>)request.getSession().getAttribute(SessionConstants.FIXED_VALUE.getValue());
         
         sb.append(divRow().cellBlank(5));
@@ -339,9 +338,6 @@ public class RegistStep2ViewHelper extends HtmlViewBaseHelper {
                 .fontSize(font).grids(CssGridsType.G12).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
         
         sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
-        
-        
-        
         
         return borderCard().noTitleWithScroll("", CssClassType.WARNING, "", calculateDlgHeight(request), divContainer().get(sb.toString()));
     }

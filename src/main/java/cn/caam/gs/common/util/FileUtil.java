@@ -16,7 +16,9 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -27,6 +29,11 @@ import org.apache.commons.io.IOUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.deepoove.poi.XWPFTemplate;
+import com.deepoove.poi.data.PictureRenderData;
+import com.deepoove.poi.data.PictureType;
+import com.deepoove.poi.data.Pictures;
 
 import cn.caam.gs.common.enums.EncodingType;
 import cn.caam.gs.common.exception.ShaException;
@@ -593,5 +600,34 @@ public class FileUtil {
 		DataSource source = new FileDataSource(multipartFile.);
 	}
 	*/
+	
+	public static void main(String[] args) throws Exception{
+		// 将要替换的文字、图片写入map集合中
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", "张三");
+        map.put("sex", "男");
+        map.put("address", "北京市XX区XX路");
+        PictureRenderData pictureRenderData = null;
+        try {
+            // 图片的处理
+//            pictureRenderData = Pictures.ofStream(new FileInputStream("d:\\1686009838039_0.jpg"), PictureType.JPEG).size(150, 200).create();
+        	pictureRenderData = Pictures.ofStream(new FileInputStream("d:\\证件.jpeg"), PictureType.JPEG).size(150, 200).create();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        map.put("photo", pictureRenderData);
+
+        String wordPath = "D:\\中国针灸学会普通会员入会申请表.docx";
+        // 生成的新文件保存路径
+        File repotrFile = new File("D:\\new.docx");
+        try {
+        // 生成新的文件并写到硬盘
+            XWPFTemplate.compile(wordPath).render(map, new FileOutputStream(repotrFile));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+	}
+	
 }
 

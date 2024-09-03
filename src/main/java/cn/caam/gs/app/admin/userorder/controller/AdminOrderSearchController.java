@@ -47,7 +47,8 @@ public class AdminOrderSearchController extends JcbcBaseController{
 	    MOrder order = new MOrder();
         order.setCheckStatus(GlobalConstants.DFL_SELECT_ALL);
         pageForm.setOrder(order);
-	    OrderListOutput listOutput = new OrderListOutput();
+//	    OrderListOutput listOutput = new OrderListOutput();
+        OrderListOutput listOutput = orderService.getOrderList(pageForm);
 
 		return ControllerHelper.getModelAndView(
 		        AdminOrderSearchViewHelper.getMainPage(request, pageForm, listOutput));

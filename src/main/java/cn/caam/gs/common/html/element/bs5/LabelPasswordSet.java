@@ -66,7 +66,7 @@ public class LabelPasswordSet {
         }
         sb.append(">");
         if (Objects.nonNull(buttonId) && showIcon) {
-            sb.append("<span class=' input-group-text text-center'>");
+            sb.append("<span class=' input-group-text text-center password'>");
             sb.append(IconSet.builder().type(IconSetType.EYE_SLASH).id(buttonId).css(IconSetCss.NOMAL_12).build().html());
             sb.append("</span>");
         }

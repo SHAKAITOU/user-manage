@@ -31,7 +31,6 @@ import cn.caam.gs.common.html.HtmlViewBaseHelper;
 import cn.caam.gs.common.html.element.HtmlRadio;
 import cn.caam.gs.common.html.element.bs5.BreadCrumbSet;
 import cn.caam.gs.common.html.element.bs5.DivChevronSet;
-import cn.caam.gs.common.html.element.bs5.DivHrSet;
 import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
 import cn.caam.gs.common.html.element.bs5.LabelDateInputSet;
 import cn.caam.gs.common.html.element.bs5.LabelDateInputSet.LabelDateInputSetType;
@@ -67,6 +66,9 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
     
     //edit url
     public static final String URL_USER_DETAIL_EDIT = UrlConstants.EDIT;
+    
+    public static final String URL_USER_DETAIL_PRINT = UrlConstants.PRINT;
+    public static final String URL_USER_DETAIL_DOWNLOAD = UrlConstants.DOWNLOAD;
     
     public static final String USER_DETAIL_JS_CLASS          = "UserDetail";
     public static final String USER_DETAIL_FORM_NAME         = "userDetailForm";
@@ -133,7 +135,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         body.append(DivChevronSet.builder().idUp(HIDE_BASE_PANEL_BTN_ID).idDown(SHOW_BASE_PANEL_BTN_ID).build().html());
         body.append(buildSelfDetailBody(fixedValueMap, userDetailForm, pageModeType));
         body.append(DivChevronSet.builder().idUp(HIDE_SELF_PANEL_BTN_ID).idDown(SHOW_SELF_PANEL_BTN_ID).build().html());
-        body.append(buildExtendDetailBody(fixedValueMap, userDetailForm, pageModeType));
+        body.append(buildExtendDetailBody(request,fixedValueMap, userDetailForm, pageModeType));
         // ----------body------]
         if (PageModeType.EDIT.equals(pageModeType)) {
 	        // --bottom btn--
@@ -636,17 +638,17 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         return sb.toString();
     }
     
-    private static String buildExtendDetailBody(Map<FixedValueType, List<FixValueInfo>> fixedValueMap, UserDetailForm userDetailForm, PageModeType pageModeType) {
+    private static String buildExtendDetailBody(HttpServletRequest request, Map<FixedValueType, List<FixValueInfo>> fixedValueMap, UserDetailForm userDetailForm, PageModeType pageModeType) {
         StringBuffer sb = new StringBuffer();
         
         sb.append(divRow().cellBlank(5));
         
-        sb.append(buildExtendDetail(fixedValueMap, userDetailForm, pageModeType));
+        sb.append(buildExtendDetail(request, fixedValueMap, userDetailForm, pageModeType));
         return borderCard().withTitleNoScroll("", CssClassType.INFO, "", 
                 getContext("userDetail.card3"),
                 divContainer().get(sb.toString()));
     }
-    private static String buildExtendDetail(Map<FixedValueType, List<FixValueInfo>> fixedValueMap, UserDetailForm userDetailForm, PageModeType pageModeType) {
+    private static String buildExtendDetail(HttpServletRequest request, Map<FixedValueType, List<FixValueInfo>> fixedValueMap, UserDetailForm userDetailForm, PageModeType pageModeType) {
         StringBuffer sb = new StringBuffer();
         
         boolean disabled = PageModeType.VIEW.equals(pageModeType);
@@ -1010,6 +1012,64 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
         //------row14----------]
         
+        //------row15----------[
+        contextList = new ArrayList<String>();
+        clmForm     = T101MUserExtend.getColumnInfo(T101MUserExtend.COL_APPLICATION_FORM);
+        name        = clmForm.getPageName("") + "File";
+        idFile      = convertNameDotForId(name);
+        idFileOpen  = idFile + "Open";
+        String idFilePrint = idFile + "Print";
+        String idFileDownload = idFile + "Download";
+        idLbl       = idFile + "Lbl";
+        idFileName  = idFile + "Name";
+        idOldFile   = idFile + "Old";
+        
+        boolean isApplicationForm = userDetailForm.getUserInfo().getUserExtend().getApplicationForm() != null &&
+        		userDetailForm.getUserInfo().getUserExtend().getApplicationForm().length > 0;
+        
+        if (LoginInfoHelper.isUserLogin(request)) {
+	        value       = "";
+	        labelName   = clmForm.getLabelName();
+	        placeholder = clmForm.getPlaceholder();
+	        contextList.add(LabelInputSet.builder()
+	                .id(idFileName).labelName(labelName).placeholder(placeholder).disabled(disabled)
+	                .fontSize(font).build().html());
+	        
+	        labelName   = getContext("userDetail.uploadApplicationForm");
+	        value       = "";
+	        contextList.add(LabelFileSet.builder()
+	                .id(idFile).idLablel(idLbl).name(name).labelName(labelName).placeholder(placeholder).disabled(disabled)
+	                .fontSize(font).build().html());
+	        
+	        context = getContext("userDetail.print");
+	        comp1 = button().getBorder(IconSetType.PRINT, CssClassType.SUCCESS, idFilePrint, context);
+	        contextList.add(comp1);
+	        
+	        if (isApplicationForm) {
+		        context = getContext("userDetail.download");
+		        comp1 = button().getBorder(IconSetType.DOWNLOAD, CssClassType.SUCCESS, idFileDownload, context);
+		        contextList.add(comp1);
+	        }else {
+	        	contextList.add("");
+	        }
+	        
+	        aligs = new ArrayList<>();
+	        aligs.add(CssAlignType.LEFT);
+	        aligs.add(CssAlignType.LEFT);
+	        aligs.add(CssAlignType.LEFT);
+  	        sb.append(divRow().get(CellWidthType.THREE_4_4_4, aligs, contextList.get(0), contextList.get(1), concactWithSpace(contextList.get(2),contextList.get(3))));
+        }
+        
+        if (LoginInfoHelper.isAdminLogin(request) && isApplicationForm) {
+        	contextList = new ArrayList<String>();
+        	context = getContext("userDetail.download");
+  	        comp1 = button().getBorder(IconSetType.DOWNLOAD, CssClassType.SUCCESS, CssGridsType.G12, idFileDownload, context);
+  	        contextList.add(comp1);
+  	        
+  	        sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+        }
+        //------row15----------]
+        
         
         return sb.toString();
     }
@@ -1017,20 +1077,24 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         StringBuffer sb = new StringBuffer();
         List<CssAlignType> aligs = new ArrayList<>();
         // bottom button
+        
+        String id = "btnTop";
+        String context = getContext("userDetail.moveTop");
+        String comp1 = button().getBorder(IconSetType.TO_UP, CssClassType.INFO, id, context);
 
-        String id = "btnOk";
-        String context = getContext("common.page.ok");
-        String comp1 = button().getBorder(IconSetType.SEND, CssClassType.SUCCESS, id, context);
+        id = "btnOk";
+        context = getContext("common.page.ok");
+        String comp2 = button().getBorder(IconSetType.SEND, CssClassType.SUCCESS, id, context);
         
         id = "btnBack";
         context = getContext("common.page.btn.back");
-        String comp2 = button().getBorder(IconSetType.BACK, CssClassType.DARK, id, context);
+        String comp3 = button().getBorder(IconSetType.BACK, CssClassType.DARK, id, context);
 
         aligs.add(CssAlignType.RIGHT);
         if (LoginAccountType.USER.equals(LoginInfoHelper.getLoginAccountType(request))) {
-        	sb.append(divRow().get(CellWidthType.ONE, aligs, comp1));
-        }else {
         	sb.append(divRow().get(CellWidthType.ONE, aligs, concactWithSpace(comp1, comp2)));
+        }else {
+        	sb.append(divRow().get(CellWidthType.ONE, aligs, concactWithSpace(comp1, comp2, comp3)));
         }
         
         return sb.toString();
@@ -1042,6 +1106,8 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         js.put("url_user_detail_init",				URL_BASE + URL_USER_DETAIL_INIT);
         js.put("url_user_detail_from_admin_init",	URL_BASE + URL_USER_DETAIL_FROM_ADMIN_INIT);
         js.put("url_user_detail_edit",				URL_BASE + URL_USER_DETAIL_EDIT);
+        js.put("url_user_detail_print",				URL_BASE + URL_USER_DETAIL_PRINT);
+        js.put("url_user_detail_download",			URL_BASE + URL_USER_DETAIL_DOWNLOAD);
         return js;
     }
     

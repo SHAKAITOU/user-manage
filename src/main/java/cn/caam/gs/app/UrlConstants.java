@@ -72,12 +72,15 @@ public class UrlConstants {
 	public static final String SETTING		= "/setting";
 	public static final String COMMIT       = "/commit";
     public static final String CONFIRM      = "/confirm";
+    public static final String DOWNLOAD		= "/download";
 	//BATCH
 	public static final String BATCH 			= "/batch";
 	/* ===================ADMIN ROLE URL========================= */
 
 	//ADMIN
 	public static final String ADMIN 			= "/admin";
+	
+	public static final String ADMIN_LIST        = "/adminList";
 
 	public static final String USER_LIST        = "/userList";
 	

@@ -25,6 +25,8 @@ Menu.prototype.ID = {
 	
 	CLASS_NM_MESSAGE      			: 'menu9001',
 	
+	CLASS_NM_PASSWORD_RESET   		: 'menu9002',
+	
 	CLASS_NM_LOGOUT      			: 'menu9003',
 	
 	BTN_LOGOUT						: 'menu7',
@@ -140,6 +142,19 @@ Menu.prototype.initEvent = function(){
 	                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
 	                }
 	            ); 
+			}
+	    );
+	});
+	
+	//密码修改
+	$buttonList = self.getObjectList(self.ID.CLASS_NM_PASSWORD_RESET);
+    $buttonList.each(function(i, elem){
+	    ShaInput.button.onClick($(elem),
+	    	function(event) {
+				ShaAjax.pop.postDialogMiddleCenter(
+	    			self.i18n["PasswordChange.title"],
+	    			self.jsContext.jsView.passwordChange.url_init, 
+	    			null); 
 			}
 	    );
 	});

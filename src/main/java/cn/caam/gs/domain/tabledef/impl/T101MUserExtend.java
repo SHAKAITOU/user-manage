@@ -28,6 +28,8 @@ public class T101MUserExtend extends BaseTableDef implements BaseDdl{
 	public static final String COL_WORK_EXPERIENCE  = "work_experience";
 	public static final String COL_PAPERS           = "papers";
 	public static final String COL_HONORS           = "honors";
+	public static final String COL_APPLICATION_FORM		= "application_form";
+	public static final String COL_APPLICATION_FORM_EXT	= "application_form_ext";
 	
 	public static final ColumnInfoForm[] cols = new ColumnInfoForm[] {
 	        // name | pk | type | charMaxLength | numPrecision | numScale | nullable | default | comment
@@ -48,6 +50,8 @@ public class T101MUserExtend extends BaseTableDef implements BaseDdl{
 	        new ColumnInfoForm(COL_WORK_EXPERIENCE,  false,    MySqlType.CHARACTER_VARYING.getType(), 255, null, null, false, "", getLabelName(TABLE_NAME, COL_WORK_EXPERIENCE),   getPlaceholder(TABLE_NAME, COL_WORK_EXPERIENCE)),
 	        new ColumnInfoForm(COL_PAPERS,           false,    MySqlType.CHARACTER_VARYING.getType(), 255, null, null, true , "", getLabelName(TABLE_NAME, COL_PAPERS),            getPlaceholder(TABLE_NAME, COL_PAPERS)),
 	        new ColumnInfoForm(COL_HONORS,           false,    MySqlType.CHARACTER_VARYING.getType(), 255, null, null, true , "", getLabelName(TABLE_NAME, COL_HONORS),            getPlaceholder(TABLE_NAME, COL_HONORS)),
+	        new ColumnInfoForm(COL_APPLICATION_FORM,	false,    MySqlType.BLOB.getType(),             null, null, null, true , "", getLabelName(TABLE_NAME, COL_APPLICATION_FORM),    getPlaceholder(TABLE_NAME, COL_APPLICATION_FORM)),
+	        new ColumnInfoForm(COL_APPLICATION_FORM_EXT,false,   MySqlType.CHARACTER_VARYING.getType(), 10 , null, null, true , "", getLabelName(TABLE_NAME, COL_APPLICATION_FORM_EXT),getPlaceholder(TABLE_NAME, COL_APPLICATION_FORM_EXT)),
 	        
 	};
 	public ColumnInfoForm[] columnInfos() {

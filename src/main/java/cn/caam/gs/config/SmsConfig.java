@@ -6,30 +6,36 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SmsConfig {
 
-	@Value("${spring.sms.api_url}")
 	private String apiUrl;
 	
-	@Value("${spring.sms.app_key}")
 	private String appKey;
 	
-	@Value("${spring.sms.app_secret}")
 	private String appSecret;
 	
-	@Value("${spring.sms.sender}")
 	private String sender;
 	
-	@Value("${spring.sms.user_regist_template_id}")
-	private String userRegistTemplateId;
+	private String templateId;
 	
-	@Value("${spring.sms.user_login_template_id}")
-	private String userLoginTemplateId;
+	private String templateName;
 	
-	@Value("${spring.sms.user_review_template_id}")
-	private String userReviewTemplateId;
-	
-	
-	@Value("${spring.sms.signature}")
 	private String signature;
+
+	
+	public SmsConfig(String apiUrl, String appKey, String appSecret, String sender, String signature, String templateId,
+			String templateName) {
+		super();
+		this.apiUrl = apiUrl;
+		this.appKey = appKey;
+		this.appSecret = appSecret;
+		this.sender = sender;
+		this.templateId = templateId;
+		this.templateName = templateName;
+		this.signature = signature;
+	}
+	
+	public SmsConfig() {
+		super();
+	}
 
 	public String getApiUrl() {
 		return apiUrl;
@@ -63,36 +69,28 @@ public class SmsConfig {
 		this.sender = sender;
 	}
 
-	public String getUserRegistTemplateId() {
-		return userRegistTemplateId;
-	}
-
-	public void setUserRegistTemplateId(String userRegistTemplateId) {
-		this.userRegistTemplateId = userRegistTemplateId;
-	}
-
-	public String getUserLoginTemplateId() {
-		return userLoginTemplateId;
-	}
-
-	public void setUserLoginTemplateId(String userLoginTemplateId) {
-		this.userLoginTemplateId = userLoginTemplateId;
-	}
-
-	public String getUserReviewTemplateId() {
-		return userReviewTemplateId;
-	}
-
-	public void setUserReviewTemplateId(String userReviewTemplateId) {
-		this.userReviewTemplateId = userReviewTemplateId;
-	}
-
 	public String getSignature() {
 		return signature;
 	}
 
 	public void setSignature(String signature) {
 		this.signature = signature;
+	}
+
+	public String getTemplateId() {
+		return templateId;
+	}
+
+	public void setTemplateId(String templateId) {
+		this.templateId = templateId;
+	}
+
+	public String getTemplateName() {
+		return templateName;
+	}
+
+	public void setTemplateName(String templateName) {
+		this.templateName = templateName;
 	}
 
 }

@@ -25,6 +25,7 @@ LoginBlock.prototype.ID = {
 	//btn
 	BTN_LOGIN							: 'loginBtn',
 	BTN_REGIST							: 'registBtn',
+	BTN_PASSFIND						: 'passFindBtn',
 	BTN_HELP							: 'helpBtn',
 	BTN_REFRESH_IMG				    	: 'refreshImgBtn',
 	BTN_SEND_AUTH_CODE					: 'sendAuthCodeBtn',
@@ -118,7 +119,7 @@ LoginBlock.prototype.initEvent = function(){
 						ShaDialog.dialogs.alert(data);
 					}else{
 						ShaUtil.other.setFocus(self.getObject(self.ID.ITEM_PHONE_AUTH_CODE));
-						self.countDown = parseInt(Pos.constants.setInfo.common.user_regist_sms_send_interval)*60;
+						self.countDown = parseInt(Pos.constants.setInfo.common.auth_code_send_interval_minute)*60;
 						self.timeId = setInterval(function(){//更新倒计时显示
 							if (self.countDown === 0) {
 								clearInterval(self.timeId);
@@ -165,12 +166,21 @@ LoginBlock.prototype.initEvent = function(){
 	    }
 	);
 	
+	ShaInput.button.onClick(self.getObject(self.ID.BTN_PASSFIND), 
+		function(event) {
+			ShaAjax.pop.postDialogMiddleCenter(
+				self.i18n["PasswordForget.step1.title"],
+				self.jsContext.jsView.passwordForget.url_init, 
+				$('#index_form').serializeArray());
+	    }
+	);
+	
+	
 	ShaInput.button.onClick(self.getObject(self.ID.BTN_HELP), 
 		function(event) {
 			window.open("/help");
 	    }
 	);
-	
 	
 	//add btn enter event
     ShaInput.keyPress.enterPress(self.getObject(self.ID.BTN_LOGIN), function(){

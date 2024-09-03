@@ -9,6 +9,14 @@ CREATE TABLE m_admin
     name             VARCHAR(70)  NOT NULL COMMENT '管理员名称(max64)',
     user_type        VARCHAR(3)   NOT NULL COMMENT '管理员类型(F0000)',
     password         VARCHAR(200) NOT NULL COMMENT '密码',
+    phone            VARCHAR(20)           COMMENT '手机号(max11)',
+    mail             VARCHAR(70)           COMMENT '电子邮箱(max64)',
+    photo            MEDIUMBLOB            COMMENT '2寸证件照jpg/png/jpeg200k',
+    photo_ext        VARCHAR(10)           COMMENT '证件照文件扩展名',
+    created_by       VARCHAR(20)  NOT NULL COMMENT '管理员号(AYYMMDDHHmmSSR2)',
+    created_at       VARCHAR(20)           COMMENT '创建时间(yyyy-MM-dd HH:mm:ss)',
+    updated_by       VARCHAR(20)    	   COMMENT '管理员号(AYYMMDDHHmmSSR2)',
+    updated_at       VARCHAR(20)           COMMENT '更新时间(yyyy-MM-dd HH:mm:ss)',
     PRIMARY KEY (id)
 ) COMMENT='管理员信息' ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -481,6 +489,14 @@ INSERT INTO m_fixed_value VALUES ('F0024', '02', '审核通过',		2);
 INSERT INTO m_fixed_value VALUES ('F0024', '03', '审核不通过',	3);
 INSERT INTO m_fixed_value VALUES ('F0024', '04', '返回修改',		4);
 
+-- 短信模板类型 --
+INSERT INTO m_fixed_value VALUES ('F0025', '01', '会员注册验证码通知模板',		1);
+INSERT INTO m_fixed_value VALUES ('F0025', '02', '会员验证码通知模板', 		2);
+INSERT INTO m_fixed_value VALUES ('F0025', '03', '用户审核通过通知模板',		3);
+INSERT INTO m_fixed_value VALUES ('F0025', '04', '用户审核不通过通知模板',		4);
+INSERT INTO m_fixed_value VALUES ('F0025', '05', '用户审核返回修改通知模板',	5);
+INSERT INTO m_fixed_value VALUES ('F0025', '06', '管理员创建通知模板',			6);
+
 -- 会员基本信息 --
 DROP TABLE IF EXISTS m_user;
 CREATE TABLE m_user
@@ -544,6 +560,8 @@ CREATE TABLE m_user_extend
     work_experience  VARCHAR(255)            COMMENT '主要工作经历(max250)',
     papers           VARCHAR(255)            COMMENT '代表性论文及著作(max250)',
     honors           VARCHAR(255)            COMMENT '获得科技奖励及荣誉情况(max250)',
+    application_form MEDIUMBLOB              COMMENT '入会申请表',
+    application_form_ext VARCHAR(10)         COMMENT '入会申请表文件扩展名',
 
     PRIMARY KEY (id)
 ) COMMENT='会员扩展信息' ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -692,3 +710,34 @@ CREATE TABLE m_message_read
     PRIMARY KEY (id)
 ) COMMENT='站内消息已读状态' ENGINE=InnoDB DEFAULT CHARSET=utf8;
 CREATE INDEX m_message_read_idx1 ON m_message_read (user_id);
+
+-- 短信模版设定 --·
+DROP TABLE IF EXISTS m_sms_config;
+CREATE TABLE m_sms_config
+( 
+	id               VARCHAR(50)    NOT NULL COMMENT 'UUID',
+	template_type    VARCHAR(3)     NOT NULL COMMENT '模板类型(F0025)',
+	template_id      VARCHAR(50)    NOT NULL COMMENT '模板ID',
+	template_name    VARCHAR(50)    NOT NULL COMMENT '模板名称',
+	api_url          VARCHAR(255)   NOT NULL COMMENT 'Application Url',
+    app_key          VARCHAR(50)    NOT NULL COMMENT 'Application Key',
+    app_secret       VARCHAR(50)    NOT NULL COMMENT 'Application Secret',
+    sender           VARCHAR(50)    NOT NULL COMMENT '通道号',
+    signature        VARCHAR(50)    NOT NULL COMMENT '签名名称',
+    created_by       VARCHAR(20)    NOT NULL COMMENT '管理员号(AYYMMDDHHmmSSR2)',
+    created_at       VARCHAR(20)    NOT NULL COMMENT '创建时间(yyyy-MM-dd HH:mm:ss)',
+    updated_by       VARCHAR(20)    		 COMMENT '管理员号(AYYMMDDHHmmSSR2)',
+    updated_at       VARCHAR(20)             COMMENT '更新时间(yyyy-MM-dd HH:mm:ss)',
+    
+    PRIMARY KEY (id)
+) COMMENT='短信模版设定信息' ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE UNIQUE INDEX m_sms_config_idx1 ON m_sms_config (template_type);
+
+-- 验证码类
+INSERT INTO m_sms_config(id,template_type,template_id,template_name,api_url,app_key,app_secret,sender,signature,created_by,created_at,updated_by,updated_at) VALUES(UUID(),"01","ca9ac74114b04d2da7b257c39b89d98d","会员注册验证码通知模板","https://smsapi.cn-north-4.myhuaweicloud.com:443/sms/batchSendSms/v1","zn7A3K61J3bz808w7671r4Mw0Rl9","0x1Ey9niYOt4yEv9VvKkcxh1kOaI","8824082205484","甘肃省针灸学会","9999",NOW(),NULL,NULL);
+INSERT INTO m_sms_config(id,template_type,template_id,template_name,api_url,app_key,app_secret,sender,signature,created_by,created_at,updated_by,updated_at) VALUES(UUID(),"02","a31e0b64caa1446ca21f5a7642abb45b","会员验证码通知模板","https://smsapi.cn-north-4.myhuaweicloud.com:443/sms/batchSendSms/v1","zn7A3K61J3bz808w7671r4Mw0Rl9","0x1Ey9niYOt4yEv9VvKkcxh1kOaI","8824082205484","甘肃省针灸学会","9999",NOW(),NULL,NULL);
+-- 通知类
+INSERT INTO m_sms_config(id,template_type,template_id,template_name,api_url,app_key,app_secret,sender,signature,created_by,created_at,updated_by,updated_at) VALUES(UUID(),"03","","用户审核通过通知模板","https://smsapi.cn-north-4.myhuaweicloud.com:443/sms/batchSendSms/v1","zn7A3K61J3bz808w7671r4Mw0Rl9","0x1Ey9niYOt4yEv9VvKkcxh1kOaI","8824082205510","甘肃省针灸学会","9999",NOW(),NULL,NULL);
+INSERT INTO m_sms_config(id,template_type,template_id,template_name,api_url,app_key,app_secret,sender,signature,created_by,created_at,updated_by,updated_at) VALUES(UUID(),"04","","用户审核不通过通知模板","https://smsapi.cn-north-4.myhuaweicloud.com:443/sms/batchSendSms/v1","zn7A3K61J3bz808w7671r4Mw0Rl9","0x1Ey9niYOt4yEv9VvKkcxh1kOaI","8824082205510","甘肃省针灸学会","9999",NOW(),NULL,NULL);
+INSERT INTO m_sms_config(id,template_type,template_id,template_name,api_url,app_key,app_secret,sender,signature,created_by,created_at,updated_by,updated_at) VALUES(UUID(),"05","","用户审核返回修改通知模板","https://smsapi.cn-north-4.myhuaweicloud.com:443/sms/batchSendSms/v1","zn7A3K61J3bz808w7671r4Mw0Rl9","0x1Ey9niYOt4yEv9VvKkcxh1kOaI","8824082205510","甘肃省针灸学会","9999",NOW(),NULL,NULL);
+INSERT INTO m_sms_config(id,template_type,template_id,template_name,api_url,app_key,app_secret,sender,signature,created_by,created_at,updated_by,updated_at) VALUES(UUID(),"06","","管理员创建通知模板","https://smsapi.cn-north-4.myhuaweicloud.com:443/sms/batchSendSms/v1","zn7A3K61J3bz808w7671r4Mw0Rl9","0x1Ey9niYOt4yEv9VvKkcxh1kOaI","8824082205510","甘肃省针灸学会","9999",NOW(),NULL,NULL);

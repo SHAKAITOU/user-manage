@@ -123,4 +123,20 @@ public class LoginInfoHelper {
 		
 		return LoginAccountType.UNKNOWN;
 	}
+	
+	public static boolean isUserLogin(HttpServletRequest request) {
+		if (request.getSession().getAttribute(SessionConstants.LOGIN_INFO.getValue()) instanceof UserInfo){
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public static boolean isAdminLogin(HttpServletRequest request) {
+		if (request.getSession().getAttribute(SessionConstants.LOGIN_INFO.getValue()) instanceof MAdmin){
+			return true;
+		}
+		
+		return false;
+	}
 }

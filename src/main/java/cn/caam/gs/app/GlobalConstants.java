@@ -57,15 +57,20 @@ public class GlobalConstants {
     
     public static final int ADD_USER_VLID_MONTHS       = 60;
     
-    public static final int USER_REGIST_EXPIRED_MINUTE  = 1;
-    public static final int USER_REGIST_SMS_SEND_INTERVAL = 1;
+//    public static final int USER_REGIST_EXPIRED_MINUTE  = 1;
+//    public static final int USER_REGIST_SMS_SEND_INTERVAL = 1;
+//    public static final int USER_LOGIN_AUTH_CODE_EXPIRED_MINUTE	= 1;
     
-    public static final int USER_LOGIN_AUTH_CODE_EXPIRED_MINUTE	= 1;
+    public static final int AUTH_CODE_EXPIRED_MINUTE		= 3;
+    public static final int AUTH_CODE_SEND_INTERVAL_MINUTE	= 1;
+    
+    
     
     /** 頁LINK表示数(PC) */
     public static final int PC_LINKCNT = 10;
     /** 頁LINK表示数(SP) */
     public static final int SP_LINKCNT = 5;
 
-    
+    public static final String APPLICATION_FORM_TEMPLATE_FILE = "static/template/甘肃针灸学会普通会员入会申请表.docx";
+    public static final String APPLICATION_FORM_NAME = "甘肃针灸学会普通会员入会申请表";
 }

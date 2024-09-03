@@ -3,7 +3,7 @@
 	<!-- SQL CHIP -->
 	<select id="getAll" resultMap="cn.caam.gs.domain.db.base.mapper.MFixedValueMapper.BaseResultMap">
         SELECT * FROM m_fixed_value
-        ORDER BY code, show_index asc
+        ORDER BY code, value,show_index asc
     </select>
     
 </mapper>

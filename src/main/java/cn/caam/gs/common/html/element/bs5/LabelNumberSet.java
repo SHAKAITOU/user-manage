@@ -35,6 +35,8 @@ public class LabelNumberSet {
     private boolean integerOnly = false;
     @Builder.Default
     boolean disabled = false;
+    @Builder.Default
+    boolean readonly = false;
 
     public String html() {
         return get();
@@ -73,6 +75,9 @@ public class LabelNumberSet {
         
         if (Objects.nonNull(value)) {
             sb.append(" value='"+ value + "'");
+        }
+        if (readonly) {
+            sb.append(" readonly ");
         }
         if (disabled) {
             sb.append(" disabled ");

@@ -21,6 +21,7 @@ import cn.caam.gs.app.user.regist.view.RegistStep1ViewHelper;
 import cn.caam.gs.app.util.ControllerHelper;
 import cn.caam.gs.app.util.SessionConstants;
 import cn.caam.gs.common.controller.ScreenBaseController;
+import cn.caam.gs.common.enums.SmsConfigType;
 import cn.caam.gs.common.util.MessageSourceUtil;
 import cn.caam.gs.config.SmsConfig;
 import cn.caam.gs.domain.db.base.entity.MAuthCode;
@@ -88,7 +89,7 @@ public class RegistStep1Controller extends ScreenBaseController{
 	    
 	    //X分钟以内只允许发送一次
 	    if (registForm.getMauthCode() != null && !StringUtil.isBlank(registForm.getMauthCode().getRecievedBy()) && 
-	    		!authCodeService.isCanSendSms(registForm.getMauthCode().getRecievedBy(), GlobalConstants.USER_REGIST_EXPIRED_MINUTE, GlobalConstants.USER_REGIST_SMS_SEND_INTERVAL)){
+	    		!authCodeService.isCanSendSms(registForm.getMauthCode().getRecievedBy(), GlobalConstants.AUTH_CODE_EXPIRED_MINUTE, GlobalConstants.AUTH_CODE_SEND_INTERVAL_MINUTE)){
             return LoginViewHelper.STEP_STS_STEP1_NG_SEND_SMS;
 	    }
 	    
@@ -98,7 +99,7 @@ public class RegistStep1Controller extends ScreenBaseController{
 	        MAuthCode mauthCode = authCodeService.addAuthCode(pageForm);
 	        registForm.setMauthCode(mauthCode);
 	        request.getSession().setAttribute(SessionConstants.USER_REGIST.getValue(), registForm);
-	        result = authCodeService.sendAuthCode(smsConfig, smsConfig.getUserRegistTemplateId(), mauthCode);
+	        result = authCodeService.sendAuthCode(SmsConfigType.REGIST_VERIFICATION_CODE, mauthCode, GlobalConstants.AUTH_CODE_EXPIRED_MINUTE);
 	    }
 
 	    if (result) {

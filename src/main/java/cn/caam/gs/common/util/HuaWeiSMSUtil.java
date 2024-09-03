@@ -25,8 +25,6 @@ import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import cn.caam.gs.config.SmsConfig;
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,23 +41,23 @@ public class HuaWeiSMSUtil {
     	config.setApiUrl("https://smsapi.cn-north-4.myhuaweicloud.com:443/sms/batchSendSms/v1");
     	config.setAppKey("zn7A3K61J3bz808w7671r4Mw0Rl9");
     	config.setAppSecret("0x1Ey9niYOt4yEv9VvKkcxh1kOaI");
-    	config.setSender("1069368924410007625");
-//    	config.setTemplateId("ab64fbafe4c94426aa91e15b9f17a9c1");
-    	config.setSignature("华为云短信测试");
-    	sendAuthCode(config, "ab64fbafe4c94426aa91e15b9f17a9c1", "13336276767", ""+ (int)((Math.random()*9+1)*100000)+"", 1);
+    	config.setSender("8824082205484");
+    	config.setTemplateId("ca9ac74114b04d2da7b257c39b89d98d");
+    	config.setSignature("甘肃省针灸学会");
+    	sendAuthCode(config, "13336276767", ""+ (int)((Math.random()*9+1)*100000)+"", 1);
         //response:
         //{"result":[{"total":1,"originTo":"+8613336276767","createTime":"2024-07-06T01:55:32Z","from":"1069368924410007625","smsMsgId":"502d816a-432e-46e3-8d0a-755f6572c883_246592933","countryId":"CN","status":"000000"}],"code":"000000","description":"Success"}
         
     }
     
-    public static boolean sendAuthCode(SmsConfig config, String templateId, String phone, String code, int validMinute) throws Exception{
+    public static boolean sendAuthCode(SmsConfig config, String phone, String code, int validMinute) throws Exception{
     	String templateParas = "[\""+ code+"\"]"; //模板变量
-    	return sendSms(config, templateId, phone, templateParas);
+    	return sendSms(config, phone, templateParas);
     }
     
-    public static boolean sendUserReviewMessage(SmsConfig config, String templateId,String phone, String msgBody)  throws Exception{
+    public static boolean sendUserReviewMessage(SmsConfig config,String phone, String msgBody)  throws Exception{
     	String templateParas = "[\""+ msgBody+"\"]"; //模板变量
-    	return sendSms(config, templateId, phone, templateParas);
+    	return sendSms(config, phone, templateParas);
     }
 
 	 /**
@@ -70,7 +68,7 @@ public class HuaWeiSMSUtil {
      * @param templateId  必填:模板ID
      * @throws Exception
      */
-    public static boolean sendSms(SmsConfig config, String templateId, String phone, String templateParas) throws Exception{
+    public static boolean sendSms(SmsConfig config, String phone, String templateParas) throws Exception{
     	//APP接入地址+接口访问URI
         String url = config.getApiUrl();
         //APP_Key
@@ -80,7 +78,7 @@ public class HuaWeiSMSUtil {
         //必填:国内短信签名通道号或国际/港澳台短信通道号
         String sender = config.getSender();
         //条件必填,国内短信关注,当templateId指定的模板类型为通用模板时生效且必填,必须是已审核通过的,与模板类型一致的签名名称
-//        String templateId = config.getTemplateId();
+        String templateId = config.getTemplateId();
         //条件必填,国内短信关注,当templateId指定的模板类型为通用模板时生效且必填,必须是已审核通过的,与模板类型一致的签名名称
         //国际/港澳台短信不用关注该参数
         String signature = config.getSignature(); //签名名称

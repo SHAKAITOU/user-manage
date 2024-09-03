@@ -77,6 +77,13 @@ UserDetail.prototype.ID = {
 	ITEM_PAPERS                   : "papers",
 	ITEM_HONORS                   : "honors",
 	
+	ITEM_APPLICATION_FORM         : "applicationFormFile",
+	BTN_APPLICATION_FORM_OPEN     : "applicationFormFileOpen",
+	BTN_APPLICATION_FORM_PRINT    : "applicationFormFilePrint",
+	BTN_APPLICATION_FORM_DOWNLOAD : "applicationFormFileDownload",
+	ITEM_APPLICATION_FORM_LBL     : "applicationFormFileLbl",
+	ITEM_APPLICATION_FORM_NAME    : "applicationFormFileName",
+	
 	SHOW_BASE_PANEL_BTN_ID        : "showBasePanelBtn",
     HIDE_BASE_PANEL_BTN_ID        : "hideBasePanelBtn",
     SHOW_SELF_PANEL_BTN_ID        : "showSelfPanelBtn",
@@ -87,6 +94,7 @@ UserDetail.prototype.ID = {
 	BTN_OPEN_EDIT_EXTEND          : "btnOpenEditExtend",
 	BTN_CLOSE_EDIT_EXTEND         : "btnCloseEditExtend",
 	BTN_OPEN_PHOTO                : "btnOpenPhoto",
+	BTN_TOP              		  : "btnTop",
 	BTN_OK              		  : "btnOk",
 	BTN_BACK              		  : "btnBack",
 	
@@ -244,6 +252,88 @@ UserDetail.prototype.initEvent = function(){
 	    }
 	);
 	
+	//init event to BTN_APPLICATION_FORM_OPEN
+	ShaInput.button.onClick(self.getObject(self.ID.BTN_APPLICATION_FORM_OPEN), 
+		function(event) {
+			if (self.getObject(self.ID.ITEM_APPLICATION_FORM).val() === "") {
+				return;
+			}
+    		ShaInput.img.previewInDialog(
+				self.getForm(), 
+    			self.ID.ITEM_APPLICATION_FORM,
+    			function(imgData) {
+					var title = self.i18n["m_user_extend.application_form"];
+					var html = ShaInput.img.previewImgCardHtml(260, 250, "ShaDialog.dialogs.subSubDialogClose();", imgData);
+					ShaDialog.dialogs.subSubDialogSmallCenter(title,html);
+				}
+    		);
+	    }
+	);
+	
+	ShaInput.button.onClick(self.getObject(self.ID.BTN_APPLICATION_FORM_PRINT), 
+		function(event) {
+			ShaAjax.ajax.getWithDownloadFile(
+	               self.jsContext.jsView.userDetail.url_user_detail_print,
+				   null,
+	               function(data, filename){
+						if (data.size == 0){
+							ShaDialog.dialogs.alert(self.i18n["dialogs.fail.title"]);
+							return;
+						}
+			            if (typeof window.chrome !== 'undefined') {
+			              // chrome
+			              const link = document.createElement('a');
+			              link.href = window.URL.createObjectURL(data);
+			              link.download = filename;
+			              link.click();
+						  window.URL.revokeObjectURL(link.href);
+			            } else if (typeof window.navigator.msSaveBlob !== 'undefined') {
+			              // IE
+			              //const blob = new Blob([data], {type: 'application/force-download'});
+			              window.navigator.msSaveBlob(data, filename);
+			            } else {
+			              // Firefox
+			              const file = new File([data], filename, {type: 'application/force-download'});
+			              window.open(URL.createObjectURL(file));
+			            }
+	               }
+	           ); 
+		}
+	);
+	
+	ShaInput.button.onClick(self.getObject(self.ID.BTN_APPLICATION_FORM_DOWNLOAD), 
+		function(event) {
+			ShaAjax.ajax.getWithDownloadFile(
+	               self.jsContext.jsView.userDetail.url_user_detail_download+"/"+self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_USER_ID).val(),
+				   //[{name:"id", value:self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_USER_ID).val()}],
+				   null,
+	               function(data, filename){
+						if (data.size == 0){
+							ShaDialog.dialogs.alert(self.i18n["dialogs.fail.title"]);
+							return;
+						}
+			            if (typeof window.chrome !== 'undefined') {
+			              // chrome
+			              const link = document.createElement('a');
+			              link.href = window.URL.createObjectURL(data);
+			              link.download = filename;
+			              link.click();
+						  window.URL.revokeObjectURL(link.href);
+			            } else if (typeof window.navigator.msSaveBlob !== 'undefined') {
+			              // IE
+			              //const blob = new Blob([data], {type: 'application/force-download'});
+			              window.navigator.msSaveBlob(data, filename);
+			            } else {
+			              // Firefox
+			              const file = new File([data], filename, {type: 'application/force-download'});
+			              window.open(URL.createObjectURL(file));
+			            }
+	               }
+	           ); 
+		}
+	);
+	
+		
 	ShaInput.button.onChange(self.getObject(self.ID.ITEM_PHOTO), 
 		function(event) {
     		var files = self.getObject(self.ID.ITEM_PHOTO).prop('files');
@@ -308,13 +398,36 @@ UserDetail.prototype.initEvent = function(){
 	    }
 	);
 	
+	ShaInput.button.onChange(self.getObject(self.ID.ITEM_APPLICATION_FORM), 
+			function(event) {
+	    		var files = self.getObject(self.ID.ITEM_APPLICATION_FORM).prop('files');
+	    		var fileExtension = ['pdf'];
+		        if ($.inArray(files[0].name.split('.').pop().toLowerCase(), fileExtension) == -1) {
+		            ShaDialog.dialogs.alert(self.i18n["common.check.file.wrongExt"]);
+		            self.getObject(self.ID.ITEM_APPLICATION_FORM).val("");
+		        } else if(files[0].size > (1024*1024*5)) {
+					ShaDialog.dialogs.alert(self.i18n["common.check.file.wrongSize"]);
+		            self.getObject(self.ID.ITEM_APPLICATION_FORM).val("");
+				} else {
+					self.getObject(self.ID.ITEM_APPLICATION_FORM_NAME).val(files[0].name);
+				}
+		    }
+		);
+	
+	//init event to BTN_TOP
+	ShaInput.button.onClick(self.getObject(self.ID.BTN_TOP),
+	   	function(event) {
+			scrollTo(0,0);
+		}
+	);
+			
 	//init event to BTN_OK
 	ShaInput.button.onClick(self.getObject(self.ID.BTN_OK), 
 		function(event) {
 			if(self.check()) {
 	            return;
 	        }
-			console.log(self.getForm().serializeArray());
+			//console.log(self.getForm().serializeArray());
 	        ShaDialog.dialogs.confirm(
 				self.i18n["dialogs.confirm.edit.title"], 
 				self.i18n["dialogs.confirm.edit.msg"], 
@@ -473,6 +586,10 @@ UserDetail.prototype.setEditableExtendDetail = function(){
 	ShaInput.obj.enabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_WORK_EXPERIENCE));
 	ShaInput.obj.enabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_PAPERS));
 	ShaInput.obj.enabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_HONORS));
+	ShaInput.obj.enabled(self.getObject(self.ID.ITEM_APPLICATION_FORM));
+	ShaInput.obj.enabled(self.getObject(self.ID.ITEM_APPLICATION_FORM_LBL));	
+	ShaInput.obj.enabledBtn(self.getObject(self.ID.BTN_APPLICATION_FORM_OPEN));
+	//ShaInput.obj.enabledBtn(self.getObject(self.ID.BTN_APPLICATION_FORM_PRINT));
 
 	self.changeOkButtonEnable();
 };
@@ -503,7 +620,11 @@ UserDetail.prototype.setReadonlyExtendDetail = function(){
 	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_WORK_EXPERIENCE));	
 	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_PAPERS));
 	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_HONORS));	
-	
+	ShaInput.obj.disabled(self.getObject(self.ID.ITEM_APPLICATION_FORM));
+	ShaInput.obj.disabled(self.getObject(self.ID.ITEM_APPLICATION_FORM_LBL));
+	ShaInput.obj.disabled(self.getObject(self.ID.ITEM_APPLICATION_FORM_NAME));
+	ShaInput.obj.disabledBtn(self.getObject(self.ID.BTN_APPLICATION_FORM_OPEN));
+	//ShaInput.obj.disabledBtn(self.getObject(self.ID.BTN_APPLICATION_FORM_PRINT));
 
 	self.changeOkButtonEnable();		
 };

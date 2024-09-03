@@ -85,6 +85,7 @@
 <script th:src="@{/js/common/messageDetail.js}"></script>
 <script th:src="@{/js/common/showPhoto.js}"></script>
 <script th:src="@{/js/common/userDetail.js}"></script>
+<script th:src="@{/js/common/passwordChange.js}"></script>
 
 <div th:remove="tag" th:if="${mainKind == 'app'}">
 <!-- 一般画面 -->
@@ -104,6 +105,9 @@
 	
 	<script th:src="@{/js/user/userreview/userReview.js}"></script>
 	
+	<script th:src="@{/js/common/passwordForgetStep1.js}"></script>
+	<script th:src="@{/js/common/passwordForgetStep2.js}"></script>
+	
 </div>
 
 <div th:remove="tag" th:if="${mainKind == 'admin'}">
@@ -113,6 +117,9 @@
 
 	<script th:src="@{/js/admin/login/adminLoginBlock.js}"></script>
 	<script th:src="@{/js/admin/menu/adminMenu.js}"></script>
+	
+	<script th:src="@{/js/admin/adminmanage/adminManageEdit.js}"></script>
+	<script th:src="@{/js/admin/adminmanage/adminManageSearch.js}"></script>
 	
 	<script th:src="@{/js/admin/userreview/adminUserReviewSearch.js}"></script>
 	<script th:src="@{/js/admin/userreview/adminUserReview.js}"></script>

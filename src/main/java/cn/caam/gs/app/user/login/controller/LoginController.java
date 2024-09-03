@@ -34,6 +34,7 @@ import cn.caam.gs.app.util.ControllerHelper;
 import cn.caam.gs.app.util.SessionConstants;
 import cn.caam.gs.common.controller.ScreenBaseController;
 import cn.caam.gs.common.enums.ExecuteReturnType;
+import cn.caam.gs.common.enums.SmsConfigType;
 import cn.caam.gs.common.util.EncryptorUtil;
 import cn.caam.gs.common.util.JsonUtility;
 import cn.caam.gs.common.util.MessageSourceUtil;
@@ -143,13 +144,13 @@ public class LoginController extends ScreenBaseController{
 			}
 		    //X分钟以内只允许发送一次
 			else if (loginForm.getPhoneAuthCode() != null && !StringUtil.isBlank(loginForm.getPhoneUserCode()) && 
-		    		!authCodeService.isCanSendSms(loginForm.getPhoneUserCode(), GlobalConstants.USER_LOGIN_AUTH_CODE_EXPIRED_MINUTE, GlobalConstants.USER_LOGIN_AUTH_CODE_EXPIRED_MINUTE)){
-		    	result = MessageFormat.format(messageSourceUtil.getContext("login.authCode.send.prohibit"), GlobalConstants.USER_LOGIN_AUTH_CODE_EXPIRED_MINUTE);
+		    		!authCodeService.isCanSendSms(loginForm.getPhoneUserCode(), GlobalConstants.AUTH_CODE_EXPIRED_MINUTE, GlobalConstants.AUTH_CODE_SEND_INTERVAL_MINUTE)){
+		    	result = MessageFormat.format(messageSourceUtil.getContext("login.authCode.send.prohibit"), GlobalConstants.AUTH_CODE_SEND_INTERVAL_MINUTE);
 		    }else {
 			    //入力エラーじゃない場合
-		        MAuthCode mauthCode = authCodeService.addPhoneAuthCode(loginForm.getPhoneUserCode(), GlobalConstants.USER_LOGIN_AUTH_CODE_EXPIRED_MINUTE);
+		        MAuthCode mauthCode = authCodeService.addPhoneAuthCode(loginForm.getPhoneUserCode(), GlobalConstants.AUTH_CODE_EXPIRED_MINUTE);
 		        request.getSession().setAttribute(SessionConstants.AUTH_CODE.getValue(), mauthCode);
-		        boolean isOk = authCodeService.sendAuthCode(smsConfig, smsConfig.getUserLoginTemplateId(), mauthCode);
+		        boolean isOk = authCodeService.sendAuthCode(SmsConfigType.COMMON_VERIFICATION_CODE, mauthCode, GlobalConstants.AUTH_CODE_EXPIRED_MINUTE);
 		        if (!isOk) {
 		        	result = messageSourceUtil.getContext("login.authCode.send.error");
 		        }

@@ -264,6 +264,77 @@ try{
 		},
 		
 		//------------------------------------------------------------------------------
+		// execute post ajax with download files, return file
+		//------------------------------------------------------------------------------
+		getWithDownloadFile : function (url, formData, callBackOk) { 
+			ShaDialog.dialogs.progress(true);
+						
+				var paramData = null;
+				//if(arguments.length === 2){
+					paramData = formData;
+				//}
+				$.ajax({
+					   type: "GET",
+					   dataType: 'blob',
+					   url: ShaUtil.util.getFullUrl(url),
+					   data: paramData,
+					   processData: false,
+					   statusCode: {
+						    200: function(data, status, xhr){
+						    	ShaDialog.dialogs.progress(false);
+								var fileName = xhr.getResponseHeader('Content-Disposition').split(";")[1].split("filename=")[1];
+				                var fileNameUnicode = xhr.getResponseHeader('Content-Disposition').split("filename*=")[1];
+				                if (fileNameUnicode) {//当存在 filename* 时，取filename* 并进行解码（为了解决中文乱码问题）
+				                    fileName = decodeURIComponent(fileNameUnicode.split("''")[1]);
+				                }
+						    	callBackOk(data, fileName);
+						    },
+						    400: function(data) {
+						    	ShaDialog.dialogs.progress(false);
+						    	ShaDialog.dialogs.alert(data.responseJSON.message);
+						    },
+						    403: function() {
+						    	ShaDialog.dialogs.progress(false);
+						    	ShaDialog.dialogs.alert(ShaConstants.constants.HTTP_STATUS_403_MSG);
+						    },
+						    404: function() {
+						    	ShaDialog.dialogs.progress(false);
+						    	ShaDialog.dialogs.alert(ShaConstants.constants.HTTP_STATUS_404_MSG);
+						    },
+						    405: function() {
+						    	ShaDialog.dialogs.progress(false);
+						    	ShaDialog.dialogs.alert(ShaConstants.constants.HTTP_STATUS_405_MSG);
+						    },
+						    500: function(data){
+						    	ShaDialog.dialogs.progress(false);
+						    	//alert(JSON.stringify(data));
+						    	if(data.responseJSON.message == 'not login, access denied!'){
+						    		ShaDialog.dialogs.alertWithCallBack(
+						    				ShaConstants.constants.HTTP_STATUS_500_ACCESS_DENY_MSG,
+						    				function(){
+						    					ShaRestful.restful.get('/logout');
+						    				});
+						    		
+						    	}else if(data.responseText != ''){
+						    		var textLength = data.responseText.length;
+						    		if(textLength > 500){
+						    			textLength = 500;
+						    		}
+						    		ShaDialog.dialogs.alert(data.responseText.substr(0, textLength));
+						    	}else{
+						    		var textLength = data.responseJSON.message.length;
+						    		if(textLength > 500){
+						    			textLength = 500;
+						    		}
+						    		ShaDialog.dialogs.alert(data.responseJSON.message.substr(0, textLength));
+						    	}
+						    }
+					   },
+					   timeout: 86400000
+				});
+		},
+		
+		//------------------------------------------------------------------------------
 		// execute post ajax to main div body
 		//------------------------------------------------------------------------------
 		

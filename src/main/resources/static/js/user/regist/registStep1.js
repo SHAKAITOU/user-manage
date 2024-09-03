@@ -79,7 +79,7 @@ RegistStep1.prototype.initEvent = function(){
 						ShaDialog.dialogs.alert(self.i18n["login.regist.step1.authCode.send.error"]);
 					}else if (data === "STEP1_NG_SEND_SMS") {
 						//X分钟以内只允许发送一次
-						ShaDialog.dialogs.alert(ShaUtil.util.format(self.i18n["login.regist.step1.authCode.send.prohibit"], Pos.constants.setInfo.common.user_regist_sms_send_interval));
+						ShaDialog.dialogs.alert(ShaUtil.util.format(self.i18n["login.regist.step1.authCode.send.prohibit"], Pos.constants.setInfo.common.auth_code_send_interval_minute));
 					}else {
 						// go to step2
 						self.getObject(self.ID.ITEM_STEP_STS).val("STEP1_COMMIT"); //go confirm

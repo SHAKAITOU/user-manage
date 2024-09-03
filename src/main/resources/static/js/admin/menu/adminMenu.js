@@ -33,7 +33,10 @@ AdminMenu.prototype.ID = {
     CLASS_NM_USER_SEARCH      		: "menu4001",
     CLASS_NM_MESSAGE_SEARCH         : "menu5001",
     
+	CLASS_NM_ADMIN_EDIT             : "menu9005",
+	CLASS_NM_PASSWORD_RESET         : "menu9002",
     CLASS_NM_LOGOUT                 : "menu9003",
+	CLASS_NM_ADMIN_MANAGE           : "menu9004",
     ITEM_LANGUAGE                   : "language",
     //div
     DIV_MAINBODY                    : "mainBody",
@@ -223,6 +226,48 @@ AdminMenu.prototype.initEvent = function(){
 	    	function(event) {
 				ShaAjax.ajax.get(
 	                self.jsContext.adminJsView.adminMessageSearch.url_init, 
+	                null, 
+	                function(data){
+	                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
+	                }
+	            ); 
+			}
+	    );
+	});
+	
+	//密码修改
+	$buttonList = self.getObjectList(self.ID.CLASS_NM_PASSWORD_RESET);
+    $buttonList.each(function(i, elem){
+	    ShaInput.button.onClick($(elem),
+	    	function(event) {
+				ShaAjax.pop.postDialogMiddleCenter(
+	    			self.i18n["PasswordChange.title"],
+	    			self.jsContext.jsView.passwordChange.url_init, 
+	    			null); 
+			}
+	    );
+	});
+	
+	//个人信息修改
+	$buttonList = self.getObjectList(self.ID.CLASS_NM_ADMIN_EDIT);
+    $buttonList.each(function(i, elem){
+	    ShaInput.button.onClick($(elem),
+	    	function(event) {
+				ShaAjax.pop.postDialogMiddleCenter(
+	    			self.i18n["admin.userEdit.title"],
+	    			self.jsContext.adminJsView.adminManageEdit.url_init_login, 
+	    			null); 
+			}
+	    );
+	});
+	
+	//管理员一览
+	$buttonList = self.getObjectList(self.ID.CLASS_NM_ADMIN_MANAGE);
+	$buttonList.each(function(i, elem){
+	    ShaInput.button.onClick($(elem),
+	    	function(event) {
+				ShaAjax.ajax.get(
+	                self.jsContext.adminJsView.adminManageSearch.url_init, 
 	                null, 
 	                function(data){
 	                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);

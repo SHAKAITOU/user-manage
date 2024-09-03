@@ -4,6 +4,7 @@
 
 //------------constructor define------------[
 Order = function(dataMap){
+	this.fatherForm = $('#userOrderListForm');
     this.form = $('#OrderForm');
     this.jsContext = Pos.constants.setInfo;
     this.i18n = JSON.parse(this.jsContext.i18n);
@@ -20,6 +21,7 @@ Order.prototype.ID = {
 	
 	BTN_CLOSE : "btnClose",
     BTN_ADD   : "btnAdd",
+	SEARCH_BTN_ID :"searchBtn",
     
     PREFIX_NAME                   : "order_",
     ITEM_ORDER_METHOD             : "orderMethod",
@@ -109,7 +111,10 @@ Order.prototype.initEvent = function(){
 					ShaAjax.ajax.postWithUploadFile(
 						self.jsContext.jsView.order.url_order_add, 
 						"OrderForm", 
-						function () {ShaDialog.dialogs.success(self.i18n["dialogs.add.success.msg"]);}
+						function () {
+							ShaDialog.dialogs.success(self.i18n["dialogs.add.success.msg"]);
+							self.getObjectInForm(self.fatherForm, self.ID.SEARCH_BTN_ID).click();
+						}
 					);
 				}
 			);
