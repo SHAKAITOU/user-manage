@@ -48,7 +48,19 @@ AdminMessageSearch.prototype.init = function(){
     //keep self instance for call back
     var self = this;
     
-    $('[data-toggle="tooltip"]').tooltip();
+    //$('[data-toggle="tooltip"]').tooltip();
+	$('[data-toggle="tooltip"]').tooltip({
+	   trigger: 'manual'
+	 }).on('mouseover', function () {
+	   var $this = $(this);
+	   if (this.offsetWidth < this.scrollWidth) {
+		console.log("offsetWidth="+this.offsetWidth + " scrollWidth="+this.scrollWidth);
+	     $this.tooltip('show');
+	   }
+	 }).on('mouseout', function () {
+	   var $this = $(this);
+	   $this.tooltip('hide');
+	 });
     
     //init bond event to btn
     self.initEvent();
@@ -101,7 +113,7 @@ AdminMessageSearch.prototype.initEvent = function(){
     
     ShaInput.button.onClick(self.getObject(self.ID.SEARCH_BTN_ID),
     	function(event) {
-			ShaAjax.ajax.post(
+			ShaAjax.ajax.get(
                 self.jsContext.adminJsView.adminMessageSearch.url_message_list, 
                 self.getForm().serializeArray(), 
                 function(data){
@@ -149,7 +161,7 @@ AdminMessageSearch.prototype.initEvent = function(){
 AdminMessageSearch.prototype.doPageLink = function(){
 	//keep self instance for call back
 	var self = this;
-	ShaAjax.ajax.post(
+	ShaAjax.ajax.get(
         self.jsContext.adminJsView.adminMessageSearch.url_message_list_growing, 
         self.getForm().serializeArray(), 
         function(data){

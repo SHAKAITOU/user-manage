@@ -55,8 +55,13 @@ public class HuaWeiSMSUtil {
     	return sendSms(config, phone, templateParas);
     }
     
-    public static boolean sendUserReviewMessage(SmsConfig config,String phone, String msgBody)  throws Exception{
-    	String templateParas = "[\""+ msgBody+"\"]"; //模板变量
+    public static boolean sendUserReviewMessage(SmsConfig config,String phone)  throws Exception{
+    	String templateParas = ""; //模板变量
+    	return sendSms(config, phone, templateParas);
+    }
+    
+    public static boolean sendPasswordReset(SmsConfig config,String phone, String password)  throws Exception{
+    	String templateParas = "[\""+ password+"\"]"; //模板变量
     	return sendSms(config, phone, templateParas);
     }
 

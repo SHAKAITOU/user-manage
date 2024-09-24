@@ -34,7 +34,7 @@ import cn.caam.gs.domain.tabledef.impl.T104MUserTypeSettings;
 @Component
 public class UserTypeSettingsViewHelper extends HtmlViewHelper {
     // base url
-    public static final String URL_BASE = "/userTypeSettings";
+    public static final String URL_BASE = UrlConstants.ADMIN+"/userTypeSettings";
     
     //init url
     public static final String URL_C_INIT = UrlConstants.INIT;

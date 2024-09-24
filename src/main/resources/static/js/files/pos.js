@@ -119,18 +119,21 @@ try{
 			ShaConstants.constants.NUMBER_ONLY_MSG 	= Pos.constants.setInfo.common.checkNumberOnlyMsg;
 			ShaConstants.constants.MAX_LENGTH_MSG 	= Pos.constants.setInfo.common.checkMaxLengthMsg;
 			ShaConstants.constants.MIN_LENGTH_MSG 	= Pos.constants.setInfo.common.checkMinLengthMsg;
-			ShaConstants.constants.MAX_VALUE_MSG 	= Pos.constants.setInfo.common.checkMaxValueMsg;
-			ShaConstants.constants.MIN_VALUE_MSG 	= Pos.constants.setInfo.common.checkMinValueMsg;
+			ShaConstants.constants.MAX_VALUE_MSG 	= Pos.constants.setInfo.common.checkMaxNumberMsg;
+			ShaConstants.constants.MIN_VALUE_MSG 	= Pos.constants.setInfo.common.checkMinNumberMsg;
 			ShaConstants.constants.REQUIRED_NUMBER_VAL_MSG 	= Pos.constants.setInfo.common.checkRequiredNumberValMsg;
 			
 			ShaConstants.constants.MAX_BILL_AMOUNT 	= Pos.constants.setInfo.common.max_bill_amount;
 			ShaConstants.constants.MIN_BILL_AMOUNT 	= Pos.constants.setInfo.common.min_bill_amount;
 			ShaConstants.constants.IPHONE_NUMBER_MSG= Pos.constants.setInfo.common.checkPhoneNumberMsg;
 			ShaConstants.constants.EMAIL_MSG 	    = Pos.constants.setInfo.common.checkEmailMsg;
+			ShaConstants.constants.CREDIT_CODE_MSG 	    = Pos.constants.setInfo.common.checkCreditCodeMsg;
 			ShaConstants.constants.IPHONE_NUMBER_EXISTED_MSG= Pos.constants.setInfo.common.checkPhoneNumberExistedMsg;
 			ShaConstants.constants.IPHONE_NUMBER_NOT_EXISTED_MSG= Pos.constants.setInfo.common.checkPhoneNumberNotExistedMsg;
 			ShaConstants.constants.EMAIL_EXISTED_MSG= Pos.constants.setInfo.common.checkEmailExistedMsg;
 			ShaConstants.constants.AUTHCODE_ERROR_MSG= Pos.constants.setInfo.common.checkAuthCodeErrorMsg;
+			ShaConstants.constants.USER_CODE_EXISTED_MSG= Pos.constants.setInfo.common.checkUserCodeExistedMsg;
+			ShaConstants.constants.USER_CODE_MSG= Pos.constants.setInfo.common.checkUserCodeMsg;
 			//date time format
 			ShaConstants.constants.DATETIME_FORMAT = Pos.constants.setInfo.common.datetimeFormat;
 			

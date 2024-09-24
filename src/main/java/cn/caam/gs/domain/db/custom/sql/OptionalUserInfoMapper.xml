@@ -4,6 +4,7 @@
     <resultMap id="UserInfoForm" 
                 type="cn.caam.gs.domain.db.custom.entity.UserInfo">
         <id property="id" column="id"/>
+        <result property="userCode"           column="user_card_user_code"/>
         <result property="userTypeName"       column="userTypeName"/>
         <result property="membershipPathName" column="membershipPathName"/>
         <result property="focusOnName"        column="focusOnName"/>
@@ -26,6 +27,9 @@
         </association>
         <association property="userExtend" resultMap="UserExtendForm">
             <id column="id" property="id" jdbcType="VARCHAR" />
+        </association>
+        <association property="userCard" resultMap="UserCardForm">
+            
         </association>
     </resultMap>
     
@@ -50,6 +54,20 @@
 	    <result column="application_form" property="applicationForm" jdbcType="BLOB" />
 	    <result column="application_form_ext" property="applicationFormExt" jdbcType="VARCHAR" />
     </resultMap>
+    
+    <resultMap id="UserCardForm" type="cn.caam.gs.domain.db.base.entity.MUserCard">
+    	<id column="user_card_id" property="id" jdbcType="VARCHAR" />
+	    <result column="user_card_user_id" property="userId" jdbcType="VARCHAR" />
+	    <result column="user_card_user_code" property="userCode" jdbcType="VARCHAR" />
+	    <result column="user_card_valid_status" property="validStatus" jdbcType="VARCHAR" />
+	    <result column="user_card_valid_start_date" property="validStartDate" jdbcType="VARCHAR" />
+	    <result column="user_card_valid_end_date" property="validEndDate" jdbcType="VARCHAR" />
+	    <result column="user_card_created_by" property="createdBy" jdbcType="VARCHAR" />
+	    <result column="user_card_created_at" property="createdAt" jdbcType="VARCHAR" />
+	    <result column="user_card_updated_by" property="updatedBy" jdbcType="VARCHAR" />
+	    <result column="user_card_updated_at" property="updatedAt" jdbcType="VARCHAR" />
+    </resultMap>
+    
     <sql id="baseSelect">
 	    mu.*,
 	    F0002.name   AS userTypeName,
@@ -68,6 +86,9 @@
 	    F0011_2.name AS areaSubName,
 	    F0023.name   AS societyTypeName,
 	    F0024.name   AS checkStatusName
+	    ,muc.id AS user_card_id
+		,muc.user_id AS user_card_user_id
+		,muc.user_code AS user_card_user_code
     </sql>
     <sql id="baseJoin">
     	LEFT JOIN m_fixed_value F0002   ON mu.user_type       = F0002.value   AND F0002.code   = 'F0002'
@@ -86,6 +107,7 @@
 		LEFT JOIN m_fixed_value F0011_2 ON mu.area_sub        = F0011_2.value AND F0011_2.code = 'F0011'
 		LEFT JOIN m_fixed_value F0024   ON mu.check_status    = F0024.value   AND F0024.code   = 'F0024'
 		LEFT JOIN m_fixed_value F0023   ON mu.society_type    = F0023.value   AND F0023.code   = 'F0023'
+		LEFT JOIN m_user_card muc       ON mu.id = muc.user_id AND muc.valid_status='1'
     </sql>
     <sql id="baseConition">
     	<if test="user != null and user.name != null and user.name != ''" >
@@ -138,7 +160,7 @@
 	        ]]>
 		</if>
 		<if test="user != null and user.id != null and user.id != ''" >
-	        and mu.id like concat(concat('%', #{user.id, jdbcType=NVARCHAR}), '%') 
+	        and muc.user_code like concat(concat('%', #{user.id, jdbcType=NVARCHAR}), '%') 
 		</if>
 		<if test="user != null and user.userType != null and user.userType != '00'" >
 	        and mu.user_type = #{user.userType, jdbcType=NVARCHAR}
@@ -150,17 +172,28 @@
 	        and mu.political = #{user.political, jdbcType=NVARCHAR}
 		</if>
 		<if test="searchMode != null and searchMode =='waitList'" >
-	        and mu.check_status IN ('01')
+	        and mu.check_status IN ('02')
 		</if>
 		<if test="searchMode != null and searchMode =='reviewedList'" >
-	        and mu.check_status IN ('02', '03', '04')
+	        and mu.check_status IN ('03')
 		</if>
+		and deleted = 0
+    </sql>
+    <sql id="baseSelect2">
+	     mu.*
+	    ,muc.id AS user_card_id
+		,muc.user_id AS user_card_user_id
+		,muc.user_code AS user_card_user_code
+    </sql>
+    <sql id="baseJoin2">
+		LEFT JOIN m_user_card muc ON mu.id = muc.user_id and muc.valid_status='1'
     </sql>
     <!-- SQL CHIP -->
 	<select id="getUserListCount" resultType="int">
 		SELECT COUNT(mu.id)
 		FROM
 		    m_user mu 
+		    LEFT JOIN m_user_card muc ON mu.id = muc.user_id and muc.valid_status='1'
 		WHERE 1=1
 			<include refid="baseConition"/>
 	</select>
@@ -181,33 +214,37 @@
     
     <select id="getLoginUserInfo" resultMap="UserInfoForm">
         SELECT
-			mu.*
+			<include refid="baseSelect2"/>
 		FROM
 		    m_user mu
+		    <include refid="baseJoin2"/>
 		WHERE
-			mu.id = #{userCode, jdbcType=NVARCHAR}
+			(muc.user_code = #{userCode, jdbcType=NVARCHAR}
 			OR
 			mu.phone = #{userCode, jdbcType=NVARCHAR}
 			OR
-			mu.mail = #{userCode, jdbcType=NVARCHAR}
+			mu.mail = #{userCode, jdbcType=NVARCHAR})
+			and deleted = 0
     </select>
     
     <select id="getLoginUserInfoByPhone" resultMap="UserInfoForm">
         SELECT
-			mu.*
+			<include refid="baseSelect2"/>
 		FROM
 		    m_user mu
+		    <include refid="baseJoin2"/>
 		WHERE
 			mu.phone = #{phone, jdbcType=NVARCHAR}
-			and
-			(mu.valid_status='1' or check_status='01')
+			and (mu.valid_status='1' or check_status='01')
+			and deleted = 0
     </select>
     
     <select id="getBaseUserInfo" resultMap="UserInfoForm">
         SELECT
-			mu.*
+			<include refid="baseSelect2"/>
 		FROM
 		    m_user mu
+		    <include refid="baseJoin2"/>
 		WHERE
 			mu.id = #{userId, jdbcType=NVARCHAR}
     </select>
@@ -232,7 +269,7 @@
 			mue.vocational_at,
 			mue.vocational_at_ext,
 			mue.application_form,
-			mue.application_form_ext					    
+			mue.application_form_ext
 		FROM
 		    m_user mu 
 		    LEFT JOIN m_user_extend mue ON mu.id = mue.id
@@ -258,7 +295,12 @@
 		FROM
 		    m_user mu 
 		WHERE
-			mu.phone = #{phone, jdbcType=NVARCHAR} limit 1) mu
+			mu.phone = #{phone, jdbcType=NVARCHAR} 
+			and deleted = 0
+			<if test="userId != null and userId != ''" >
+				 and mu.id != #{userId, jdbcType=NVARCHAR} 
+			</if>
+			limit 1) mu
 	</select>
 	
 	<select id="isEmailExist" resultType="boolean">
@@ -267,7 +309,44 @@
 		FROM
 		    m_user mu 
 		WHERE
-			mu.mail = #{mail, jdbcType=NVARCHAR} limit 1) mu
+			mu.mail = #{mail, jdbcType=NVARCHAR} 
+			and mu.deleted = 0
+			limit 1) mu
 	</select>
+	
+	<select id="isUserCodeExist" resultType="boolean">
+		SELECT COUNT(1) FROM 
+		(SELECT 1
+		FROM
+		    m_user mu 
+		    LEFT JOIN m_user_card muc ON mu.id = muc.user_id 
+		WHERE
+			muc.user_code = #{userCode, jdbcType=NVARCHAR}
+			and mu.deleted = 0
+			limit 1) mu
+	</select>
+	
+	<select id="getUserCard" resultMap="UserCardForm">
+        SELECT
+		    muc.id user_card_id,
+		    muc.user_id user_card_user_id,
+			muc.user_code user_card_user_code					    
+		FROM
+		    m_user_card muc
+		WHERE
+			muc.user_id = #{userId, jdbcType=NVARCHAR}
+			and muc.valid_status='1'
+    </select>
+    
+    <select id="getUserCardByUserCode" resultMap="UserCardForm">
+        SELECT
+		    muc.id user_card_id,
+		    muc.user_id user_card_user_id,
+			muc.user_code user_card_user_code					    
+		FROM
+		    m_user_card muc
+		WHERE
+			muc.user_code = #{userCode, jdbcType=NVARCHAR}
+    </select>
     
 </mapper>

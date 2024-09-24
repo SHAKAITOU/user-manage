@@ -46,7 +46,6 @@ AdminUserReview.prototype.init = function(){
     //init bond event to btn
     self.initEvent();
 
-
 };
 
 // init event
@@ -85,7 +84,7 @@ AdminUserReview.prototype.initEvent = function(){
 			            function(data){
 							if (data == Pos.constants.setInfo.common.executeReturnTypeOk) {
 								ShaDialog.dialogs.success(self.i18n["dialogs.add.success.msg"]);
-								ShaAjax.ajax.post(
+								ShaAjax.ajax.get(
 					                self.jsContext.adminJsView.adminUserReviewSearch.url_user_list, 
 									null, 
 					                function(data){
@@ -105,7 +104,7 @@ AdminUserReview.prototype.initEvent = function(){
     //init event to BTN_BACK
 	ShaInput.button.onClick(self.getObject(self.ID.BTN_BACK), 
 		function(event) {
-			ShaAjax.ajax.post(
+			ShaAjax.ajax.get(
                 self.jsContext.adminJsView.adminUserReviewSearch.url_user_list, 
                 //[{name:"searchMode",     value:"waitList"}],
 				null, 

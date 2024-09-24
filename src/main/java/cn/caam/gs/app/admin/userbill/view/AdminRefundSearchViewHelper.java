@@ -193,7 +193,7 @@ public class AdminRefundSearchViewHelper extends HtmlViewHelper {
         name      = clmForm.getPageName("") + "From";
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName() + getContext("common.page.start");
-        String placeholder = T100MUser.getColumnInfo(T100MUser.COL_VALID_END_DATE).getPlaceholder();
+        String placeholder = T200MOrder.getColumnInfo(T200MOrder.COL_REFUND_DATE).getPlaceholder();
         contextList.add(LabelDateInputSet.builder()
                 .id(id).name(name).labelName(labelName).placeholder(placeholder)
                 .fontSize(font).grids(CssGridsType.G4).outPutType(LabelDateInputSetType.WITH_LABEL_FOOT).build().html());

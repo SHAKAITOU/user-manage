@@ -233,6 +233,10 @@ public class IconSet {
         STAMP            ("fa fa-stamp"),
         
         BILL             ("fa fa-clipboard"),
+        
+        EXPORT             ("fa fa-file-export"),
+        
+        IMPORT             ("fa fa-file-import"),
         ;
         
         /** type. */

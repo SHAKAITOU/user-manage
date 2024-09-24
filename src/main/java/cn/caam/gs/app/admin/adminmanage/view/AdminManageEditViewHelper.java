@@ -17,6 +17,7 @@ import cn.caam.gs.app.admin.adminmanage.form.AdminUserDetailForm;
 import cn.caam.gs.app.dbmainten.form.ColumnInfoForm;
 import cn.caam.gs.app.util.SessionConstants;
 import cn.caam.gs.common.bean.ViewData;
+import cn.caam.gs.common.enums.AcceptFileType;
 import cn.caam.gs.common.enums.AdminUserType;
 import cn.caam.gs.common.enums.CellWidthType;
 import cn.caam.gs.common.enums.CssAlignType;
@@ -239,7 +240,7 @@ public class AdminManageEditViewHelper extends HtmlViewBaseHelper {
         labelName   = getContext("common.page.File");
         value       = "";
         contextList.add(LabelFileSet.builder()
-                .id(idFile).idLablel(idLbl).name(name).labelName(labelName).placeholder(placeholder)
+                .id(idFile).idLablel(idLbl).name(name).labelName(labelName).placeholder(placeholder).acceptFileType(AcceptFileType.IMAGE)
                 .fontSize(font).grids(CssGridsType.G9).build().html());
         String context = getContext("common.page.showImg");
         String  comp1 = button().getBorder(IconSetType.EYE, CssClassType.INFO, CssGridsType.G3, idFileOpen, context);

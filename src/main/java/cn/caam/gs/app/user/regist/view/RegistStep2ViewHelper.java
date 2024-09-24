@@ -186,14 +186,16 @@ public class RegistStep2ViewHelper extends HtmlViewBaseHelper {
         property  = "nationality";
         name      = prefix_name + property;
         labelName = getContext(prefix_label + property);
+        String defaultValue = "";//GlobalConstants.DFL_NATIONALITY
         radios = new ArrayList<>();
+        addDefaultHtmlRadio(radios, labelName);
         List<FixValueInfo> nationalityList = fixedValueMap.get(FixedValueType.NATIONALITY);
         for (FixValueInfo fValueInfo : nationalityList) {
             radios.add(new HtmlRadio(fValueInfo.getValueObj().getValue(), fValueInfo.getValueObj().getName()));
         }
         contextList.add(LabelSelectSet.builder()
                 .id(convertNameDotForId(name)).name(name).labelName(labelName)
-                .radios(radios).selectedValue(GlobalConstants.DFL_NATIONALITY)
+                .radios(radios).selectedValue(defaultValue)
                 .fontSize(font).grids(CssGridsType.G12).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
         
         sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
@@ -203,14 +205,16 @@ public class RegistStep2ViewHelper extends HtmlViewBaseHelper {
         property  = "political";
         name      = prefix_name + property;
         labelName = getContext(prefix_label + property);
+        defaultValue = "";//GlobalConstants.DFL_POLITICAL
         radios = new ArrayList<>();
+        addDefaultHtmlRadio(radios, labelName);
         List<FixValueInfo> politicalList = fixedValueMap.get(FixedValueType.POLITICAL);
         for (FixValueInfo fValueInfo : politicalList) {
             radios.add(new HtmlRadio(fValueInfo.getValueObj().getValue(), fValueInfo.getValueObj().getName()));
         }
         contextList.add(LabelSelectSet.builder()
                 .id(convertNameDotForId(name)).name(name).labelName(labelName)
-                .radios(radios).selectedValue(GlobalConstants.DFL_POLITICAL)
+                .radios(radios).selectedValue(defaultValue)
                 .fontSize(font).grids(CssGridsType.G12).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
         
         sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
@@ -220,14 +224,16 @@ public class RegistStep2ViewHelper extends HtmlViewBaseHelper {
         property  = "edu_degree";
         name      = prefix_name + "eduDegree";
         labelName = getContext(prefix_label + property);
+        defaultValue = "";//GlobalConstants.DFL_POLITICAL
         radios = new ArrayList<>();
+        addDefaultHtmlRadio(radios, labelName);
         List<FixValueInfo> eduDegreeList = fixedValueMap.get(FixedValueType.EDU_DEGREE);
         for (FixValueInfo fValueInfo : eduDegreeList) {
             radios.add(new HtmlRadio(fValueInfo.getValueObj().getValue(), fValueInfo.getValueObj().getName()));
         }
         contextList.add(LabelSelectSet.builder()
                 .id(convertNameDotForId(name)).name(name).labelName(labelName)
-                .radios(radios).selectedValue(GlobalConstants.DFL_POLITICAL)
+                .radios(radios).selectedValue(defaultValue)
                 .fontSize(font).grids(CssGridsType.G12).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
         
         sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
@@ -237,14 +243,16 @@ public class RegistStep2ViewHelper extends HtmlViewBaseHelper {
         property  = "bachelor";
         name      = prefix_name + property;
         labelName = getContext(prefix_label + property);
+        defaultValue = "";//GlobalConstants.DFL_POLITICAL
         radios = new ArrayList<>();
+        addDefaultHtmlRadio(radios, labelName);
         List<FixValueInfo> bachelorList = fixedValueMap.get(FixedValueType.BACHELOR);
         for (FixValueInfo fValueInfo : bachelorList) {
             radios.add(new HtmlRadio(fValueInfo.getValueObj().getValue(), fValueInfo.getValueObj().getName()));
         }
         contextList.add(LabelSelectSet.builder()
                 .id(convertNameDotForId(name)).name(name).labelName(labelName)
-                .radios(radios).selectedValue(GlobalConstants.DFL_POLITICAL)
+                .radios(radios).selectedValue(defaultValue)
                 .fontSize(font).grids(CssGridsType.G12).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
         
         sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
@@ -254,14 +262,16 @@ public class RegistStep2ViewHelper extends HtmlViewBaseHelper {
         property  = "position";
         name      = prefix_name + property;
         labelName = getContext(prefix_label + property);
+        defaultValue = "";//GlobalConstants.DFL_POLITICAL
         radios = new ArrayList<>();
+        addDefaultHtmlRadio(radios, labelName);
         List<FixValueInfo> positionList = fixedValueMap.get(FixedValueType.POSITION);
         for (FixValueInfo fValueInfo : positionList) {
             radios.add(new HtmlRadio(fValueInfo.getValueObj().getValue(), fValueInfo.getValueObj().getName()));
         }
         contextList.add(LabelSelectSet.builder()
                 .id(convertNameDotForId(name)).name(name).labelName(labelName)
-                .radios(radios).selectedValue(GlobalConstants.DFL_POLITICAL)
+                .radios(radios).selectedValue(defaultValue)
                 .fontSize(font).grids(CssGridsType.G12).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
         
         sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
@@ -284,9 +294,11 @@ public class RegistStep2ViewHelper extends HtmlViewBaseHelper {
         property  = "job_title";
         name      = prefix_name + "jobTitle";
         labelName = getContext(prefix_label + property);
+        defaultValue = "";//GlobalConstants.DFL_POLITICAL
         radios = new ArrayList<>();
         List<FixValueInfo> jobTitleList = fixedValueMap.get(FixedValueType.JOB_TITLE);
         Map<HtmlRadio, List<HtmlRadio>> radioMap = new LinkedHashMap<HtmlRadio, List<HtmlRadio>>();
+        radioMap.put(getDefaultHtmlRadio(labelName), null);
         for (FixValueInfo fValueInfo : jobTitleList) {
             List<HtmlRadio> subList = new ArrayList<HtmlRadio>();
             if (fValueInfo.getSubList() != null && fValueInfo.getSubList().size() > 0) {
@@ -300,7 +312,7 @@ public class RegistStep2ViewHelper extends HtmlViewBaseHelper {
         }
         contextList.add(LabelSelectGroupSet.builder()
                 .id(convertNameDotForId(name)).name(name).labelName(labelName)
-                .radioMap(radioMap).selectedValue(GlobalConstants.DFL_POLITICAL)
+                .radioMap(radioMap).selectedValue(defaultValue)
                 .fontSize(font).grids(CssGridsType.G12).outPutType(LabelSelectGroupSetType.WITH_LABEL).build().html());
         
         sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
@@ -310,14 +322,16 @@ public class RegistStep2ViewHelper extends HtmlViewBaseHelper {
         property  = "membership_path";
         name      = prefix_name + "membershipPath";
         labelName = getContext(prefix_label + property);
+        defaultValue = GlobalConstants.DFL_MEMBERSHIP_PATH_GANSU;
         radios = new ArrayList<>();
+        addDefaultHtmlRadio(radios, labelName);
         List<FixValueInfo> membershipPathList = fixedValueMap.get(FixedValueType.MEMBERSHIP_PATH);
         for (FixValueInfo fValueInfo : membershipPathList) {
             radios.add(new HtmlRadio(fValueInfo.getValueObj().getValue(), fValueInfo.getValueObj().getName()));
         }
         contextList.add(LabelSelectSet.builder()
                 .id(convertNameDotForId(name)).name(name).labelName(labelName)
-                .radios(radios).selectedValue(GlobalConstants.DFL_MEMBERSHIP_PATH_GANSU)
+                .radios(radios).selectedValue(defaultValue)
                 .fontSize(font).grids(CssGridsType.G12).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
         
         sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
@@ -327,14 +341,16 @@ public class RegistStep2ViewHelper extends HtmlViewBaseHelper {
         property  = "focus_on";
         name      = prefix_name + "focusOn";
         labelName = getContext(prefix_label + property);
+        defaultValue = GlobalConstants.DFL_MEMBERSHIP_PATH_GANSU;
         radios = new ArrayList<>();
+        addDefaultHtmlRadio(radios, labelName);
         List<FixValueInfo> focusOnList = fixedValueMap.get(FixedValueType.MEMBERSHIP_PATH);
         for (FixValueInfo fValueInfo : focusOnList) {
             radios.add(new HtmlRadio(fValueInfo.getValueObj().getValue(), fValueInfo.getValueObj().getName()));
         }
         contextList.add(LabelSelectSet.builder()
                 .id(convertNameDotForId(name)).name(name).labelName(labelName)
-                .radios(radios).selectedValue(GlobalConstants.DFL_MEMBERSHIP_PATH_GANSU)
+                .radios(radios).selectedValue(defaultValue)
                 .fontSize(font).grids(CssGridsType.G12).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
         
         sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));

@@ -7,6 +7,7 @@ import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -26,6 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 import cn.caam.gs.app.GlobalConstants;
 import cn.caam.gs.app.JavaScriptSet;
 import cn.caam.gs.app.UrlConstants;
+import cn.caam.gs.app.admin.login.view.AdminLoginViewHelper;
 import cn.caam.gs.app.user.login.form.IndexForm;
 import cn.caam.gs.app.user.login.form.LoginForm;
 import cn.caam.gs.app.user.login.view.LoginViewHelper;
@@ -78,7 +81,7 @@ public class LoginController extends ScreenBaseController{
    @Autowired
    SmsConfig smsConfig;
 
-	@GetMapping("")
+	@GetMapping({"", "/"})
 	public ModelAndView index(
 			@RequestParam Map<String,String> allRequestParams,
 			HttpServletRequest request,
@@ -107,7 +110,8 @@ public class LoginController extends ScreenBaseController{
 	}
 	
 	
-	@PostMapping(path=LoginViewHelper.URL_C_LOGIN_INIT)
+//	@PostMapping(path=LoginViewHelper.URL_C_LOGIN_INIT)
+	@RequestMapping(value = AdminLoginViewHelper.URL_C_LOGIN_INIT, method = {RequestMethod.GET,RequestMethod.POST})
 	public ModelAndView initLogin(IndexForm indexForm,
 			HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
@@ -163,7 +167,8 @@ public class LoginController extends ScreenBaseController{
     }	
 	
 
-	@PostMapping(path=LoginViewHelper.URL_C_USER_LOGIN)
+//	@PostMapping(path=LoginViewHelper.URL_C_USER_LOGIN)
+	@RequestMapping(value = AdminLoginViewHelper.URL_C_USER_LOGIN, method = {RequestMethod.GET,RequestMethod.POST})
 	public ModelAndView menu(LoginForm loginForm, Locale loc, 
 			HttpServletRequest request,
 			HttpServletResponse response) {
@@ -198,7 +203,7 @@ public class LoginController extends ScreenBaseController{
 		}else {//会员号登录
 			 userInfo = userService.getLoginUserInfo(loginForm.getUserCode());
 			 
-			 String ePw = EncryptorUtil.encrypt(loginForm.getPassword());
+			 String ePw = EncryptorUtil.encrypt(Optional.ofNullable(loginForm.getPassword()).orElse(""));
 			if (request.getSession().getAttribute(SessionConstants.VERIFY_CODE.getValue()) == null) {
 	            okFlag = false;
 	            loginForm.setErrorMsg(messageSourceUtil.getContext("login.fail.msg.notRightLogin"));

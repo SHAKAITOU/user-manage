@@ -39,13 +39,16 @@ INSERT INTO m_fixed_value VALUES ('F0000', '03', '一般管理员', 3);
 INSERT INTO m_fixed_value VALUES ('F0001', '01', '男', 1);
 INSERT INTO m_fixed_value VALUES ('F0001', '02', '女', 2);
 -- 会员类型 --
+-- INSERT INTO m_fixed_value VALUES ('F0002', '01', '个人会员',         1);
+-- INSERT INTO m_fixed_value VALUES ('F0002', '0101', '普通会员',       1);
+-- INSERT INTO m_fixed_value VALUES ('F0002', '0102', '普通会员(学生)', 2);
+-- INSERT INTO m_fixed_value VALUES ('F0002', '0103', '外籍会员',       3);
+-- INSERT INTO m_fixed_value VALUES ('F0002', '0104', '会士会员',       4);
+-- INSERT INTO m_fixed_value VALUES ('F0002', '02', '团体会员单位',   2);
+-- INSERT INTO m_fixed_value VALUES ('F0002', '0201', '团体会员单位',   1);
 INSERT INTO m_fixed_value VALUES ('F0002', '01', '个人会员',         1);
-INSERT INTO m_fixed_value VALUES ('F0002', '0101', '普通会员',       1);
-INSERT INTO m_fixed_value VALUES ('F0002', '0102', '普通会员(学生)', 2);
-INSERT INTO m_fixed_value VALUES ('F0002', '0103', '外籍会员',       3);
-INSERT INTO m_fixed_value VALUES ('F0002', '0104', '会士会员',       4);
-INSERT INTO m_fixed_value VALUES ('F0002', '02', '团体会员单位',   2);
-INSERT INTO m_fixed_value VALUES ('F0002', '0201', '团体会员单位',   1);
+INSERT INTO m_fixed_value VALUES ('F0002', '0101', '甘肃会员',       1);
+INSERT INTO m_fixed_value VALUES ('F0002', '0105', '中国会员',       2);
 
 -- 政治面貌 --
 INSERT INTO m_fixed_value VALUES ('F0003', '01', '中共党员',       1);
@@ -465,6 +468,7 @@ INSERT INTO m_fixed_value VALUES ('F0017', '03', '增值税普通发票',       
 -- 开票状态 --
 INSERT INTO m_fixed_value VALUES ('F0018', '01', '待开票',    1);
 INSERT INTO m_fixed_value VALUES ('F0018', '02', '已开票',    2);
+INSERT INTO m_fixed_value VALUES ('F0018', '03', '开票申请',  3);
 -- 取票方式 --
 INSERT INTO m_fixed_value VALUES ('F0019', '01', '电子票据',    1);
 -- 订单方式 --
@@ -484,10 +488,11 @@ INSERT INTO m_fixed_value VALUES ('F0023', '01', '中国学会',    1);
 INSERT INTO m_fixed_value VALUES ('F0023', '02', '甘肃学会',    2);
 
 -- 用户审核状态 --
-INSERT INTO m_fixed_value VALUES ('F0024', '01', '等待审核',		1);
-INSERT INTO m_fixed_value VALUES ('F0024', '02', '审核通过',		2);
-INSERT INTO m_fixed_value VALUES ('F0024', '03', '审核不通过',	3);
-INSERT INTO m_fixed_value VALUES ('F0024', '04', '返回修改',		4);
+INSERT INTO m_fixed_value VALUES ('F0024', '01', '新注册',		1);
+INSERT INTO m_fixed_value VALUES ('F0024', '02', '等待审核',		2);
+INSERT INTO m_fixed_value VALUES ('F0024', '03', '审核通过',		3);
+INSERT INTO m_fixed_value VALUES ('F0024', '04', '审核不通过',	4);
+INSERT INTO m_fixed_value VALUES ('F0024', '05', '返回修改',		5);
 
 -- 短信模板类型 --
 INSERT INTO m_fixed_value VALUES ('F0025', '01', '会员注册验证码通知模板',		1);
@@ -497,6 +502,14 @@ INSERT INTO m_fixed_value VALUES ('F0025', '04', '用户审核不通过通知模
 INSERT INTO m_fixed_value VALUES ('F0025', '05', '用户审核返回修改通知模板',	5);
 INSERT INTO m_fixed_value VALUES ('F0025', '06', '管理员创建通知模板',			6);
 
+-- 有效状态 --
+INSERT INTO m_fixed_value VALUES ('F0026', '0', '无效',    1);
+INSERT INTO m_fixed_value VALUES ('F0026', '1', '有效',    2);
+
+-- 抬头类型 --
+INSERT INTO m_fixed_value VALUES ('F0027', '01', '个人',    1);
+INSERT INTO m_fixed_value VALUES ('F0027', '02', '单位',    2);
+
 -- 会员基本信息 --
 DROP TABLE IF EXISTS m_user;
 CREATE TABLE m_user
@@ -504,10 +517,10 @@ CREATE TABLE m_user
     id               VARCHAR(20)  NOT NULL COMMENT '会员号(M/TYYMMDDHHmmSSR2)',
     name             VARCHAR(70)  NOT NULL COMMENT '会员名称(max64)',
     user_type        VARCHAR(6)   NOT NULL COMMENT '会员类型(F0002)',
-    password         VARCHAR(200) NOT NULL COMMENT '密码',
+    password         VARCHAR(200)          COMMENT '密码',
     membership_path  VARCHAR(6)            COMMENT '入会途径(F0012)',
     focus_on         VARCHAR(255)          COMMENT '关注(F0012)',
-    sex              VARCHAR(6)   NOT NULL COMMENT '性别(F0001)',
+    sex              VARCHAR(6)           COMMENT '性别(F0001)',
     birth            VARCHAR(10)           COMMENT '出生年月',
     nationality      VARCHAR(6)            COMMENT '民族(F0005)',
     political        VARCHAR(6)            COMMENT '政治面貌(F0003)',
@@ -534,7 +547,12 @@ CREATE TABLE m_user
     valid_end_date   VARCHAR(20)           COMMENT '有效结束日期(yyyy-MM-dd HH:mm:ss)',
     society_type     VARCHAR(6)            COMMENT '学会区分(F0023)',
     group_name       VARCHAR(120)          COMMENT '团体证名称',
+    deleted          int 	    DEFAULT 0  COMMENT '删除标记',
     credit_code      VARCHAR(120)          COMMENT '统一社会信用代码',
+    created_by       VARCHAR(20)           COMMENT '管理员号(AYYMMDDHHmmSSR2)',
+    created_at       VARCHAR(20)           COMMENT '创建时间(yyyy-MM-dd HH:mm:ss)',
+    updated_by       VARCHAR(20)           COMMENT '管理员号(AYYMMDDHHmmSSR2)',
+    updated_at       VARCHAR(20)           COMMENT '更新时间(yyyy-MM-dd HH:mm:ss)',
     PRIMARY KEY (id)
 ) COMMENT='会员基本信息' ENGINE=InnoDB DEFAULT CHARSET=utf8;
 CREATE INDEX m_user_idx1 ON m_user (name);
@@ -543,7 +561,7 @@ CREATE INDEX m_user_idx2 ON m_user (phone);
 DROP TABLE IF EXISTS m_user_extend;
 CREATE TABLE m_user_extend
 ( 
-    id                 VARCHAR(20)  NOT NULL COMMENT '(M/TYYMMDDHHmmSSR2)',
+    id                 VARCHAR(50)  NOT NULL COMMENT 'UUID',
     introducer1        VARCHAR(50)           COMMENT '介绍人1(max32)',
     introducer2        VARCHAR(50)           COMMENT '介绍人2(max32)',
     photo              MEDIUMBLOB            COMMENT '2寸证件照jpg/png/jpeg200k',
@@ -570,19 +588,21 @@ CREATE TABLE m_user_extend
 DROP TABLE IF EXISTS m_user_card;
 CREATE TABLE m_user_card
 ( 
-	id               VARCHAR(20)    NOT NULL COMMENT '会员号(M/TYYMMDDHHmmSSR2)',
+	id               VARCHAR(50)    NOT NULL COMMENT 'UUID',
 	user_id          VARCHAR(50)    NOT NULL COMMENT 'UUID',
-	valid_status     VARCHAR(6)              COMMENT '有效状态',
+	user_code        VARCHAR(20)    NOT NULL COMMENT '会员号(M/TYYMMDDHHmmSSR2)',
+	valid_status     VARCHAR(2)              COMMENT '有效状态(F0026)',
 	valid_start_date VARCHAR(20)             COMMENT '有效开始日期(yyyy-MM-dd HH:mm:ss)',
     valid_end_date   VARCHAR(20)             COMMENT '有效结束日期(yyyy-MM-dd HH:mm:ss)',
-    created_by       VARCHAR(20)    NOT NULL COMMENT '管理员号(AYYMMDDHHmmSSR2)',
-    created_at       VARCHAR(20)    NOT NULL COMMENT '创建时间(yyyy-MM-dd HH:mm:ss)',
+    created_by       VARCHAR(20)             COMMENT '管理员号(AYYMMDDHHmmSSR2)',
+    created_at       VARCHAR(20)             COMMENT '创建时间(yyyy-MM-dd HH:mm:ss)',
     updated_by       VARCHAR(20)    		 COMMENT '管理员号(AYYMMDDHHmmSSR2)',
     updated_at       VARCHAR(20)             COMMENT '更新时间(yyyy-MM-dd HH:mm:ss)',
 
     PRIMARY KEY (id)
-) COMMENT='会员扩展信息' ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) COMMENT='会员卡信息' ENGINE=InnoDB DEFAULT CHARSET=utf8;
 CREATE INDEX m_user_card_idx1 ON m_user_card (user_id);
+CREATE UNIQUE INDEX m_user_card_idx2 ON m_user_card (user_code);
 
 -- 会员会费相关设定 --
 DROP TABLE IF EXISTS m_user_type_settings;
@@ -622,7 +642,7 @@ DROP TABLE IF EXISTS m_order;
 CREATE TABLE m_order
 ( 
     id               VARCHAR(30)    NOT NULL COMMENT '订单号(yyyyMMddHHmmssSSSR7)',
-    user_id          VARCHAR(20)    NOT NULL COMMENT '会员号(M/TYYMMDDHHmmSSR2)',
+    user_id          VARCHAR(50)    NOT NULL COMMENT 'UUID',
     pay_path         VARCHAR(3)     NOT NULL COMMENT '缴费渠道(F0012)',
     order_method     VARCHAR(3)     NOT NULL COMMENT '订单方式(F0020)',
     order_type       VARCHAR(3)     NOT NULL COMMENT '订单类型(F0015)',
@@ -637,6 +657,11 @@ CREATE TABLE m_order
     bill_status      VARCHAR(3)            COMMENT '开票状态(F0018)',
     memo             VARCHAR(255)          COMMENT '备注(max250)',
     ans              VARCHAR(255)          COMMENT '回执(max250)',
+    invoice_type     VARCHAR(2)            COMMENT '发票抬头类型(F0027)',
+    invoice_title    VARCHAR(64)           COMMENT '发票抬头',
+    invoice_amount   DECIMAL(10, 2)        COMMENT '发票金额',
+    credit_code      VARCHAR(20)           COMMENT '纳税人识别号',
+    mail             VARCHAR(70)           COMMENT '电子邮箱(max64)',
     PRIMARY KEY (id)
 ) COMMENT='会员订单信息' ENGINE=InnoDB DEFAULT CHARSET=utf8;
 CREATE INDEX m_order_idx1 ON m_order (user_id);
@@ -646,12 +671,14 @@ DROP TABLE IF EXISTS m_bill;
 CREATE TABLE m_bill
 ( 
     id               VARCHAR(30)    NOT NULL COMMENT '订单号(yyyyMMddHHmmssSSSR7)',
-    user_id          VARCHAR(20)    NOT NULL COMMENT '会员号(M/TYYMMDDHHmmSSR2)',
+    user_id          VARCHAR(50)    NOT NULL COMMENT 'UUID',
     bill_code        VARCHAR(50)             COMMENT '发票代码',
     bill_type        VARCHAR(3)              COMMENT '发票类型(F0017)',
     bill_amount      DECIMAL(10, 2) NOT NULL COMMENT '开票金额',
-    bill_title       VARCHAR(20)    NOT NULL COMMENT '发票抬头',
-    credit_code      VARCHAR(20)             COMMENT '统一社会信用代码',
+    invoice_type     VARCHAR(2)              COMMENT '发票抬头类型',
+    invoice_title    VARCHAR(64)    NOT NULL COMMENT '发票抬头',
+    credit_code      VARCHAR(20)             COMMENT '纳税人识别号',
+    mail             VARCHAR(70)             COMMENT '电子邮箱(max64)',
     bill_date        VARCHAR(20)             COMMENT '开票时间(yyyy-MM-dd HH:mm:ss)',
     check_status     VARCHAR(3)              COMMENT '审核状态(F0013)',
     vote_method      VARCHAR(3)              COMMENT '取票方式(F0019)',
@@ -681,8 +708,8 @@ CREATE TABLE m_image
     id               VARCHAR(50)    NOT NULL COMMENT '订单号(yyyyMMddHHmmssSSSR7)',
     order_photo      MEDIUMBLOB              COMMENT '订单图片',
     order_photo_ext  VARCHAR(10)             COMMENT '订单图片文件扩展名',
-    bill_photo       MEDIUMBLOB              COMMENT '发票图片',
-    bill_photo_ext   VARCHAR(10)             COMMENT '发票图片文件扩展名',
+    bill_photo       MEDIUMBLOB              COMMENT '发票文件',
+    bill_photo_ext   VARCHAR(10)             COMMENT '发票文件扩展名',
     PRIMARY KEY (id)
 ) COMMENT='订单发票图片信息' ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -692,7 +719,7 @@ CREATE TABLE m_message
 ( 
     id               VARCHAR(50)    NOT NULL COMMENT '站内消息ID(yyyyMMddHHmmssR3)',
     msg_type         VARCHAR(6)     NOT NULL COMMENT '站内消息类型(F0021)',
-    user_id          VARCHAR(20)             COMMENT '会员号(M/TYYMMDDHHmmSSR2)',
+    user_id          VARCHAR(20)             COMMENT 'UUID',
     title            VARCHAR(255)   NOT NULL COMMENT '标题',
     msg              TEXT           NOT NULL COMMENT '消息内容',
     regist_date      VARCHAR(20)             COMMENT '消息时间(yyyy-MM-dd HH:mm:ss)',
@@ -706,7 +733,7 @@ DROP TABLE IF EXISTS m_message_read;
 CREATE TABLE m_message_read
 ( 
     id               VARCHAR(50)    NOT NULL COMMENT '站内消息ID(yyyyMMddHHmmssR3)',
-    user_id          VARCHAR(20)             COMMENT '会员号(M/TYYMMDDHHmmSSR2)',
+    user_id          VARCHAR(20)             COMMENT 'UUID',
     PRIMARY KEY (id)
 ) COMMENT='站内消息已读状态' ENGINE=InnoDB DEFAULT CHARSET=utf8;
 CREATE INDEX m_message_read_idx1 ON m_message_read (user_id);
@@ -737,7 +764,11 @@ CREATE UNIQUE INDEX m_sms_config_idx1 ON m_sms_config (template_type);
 INSERT INTO m_sms_config(id,template_type,template_id,template_name,api_url,app_key,app_secret,sender,signature,created_by,created_at,updated_by,updated_at) VALUES(UUID(),"01","ca9ac74114b04d2da7b257c39b89d98d","会员注册验证码通知模板","https://smsapi.cn-north-4.myhuaweicloud.com:443/sms/batchSendSms/v1","zn7A3K61J3bz808w7671r4Mw0Rl9","0x1Ey9niYOt4yEv9VvKkcxh1kOaI","8824082205484","甘肃省针灸学会","9999",NOW(),NULL,NULL);
 INSERT INTO m_sms_config(id,template_type,template_id,template_name,api_url,app_key,app_secret,sender,signature,created_by,created_at,updated_by,updated_at) VALUES(UUID(),"02","a31e0b64caa1446ca21f5a7642abb45b","会员验证码通知模板","https://smsapi.cn-north-4.myhuaweicloud.com:443/sms/batchSendSms/v1","zn7A3K61J3bz808w7671r4Mw0Rl9","0x1Ey9niYOt4yEv9VvKkcxh1kOaI","8824082205484","甘肃省针灸学会","9999",NOW(),NULL,NULL);
 -- 通知类
-INSERT INTO m_sms_config(id,template_type,template_id,template_name,api_url,app_key,app_secret,sender,signature,created_by,created_at,updated_by,updated_at) VALUES(UUID(),"03","","用户审核通过通知模板","https://smsapi.cn-north-4.myhuaweicloud.com:443/sms/batchSendSms/v1","zn7A3K61J3bz808w7671r4Mw0Rl9","0x1Ey9niYOt4yEv9VvKkcxh1kOaI","8824082205510","甘肃省针灸学会","9999",NOW(),NULL,NULL);
-INSERT INTO m_sms_config(id,template_type,template_id,template_name,api_url,app_key,app_secret,sender,signature,created_by,created_at,updated_by,updated_at) VALUES(UUID(),"04","","用户审核不通过通知模板","https://smsapi.cn-north-4.myhuaweicloud.com:443/sms/batchSendSms/v1","zn7A3K61J3bz808w7671r4Mw0Rl9","0x1Ey9niYOt4yEv9VvKkcxh1kOaI","8824082205510","甘肃省针灸学会","9999",NOW(),NULL,NULL);
-INSERT INTO m_sms_config(id,template_type,template_id,template_name,api_url,app_key,app_secret,sender,signature,created_by,created_at,updated_by,updated_at) VALUES(UUID(),"05","","用户审核返回修改通知模板","https://smsapi.cn-north-4.myhuaweicloud.com:443/sms/batchSendSms/v1","zn7A3K61J3bz808w7671r4Mw0Rl9","0x1Ey9niYOt4yEv9VvKkcxh1kOaI","8824082205510","甘肃省针灸学会","9999",NOW(),NULL,NULL);
-INSERT INTO m_sms_config(id,template_type,template_id,template_name,api_url,app_key,app_secret,sender,signature,created_by,created_at,updated_by,updated_at) VALUES(UUID(),"06","","管理员创建通知模板","https://smsapi.cn-north-4.myhuaweicloud.com:443/sms/batchSendSms/v1","zn7A3K61J3bz808w7671r4Mw0Rl9","0x1Ey9niYOt4yEv9VvKkcxh1kOaI","8824082205510","甘肃省针灸学会","9999",NOW(),NULL,NULL);
+INSERT INTO m_sms_config(id,template_type,template_id,template_name,api_url,app_key,app_secret,sender,signature,created_by,created_at,updated_by,updated_at) VALUES(UUID(),"03","20b7538df114416781a38e8dc3049b5a","用户审核通过通知模板","https://smsapi.cn-north-4.myhuaweicloud.com:443/sms/batchSendSms/v1","zn7A3K61J3bz808w7671r4Mw0Rl9","0x1Ey9niYOt4yEv9VvKkcxh1kOaI","8824082205510","甘肃省针灸学会","9999",NOW(),NULL,NULL);
+INSERT INTO m_sms_config(id,template_type,template_id,template_name,api_url,app_key,app_secret,sender,signature,created_by,created_at,updated_by,updated_at) VALUES(UUID(),"04","3377f1d924134e72bb75b16fbf219bbb","用户审核不通过通知模板","https://smsapi.cn-north-4.myhuaweicloud.com:443/sms/batchSendSms/v1","zn7A3K61J3bz808w7671r4Mw0Rl9","0x1Ey9niYOt4yEv9VvKkcxh1kOaI","8824082205510","甘肃省针灸学会","9999",NOW(),NULL,NULL);
+INSERT INTO m_sms_config(id,template_type,template_id,template_name,api_url,app_key,app_secret,sender,signature,created_by,created_at,updated_by,updated_at) VALUES(UUID(),"05","13cd8c937c82420b80db8c7fd4e8453d","用户审核返回修改通知模板","https://smsapi.cn-north-4.myhuaweicloud.com:443/sms/batchSendSms/v1","zn7A3K61J3bz808w7671r4Mw0Rl9","0x1Ey9niYOt4yEv9VvKkcxh1kOaI","8824082205510","甘肃省针灸学会","9999",NOW(),NULL,NULL);
+INSERT INTO m_sms_config(id,template_type,template_id,template_name,api_url,app_key,app_secret,sender,signature,created_by,created_at,updated_by,updated_at) VALUES(UUID(),"06","a258e93ca6b2475ea8728d95b946644d","管理员创建通知模板","https://smsapi.cn-north-4.myhuaweicloud.com:443/sms/batchSendSms/v1","zn7A3K61J3bz808w7671r4Mw0Rl9","0x1Ey9niYOt4yEv9VvKkcxh1kOaI","8824082205510","甘肃省针灸学会","9999",NOW(),NULL,NULL);
+INSERT INTO m_sms_config(id,template_type,template_id,template_name,api_url,app_key,app_secret,sender,signature,created_by,created_at,updated_by,updated_at) VALUES(UUID(),"07","12a6274e987c414c98bdef0c95627f7e","管理员密码重置模板","https://smsapi.cn-north-4.myhuaweicloud.com:443/sms/batchSendSms/v1","zn7A3K61J3bz808w7671r4Mw0Rl9","0x1Ey9niYOt4yEv9VvKkcxh1kOaI","8824082205510","甘肃省针灸学会","9999",NOW(),NULL,NULL);
+INSERT INTO m_sms_config(id,template_type,template_id,template_name,api_url,app_key,app_secret,sender,signature,created_by,created_at,updated_by,updated_at) VALUES(UUID(),"08","ead4a059630848cdaaafcda1014a507f","会员密码重置模板","https://smsapi.cn-north-4.myhuaweicloud.com:443/sms/batchSendSms/v1","zn7A3K61J3bz808w7671r4Mw0Rl9","0x1Ey9niYOt4yEv9VvKkcxh1kOaI","8824082205510","甘肃省针灸学会","9999",NOW(),NULL,NULL);
+
+

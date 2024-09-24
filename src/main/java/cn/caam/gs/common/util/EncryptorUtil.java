@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalTime;
 import java.util.Properties;
 
 import javax.crypto.BadPaddingException;
@@ -23,7 +24,9 @@ import com.google.code.kaptcha.util.Config;
 
 import cn.caam.gs.app.util.SessionConstants;
 import cn.caam.gs.common.exception.ShaApiException;
+import cn.caam.gs.common.util.LocalDateUtility.DatePattern;
 import cn.caam.gs.common.util.LocalDateUtility.DateTimePattern;
+import cn.caam.gs.common.util.LocalDateUtility.TimePattern;
 
 public class EncryptorUtil {
 	
@@ -123,6 +126,11 @@ public class EncryptorUtil {
         String randomSubfix = defaultKaptcha.createText();
         
         return prefix + randomSubfix;
+    }
+    
+    public static String generateGansuUserCode() {
+    	return "G"+LocalDateUtility.getCurrentDateString(DatePattern.UUUUMMDD)+LocalDateUtility.formatTime(LocalTime.now(), TimePattern.HHMISS);
+        
     }
 
     /*

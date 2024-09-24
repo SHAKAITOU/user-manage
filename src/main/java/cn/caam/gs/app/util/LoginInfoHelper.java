@@ -139,4 +139,14 @@ public class LoginInfoHelper {
 		
 		return false;
 	}
+	
+	public static String getLoginId(HttpServletRequest request) {
+		if (request.getSession().getAttribute(SessionConstants.LOGIN_INFO.getValue()) instanceof UserInfo){
+			return ((UserInfo)request.getSession().getAttribute(SessionConstants.LOGIN_INFO.getValue())).getUserCode();
+		}else if (request.getSession().getAttribute(SessionConstants.LOGIN_INFO.getValue()) instanceof MAdmin){
+			return ((MAdmin)request.getSession().getAttribute(SessionConstants.LOGIN_INFO.getValue())).getId();
+		}
+		
+		return "";
+	}
 }

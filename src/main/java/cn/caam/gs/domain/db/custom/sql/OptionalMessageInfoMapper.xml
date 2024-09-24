@@ -4,6 +4,8 @@
     <resultMap id="MessageInfoForm" 
                 type="cn.caam.gs.domain.db.custom.entity.MessageInfo">
         <id property="id" column="id"/>
+        <result property="userName"      column="userName"/>
+        <result property="userCode"      column="userCode"/>
         <result property="msgTypeName"   column="msgTypeName"/>
         <result property="readSts"       column="readSts"/>
         
@@ -22,17 +24,30 @@
     </resultMap>
     <sql id="baseSelect">
 	    mm.*,
+	    mu.name AS userName,
+	    muc.user_code AS userCode,
 	    F0021.name   AS msgTypeName
     </sql>
     <sql id="baseJoin">
+        LEFT JOIN m_user mu ON mm.user_id = mu.id
+    	LEFT JOIN m_user_card muc ON mu.id = muc.user_id AND muc.valid_status='1'
 		LEFT JOIN m_fixed_value F0021   ON mm.msg_type        = F0021.value   AND F0021.code   = 'F0021'
     </sql>
     <sql id="baseCondition">
     	<if test="message != null and message.msgType != null and message.msgType != '' and message.msgType != '00' " >
 	        and mm.msg_type = #{message.msgType, jdbcType=NVARCHAR}
 		</if>
+		<if test="message != null and message.title != null and message.title != '' " >
+	        and mm.title like concat(concat('%', #{message.title, jdbcType=NVARCHAR}), '%') 
+		</if>
 		<if test="message != null and message.userId != null and message.userId != ''" >
-	        and mm.user_id like concat(concat('%', #{message.userId, jdbcType=NVARCHAR}), '%') 
+	        and mm.user_id =#{message.userId, jdbcType=NVARCHAR}
+		</if>
+		<if test="userName != null and userName != ''" >
+	        and mu.name like concat(concat('%', #{userName, jdbcType=NVARCHAR}), '%') 
+		</if>
+		<if test="userCode != null and userCode != ''" >
+	        and muc.user_code like concat(concat('%', #{userCode, jdbcType=NVARCHAR}), '%') 
 		</if>
     	<if test="registDateFrom != null and registDateFrom != ''" >
 	        <![CDATA[
@@ -50,6 +65,7 @@
 		SELECT COUNT(mm.id)
 		FROM
 		    m_message mm 
+		    <include refid="baseJoin"/>
 		WHERE
 		    1=1
 		    <include refid="baseCondition"/>

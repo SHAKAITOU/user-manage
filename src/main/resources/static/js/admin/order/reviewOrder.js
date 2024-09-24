@@ -90,7 +90,7 @@ ReviewOrder.prototype.initEvent = function(){
     //init event to BTN_CLOSE
 	ShaInput.button.onClick(self.getObject(self.ID.BTN_BACK), 
 		function(event) {
-			ShaAjax.ajax.post(
+			ShaAjax.ajax.get(
                 self.jsContext.adminJsView.adminOrderSearch.url_order_list_review, 
                 null, 
                 function(data){

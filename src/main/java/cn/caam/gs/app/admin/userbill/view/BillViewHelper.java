@@ -15,6 +15,7 @@ import cn.caam.gs.app.dbmainten.form.ColumnInfoForm;
 import cn.caam.gs.app.util.HtmlViewHelper;
 import cn.caam.gs.app.util.SessionConstants;
 import cn.caam.gs.common.bean.ViewData;
+import cn.caam.gs.common.enums.AcceptFileType;
 import cn.caam.gs.common.enums.BillType;
 import cn.caam.gs.common.enums.CellWidthType;
 import cn.caam.gs.common.enums.CssAlignType;
@@ -119,7 +120,7 @@ public class BillViewHelper extends HtmlViewHelper {
         
         //会员号(M/TYYMMDDHHmmSSR2)
         labelName = T200MOrder.getColumnInfo(T200MOrder.COL_USER_ID).getLabelName() + UtilConstants.COLON;
-        context   = orderInfo.getUserName() + "(" + orderInfo.getOrder().getUserId() + ")";
+        context   = orderInfo.getUserName() + "(" + orderInfo.getUserCode() + ")";
         contextList.add(DivAlertSet.builder().gridFlexType(GridFlexType.LEFT)
                 .grids(CssGridsType.G12).classType(CssClassType.INFO)
                 .contexts(new String[] {labelName, context}).build().html());
@@ -132,7 +133,7 @@ public class BillViewHelper extends HtmlViewHelper {
                 .grids(CssGridsType.G12).classType(CssClassType.INFO)
                 .contexts(new String[] {labelName, context}).build().html());
         sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
-        sb.append(borderCard().noTitleWithScroll("", CssClassType.SUCCESS, "", 320,
+        sb.append(borderCard().noTitleWithScroll("", CssClassType.SUCCESS, "", 430,
                 setOrderPanel(request, orderInfo)));
         
         return sb.toString();
@@ -146,7 +147,7 @@ public class BillViewHelper extends HtmlViewHelper {
         List<String> contextList = new ArrayList<String>();
 
         
-        //-----row 3-------------[
+        //-----row 1-------------[
        
         //发票代码選択
         ColumnInfoForm clmForm = T201MBill.getColumnInfo(T201MBill.COL_BILL_CODE);
@@ -160,9 +161,9 @@ public class BillViewHelper extends HtmlViewHelper {
                 .fontSize(font).grids(CssGridsType.G12).build().html());
 
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
-        //-----row 3-------------]
+        //-----row 1-------------]
         
-        //-----row 4-------------[
+        //-----row 2-------------[
         contextList = new ArrayList<String>();
         
         //发票类型(F0017)選択
@@ -181,9 +182,9 @@ public class BillViewHelper extends HtmlViewHelper {
                 .fontSize(font).grids(CssGridsType.G12).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
 
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
-        //-----row 4-------------]
+        //-----row 2-------------]
         
-        //-----row 5-------------[
+        //-----row -------------[
         contextList = new ArrayList<String>();
         //开票金额入力値
         clmForm = T201MBill.getColumnInfo(T201MBill.COL_BILL_AMOUNT);
@@ -191,24 +192,26 @@ public class BillViewHelper extends HtmlViewHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        contextList.add(LabelNumberSet.builder()
-                .id(id).name(name).labelName(labelName).notBlank(true)
+        contextList.add(LabelInputSet.builder()
+                .id(id).name(name).labelName(labelName).value(String.valueOf(orderInfo.getOrder().getOrderAmount().intValue()))
+                .notBlank(true).readonly(true)
                 .maxlength(GlobalConstants.AMOUNT_MAX_L).placeholder(placeholder)
                 .fontSize(font).grids(CssGridsType.G12).build().html());
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
-        //-----row 5-------------]
+        //-----row -------------]
         
         //-----row 6-------------[
         contextList = new ArrayList<String>();
         //发票抬头入力値
-        clmForm = T201MBill.getColumnInfo(T201MBill.COL_BILL_TITLE);
+        clmForm = T201MBill.getColumnInfo(T201MBill.COL_INVOICE_TITLE);
         name      = clmForm.getPageName(PREFIX_NAME);
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
         contextList.add(LabelInputSet.builder()
-                .id(id).name(name).labelName(labelName).notBlank(true)
-                .maxlength(GlobalConstants.BILL_TITLE_MAX_L).placeholder(placeholder)
+                .id(id).name(name).labelName(labelName).value(nonNull(orderInfo.getOrder().getInvoiceTitle()))
+                .notBlank(true).readonly(true)
+                .maxlength(GlobalConstants.INVOICE_TITLE_MAX_L).placeholder(placeholder)
                 .fontSize(font).grids(CssGridsType.G12).build().html());
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
         //-----row 6-------------]
@@ -222,8 +225,9 @@ public class BillViewHelper extends HtmlViewHelper {
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
         contextList.add(LabelInputSet.builder()
-                .id(id).name(name).labelName(labelName).notBlank(true)
-                .maxlength(GlobalConstants.BILL_TITLE_MAX_L).placeholder(placeholder)
+                .id(id).name(name).labelName(labelName).value(nonNull(orderInfo.getOrder().getCreditCode()))
+                .notBlank(true).readonly(true)
+                .maxlength(GlobalConstants.INVOICE_TITLE_MAX_L).placeholder(placeholder)
                 .fontSize(font).grids(CssGridsType.G12).build().html());
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
         //-----row 7-------------]
@@ -278,8 +282,8 @@ public class BillViewHelper extends HtmlViewHelper {
         String idLbl       = idFile + "Lbl";
         String idFileName  = idFile + "Name";
 
-        labelName   = getContext("admin.addBillImg");
-        placeholder = getContext("m_user_extend.bachelor_at.placeholder");
+        labelName   = getContext("m_image.bill_photo");
+        placeholder = getContext("m_image.bill_photo.placeholder");
         contextList.add(LabelInputSet.builder()
                 .id(idFileName).labelName(labelName).placeholder(placeholder).notBlank(true)
                 .fontSize(font).grids(CssGridsType.G12).build().html());
@@ -292,7 +296,7 @@ public class BillViewHelper extends HtmlViewHelper {
         
         labelName   = getContext("common.page.File");
         contextList.add(LabelFileSet.builder()
-                .id(idFile).idLablel(idLbl).name(name).labelName(labelName).placeholder(placeholder)
+                .id(idFile).idLablel(idLbl).name(name).labelName(labelName).placeholder(placeholder).acceptFileType(AcceptFileType.PDF)
                 .fontSize(font).grids(CssGridsType.G8).build().html());
 
         

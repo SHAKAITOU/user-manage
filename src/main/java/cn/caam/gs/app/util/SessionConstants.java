@@ -49,6 +49,8 @@ public enum SessionConstants {
     USER_REVIEW_SEARCH_FORM("userReviewSearchForm", true),
     
     USER_SEARCH_FORM("userSearchForm", true),
+    
+    ORDER_SEARCH_FORM("orderSearchForm", true),
 	;
 	
 	private String value;

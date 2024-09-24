@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import cn.caam.gs.app.admin.usersearch.form.UserSearchForm;
+import cn.caam.gs.domain.db.base.entity.MUserCard;
 import cn.caam.gs.domain.db.base.entity.MUserExtend;
 import cn.caam.gs.domain.db.custom.entity.UserInfo;
 
@@ -25,7 +26,13 @@ public interface OptionalUserInfoMapper {
 	
 	MUserExtend getUserPhoto(@Param("userId") String userId);
 	
-	boolean isPhoneNumberExist(@Param("phone") String phone);
+	MUserCard getUserCard(@Param("userId") String userId);
+	
+	MUserCard getUserCardByUserCode(@Param("userCode") String userCode);
+	
+	boolean isPhoneNumberExist(@Param("phone") String phone, String userId);
 	
 	boolean isEmailExist(@Param("mail") String mail);
+	
+	boolean isUserCodeExist(@Param("userCode") String userCode);
 }

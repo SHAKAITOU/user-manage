@@ -15,19 +15,31 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import cn.caam.gs.app.GlobalConstants;
 import cn.caam.gs.app.admin.usersearch.form.UserSearchForm;
+import cn.caam.gs.app.common.form.IdForm;
+import cn.caam.gs.app.common.form.OrderSearchForm;
 import cn.caam.gs.app.common.form.UserDetailForm;
+import cn.caam.gs.app.common.output.OrderListOutput;
 import cn.caam.gs.app.common.view.UserDetailViewHelper;
 import cn.caam.gs.app.util.ControllerHelper;
 import cn.caam.gs.app.util.LoginInfoHelper;
 import cn.caam.gs.app.util.SessionConstants;
 import cn.caam.gs.common.controller.ScreenBaseController;
+import cn.caam.gs.common.enums.DownloadFileType;
+import cn.caam.gs.common.enums.ExecuteReturnType;
 import cn.caam.gs.common.enums.LoginAccountType;
+import cn.caam.gs.common.enums.PageModeType;
 import cn.caam.gs.common.util.MessageSourceUtil;
+import cn.caam.gs.domain.db.base.entity.MOrder;
+import cn.caam.gs.domain.db.base.entity.MUser;
+import cn.caam.gs.domain.db.base.entity.MUserCard;
+import cn.caam.gs.domain.db.base.entity.MUserExtend;
 import cn.caam.gs.domain.db.custom.entity.UserInfo;
+import cn.caam.gs.service.impl.OrderService;
 import cn.caam.gs.service.impl.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,6 +63,9 @@ public class UserDetailController extends ScreenBaseController{
 	
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+    OrderService orderService;
 
 	@GetMapping(path=UserDetailViewHelper.URL_USER_DETAIL_INIT)
     public ModelAndView init(
@@ -62,22 +77,97 @@ public class UserDetailController extends ScreenBaseController{
 	    userDetailForm.setId(userInfo.getUser().getId());
 	    userDetailForm.setUserInfo(userService.getUserInfo(userInfo.getUser().getId()));
 	    
-        return ControllerHelper.getModelAndView(UserDetailViewHelper.getMainPage(request, userDetailForm));
+        return ControllerHelper.getModelAndView(UserDetailViewHelper.getMainPage(request, userDetailForm, new OrderListOutput(), PageModeType.EDIT_BY_USER));
 
     }
 	
-	@PostMapping(path=UserDetailViewHelper.URL_USER_DETAIL_FROM_ADMIN_INIT)
+	@GetMapping(path=UserDetailViewHelper.URL_USER_DETAIL_FROM_ADMIN_INIT)
     public ModelAndView adminInit(
-    		UserSearchForm pageForm,
+    		IdForm pageForm,
             HttpServletRequest request,
             HttpServletResponse response)  {
-		request.getSession().setAttribute(SessionConstants.USER_SEARCH_FORM.getValue(), pageForm);
-	    UserInfo userInfo = userService.getUserInfo(pageForm.getSelectedUserId());
+	    UserInfo userInfo = userService.getUserInfo(pageForm.getId());
 	    UserDetailForm userDetailForm = new UserDetailForm();
 	    userDetailForm.setId(userInfo.getUser().getId());
 	    userDetailForm.setUserInfo(userInfo);
 	    
-        return ControllerHelper.getModelAndView(UserDetailViewHelper.getMainPage(request, userDetailForm));
+	    OrderSearchForm orderSearchForm = new OrderSearchForm();
+	    MOrder mOrder = new MOrder();
+	    mOrder.setUserId(userInfo.getUser().getId());
+	    orderSearchForm.setOrder(mOrder);
+	    orderSearchForm.setOrderPageLinkIdPrefixIndex(0);
+	    orderSearchForm.setLimit(99999);
+        OrderListOutput orderListOutput = orderService.getOrderList(orderSearchForm);
+	    
+        return ControllerHelper.getModelAndView(UserDetailViewHelper.getMainPage(request, userDetailForm, orderListOutput, PageModeType.EDIT_BY_ADMIN));
+    }
+	
+//	@GetMapping(path=UserDetailViewHelper.URL_USER_DETAIL_FROM_ADMIN_INIT)
+//    public ModelAndView adminInit(
+//    		UserSearchForm pageForm,
+//            HttpServletRequest request,
+//            HttpServletResponse response)  {
+////		request.getSession().setAttribute(SessionConstants.USER_SEARCH_FORM.getValue(), pageForm);
+//	    UserInfo userInfo = userService.getUserInfo(pageForm.getSelectedUserId());
+//	    UserDetailForm userDetailForm = new UserDetailForm();
+//	    userDetailForm.setId(userInfo.getUser().getId());
+//	    userDetailForm.setUserInfo(userInfo);
+//	    
+//	    OrderSearchForm orderSearchForm = new OrderSearchForm();
+//	    MOrder mOrder = new MOrder();
+//	    mOrder.setUserId(userInfo.getUser().getId());
+//	    orderSearchForm.setOrder(mOrder);
+//	    orderSearchForm.setOrderPageLinkIdPrefixIndex(0);
+//	    orderSearchForm.setLimit(99999);
+//        OrderListOutput orderListOutput = orderService.getOrderList(orderSearchForm);
+//	    
+//        return ControllerHelper.getModelAndView(UserDetailViewHelper.getMainPage(request, userDetailForm, orderListOutput, PageModeType.EDIT_BY_ADMIN));
+//    }
+	
+//	@PostMapping(path=UserDetailViewHelper.URL_USER_DETAIL_FROM_ADMIN_INIT)
+//    public ModelAndView adminInitFromOrder(
+//    		OrderSearchForm pageForm,
+//            HttpServletRequest request,
+//            HttpServletResponse response)  {
+//		request.getSession().setAttribute(SessionConstants.ORDER_SEARCH_FORM.getValue(), pageForm);
+//	    UserInfo userInfo = userService.getUserInfo(pageForm.getUserId());
+//	    UserDetailForm userDetailForm = new UserDetailForm();
+//	    userDetailForm.setId(userInfo.getUser().getId());
+//	    userDetailForm.setUserInfo(userInfo);
+//	    
+//        return ControllerHelper.getModelAndView(UserDetailViewHelper.getMainPage(request, userDetailForm));
+//
+//    }
+	
+	@PostMapping(path=UserDetailViewHelper.URL_USER_DETAIL_ADD_INIT)
+    public ModelAndView addInit(
+    		UserSearchForm pageForm,
+            HttpServletRequest request,
+            HttpServletResponse response)  {
+		 UserDetailForm userDetailForm = new UserDetailForm();
+		    
+		    UserInfo userInfo = new UserInfo();
+		    userInfo.setUser(new MUser());
+		    userInfo.setUserExtend(new MUserExtend());
+		    userInfo.setUserCard(new MUserCard());
+		    userDetailForm.setUserInfo(userInfo);
+		    
+	        return ControllerHelper.getModelAndView(UserDetailViewHelper.getMainPage(request, userDetailForm, new OrderListOutput(), PageModeType.INSERT_BY_ADMIN));
+    }
+	
+	@PostMapping(path=UserDetailViewHelper.URL_USER_DETAIL_ADD)
+    public ModelAndView add(
+    		@ModelAttribute UserDetailForm pageForm,
+            HttpServletRequest request,
+            HttpServletResponse response)  throws Exception {
+	    
+		String id = userService.insertUserInfo(request, pageForm);
+	    
+//		UserDetailForm userDetailForm = new UserDetailForm();
+		pageForm.setId(id);
+		pageForm.setUserInfo(userService.getUserInfo(id));
+	    
+        return ControllerHelper.getModelAndView(UserDetailViewHelper.getMainPage(request, pageForm, new OrderListOutput(), PageModeType.EDIT_BY_ADMIN));
 
     }
 	
@@ -92,14 +182,27 @@ public class UserDetailController extends ScreenBaseController{
 		}else {
 			userInfo = userService.getUserInfo(pageForm.getUserInfo().getUser().getId());
 		}
-	    userService.updateUserInfo(pageForm);
+	    userService.updateUserInfo(request, pageForm);
 	    
-	    UserDetailForm userDetailForm = new UserDetailForm();
-	    userDetailForm.setId(userInfo.getUser().getId());
-	    userDetailForm.setUserInfo(userService.getUserInfo(userInfo.getUser().getId()));
+//	    UserDetailForm userDetailForm = new UserDetailForm();
+	    pageForm.setId(userInfo.getUser().getId());
+	    pageForm.setUserInfo(userService.getUserInfo(userInfo.getUser().getId()));
 	    
-        return ControllerHelper.getModelAndView(UserDetailViewHelper.getMainPage(request, userDetailForm));
+        return ControllerHelper.getModelAndView(UserDetailViewHelper.getMainPage(request, pageForm, new OrderListOutput(), 
+        		LoginInfoHelper.isAdminLogin(request) ? PageModeType.EDIT_BY_ADMIN:PageModeType.EDIT_BY_USER));
 
+    }
+	
+	@PostMapping(path=UserDetailViewHelper.URL_USER_DETAIL_DELETE)
+	@ResponseBody
+    public int delete(
+    		@ModelAttribute IdForm pageForm,
+            HttpServletRequest request,
+            HttpServletResponse response)  throws Exception {
+		
+	    userService.deleteUserInfo(request, pageForm.getId());
+	    
+	    return ExecuteReturnType.OK.getId();
     }
 	
 	@GetMapping(path=UserDetailViewHelper.URL_USER_DETAIL_PRINT)
@@ -120,16 +223,13 @@ public class UserDetailController extends ScreenBaseController{
 		}
     }
 	
-	@GetMapping(path=UserDetailViewHelper.URL_USER_DETAIL_DOWNLOAD+"/{id}")
+	@GetMapping(path=UserDetailViewHelper.URL_USER_DETAIL_DOWNLOAD+"/{id}/{type}")
     public void download(
     		@PathVariable("id") String id,
+    		@PathVariable("type") String type,
             HttpServletRequest request,
             HttpServletResponse response)  throws Exception {
-    	response.setHeader(HttpHeaders.PRAGMA, "No-cache");
-	    response.setHeader(HttpHeaders.CACHE_CONTROL, "No-cache");
-	    String filename = URLEncoder.encode(GlobalConstants.APPLICATION_FORM_NAME+".pdf","UTF-8");
-	    response.setHeader("Content-Disposition", "attachment; filename="+filename+";"+"filename*=utf-8''"+filename);
-	    response.setContentType("application/pdf;charset=UTF-8");
-	    userService.downloadAppliactionForm(id, response.getOutputStream());
+	    DownloadFileType fileType = DownloadFileType.keyOf(type);
+	    userService.downloadFile(id, fileType, response);
     }
 }

@@ -6,7 +6,9 @@ public enum SmsConfigType {
 	USER_REVIEW_OK				(EnumIndex.getNext(),     "03",  true,    "SmsTemplateType.USER_REVIEW_OK", CssClassType.INFO),
 	USER_REVIEW_NG				(EnumIndex.getNext(),     "04",  true,    "SmsTemplateType.USER_REVIEW_NG", CssClassType.INFO),
 	USER_REVIEW_RETURN			(EnumIndex.getNext(),     "05",  true,    "SmsTemplateType.USER_REVIEW_RETURN", CssClassType.INFO),
-	ADMIN_CREATED_NOTIFY		(EnumIndex.getNext(),     "06",  true,    "SmsTemplateType.ADMIN_CREATED_NOTIFY", CssClassType.INFO);
+	ADMIN_CREATED_NOTIFY		(EnumIndex.getNext(),     "06",  true,    "SmsTemplateType.ADMIN_CREATED_NOTIFY", CssClassType.INFO),
+	ADMIN_PASSWORD_RESET		(EnumIndex.getNext(),     "07",  true,    "SmsTemplateType.ADMIN_PASSWORD_RESET", CssClassType.INFO),
+	USER_PASSWORD_RESET			(EnumIndex.getNext(),     "08",  true,    "SmsTemplateType.USER_PASSWORD_RESET", CssClassType.INFO);
 
     /** type. */
     private int id;

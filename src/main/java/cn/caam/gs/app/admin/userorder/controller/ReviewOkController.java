@@ -17,7 +17,6 @@ import cn.caam.gs.app.common.form.IdForm;
 import cn.caam.gs.app.util.ControllerHelper;
 import cn.caam.gs.common.controller.JcbcBaseController;
 import cn.caam.gs.common.enums.ExecuteReturnType;
-import cn.caam.gs.domain.db.base.entity.MUser;
 import cn.caam.gs.domain.db.base.entity.MUserTypeSettings;
 import cn.caam.gs.domain.db.base.mapper.MMessageMapper;
 import cn.caam.gs.domain.db.custom.entity.OrderInfo;

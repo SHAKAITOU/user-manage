@@ -24,6 +24,8 @@ public class GlobalConstants {
     
     public static final String DFL_SELECT_ALL              = "00";
     
+    public static final String DFL_SELECT_DEFAULT          = "";
+    
     public static final String DFL_MEMBERSHIP_PATH_GANSU   = "027";
     
     public static final String DFL_NATIONALITY             = "01";
@@ -41,19 +43,22 @@ public class GlobalConstants {
     public static final int AUTH_CODE_MAX_L            = 6;
     public static final int EMPLOYER_MAX_L             = 60;
     public static final int CERTIFICATE_CODE_MAX_L     = 18;
-    public static final int POST_CODE_MAX_L            = 10;
+    public static final int POST_CODE_MAX_L            = 6;
     public static final int ADDRESS_MAX_L              = 128;
     public static final int INTRODUCER1_MAX_L          = 32;
     public static final int RESEARCH_DIR_MAX_L         = 64;
     public static final int MAJOR_MAX_L                = 36;
     public static final int LEARN_EXPERIENCE_MAX_L     = 250;
     public static final int AMOUNT_MAX_L               = 10;
-    public static final int BILL_CODE_MAX_L            = 50;
-    public static final int BILL_TITLE_MAX_L           = 20;
+    public static final int BILL_CODE_MAX_L            = 12;
+    public static final int INVOICE_TITLE_MAX_L        = 64;
+    public static final int CREDIT_CODE_MAX_L          = 18;
     public static final int REVIEW_MEMO_MAX_L          = 150;
+    public static final int MESSAGE_TITLE_MAX_L        = 100;
+    public static final int MESSAGE_MSG_MAX_L          = 200;
     
-    public static final int MAX_BILL_AMOUNT            = 500;
-    public static final int MIN_BILL_AMOUNT            = 500;
+    public static final int MAX_BILL_AMOUNT            = 10000;
+    public static final int MIN_BILL_AMOUNT            = 1;
     
     public static final int ADD_USER_VLID_MONTHS       = 60;
     

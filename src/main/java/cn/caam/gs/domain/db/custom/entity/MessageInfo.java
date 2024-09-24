@@ -18,6 +18,9 @@ public class MessageInfo {
     private String id;
 	private MMessage message;
 	private MMessageRead messageRead;
+	
+	private String userName;
+	private String userCode;
     
 	/** 未读状态 */
 	private boolean readSts;

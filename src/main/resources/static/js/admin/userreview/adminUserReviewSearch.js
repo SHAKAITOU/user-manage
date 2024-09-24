@@ -129,7 +129,7 @@ AdminUserReviewSearch.prototype.initEvent = function(){
     
     ShaInput.button.onClick(self.getObject(self.ID.SEARCH_BTN_ID),
     	function(event) {
-			ShaAjax.ajax.post(
+			ShaAjax.ajax.get(
                 self.jsContext.adminJsView.adminUserReviewSearch.url_user_list, 
                 self.getForm().serializeArray(), 
                 function(data){
@@ -173,7 +173,7 @@ AdminUserReviewSearch.prototype.initEvent = function(){
 	ShaInput.button.onClick(self.getObject(self.ID.WAITLIST_BTN_ID),
 		function(event) {
 			self.getObject(self.ID.SEARCH_MODE).val(self.ID.SEARCH_MODE_WAIT_LIST);
-			ShaAjax.ajax.post(
+			ShaAjax.ajax.get(
 	            self.jsContext.adminJsView.adminUserReviewSearch.url_user_list, 
 	            self.getForm().serializeArray(), 
 	            function(data){
@@ -187,7 +187,7 @@ AdminUserReviewSearch.prototype.initEvent = function(){
 	ShaInput.button.onClick(self.getObject(self.ID.REVIEWEDLIST_BTN_ID),
 		function(event) {
 			self.getObject(self.ID.SEARCH_MODE).val(self.ID.SEARCH_MODE_REVIEWED_LIST);
-			ShaAjax.ajax.post(
+			ShaAjax.ajax.get(
 	            self.jsContext.adminJsView.adminUserReviewSearch.url_user_list, 
 	            self.getForm().serializeArray(), 
 	            function(data){
@@ -222,7 +222,7 @@ AdminUserReviewSearch.prototype.initEvent = function(){
 		ShaInput.button.onClick($(elem),
 			function(event) {
 				//refresh order list
-				ShaAjax.ajax.post(
+				ShaAjax.ajax.get(
 		            self.jsContext.adminJsView.adminUserReview.url_init, 
 		            [{name:"id",     value:$(elem).attr("data")}], 
 		            function(data){

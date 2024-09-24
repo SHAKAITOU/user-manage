@@ -27,10 +27,11 @@ public class PasswordResetViewHelper extends HtmlViewHelper {
     public static final String URL_BASE = "/passwordReset";
     
     //init url
-    public static final String URL_C_INIT = UrlConstants.INIT;
+//    public static final String URL_C_INIT = UrlConstants.INIT;
     //init url
-    public static final String URL_C_EDIT = UrlConstants.EDIT;  
+    public static final String URL_C_USER_RESET = "/user";
     
+    public static final String URL_C_ADMIN_RESET = "/admin"; 
     
     public static final String MAIN_JS_CLASS  = "PasswordReset";
     public static final String FORM_NAME      = MAIN_JS_CLASS + "Form";
@@ -135,9 +136,9 @@ public class PasswordResetViewHelper extends HtmlViewHelper {
     public static Map<String, String> getJsProperties() {
         Map<String, String> js = new HashMap<String, String>();
         // url
-        js.put("url_init",	URL_BASE + URL_C_INIT); 
-        js.put("url_edit",	URL_BASE + URL_C_EDIT); 
-        
+//        js.put("url_init",	URL_BASE + URL_C_INIT); 
+        js.put("url_user_reset",	URL_BASE + URL_C_USER_RESET); 
+        js.put("url_admin_reset",	URL_BASE + URL_C_ADMIN_RESET); 
         
         return js;
     }

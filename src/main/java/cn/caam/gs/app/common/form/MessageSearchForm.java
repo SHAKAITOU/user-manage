@@ -15,6 +15,8 @@ import lombok.NoArgsConstructor;
 public class MessageSearchForm {
 
 	private MMessage message;
+	private String userName;
+	private String userCode;
 	private String registDateFrom;
 	private String registDateTo;
 	@Default

@@ -27,6 +27,8 @@ UserDetail.prototype.ID = {
 	ITEM_USER_TYPE                : "userType",
 	ITEM_REGIST_DATE              : "registDate",
 	ITEM_VALID_END_DATE           : "validEndDate",
+	ITEM_PHONE                    : "phone",
+	ITEM_MAIL                     : "mail",
 	ITEM_USER_NAME                : "name",
 	ITEM_USER_SEX                 : "sex",
 	ITEM_BIRTH                    : "birth",
@@ -52,23 +54,31 @@ UserDetail.prototype.ID = {
 	
 	ITEM_PHOTO                    : "photoFile",
 	BTN_PHOTO_OPEN                : "photoFileOpen",
+	BTN_PHOTO_DOWNLOAD            : "photoFileDownload",
 	ITEM_PHOTO_LBL                : "photoFileLbl",
 	ITEM_PHOTO_NAME               : "photoFileName",
+	IMG_PHOTO_OLD                 : "photoFileOld",
 	
 	ITEM_EDUCATIONAL_AT           : "educationalAtFile",
 	BTN_EDUCATIONAL_AT_OPEN       : "educationalAtFileOpen",
+	BTN_EDUCATIONAL_AT_DOWNLOAD   : "educationalAtFileDownload",
 	ITEM_EDUCATIONAL_AT_LBL       : "educationalAtFileLbl",
 	ITEM_EDUCATIONAL_AT_NAME      : "educationalAtFileName",
+	IMG_EDUCATIONAL_AT_OLD        : "educationalAtFileOld",
 		
 	ITEM_BACHELOR_AT              : "bachelorAtFile",
 	BTN_BACHELOR_AT_OPEN          : "bachelorAtFileOpen",
+	BTN_BACHELOR_AT_DOWNLOAD      : "bachelorAtFileDownload",
 	ITEM_BACHELOR_AT_LBL          : "bachelorAtFileLbl",
 	ITEM_BACHELOR_AT_NAME         : "bachelorAtFileName",
+	IMG_BACHELOR_AT_OLD           : "bachelorAtFileOld",
 			
 	ITEM_VOCATIONAL_AT            : "vocationalAtFile",
 	BTN_VOCATIONAL_AT_OPEN        : "vocationalAtFileOpen",
+	BTN_VOCATIONAL_AT_DOWNLOAD    : "vocationalAtFileDownload",
 	ITEM_VOCATIONAL_AT_LBL        : "vocationalAtFileLbl",
 	ITEM_VOCATIONAL_AT_NAME       : "vocationalAtFileName",
+	IMG_VOCATIONAL_AT_OLD         : "vocationalAtFileOld",
 	
 	ITEM_MAJOR                    : "major",
 	ITEM_RESEARCH_DIR             : "researchDir",
@@ -84,10 +94,19 @@ UserDetail.prototype.ID = {
 	ITEM_APPLICATION_FORM_LBL     : "applicationFormFileLbl",
 	ITEM_APPLICATION_FORM_NAME    : "applicationFormFileName",
 	
+	PREFIX_USER_CARD_ID           : "userInfo_userCard_",
+	ITEM_USER_CODE                : "userCode",
+	
 	SHOW_BASE_PANEL_BTN_ID        : "showBasePanelBtn",
     HIDE_BASE_PANEL_BTN_ID        : "hideBasePanelBtn",
     SHOW_SELF_PANEL_BTN_ID        : "showSelfPanelBtn",
     HIDE_SELF_PANEL_BTN_ID        : "hideSelfPanelBtn",
+	
+	HIDE_ITEM_PAGE_MODE_TYPE      : "mode_type",
+	PAGE_MODE_TYPE_VIEW           : "view",
+	PAGE_MODE_TYPE_EDIT_BY_USER   : "edit_by_user",
+	PAGE_MODE_TYPE_EDIT_BY_ADMIN  : "edit_by_admin",
+	PAGE_MODE_TYPE_INSERT_BY_ADMIN: "insert_by_admin",
 	
 	BTN_OPEN_EDIT_BASE            : "btnOpenEditBase",
 	BTN_CLOSE_EDIT_BASE           : "btnCloseEditBase",
@@ -97,6 +116,14 @@ UserDetail.prototype.ID = {
 	BTN_TOP              		  : "btnTop",
 	BTN_OK              		  : "btnOk",
 	BTN_BACK              		  : "btnBack",
+	
+	TAB_ID                        : "detailTab",
+	TAB_TITLE_USER_ID             : "userTab",
+	TAB_TITLE_ORDER_ID            : "orderTab",
+	TAB_TITLE_USER_CARD_ID        : "userCardTab",
+	TAB_BODY_USER_ID              : "userTabBody",
+	TAB_BODY_ORDER_ID             : "orderTabBody",
+    TAB_BODY_USER_CARD_ID         : "userCardTabBody",
 	
 	DIV_MAINBODY                  : "mainBody",
 
@@ -119,6 +146,22 @@ UserDetail.prototype.initEvent = function(){
 	
 	//keep self instance for call back
 	var self = this;
+	
+	ShaInput.button.onClick(self.getObject(self.ID.TAB_TITLE_USER_ID), 
+    	function(event) {
+			ShaInput.tab.activeTab(self.getForm(), self.ID.TAB_ID, self.ID.TAB_TITLE_USER_ID, self.ID.TAB_BODY_USER_ID);
+		}
+	);
+	ShaInput.button.onClick(self.getObject(self.ID.TAB_TITLE_ORDER_ID), 
+    	function(event) {
+			ShaInput.tab.activeTab(self.getForm(), self.ID.TAB_ID, self.ID.TAB_TITLE_ORDER_ID, self.ID.TAB_BODY_ORDER_ID);
+		}
+	);
+	ShaInput.button.onClick(self.getObject(self.ID.TAB_TITLE_USER_CARD_ID), 
+    	function(event) {
+			ShaInput.tab.activeTab(self.getForm(), self.ID.TAB_ID, self.ID.TAB_TITLE_USER_CARD_ID, self.ID.TAB_BODY_USER_CARD_ID);
+		}
+	);
 	
 	ShaInput.button.onClick(self.getObject(self.ID.SHOW_BASE_PANEL_BTN_ID),
     	function(event) {
@@ -143,10 +186,24 @@ UserDetail.prototype.initEvent = function(){
 			self.getObject(self.ID.SELF_PANEL_CARD_ID).find(".card-body").hide();
 		}
     );
+	/*
+	ShaInput.button.onChange(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_USER_TYPE), 
+		function(event) {
+			var userType = self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_USER_TYPE).val();
+			if (userType === "0101"){//甘肃协会会员
+				self.getObject(self.ID.PREFIX_USER_CARD_ID + self.ID.ITEM_USER_CODE).val("");
+				ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_USER_CARD_ID + self.ID.ITEM_USER_CODE));
+			}else{
+				ShaInput.obj.enabled(self.getObject(self.ID.PREFIX_USER_CARD_ID + self.ID.ITEM_USER_CODE));
+			}
+		}
+	);
+	self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_USER_TYPE).change();
+	*/
 	
-	self.setReadonlyBaseDetail();
-	self.setReadonlySelfDetail();
-	self.setReadonlyExtendDetail();
+	//self.setReadonlyBaseDetail();
+	//self.setReadonlySelfDetail();
+	//self.setReadonlyExtendDetail();
 	self.changeOkButtonEnable();
 	
 	ShaInput.button.onClick(self.getObject(self.ID.BTN_OPEN_EDIT_BASE), 
@@ -173,17 +230,34 @@ UserDetail.prototype.initEvent = function(){
 	    }
 	);
 	
-	//init event to BTN_BACK
+	//init event to ITEM_REGIST_DATE
+    self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_REGIST_DATE).datepicker({
+        format   : self.dateFormat,
+        language : self.language,
+        clearBtn : self.clearBtn,
+		maxDate: 'now',
+    });
+		
+	//init event to ITEM_VALID_END_DATE
+    self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_VALID_END_DATE).datepicker({
+        format   : self.dateFormat,
+        language : self.language,
+        clearBtn : self.clearBtn,
+		maxDate: 'now',
+    });
+	
+	//init event to ITEM_BIRTH
     self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_BIRTH).datepicker({
         format   : self.dateFormat,
         language : self.language,
-        clearBtn : self.clearBtn
+        clearBtn : self.clearBtn,
+		maxDate: 'now',
     });
     
     //init event to BTN_PHOTO_OPEN
 	ShaInput.button.onClick(self.getObject(self.ID.BTN_PHOTO_OPEN), 
 		function(event) {
-			if (self.getObject(self.ID.ITEM_ORDER_PHOTO).val() === "") {
+			/*if (self.getObject(self.ID.ITEM_ORDER_PHOTO).val() === "") {
 				return;
 			}
     		ShaInput.img.previewInDialog(
@@ -194,14 +268,31 @@ UserDetail.prototype.initEvent = function(){
 					var html = ShaInput.img.previewImgCardHtml(260, 250, "ShaDialog.dialogs.subSubDialogClose();", imgData);
 					ShaDialog.dialogs.subSubDialogSmallCenter(title,html);
 				}
-    		);
+    		);*/
+			var newImg = new Image();
+		    newImg.onload = function() {
+		    	var imgH = newImg.height;
+		    	var imgW = newImg.width;
+		    	var title = self.i18n["m_user_extend.photo"];
+				var html = ShaInput.img.previewOrigImgCardHtml(770, 450, imgW, imgH,
+					"ShaDialog.dialogs.subSubDialogClose();", self.getObject(self.ID.IMG_PHOTO_OLD).attr("src"));
+				ShaDialog.dialogs.subSubDialogLargeCenter(title,html);
+		    }
+			newImg.src = self.getObject(self.ID.IMG_PHOTO_OLD).attr("src");
+	    }
+	);
+	
+	//init event to BTN_PHOTO_OPEN
+	ShaInput.button.onClick(self.getObject(self.ID.BTN_PHOTO_DOWNLOAD), 
+		function(event) {
+			self.download("photo");
 	    }
 	);
 	
 	//init event to BTN_EDUCATIONAL_AT_OPEN
 	ShaInput.button.onClick(self.getObject(self.ID.BTN_EDUCATIONAL_AT_OPEN), 
 		function(event) {
-			if (self.getObject(self.ID.ITEM_EDUCATIONAL_AT).val() === "") {
+			/*if (self.getObject(self.ID.ITEM_EDUCATIONAL_AT).val() === "") {
 				return;
 			}
     		ShaInput.img.previewInDialog(
@@ -212,14 +303,31 @@ UserDetail.prototype.initEvent = function(){
 					var html = ShaInput.img.previewImgCardHtml(260, 250, "ShaDialog.dialogs.subSubDialogClose();", imgData);
 					ShaDialog.dialogs.subSubDialogSmallCenter(title,html);
 				}
-    		);
+    		);*/
+			var newImg = new Image();
+		    newImg.onload = function() {
+		    	var imgH = newImg.height;
+		    	var imgW = newImg.width;
+		    	var title = self.i18n["m_user_extend.educational_at"];
+				var html = ShaInput.img.previewOrigImgCardHtml(770, 450, imgW, imgH,
+					"ShaDialog.dialogs.subSubDialogClose();", self.getObject(self.ID.IMG_EDUCATIONAL_AT_OLD).attr("src"));
+				ShaDialog.dialogs.subSubDialogLargeCenter(title,html);
+		    }
+			newImg.src = self.getObject(self.ID.IMG_EDUCATIONAL_AT_OLD).attr("src");
+	    }
+	);
+	
+	//init event to BTN_EDUCATIONAL_AT_DOWNLOAD
+	ShaInput.button.onClick(self.getObject(self.ID.BTN_EDUCATIONAL_AT_DOWNLOAD), 
+		function(event) {
+			self.download("educational");
 	    }
 	);
 	
 	//init event to BTN_BACHELOR_AT_OPEN
 	ShaInput.button.onClick(self.getObject(self.ID.BTN_BACHELOR_AT_OPEN), 
 		function(event) {
-			if (self.getObject(self.ID.ITEM_BACHELOR_AT).val() === "") {
+			/*if (self.getObject(self.ID.ITEM_BACHELOR_AT).val() === "") {
 				return;
 			}
     		ShaInput.img.previewInDialog(
@@ -230,25 +338,47 @@ UserDetail.prototype.initEvent = function(){
 					var html = ShaInput.img.previewImgCardHtml(260, 250, "ShaDialog.dialogs.subSubDialogClose();", imgData);
 					ShaDialog.dialogs.subSubDialogSmallCenter(title,html);
 				}
-    		);
+    		);*/
+			var newImg = new Image();
+		    newImg.onload = function() {
+		    	var imgH = newImg.height;
+		    	var imgW = newImg.width;
+		    	var title = self.i18n["m_user_extend.bachelor_at"];
+				var html = ShaInput.img.previewOrigImgCardHtml(770, 450, imgW, imgH,
+					"ShaDialog.dialogs.subSubDialogClose();", self.getObject(self.ID.IMG_BACHELOR_AT_OLD).attr("src"));
+				ShaDialog.dialogs.subSubDialogLargeCenter(title,html);
+		    }
+			newImg.src = self.getObject(self.ID.IMG_BACHELOR_AT_OLD).attr("src");
+	    }
+	);
+	
+	//init event to BTN_BACHELOR_AT_DOWNLOAD
+	ShaInput.button.onClick(self.getObject(self.ID.BTN_BACHELOR_AT_DOWNLOAD), 
+		function(event) {
+			self.download("bachelor");
 	    }
 	);
 	
 	//init event to BTN_VOCATIONAL_AT_OPEN
 	ShaInput.button.onClick(self.getObject(self.ID.BTN_VOCATIONAL_AT_OPEN), 
 		function(event) {
-			if (self.getObject(self.ID.ITEM_VOCATIONAL_AT).val() === "") {
-				return;
-			}
-    		ShaInput.img.previewInDialog(
-				self.getForm(), 
-    			self.ID.ITEM_VOCATIONAL_AT,
-    			function(imgData) {
-					var title = self.i18n["m_user_extend.vocational_at"];
-					var html = ShaInput.img.previewImgCardHtml(260, 250, "ShaDialog.dialogs.subSubDialogClose();", imgData);
-					ShaDialog.dialogs.subSubDialogSmallCenter(title,html);
-				}
-    		);
+			var newImg = new Image();
+		    newImg.onload = function() {
+		    	var imgH = newImg.height;
+		    	var imgW = newImg.width;
+		    	var title = self.i18n["m_user_extend.vocational_at"];
+				var html = ShaInput.img.previewOrigImgCardHtml(770, 450, imgW, imgH,
+					"ShaDialog.dialogs.subSubDialogClose();", self.getObject(self.ID.IMG_VOCATIONAL_AT_OLD).attr("src"));
+				ShaDialog.dialogs.subSubDialogLargeCenter(title,html);
+		    }
+			newImg.src = self.getObject(self.ID.IMG_VOCATIONAL_AT_OLD).attr("src");
+	    }
+	);
+	
+	//init event to BTN_VOCATIONAL_AT_DOWNLOAD
+	ShaInput.button.onClick(self.getObject(self.ID.BTN_VOCATIONAL_AT_DOWNLOAD), 
+		function(event) {
+			self.download("vocational");
 	    }
 	);
 	
@@ -270,69 +400,19 @@ UserDetail.prototype.initEvent = function(){
 	    }
 	);
 	
+	//init event to BTN_APPLICATION_FORM_PRINT
 	ShaInput.button.onClick(self.getObject(self.ID.BTN_APPLICATION_FORM_PRINT), 
 		function(event) {
-			ShaAjax.ajax.getWithDownloadFile(
-	               self.jsContext.jsView.userDetail.url_user_detail_print,
-				   null,
-	               function(data, filename){
-						if (data.size == 0){
-							ShaDialog.dialogs.alert(self.i18n["dialogs.fail.title"]);
-							return;
-						}
-			            if (typeof window.chrome !== 'undefined') {
-			              // chrome
-			              const link = document.createElement('a');
-			              link.href = window.URL.createObjectURL(data);
-			              link.download = filename;
-			              link.click();
-						  window.URL.revokeObjectURL(link.href);
-			            } else if (typeof window.navigator.msSaveBlob !== 'undefined') {
-			              // IE
-			              //const blob = new Blob([data], {type: 'application/force-download'});
-			              window.navigator.msSaveBlob(data, filename);
-			            } else {
-			              // Firefox
-			              const file = new File([data], filename, {type: 'application/force-download'});
-			              window.open(URL.createObjectURL(file));
-			            }
-	               }
-	           ); 
-		}
+			self.download("application_form_template");
+	    }
 	);
 	
+	//init event to BTN_APPLICATION_FORM_DOWNLOAD
 	ShaInput.button.onClick(self.getObject(self.ID.BTN_APPLICATION_FORM_DOWNLOAD), 
 		function(event) {
-			ShaAjax.ajax.getWithDownloadFile(
-	               self.jsContext.jsView.userDetail.url_user_detail_download+"/"+self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_USER_ID).val(),
-				   //[{name:"id", value:self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_USER_ID).val()}],
-				   null,
-	               function(data, filename){
-						if (data.size == 0){
-							ShaDialog.dialogs.alert(self.i18n["dialogs.fail.title"]);
-							return;
-						}
-			            if (typeof window.chrome !== 'undefined') {
-			              // chrome
-			              const link = document.createElement('a');
-			              link.href = window.URL.createObjectURL(data);
-			              link.download = filename;
-			              link.click();
-						  window.URL.revokeObjectURL(link.href);
-			            } else if (typeof window.navigator.msSaveBlob !== 'undefined') {
-			              // IE
-			              //const blob = new Blob([data], {type: 'application/force-download'});
-			              window.navigator.msSaveBlob(data, filename);
-			            } else {
-			              // Firefox
-			              const file = new File([data], filename, {type: 'application/force-download'});
-			              window.open(URL.createObjectURL(file));
-			            }
-	               }
-	           ); 
-		}
+			self.download("application_form");
+	    }
 	);
-	
 		
 	ShaInput.button.onChange(self.getObject(self.ID.ITEM_PHOTO), 
 		function(event) {
@@ -346,6 +426,15 @@ UserDetail.prototype.initEvent = function(){
 	            self.getObject(self.ID.ITEM_PHOTO).val("");
 			} else {
 				self.getObject(self.ID.ITEM_PHOTO_NAME).val(files[0].name);
+				const file = files[0];
+				// 使用fileReader对象可以读取文件信息 ---- 将图片转换为 base64
+			    const reader = new FileReader();
+			    // 将选中的文件转换为base64 --- 异步操作
+			    reader.readAsDataURL(file);
+			    // 转换完成执行 this.result 就表示 转换成的结果
+			    reader.onload = function () {
+				  self.getObject(self.ID.IMG_PHOTO_OLD).attr("src",this.result);
+			    }
 			}
 	    }
 	);
@@ -362,6 +451,15 @@ UserDetail.prototype.initEvent = function(){
 	            self.getObject(self.ID.ITEM_EDUCATIONAL_AT).val("");
 			} else {
 				self.getObject(self.ID.ITEM_EDUCATIONAL_AT_NAME).val(files[0].name);
+				const file = files[0];
+				// 使用fileReader对象可以读取文件信息 ---- 将图片转换为 base64
+			    const reader = new FileReader();
+			    // 将选中的文件转换为base64 --- 异步操作
+			    reader.readAsDataURL(file);
+			    // 转换完成执行 this.result 就表示 转换成的结果
+			    reader.onload = function () {
+				  self.getObject(self.ID.IMG_EDUCATIONAL_AT_OLD).attr("src",this.result);
+			    }
 			}
 	    }
 	);
@@ -378,6 +476,15 @@ UserDetail.prototype.initEvent = function(){
 	            self.getObject(self.ID.ITEM_BACHELOR_AT).val("");
 			} else {
 				self.getObject(self.ID.ITEM_BACHELOR_AT_NAME).val(files[0].name);
+				const file = files[0];
+				// 使用fileReader对象可以读取文件信息 ---- 将图片转换为 base64
+			    const reader = new FileReader();
+			    // 将选中的文件转换为base64 --- 异步操作
+			    reader.readAsDataURL(file);
+			    // 转换完成执行 this.result 就表示 转换成的结果
+			    reader.onload = function () {
+				  self.getObject(self.ID.IMG_BACHELOR_AT_OLD).attr("src",this.result);
+			    }
 			}
 	    }
 	);
@@ -394,6 +501,15 @@ UserDetail.prototype.initEvent = function(){
 	            self.getObject(self.ID.ITEM_VOCATIONAL_AT).val("");
 			} else {
 				self.getObject(self.ID.ITEM_VOCATIONAL_AT_NAME).val(files[0].name);
+				const file = files[0];
+				// 使用fileReader对象可以读取文件信息 ---- 将图片转换为 base64
+			    const reader = new FileReader();
+			    // 将选中的文件转换为base64 --- 异步操作
+			    reader.readAsDataURL(file);
+			    // 转换完成执行 this.result 就表示 转换成的结果
+			    reader.onload = function () {
+				self.getObject(self.ID.IMG_VOCATIONAL_AT_OLD).attr("src",this.result);
+			    }
 			}
 	    }
 	);
@@ -427,74 +543,70 @@ UserDetail.prototype.initEvent = function(){
 			if(self.check()) {
 	            return;
 	        }
-			//console.log(self.getForm().serializeArray());
-	        ShaDialog.dialogs.confirm(
-				self.i18n["dialogs.confirm.edit.title"], 
-				self.i18n["dialogs.confirm.edit.msg"], 
-				function () {
-					ShaAjax.ajax.postWithUploadFile(
-						self.jsContext.jsView.userDetail.url_user_detail_edit,
-						"userDetailForm", 
-						function (data) {
-							ShaDialog.dialogs.success(self.i18n["dialogs.add.success.msg"]);
-							self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
-							window.scrollTo(0, 0);
-						}
-					);
-				}
-			);
+			
+			if (self.getObject(self.ID.HIDE_ITEM_PAGE_MODE_TYPE).val() == self.ID.PAGE_MODE_TYPE_INSERT_BY_ADMIN){
+				ShaDialog.dialogs.confirm(
+					self.i18n["dialogs.confirm.add.title"], 
+					self.i18n["dialogs.confirm.add.msg"], 
+					function () {
+						ShaAjax.ajax.postWithUploadFile(
+							url = self.jsContext.jsView.userDetail.url_user_detail_add,
+							"userDetailForm", 
+							function (data) {
+								ShaDialog.dialogs.success(self.i18n["dialogs.add.success.msg"]);
+								self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
+								window.scrollTo(0, 0);
+							}
+						);
+					}
+				);
+			}else{
+		        ShaDialog.dialogs.confirm(
+					self.i18n["dialogs.confirm.edit.title"], 
+					self.i18n["dialogs.confirm.edit.msg"], 
+					function () {
+						ShaAjax.ajax.postWithUploadFile(
+							self.jsContext.jsView.userDetail.url_user_detail_edit,
+							"userDetailForm", 
+							function (data) {
+								ShaDialog.dialogs.success(self.i18n["dialogs.edit.success.msg"]);
+								self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
+								window.scrollTo(0, 0);
+							}
+						);
+					}
+				);
+			}
 	    }
 	);
 	
 	//init event to BTN_BACK
 	ShaInput.button.onClick(self.getObject(self.ID.BTN_BACK),
 	   	function(event) {
-			ShaAjax.ajax.post(
+			/*ShaAjax.ajax.post(
 	               self.jsContext.adminJsView.adminUserSearch.url_user_list, 
 				   [{name:"selectedUserId", value:self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_USER_ID).val()}],
 	               function(data){
 	                   self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
 	                   $('[data-toggle="tooltip"]').tooltip();
 	               }
-	           ); 
+	           ); */
+			window.history.back();
 		}
 	);
 
 };
 
-//checkValue
-UserDetail.prototype.check = function(){
+UserDetail.prototype.isAdminEdit = function(){
 	var self = this;
-	var inputCheckItemList = [];
-	ShaCheck.check.setFirstItemFocus(true);
-	if (ShaInput.obj.isEnabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_USER_NAME))){
-		inputCheckItemList = inputCheckItemList.concat([
-	       [ self.i18n["m_user.name"], 	            self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_USER_NAME)], 
-	       [ self.i18n["m_user.birth"], 	        self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_BIRTH)], 
-		   [ self.i18n["m_user.employer"],       	self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_EMPLOYER)], 
-		   [ self.i18n["m_user.certificate_code"], 	self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_CERTIFICATE_CODE)], 
-		   [ self.i18n["m_user.postal_code"], 	    self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_POSTAL_CODE)], 
-		   [ self.i18n["m_user.address"], 	        self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_ADDRESS)], 
-	   ]);
-	}
-	if (ShaInput.obj.isEnabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_MAJOR))){
-		inputCheckItemList = inputCheckItemList.concat([
-	       [ self.i18n["m_user_extend.major"], 	            self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_MAJOR)], 
-	       [ self.i18n["m_user_extend.learn_experience"], 	self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_LEARN_EXPERIENCE)], 
-		   [ self.i18n["m_user_extend.work_experience"],     self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_WORK_EXPERIENCE)], 
-	   ]);
-	}
-	
-	if (inputCheckItemList.length == 0 || ShaCheck.check.checkNotBlank(inputCheckItemList, true)) {
-		return true;
-	}
-	
-	return false;
+	return self.getObject(self.ID.HIDE_ITEM_PAGE_MODE_TYPE).val() == self.ID.PAGE_MODE_TYPE_EDIT_BY_ADMIN ||
+			self.getObject(self.ID.HIDE_ITEM_PAGE_MODE_TYPE).val() == self.ID.PAGE_MODE_TYPE_INSERT_BY_ADMIN;
 };
 
 UserDetail.prototype.changeOkButtonEnable = function(){
 	var self = this;
-	if (ShaInput.obj.isEnabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_USER_NAME)) ||
+	if (ShaInput.obj.isEnabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_USER_TYPE)) ||
+		ShaInput.obj.isEnabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_USER_NAME)) ||
 		ShaInput.obj.isEnabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_MAJOR))){
 		ShaInput.obj.enabled(self.getObject(self.ID.BTN_OK));
 	}else{
@@ -531,6 +643,10 @@ UserDetail.prototype.setEditableSelfDetail = function(){
 	ShaInput.obj.enabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_AREA));
 	ShaInput.obj.enabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_POSTAL_CODE));
 	ShaInput.obj.enabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_ADDRESS));
+	if (self.isAdminEdit() ){
+		ShaInput.obj.enabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_PHONE));
+	}
+	ShaInput.obj.enabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_MAIL));
 	ShaInput.obj.enabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_MEMBERSHIP_PATH));
 	ShaInput.obj.enabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_FOCUS_ON));
 	
@@ -558,6 +674,8 @@ UserDetail.prototype.setReadonlySelfDetail = function(){
 	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_AREA));
 	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_POSTAL_CODE));
 	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_ADDRESS));
+	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_PHONE));
+	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_MAIL));
 	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_MEMBERSHIP_PATH));
 	ShaInput.obj.disabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_FOCUS_ON));
 
@@ -629,3 +747,120 @@ UserDetail.prototype.setReadonlyExtendDetail = function(){
 	self.changeOkButtonEnable();		
 };
 //----------------------------------------------------------------------------]
+UserDetail.prototype.download = function(fileType){
+	var self = this;
+	ShaAjax.ajax.getWithDownloadFile(
+       self.jsContext.jsView.userDetail.url_user_detail_download+"/"+self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_USER_ID).val()+"/"+fileType,
+	   null,
+       function(data, filename){
+			if (data.size == 0){
+				ShaDialog.dialogs.alert(self.i18n["dialogs.fail.title"]);
+				return;
+			}
+            if (ShaUtil.other.isChrome() || ShaUtil.other.isSafari()){
+              // chrome
+              const link = document.createElement('a');
+              link.href = window.URL.createObjectURL(data);
+              link.download = filename;
+              link.click();
+			  window.URL.revokeObjectURL(link.href);
+            } else if (ShaUtil.other.isIE()) {
+              // IE
+              //const blob = new Blob([data], {type: 'application/force-download'});
+              window.navigator.msSaveBlob(data, filename);
+            } else {
+              // Firefox
+              const file = new File([data], filename, {type: 'application/force-download'});
+              window.open(URL.createObjectURL(file));
+            }
+       }
+   ); 
+};
+//checkValue
+UserDetail.prototype.check = function(){
+	var self = this;
+	var isAdminInsert = self.getObject(self.ID.HIDE_ITEM_PAGE_MODE_TYPE).val() == self.ID.PAGE_MODE_TYPE_INSERT_BY_ADMIN;
+	var inputCheckItemList = [];
+	ShaCheck.check.setFirstItemFocus(true);
+	
+	if (ShaInput.obj.isEnabled(self.getObject(self.ID.PREFIX_USER_CARD_ID + self.ID.ITEM_USER_CODE))){
+		inputCheckItemList = inputCheckItemList.concat([
+	       [ self.i18n["m_user_card.user_code"], 	self.getObject(self.ID.PREFIX_USER_CARD_ID + self.ID.ITEM_USER_CODE)], 
+	   ]);
+	}
+	
+	if (ShaInput.obj.isEnabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_PHONE))){
+		inputCheckItemList = inputCheckItemList.concat([
+	       [ self.i18n["m_user.phone"], 	        self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_PHONE)], 
+	   ]);
+	}
+	
+	if (ShaInput.obj.isEnabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_USER_NAME))){
+		inputCheckItemList = inputCheckItemList.concat([
+	       [ self.i18n["m_user.name"], 	            self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_USER_NAME)], 
+	   ]);
+	}
+	
+	if (ShaInput.obj.isEnabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_MAIL))){
+		inputCheckItemList = inputCheckItemList.concat([
+	       [ self.i18n["m_user.mail"], 	            self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_MAIL)], 
+	   ]);
+	}
+	
+	if (ShaInput.obj.isEnabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_BIRTH)) && 
+		self.getObject(self.ID.HIDE_ITEM_PAGE_MODE_TYPE).val() == self.ID.PAGE_MODE_TYPE_EDIT_BY_USER){
+			inputCheckItemList = inputCheckItemList.concat([
+	       [ self.i18n["m_user.birth"], 	        self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_BIRTH)], 
+		   [ self.i18n["m_user.employer"],       	self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_EMPLOYER)], 
+		   [ self.i18n["m_user.certificate_code"], 	self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_CERTIFICATE_CODE)], 
+		   [ self.i18n["m_user.postal_code"], 	    self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_POSTAL_CODE)], 
+		   [ self.i18n["m_user.address"], 	        self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_ADDRESS)], 
+	   ]);
+	}
+	
+	if (ShaInput.obj.isEnabled(self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_MAJOR)) &&
+			self.getObject(self.ID.HIDE_ITEM_PAGE_MODE_TYPE).val() == self.ID.PAGE_MODE_TYPE_EDIT_BY_USER){
+		inputCheckItemList = inputCheckItemList.concat([
+	       [ self.i18n["m_user_extend.major"], 	                                    self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_MAJOR)], 
+	       [ self.i18n["m_user_extend.learn_experience"].replace(/(<br\/>)*/g,""), 	self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_LEARN_EXPERIENCE)], 
+		   [ self.i18n["m_user_extend.work_experience"].replace(/(<br\/>)*/g,""),   self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_WORK_EXPERIENCE)], 
+	   ]);
+	}
+	
+	if (inputCheckItemList.length > 0 && ShaCheck.check.checkNotBlank(inputCheckItemList, true)) {
+		return true;
+	}
+	
+	const checkMultiItemsMap = new Map();
+	
+	if (ShaInput.obj.isEnabled(self.getObject(self.ID.PREFIX_USER_CARD_ID + self.ID.ITEM_USER_CODE))){
+		checkMultiItemsMap.set('checkUserCode', [[ self.i18n["m_user_card.user_code"], 	self.getObject(self.ID.PREFIX_USER_CARD_ID + self.ID.ITEM_USER_CODE)]]);
+	}
+	
+	if (ShaInput.obj.isEnabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_PHONE))){
+		checkMultiItemsMap.set('checkPhoneNumber', [[ self.i18n["m_user.phone"], 	self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_PHONE)]]);
+	}
+	
+	if (ShaInput.obj.isEnabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_MAIL))){
+		checkMultiItemsMap.set('checkEmail', [[ self.i18n["m_user.mail"], 	self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_MAIL)]]);
+	}
+	
+	if (ShaCheck.check.checkMultiItems(checkMultiItemsMap)){
+		return true;
+	}
+		
+	if (ShaInput.obj.isEnabled(self.getObject(self.ID.PREFIX_USER_CARD_ID + self.ID.ITEM_USER_CODE))){
+		checkMultiItemsMap.set('checkUserCodeExisted', [[ self.i18n["m_user_card.user_code"], 	self.getObject(self.ID.PREFIX_USER_CARD_ID + self.ID.ITEM_USER_CODE)]]);
+	}
+	
+	if (ShaInput.obj.isEnabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_PHONE))){
+		checkMultiItemsMap.set('checkPhoneNumberExisted', [[ self.i18n["m_user.phone"], 	
+			self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_PHONE), true, self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_USER_ID).val()]]);
+	}
+	
+	if (ShaCheck.check.checkMultiItems(checkMultiItemsMap)){
+		return true;
+	}
+	
+	return false;
+};

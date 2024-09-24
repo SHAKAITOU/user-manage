@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 public class BillSearchForm {
 
 	private MOrder order;
+	private String name;
     private String billDateFrom;
 	private String billDateTo;
 	

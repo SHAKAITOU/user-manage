@@ -77,7 +77,7 @@ public class LabelDateInputSet {
         sb.append("</span>");
         sb.append(get());
         sb.append("<div class='input-group-append'>");
-        sb.append("<span class=' input-group-text text-center'>");
+        sb.append("<span class=' input-group-text text-center' style='min-width:30px;'>");
         sb.append(IconSet.builder().type(IconSetType.CALENDAR).css(IconSetCss.NOMAL_12).build().html());
         sb.append("</span>");
         sb.append("</div>");
@@ -95,7 +95,7 @@ public class LabelDateInputSet {
         sb.append("<div class='input-group mb-3'>");
         sb.append(get());
         sb.append("<div class='input-group-append'>");
-        sb.append("<span class=' input-group-text text-center'>");
+        sb.append("<span class=' input-group-text text-center' style='min-width:30px;'>");
         sb.append(IconSet.builder().type(IconSetType.CALENDAR).css(IconSetCss.NOMAL_12).build().html());
         sb.append("</span>");
         sb.append("</div>");

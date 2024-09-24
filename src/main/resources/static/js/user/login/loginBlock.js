@@ -222,7 +222,7 @@ LoginBlock.prototype.checkValue = function(){
 	}else{
 		if (ShaCheck.check.checkPhoneNumber([[ self.getJsContext().jsView.login.label_phone_code, 	self.getObject(self.ID.ITEM_PHONE_USER_CODE)]])){
 			result = true;		
-		}else if (ShaCheck.check.checkPhoneNumberExisted([[ self.getJsContext().jsView.login.label_phone_code, 	self.getObject(self.ID.ITEM_PHONE_USER_CODE)]], false)){
+		}else if (ShaCheck.check.checkPhoneNumberExisted([[ self.getJsContext().jsView.login.label_phone_code, 	self.getObject(self.ID.ITEM_PHONE_USER_CODE), false, ""]])){
 			result = true;		
 		}
 		if (ShaCheck.check.checkAuthCode([[ self.getJsContext().jsView.login.label_phone_auth_code, self.getObject(self.ID.ITEM_PHONE_AUTH_CODE)]])){
@@ -243,7 +243,7 @@ LoginBlock.prototype.checkPhone = function(){
 	if (ShaCheck.check.checkPhoneNumber([[ self.getJsContext().jsView.login.label_phone_code, 	self.getObject(self.ID.ITEM_PHONE_USER_CODE)]])){
 		return true;		
 	}
-	if (ShaCheck.check.checkPhoneNumberExisted([[ self.getJsContext().jsView.login.label_phone_code, 	self.getObject(self.ID.ITEM_PHONE_USER_CODE)]], false)){
+	if (ShaCheck.check.checkPhoneNumberExisted([[ self.getJsContext().jsView.login.label_phone_code, 	self.getObject(self.ID.ITEM_PHONE_USER_CODE), false, ""]])){
 		return true;		
 	}
 

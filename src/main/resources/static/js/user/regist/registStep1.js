@@ -129,7 +129,7 @@ RegistStep1.prototype.check = function(){
 		return true;
 	}
 	
-	if (ShaCheck.check.checkPhoneNumberExisted([[ self.i18n["m_user.phone"], 	self.getObject(self.ID.ITEM_PHONE)]]) ||
+	if (ShaCheck.check.checkPhoneNumberExisted([[ self.i18n["m_user.phone"], 	self.getObject(self.ID.ITEM_PHONE), true, ""]]) ||
 		ShaCheck.check.checkEmailExisted([[ self.i18n["m_user.mail"], 			self.getObject(self.ID.ITEM_MAIL)]])){
 		return true;
 	}

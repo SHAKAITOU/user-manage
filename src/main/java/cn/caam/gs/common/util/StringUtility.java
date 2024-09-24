@@ -164,11 +164,30 @@ public class StringUtility {
      * @return formatted text.
      */
     public static String formatCurrencyZH(BigDecimal value) {
+        return formatCurrencyZH(value, 0);
+    }
+    
+    /**
+     * convert the specified double value to a text number with the specified locale format
+     * and the specified scale and round type <BR>
+     * example:<BR>
+     *  StringUtility.formatNumber(1234567.891234, 3, RoundMode.ROUND, Locale.JAPAN)
+     *   --> 1,234,567.891<BR>
+     *  StringUtility.formatNumber(0.2355, 3, RoundMode.ROUND, Locale.JAPAN)
+     *   --> 0.236
+     * @param value the specified double value
+     * @param scale the specified scale
+     * @param roundMode the specified RoundMode
+     * @param locale the specified Locale. Uses Locale.getDefault() if null.
+     * @return formatted text.
+     */
+    public static String formatCurrencyZH(BigDecimal value, int scale) {
         if (value == null) {
             return "";
         }
-        BigDecimal scaledBigDecimal = value.setScale(2, RoundingMode.HALF_UP);
+        BigDecimal scaledBigDecimal = value.setScale(scale, RoundingMode.HALF_UP);
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.SIMPLIFIED_CHINESE);
+        numberFormat.setMaximumFractionDigits(scale);
         return numberFormat.format(scaledBigDecimal.doubleValue());
     }
     

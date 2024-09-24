@@ -54,7 +54,7 @@ public class AdminOrderSearchController extends JcbcBaseController{
 		        AdminOrderSearchViewHelper.getMainPage(request, pageForm, listOutput));
 	}
 	
-	@PostMapping(path=AdminOrderSearchViewHelper.URL_C_SEARCH)
+	@GetMapping(path=AdminOrderSearchViewHelper.URL_C_SEARCH)
     public ModelAndView search(
             OrderSearchForm pageForm,
             HttpServletRequest request,
@@ -69,7 +69,7 @@ public class AdminOrderSearchController extends JcbcBaseController{
                 AdminOrderSearchViewHelper.refeshTable(request, pageForm, listOutput));
     }
 	
-	@PostMapping(path=AdminOrderSearchViewHelper.URL_C_SEARCH_WAIT)
+	@GetMapping(path=AdminOrderSearchViewHelper.URL_C_SEARCH_WAIT)
     public ModelAndView searchWait(
             OrderSearchForm pageForm,
             HttpServletRequest request,
@@ -91,7 +91,7 @@ public class AdminOrderSearchController extends JcbcBaseController{
                 AdminOrderSearchViewHelper.getMainPage(request, pageForm, listOutput));
     }
 	
-	@PostMapping(path=AdminOrderSearchViewHelper.URL_C_SEARCH_REVIEW)
+	@GetMapping(path=AdminOrderSearchViewHelper.URL_C_SEARCH_REVIEW)
     public ModelAndView searchReview(
             OrderSearchForm pageForm,
             HttpServletRequest request,
@@ -112,7 +112,7 @@ public class AdminOrderSearchController extends JcbcBaseController{
                 AdminOrderSearchViewHelper.getMainPage(request, pageForm, listOutput));
     }
 	
-	@PostMapping(path=AdminOrderSearchViewHelper.URL_C_SEARCH_PASS)
+	@GetMapping(path=AdminOrderSearchViewHelper.URL_C_SEARCH_PASS)
     public ModelAndView searchPass(
             OrderSearchForm pageForm,
             HttpServletRequest request,
@@ -133,7 +133,7 @@ public class AdminOrderSearchController extends JcbcBaseController{
                 AdminOrderSearchViewHelper.getMainPage(request, pageForm, listOutput));
     }
 	
-	@PostMapping(path=AdminOrderSearchViewHelper.URL_C_GROWING)
+	@GetMapping(path=AdminOrderSearchViewHelper.URL_C_GROWING)
     public ModelAndView growing(
             OrderSearchForm pageForm,
             HttpServletRequest request,

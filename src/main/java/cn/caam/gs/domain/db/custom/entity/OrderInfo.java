@@ -23,6 +23,8 @@ public class OrderInfo {
 	private MBill bill;
     private MImage orderImg;
     
+    private String userCode;
+    
     private String userName;
     
 	/** 缴费渠道(F0012) */
@@ -51,5 +53,11 @@ public class OrderInfo {
     
     /** 取票方式(F0019) */
     private String voteMethodName;
+    
+    /** 发票抬头类型(F0027) */
+    private String invoiceTypeName;
+    
+    /** 用户类型(F0002) */
+    private String userTypeName;
 
 }

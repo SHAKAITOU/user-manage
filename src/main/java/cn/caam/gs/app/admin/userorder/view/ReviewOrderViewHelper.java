@@ -66,7 +66,7 @@ public class ReviewOrderViewHelper extends HtmlViewHelper {
     public static final int IMG_WIDTH                      = 300;
     public static final int IMG_HEIGHT                     = 250;
     
-    public static final int PHONE_CARD_HEIGHT              = 270;
+    public static final int PHONE_CARD_HEIGHT              = 480;
     
     public static final String BTN_REVIEW_OK = "btnReviewOk";
     public static final String BTN_REVIEW_NG = "btnReviewNg";
@@ -126,7 +126,7 @@ public class ReviewOrderViewHelper extends HtmlViewHelper {
         if (isPhoneMode(request)) {
             return PHONE_CARD_HEIGHT;
         }
-        return 515;
+        return 610;
     }
     
     private static String buildFooter() {
@@ -149,7 +149,7 @@ public class ReviewOrderViewHelper extends HtmlViewHelper {
         aligs.add(CssAlignType.LEFT);
         aligs.add(CssAlignType.RIGHT);
         sb.append(DivHrSet.builder().build().html());
-        sb.append(divRow().get(CellWidthType.TWO_6_6, aligs, concactWithSpace(comp1,comp2), comp3));
+        sb.append(divRow().get(CellWidthType.TWO_8_4, aligs, concactWithSpace(comp1,comp2), comp3));
         
         return sb.toString();
     }

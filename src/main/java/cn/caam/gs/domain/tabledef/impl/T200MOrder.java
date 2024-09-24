@@ -27,11 +27,16 @@ public class T200MOrder extends BaseTableDef implements BaseDdl{
     public static final String COL_BILL_STATUS     = "bill_status";
     public static final String COL_MEMO            = "memo";
     public static final String COL_ANS             = "ans";
+    public static final String COL_INVOICE_TYPE    = "invoice_type";
+    public static final String COL_INVOICE_TITLE   = "invoice_title";
+    public static final String COL_INVOICE_AMOUNT  = "invoice_amount";
+    public static final String COL_CREDIT_CODE     = "credit_code";
+    public static final String COL_MAIL            = "mail";
     
     public static final ColumnInfoForm[] cols = new ColumnInfoForm[] {
             // name | pk | type | charMaxLength | numPrecision | numScale | nullable | default | comment
             new ColumnInfoForm(COL_ID,           true,     MySqlType.CHARACTER_VARYING.getType(), 30, null, null, false, "", getLabelName(TABLE_NAME, COL_ID),              getPlaceholder(TABLE_NAME, COL_ID)),
-            new ColumnInfoForm(COL_USER_ID,      false,    MySqlType.CHARACTER_VARYING.getType(), 20, null, null, false, "", getLabelName(TABLE_NAME, COL_USER_ID),         getPlaceholder(TABLE_NAME, COL_USER_ID)),
+            new ColumnInfoForm(COL_USER_ID,      false,    MySqlType.CHARACTER_VARYING.getType(), 50, null, null, false, "", getLabelName(TABLE_NAME, COL_USER_ID),         getPlaceholder(TABLE_NAME, COL_USER_ID)),
             new ColumnInfoForm(COL_PAY_PATH,     false,    MySqlType.CHARACTER_VARYING.getType(), 3 , null, null, false, "", getLabelName(TABLE_NAME, COL_PAY_PATH),        getPlaceholder(TABLE_NAME, COL_PAY_PATH)),
             new ColumnInfoForm(COL_ORDER_METHOD, false,    MySqlType.CHARACTER_VARYING.getType(), 3 , null, null, false, "", getLabelName(TABLE_NAME, COL_ORDER_METHOD),    getPlaceholder(TABLE_NAME, COL_ORDER_METHOD)),
             new ColumnInfoForm(COL_ORDER_TYPE,   false,    MySqlType.CHARACTER_VARYING.getType(), 3 , null, null, false, "", getLabelName(TABLE_NAME, COL_ORDER_TYPE),      getPlaceholder(TABLE_NAME, COL_ORDER_TYPE)),
@@ -46,6 +51,11 @@ public class T200MOrder extends BaseTableDef implements BaseDdl{
             new ColumnInfoForm(COL_BILL_STATUS,  false,    MySqlType.CHARACTER_VARYING.getType(), 3,  null, null, true , "", getLabelName(TABLE_NAME, COL_BILL_STATUS),     getPlaceholder(TABLE_NAME, COL_BILL_STATUS)),
             new ColumnInfoForm(COL_MEMO,         false,    MySqlType.CHARACTER_VARYING.getType(),255, null, null, true , "", getLabelName(TABLE_NAME, COL_MEMO),            getPlaceholder(TABLE_NAME, COL_MEMO)),
             new ColumnInfoForm(COL_ANS,          false,    MySqlType.CHARACTER_VARYING.getType(),255, null, null, true , "", getLabelName(TABLE_NAME, COL_ANS),             getPlaceholder(TABLE_NAME, COL_ANS)),
+            new ColumnInfoForm(COL_INVOICE_TYPE, false,    MySqlType.CHARACTER_VARYING.getType(), 2, null, null, false, "", getLabelName(TABLE_NAME, COL_INVOICE_TYPE),  getPlaceholder(TABLE_NAME, COL_INVOICE_TYPE)),
+            new ColumnInfoForm(COL_INVOICE_TITLE,false,    MySqlType.CHARACTER_VARYING.getType(), 20, null, null, false, "", getLabelName(TABLE_NAME, COL_INVOICE_TITLE),  getPlaceholder(TABLE_NAME, COL_INVOICE_TITLE)),
+            new ColumnInfoForm(COL_INVOICE_AMOUNT,false,    MySqlType.NUMERIC.getType(),        null , 10,   2   , false, "", getLabelName(TABLE_NAME, COL_INVOICE_AMOUNT),    getPlaceholder(TABLE_NAME, COL_INVOICE_AMOUNT)),
+            new ColumnInfoForm(COL_CREDIT_CODE,  false,    MySqlType.CHARACTER_VARYING.getType(), 20, null, null, true , "", getLabelName(TABLE_NAME, COL_CREDIT_CODE), getPlaceholder(TABLE_NAME, COL_CREDIT_CODE)),
+            new ColumnInfoForm(COL_MAIL,         false,    MySqlType.CHARACTER_VARYING.getType(), 64, null, null, false, "", getLabelName(TABLE_NAME, COL_MAIL),  getPlaceholder(TABLE_NAME, COL_MAIL)),
             
     };
     public ColumnInfoForm[] columnInfos() {

@@ -4,7 +4,8 @@ import java.security.SecureRandom;
 
 public class PasswordGenerator {
 //	 private static final String CHAR_SET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-	 private static final String CHAR_SET = "ABCDEFGHIJKLMNPQRSTUVWXYZabcdefghijklmnpqrstuvwxyz123456789";
+//	 private static final String CHAR_SET = "ABCDEFGHIJKLMNPQRSTUVWXYZabcdefghijklmnpqrstuvwxyz123456789";
+	private static final String CHAR_SET = "0123456789";
 	    private static final int PASSWORD_LENGTH = 8;
 	 
 	    public static String generatePassword() {

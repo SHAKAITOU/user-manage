@@ -27,9 +27,9 @@ public class HtmlTdHelper extends HtmlBaseHelper {
         return TdSet.builder().outPutType(TdSetType.NORMAL).grids(grids.getKey()).align(alignType).contexts(context).build();
     }
     
-    public TdSet get(CssGridsType grids, CssAlignType alignType, boolean wordWrap, String... context) {
-        return TdSet.builder().outPutType(TdSetType.NORMAL).grids(grids.getKey()).align(alignType).wordWrap(wordWrap).contexts(context).build();
-    }
+//    public TdSet get(CssGridsType grids, CssAlignType alignType, boolean wordWrap, String... context) {
+//        return TdSet.builder().outPutType(TdSetType.NORMAL).grids(grids.getKey()).align(alignType).wordWrap(wordWrap).contexts(context).build();
+//    }
     
     public TdSet get(int height, CssGridsType grids, CssAlignType alignType, String... context) {
         return TdSet.builder().outPutType(TdSetType.NORMAL)
@@ -62,10 +62,10 @@ public class HtmlTdHelper extends HtmlBaseHelper {
                 .height(height).grids(grids.getKey()).align(alignType).contexts(context).build();
     }
     
-    public TdSet withTooltip(int height, CssGridsType grids, 
+    public TdSet withTooltip(CssGridsType grids, 
             String tooltipContext, CssAlignType alignType, String... context) {
         return TdSet.builder().outPutType(TdSetType.TOOLTIP)
-                .height(height).grids(grids.getKey()).align(alignType)
+                .grids(grids.getKey()).align(alignType)
                 .contexts(context).tooltipContext(tooltipContext).build();
     }
     

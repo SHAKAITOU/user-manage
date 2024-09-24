@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import cn.caam.gs.app.admin.usertypesettings.form.UserTypeSettingsForm;
+import cn.caam.gs.app.util.LoginInfoHelper;
 import cn.caam.gs.app.util.SessionConstants;
 import cn.caam.gs.common.util.LocalDateUtility;
 import cn.caam.gs.common.util.LocalDateUtility.DateTimePattern;
@@ -44,12 +45,6 @@ public class UserTypeSettingsService extends BaseService {
 	@Transactional
 	public boolean update(UserTypeSettingsForm pageForm) {
 		if (pageForm.getUserTypeSettingsInfoList() != null) {
-			String adminUserId = null;
-			MAdmin adminUserInfo = (MAdmin)request.getSession().getAttribute(SessionConstants.LOGIN_INFO.getValue());
-			if (adminUserInfo != null) {
-				adminUserId = adminUserInfo.getId();
-			}
-			
 			for(int i=0; i<pageForm.getUserTypeSettingsInfoList().size(); i++) {
 				UserTypeSettingsInfo userTypeSettingsInfo = pageForm.getUserTypeSettingsInfoList().get(i);
 				MUserTypeSettings mUserTypeSettings = mUserTypeSettingsMapper.selectByPrimaryKey(userTypeSettingsInfo.getUserTypeSettings().getUserType());
@@ -57,10 +52,10 @@ public class UserTypeSettingsService extends BaseService {
 				if (mUserTypeSettings == null) {
 					isInsert = true;
 					mUserTypeSettings = new MUserTypeSettings();
-					mUserTypeSettings.setCreatedBy(adminUserId);
+					mUserTypeSettings.setCreatedBy(LoginInfoHelper.getLoginId(request));
 					mUserTypeSettings.setCreatedAt(LocalDateUtility.getCurrentDateTimeString(DateTimePattern.UUUUHMMHDDHHQMIQSS));
 				}else {
-					mUserTypeSettings.setUpdatedBy(adminUserId);
+					mUserTypeSettings.setUpdatedBy(LoginInfoHelper.getLoginId(request));
 					mUserTypeSettings.setUpdatedAt(LocalDateUtility.getCurrentDateTimeString(DateTimePattern.UUUUHMMHDDHHQMIQSS));
 				}
 				mUserTypeSettings.setUserType(userTypeSettingsInfo.getUserTypeSettings().getUserType());

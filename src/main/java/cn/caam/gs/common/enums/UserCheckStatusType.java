@@ -1,10 +1,11 @@
 package cn.caam.gs.common.enums;
 
 public enum UserCheckStatusType implements EnumImpl {
-    WAIT_FOR_REVIEW  (EnumIndex.startIndex(1), "01",  true,    "UserCheckStatusType.WAIT_FOR_REVIEW", CssClassType.INFO),
-    PASS             (EnumIndex.getNext(),     "02",  true,    "UserCheckStatusType.PASS", CssClassType.SUCCESS),
-    REFUSED          (EnumIndex.getNext(),     "03",  true,    "UserCheckStatusType.REFUSED", CssClassType.DANGER),
-    RETURN           (EnumIndex.getNext(),     "04",  true,    "UserCheckStatusType.RETURN", CssClassType.WARNING),
+	NEW              (EnumIndex.startIndex(1), "01",  true,    "UserCheckStatusType.NEW ", CssClassType.INFO),
+    WAIT_FOR_REVIEW  (EnumIndex.getNext()    , "02",  true,    "UserCheckStatusType.WAIT_FOR_REVIEW", CssClassType.INFO),
+    PASS             (EnumIndex.getNext(),     "03",  true,    "UserCheckStatusType.PASS", CssClassType.SUCCESS),
+    REFUSED          (EnumIndex.getNext(),     "04",  true,    "UserCheckStatusType.REFUSED", CssClassType.DANGER),
+    RETURN           (EnumIndex.getNext(),     "05",  true,    "UserCheckStatusType.RETURN", CssClassType.PRIMARY),
 	;
     
     /** type. */

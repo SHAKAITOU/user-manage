@@ -50,7 +50,7 @@ public class AdminRefundSearchController extends JcbcBaseController{
 		        AdminRefundSearchViewHelper.getMainPage(request, pageForm, listOutput));
 	}
 	
-	@PostMapping(path=AdminRefundSearchViewHelper.URL_C_SEARCH)
+	@GetMapping(path=AdminRefundSearchViewHelper.URL_C_SEARCH)
     public ModelAndView search(
             RefundSearchForm pageForm,
             HttpServletRequest request,
@@ -64,7 +64,7 @@ public class AdminRefundSearchController extends JcbcBaseController{
                 AdminRefundSearchViewHelper.refeshTable(request, pageForm, listOutput));
     }
 	
-	@PostMapping(path=AdminRefundSearchViewHelper.URL_C_GROWING)
+	@GetMapping(path=AdminRefundSearchViewHelper.URL_C_GROWING)
     public ModelAndView growing(
             RefundSearchForm pageForm,
             HttpServletRequest request,

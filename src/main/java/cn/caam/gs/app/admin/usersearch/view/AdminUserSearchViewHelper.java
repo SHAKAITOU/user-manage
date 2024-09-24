@@ -31,32 +31,30 @@ import cn.caam.gs.common.enums.GridFlexType;
 import cn.caam.gs.common.enums.UserExpiredType;
 import cn.caam.gs.common.enums.UserType;
 import cn.caam.gs.common.html.HtmlPageLinkedHelper;
-import cn.caam.gs.common.html.element.CheckBoxSet;
-import cn.caam.gs.common.html.element.CheckBoxSet.CheckBoxSetType;
 import cn.caam.gs.common.html.element.HtmlRadio;
 import cn.caam.gs.common.html.element.TrSet;
 import cn.caam.gs.common.html.element.bs5.BreadCrumbSet;
 import cn.caam.gs.common.html.element.bs5.ButtonSet;
 import cn.caam.gs.common.html.element.bs5.ButtonSet.ButtonSetType;
-import cn.caam.gs.common.html.element.bs5.IconSet.IconSetCss;
-import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
 import cn.caam.gs.common.html.element.bs5.DivChevronSet;
 import cn.caam.gs.common.html.element.bs5.IconSet;
+import cn.caam.gs.common.html.element.bs5.IconSet.IconSetCss;
+import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
 import cn.caam.gs.common.html.element.bs5.LabelDateInputSet;
 import cn.caam.gs.common.html.element.bs5.LabelDateInputSet.LabelDateInputSetType;
 import cn.caam.gs.common.html.element.bs5.LabelInputSet;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet.LabelSelectSetType;
 import cn.caam.gs.common.html.element.bs5.PTextSet;
-import cn.caam.gs.common.html.element.bs5.SpanTextSet;
 import cn.caam.gs.common.util.LocalDateUtility;
-import cn.caam.gs.common.util.PaginationHolder;
 import cn.caam.gs.common.util.LocalDateUtility.DateTimePattern;
+import cn.caam.gs.common.util.PaginationHolder;
 import cn.caam.gs.domain.db.base.entity.MFixedValue;
+import cn.caam.gs.domain.db.base.entity.MUser;
 import cn.caam.gs.domain.db.custom.entity.FixValueInfo;
 import cn.caam.gs.domain.db.custom.entity.UserInfo;
 import cn.caam.gs.domain.tabledef.impl.T100MUser;
-import cn.caam.gs.domain.tabledef.impl.T200MOrder;
+import cn.caam.gs.domain.tabledef.impl.T105MUserCard;
 
 @Component
 public class AdminUserSearchViewHelper extends HtmlViewHelper {
@@ -64,9 +62,7 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
 	public static final String URL_BASE = UrlConstants.ADMIN + UrlConstants.USER_LIST;
 	//init url
 	public static final String URL_C_INIT = UrlConstants.INIT;
-	//init url
     public static final String URL_C_SEARCH = UrlConstants.SEARCH;
-    
     public static final String URL_C_GROWING = UrlConstants.GROWING;
     
     public static final String PREFIX_NAME                    = "user.";
@@ -79,6 +75,9 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
     public static final String USER_LIST_REFRESH_BODY_ID      = "userListRefreshBody";
     public static final String SEARCH_BTN_ID                  = "searchBtn";
     public static final String SEARCH_PANEL_ID                = "searchPanel";
+    public static final String ADD_BTN_ID                     = "addBtn";
+    public static final String EXPORT_BTN_ID                  = "exportBtn";
+    public static final String IMPORT_BTN_ID                  = "importBtn";
     public static final String SHOW_SEARCH_PANEL_BTN_ID       = "showSearchPanelBtn";
     public static final String HIDE_SEARCH_PANEL_BTN_ID       = "hideSearchPanelBtn";
     public static final String TABLE_HEIGHT_WHEN_HIDE_SEARCH  = "tableHeightWhenHideSearch";
@@ -86,6 +85,8 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
     
     public static final String TABLE_BTN_RESETPW              = "restPw";
     public static final String TABLE_BTN_DETAIL               = "detail";
+    public static final String TABLE_BTN_USERTYPE_EDIT        = "userTypeEdit";
+    public static final String TABLE_BTN_DELETE               = "delete";
     public static final String SHOW_MORE_BTN_ID               = "showMore";
     public static final String HID_HIDE_SEARCH                = "hideSearch";
     public static final String HID_LIMIT                      = "limit";
@@ -172,6 +173,7 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         return sbBody.toString();
     }
     private static String setSearchPanel(HttpServletRequest request, UserSearchForm pageForm) {
+    	if (Objects.isNull(pageForm.getUser())) pageForm.setUser(new MUser());
         @SuppressWarnings("unchecked")
         Map<FixedValueType, List<FixValueInfo>> fixedValueMap = 
                 (Map<FixedValueType, List<FixValueInfo>>)request.getSession().getAttribute(SessionConstants.FIXED_VALUE.getValue());
@@ -350,9 +352,10 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         labelName = getContext("common.page.search");
         contextList.add(ButtonSet.builder()
                 .id(SEARCH_BTN_ID).buttonName(labelName).isBorderOnly(true)
-                .grids(CssGridsType.G1).outPutType(ButtonSetType.GRID_STYLE).gridFlexType(GridFlexType.RIGHT)
+                .grids(CssGridsType.G1).outPutType(ButtonSetType.GRID_STYLE).gridFlexType(GridFlexType.LEFT)
                 .iconSet(IconSet.builder().type(IconSetType.SEARCH).css(IconSetCss.NOMAL_10).build())
                 .build().html());
+        
 
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
         //-----row 3-------------]
@@ -368,6 +371,7 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         StringBuffer sbBody = new StringBuffer();
         StringBuffer cardBody = new StringBuffer();
         cardBody.append(setHidden(pageForm));
+        cardBody.append(setShowMore(request));
         cardBody.append(divRow().cellBlank(5));
         cardBody.append(setUserListTable(request, userListOutput.getUserList()));
         String cardTitle = getContext("admin.userList.table.title");
@@ -393,6 +397,30 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
 //        sb.append(hidden().get(HIDE_LOGIN_TYPE, LoginInfoHelper.getLoginAccountType(request).getKey()));
         sb.append(hidden().get(HIDE_SELECTEDU_SER_ID, ""));
         return sb.toString();
+    }
+    
+    private static String setShowMore(HttpServletRequest request) {
+        StringBuffer sbBody = new StringBuffer();
+        
+        List<CssAlignType> aligs = new ArrayList<>();
+        
+        String id = ADD_BTN_ID;
+        String context = getContext("admin.userList.btn.add");
+        String comp1 = button().getBorder(IconSetType.PLUS, CssClassType.SUCCESS, id, context);
+        
+        id = IMPORT_BTN_ID;
+        context = getContext("admin.userList.btn.import");
+        String comp2 = button().getBorder(IconSetType.IMPORT, CssClassType.DANGER, id, context);
+        
+        id = EXPORT_BTN_ID;
+        context = getContext("admin.userList.btn.export");
+        String comp3 = button().getBorder(IconSetType.EXPORT, CssClassType.DARK, id, context);
+
+        aligs.add(CssAlignType.RIGHT);
+        sbBody.append(divRow().get(CellWidthType.ONE, aligs, concactWithSpace(comp1, comp2, comp3)));
+        //-----row 3-------------]
+        
+        return sbBody.toString();
     }
     
     private static String getPageLinked(HttpServletRequest request, UserSearchForm pageForm, UserListOutput userListOutput) {
@@ -425,34 +453,37 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
                     getContext("common.page.do"));
             headTr.addTh(th().get(PHONE_TD_HEIGHT, CssGridsType.G12, CssAlignType.LEFT, subRow1, subRow2));
         } else {
-         // --col1--
-            List<CssAlignType> aligs = new ArrayList<>();
-            aligs.add(CssAlignType.LEFT);
-            aligs.add(CssAlignType.LEFT);
-            aligs.add(CssAlignType.LEFT);
-            aligs.add(CssAlignType.LEFT);
-            aligs.add(CssAlignType.LEFT);
-            aligs.add(CssAlignType.LEFT);
-            String subRow1 = divRow().get(CellWidthType.SIX_221115, aligs, 
-                    T100MUser.getColumnInfo(T100MUser.COL_ID).getLabelName(), 
-                    T100MUser.getColumnInfo(T100MUser.COL_NAME).getLabelName(),
-                    T100MUser.getColumnInfo(T100MUser.COL_USER_TYPE).getLabelName(),
-                    T100MUser.getColumnInfo(T100MUser.COL_REGIST_DATE).getLabelName(),
-                    T100MUser.getColumnInfo(T100MUser.COL_VALID_END_DATE).getLabelName(),
-                    T100MUser.getColumnInfo(T100MUser.COL_PHONE).getLabelName());
-            
-            aligs = new ArrayList<>();
-            aligs.add(CssAlignType.LEFT);
-            aligs.add(CssAlignType.LEFT);
-            aligs.add(CssAlignType.LEFT);
-            aligs.add(CssAlignType.CENTER);
-            String subRow2 = divRow().get(CellWidthType.FOUR_6_3_1_2, aligs, 
-                    T100MUser.getColumnInfo(T100MUser.COL_EMPLOYER).getLabelName(),
-                    T100MUser.getColumnInfo(T100MUser.COL_MAIL).getLabelName(),
-                    getContext("admin.userList.validStatus"),
-                    getContext("common.page.do"));
-
-            headTr.addTh(th().get(PHONE_TD_HEIGHT, CssGridsType.G12, CssAlignType.LEFT, subRow1, subRow2));
+            // --[
+            // --col1--会员号(M/TYYMMDDHHmmSSR2)
+            String context  = T105MUserCard.getColumnInfo(T105MUserCard.COL_USER_CODE).getLabelName();
+            headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, context));
+            // --col2--会员名
+            context         = T100MUser.getColumnInfo(T100MUser.COL_NAME).getLabelName();
+            headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, context));
+            // --col3--会员类型
+            context         = T100MUser.getColumnInfo(T100MUser.COL_USER_TYPE).getLabelName();
+            headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, context));
+            // --col4--手机号
+            context         = T100MUser.getColumnInfo(T100MUser.COL_PHONE).getLabelName();
+            headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, context));
+            // --col5--邮箱
+            context         = T100MUser.getColumnInfo(T100MUser.COL_MAIL).getLabelName();
+            headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, context));
+            // --col6--工作单位
+            context         = T100MUser.getColumnInfo(T100MUser.COL_EMPLOYER).getLabelName();
+            headTr.addTh(th().get(CssGridsType.G2, CssAlignType.CENTER, context));
+            // --col7--入会时间
+            context         = T100MUser.getColumnInfo(T100MUser.COL_REGIST_DATE).getLabelName();
+            headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, context));
+            // --col8--会员有效期
+            context         = T100MUser.getColumnInfo(T100MUser.COL_VALID_END_DATE).getLabelName();
+            headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, context));
+            // --col9--有效状态
+            context         = getContext("admin.userList.validStatus");
+            headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, context));
+            // --col10--操作
+            context         = getContext("common.page.do");
+            headTr.addTh(th().get(CssGridsType.G2, CssAlignType.CENTER, context));
             // --]
         }
         
@@ -465,7 +496,7 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
                 properties.put("rowDataKey", String.valueOf(userInfo.getId()));
                 TrSet tr = tr().row(properties);
                 
-                String userId = nonNull(userInfo.getId());
+                String userCode = nonNull(userInfo.getUserCode());
                 String userName = nonNull(userInfo.getUser().getName());
                 String userTypeName = nonNull(userInfo.getUserTypeName());
                 String phone = nonNull(userInfo.getUser().getPhone());
@@ -474,49 +505,53 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
                 String registDate = LocalDateUtility.formatDateZH(nonNull(userInfo.getUser().getRegistDate()));
                 String validEndDate = LocalDateUtility.formatDateZH(nonNull(userInfo.getUser().getValidEndDate()));
                 String validStatus = nonNull(getValidStatus(userInfo.getUser().getValidEndDate()));
-                String button = button().forTableBorderNameLeft(IconSetType.REFRESH, CssClassType.SUCCESS, 
-                        "", getContext("admin.userList.btn.resetPw"), userInfo.getId(), TABLE_BTN_RESETPW);
-                button += "&nbsp;&nbsp;";
-                button += button().forTableBorderNameLeft(IconSetType.DETAIL, CssClassType.INFO, 
+                String button = button().forTableBorderNameLeft(IconSetType.DETAIL, CssClassType.INFO, 
                         "", getContext("admin.userList.btn.detail"), userInfo.getId(), TABLE_BTN_DETAIL);
+                button += "&nbsp;&nbsp;";
+                button += button().forTableBorderNameLeft(IconSetType.REFRESH, CssClassType.SUCCESS, 
+                        "", getContext("admin.userList.btn.resetPw"), userInfo.getId(), TABLE_BTN_RESETPW);
+//                button += "&nbsp;&nbsp;";
+//                button += button().forTableBorderNameLeft(IconSetType.EDIT, CssClassType.INFO, 
+//                        "", getContext("admin.userList.btn.userTypeEdit"), userInfo.getId(), TABLE_BTN_USERTYPE_EDIT);
+                button += "&nbsp;&nbsp;";
+                button += button().forTableBorderNameLeft(IconSetType.DELETE, CssClassType.DANGER, 
+                        "", getContext("common.page.delete"), userInfo.getId(), TABLE_BTN_DELETE);
+                
                 if (isPhoneMode(request)) {
                     List<CssAlignType> aligs = new ArrayList<>();
                     aligs.add(CssAlignType.LEFT);
                     aligs.add(CssAlignType.LEFT);
                     String subRow1 = divRow().get(CellWidthType.TWO_6_6, aligs, 
-                            userId, userName);
+                    		userCode, userName);
                     
                     aligs = new ArrayList<>();
                     aligs.add(CssAlignType.LEFT);
                     aligs.add(CssAlignType.LEFT);
-                    String subRow2 = divRow().get(CellWidthType.TWO_6_6, aligs,
+                    String subRow2 = divRow().get(CellWidthType.TWO_5_7, aligs,
                             validStatus, button);
                     
                     tr.addTd(td().get(PHONE_TD_HEIGHT, CssGridsType.G12, CssAlignType.LEFT, subRow1, subRow2));
                 } else {
-                    
-                    List<CssAlignType> aligs = new ArrayList<>();
-                    aligs.add(CssAlignType.LEFT);
-                    aligs.add(CssAlignType.LEFT);
-                    aligs.add(CssAlignType.LEFT);
-                    aligs.add(CssAlignType.LEFT);
-                    aligs.add(CssAlignType.LEFT);
-                    aligs.add(CssAlignType.LEFT);
-                    String subRow1 = divRow().get(CellWidthType.SIX_221115, aligs, 
-                            userId, userName, userTypeName, 
-                            registDate, validEndDate, 
-                            trimFitForTd(CssGridsType.G4.getKey(), phone));
-
-                    aligs = new ArrayList<>();
-                    aligs.add(CssAlignType.LEFT);
-                    aligs.add(CssAlignType.LEFT);
-                    aligs.add(CssAlignType.LEFT);
-                    aligs.add(CssAlignType.CENTER);
-                    String subRow2 = divRow().get(CellWidthType.FOUR_6_3_1_2, aligs, 
-                            trimFitForTd(CssGridsType.G5.getKey(), employer), 
-                            trimFitForTd(CssGridsType.G5.getKey(), mail), validStatus, button);
-                    
-                    tr.addTd(td().get(PHONE_TD_HEIGHT, CssGridsType.G12, CssAlignType.LEFT, subRow1, subRow2));
+                    // --col1--
+                    tr.addTd(td().withTooltip(CssGridsType.G1, userCode, CssAlignType.CENTER, userCode));
+                    // --col2--
+                    tr.addTd(td().withTooltip(CssGridsType.G1, userName, CssAlignType.CENTER, userName));
+                    // --col3--
+                    tr.addTd(td().withTooltip(CssGridsType.G1, userTypeName, CssAlignType.CENTER, userTypeName));
+                    // --col4--
+                    tr.addTd(td().withTooltip(CssGridsType.G1, phone, CssAlignType.CENTER, phone));
+                    // --col5--
+                    tr.addTd(td().withTooltip(CssGridsType.G1, mail, CssAlignType.CENTER, mail));
+                   // --col6--
+                    tr.addTd(td().withTooltip(CssGridsType.G2, employer, CssAlignType.CENTER, employer));
+                    // --col7--
+                    tr.addTd(td().get(CssGridsType.G1, CssAlignType.CENTER, registDate));
+                    // --col8--
+                    tr.addTd(td().get(CssGridsType.G1, CssAlignType.CENTER, validEndDate));
+                    // --col9--
+                    tr.addTd(td().get(CssGridsType.G1, CssAlignType.CENTER, validStatus));
+                    // --col10--
+                    tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, button));
                 }
                 
                 bodyList.add(tr);
@@ -555,13 +590,13 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         return LoginInfoHelper.getMediaHeight(request) - HEADER_HEIGHT + SEARCH_PANEL_HEIGHT;
     }
     
-    private static int calcTableWidth(int [] widths) {
-        int totalWidth = 0;
-        for (int width : widths) {
-            totalWidth += width;
-        }
-        return totalWidth;
-    }
+//    private static int calcTableWidth(int [] widths) {
+//        int totalWidth = 0;
+//        for (int width : widths) {
+//            totalWidth += width;
+//        }
+//        return totalWidth;
+//    }
 	
 	public static Map<String, String> getJsProperties() {
 		Map<String, String> js = new HashMap<String, String>();

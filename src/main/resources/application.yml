@@ -8,7 +8,7 @@
 server:
   servlet:
     session:
-      timeout: 86400
+      timeout: 1800
   port : 80
 #### SPRING ####
 spring:
@@ -17,7 +17,12 @@ spring:
   
   profiles: 
     active: dev
-  
+
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 50MB
+
   messages:
     basename: i18n/message
     cache-duration: -1
@@ -28,12 +33,12 @@ spring:
     mode: local-MySQL
     local-MySQL:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      #jdbc-url: jdbc:mysql://localhost/shatest
-      #username: root
-      #password: admin
-      jdbc-url: jdbc:mysql://afa397eca7da454e925b9a637c954bbfin01.internal.cn-north-4.mysql.rds.myhuaweicloud.com:3306/shatest
+      jdbc-url: jdbc:mysql://localhost/shatest
       username: root
-      password: XHT2024Pass1
+      password: admin
+      #jdbc-url: jdbc:mysql://afa397eca7da454e925b9a637c954bbfin01.internal.cn-north-4.mysql.rds.myhuaweicloud.com:3306/shatest2
+      #username: root
+      #password: XHT2024Pass1
     cloud-MySQL:
       driver-class-name: com.mysql.cj.jdbc.Driver
       #jdbc-url: jdbc:mysql://localhost/shatest
@@ -59,24 +64,6 @@ spring:
          enable: true
     templates:
       regist_authcode_template: mail/regist_authcode.html
-
-  #### SMS ####
-  sms:
-    #APP接入地址+接口访问URI
-    api_url: https://smsapi.cn-north-4.myhuaweicloud.com:443/sms/batchSendSms/v1
-    #APP_Key
-    app_key: zn7A3K61J3bz808w7671r4Mw0Rl9
-    #APP_Secret
-    app_secret: 0x1Ey9niYOt4yEv9VvKkcxh1kOaI
-    #必填:国内短信签名通道号或国际/港澳台短信通道号
-    sender: 1069368924410007625
-    #条件必填,国内短信关注,当templateId指定的模板类型为通用模板时生效且必填,必须是已审核通过的,与模板类型一致的签名名称
-    user_regist_template_id: ab64fbafe4c94426aa91e15b9f17a9c1
-    user_login_template_id: ab64fbafe4c94426aa91e15b9f17a9c1
-    user_review_template_id: ab64fbafe4c94426aa91e15b9f17a9c1
-    #条件必填,国内短信关注,当templateId指定的模板类型为通用模板时生效且必填,必须是已审核通过的,与模板类型一致的签名名称 国际/港澳台短信不用关注该参数
-    signature: 华为云短信测试
-  ################
     
 #### LOGGING ####
 logging:

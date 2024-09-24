@@ -65,10 +65,11 @@ public class CommonController extends ScreenBaseController{
     @ResponseBody
 	public String checkPhoneNumber(
 			@RequestParam("phoneNumber") String phoneNumber,
+			@RequestParam("userId") String userId,
 			HttpServletRequest request,
 			HttpServletResponse response) {
 
-		if (userService.isPhoneNumberExist(phoneNumber)) {
+		if (userService.isPhoneNumberExist(phoneNumber, userId)) {
 			return "existed";
 		}
 		return "";
@@ -82,6 +83,19 @@ public class CommonController extends ScreenBaseController{
 			HttpServletResponse response) {
 
     	if (userService.isEmailExist(email)) {
+			return "existed";
+		}
+		return "";
+	}
+    
+    @PostMapping(path=CommonViewHelper.URL_CHECK_USER_CODE)
+    @ResponseBody
+	public String checkUserCode(
+			@RequestParam("userCode") String userCode,
+			HttpServletRequest request,
+			HttpServletResponse response) {
+
+    	if (userService.isUserCodeExist(userCode)) {
 			return "existed";
 		}
 		return "";

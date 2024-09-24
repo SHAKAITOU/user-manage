@@ -26,8 +26,11 @@ ReviewOk.prototype.ID = {
 	BTN_CLOSE                : "btnClose",
 	
 	ITEM_ID                  : "id",
+	ITEM_PAY_AMOUNT          : "payAmount",
 	ITEM_VALID_END_DATE      : "validEndDate",
 	ITEM_ANS                 : "ans",
+	
+	HID_ITEM_ORDER_AMOUNT    : "order_amount",
 	
     //div
     DIV_MAINBODY             : 'mainBody',
@@ -46,7 +49,7 @@ ReviewOk.prototype.init = function(){
     //init bond event to btn
     self.initEvent();
 
-
+	self.initFocus();
 };
 
 // init event
@@ -65,6 +68,10 @@ ReviewOk.prototype.initEvent = function(){
 	//init event to BTN_OK
 	ShaInput.button.onClick(self.getObject(self.ID.BTN_OK), 
 		function(event) {
+			if(self.check()) {
+	            return;
+	        }
+			
 			ShaDialog.dialogs.confirm(
 				self.i18n["admin.order.btn.reviewOk"],
 				self.i18n["dialogs.confirm.add.msg"], 
@@ -98,4 +105,32 @@ ReviewOk.prototype.initEvent = function(){
 	);
 };
 
+//checkValue
+ReviewOk.prototype.check = function(){
+	//keep self instance for call back
+	var self = this;
+	ShaCheck.check.setFirstItemFocus(true);
+	
+    if (ShaCheck.check.checkNotBlank([[ self.i18n["m_order.pay_amount"], self.getObject(self.ID.ITEM_PAY_AMOUNT)]])) {
+		return true;
+	}
+		
+	if (ShaCheck.check.checkNotNumber([[ self.i18n["m_order.pay_amount"], self.getObject(self.ID.ITEM_PAY_AMOUNT)]])) {
+		return true;
+	}
+	
+	if (ShaCheck.check.checkNumberRange([[ self.i18n["m_order.pay_amount"], 	
+		self.getObject(self.ID.ITEM_PAY_AMOUNT), parseInt(self.getObject(self.ID.HID_ITEM_ORDER_AMOUNT).val()), ShaConstants.constants.MIN_BILL_AMOUNT]])) {
+		return true;
+	}
+		
+	return false;
+};
+
+// initFocus
+ReviewOk.prototype.initFocus = function(){
+	//keep self instance for call back
+	var self = this;
+	ShaUtil.other.setFocus(self.getObject(self.ID.ITEM_PAY_AMOUNT));
+};
 //----------------------------------------------------------------------------]

@@ -110,7 +110,7 @@ public class AdminMessagePushViewHelper extends HtmlViewHelper {
         placeholder = clmForm.getPlaceholder();
         contextList.add(LabelTextAreaSet.builder()
                 .id(id).name(name).labelName(labelName)
-                .maxlength(GlobalConstants.LEARN_EXPERIENCE_MAX_L)
+                .maxlength(GlobalConstants.MESSAGE_MSG_MAX_L).notBlank(true)
                 .placeholder(placeholder).outPutType(LabelTextAreaSetType.WITH_LABEL)
                 .fontSize(font).rows(11).grids(CssGridsType.G12).build().html());
         

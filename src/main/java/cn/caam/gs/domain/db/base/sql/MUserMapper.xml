@@ -40,6 +40,11 @@
     <result column="group_name" property="groupName" jdbcType="VARCHAR" />
     <result column="credit_code" property="creditCode" jdbcType="VARCHAR" />
     <result column="application_date" property="applicationDate" jdbcType="VARCHAR" />
+    <result column="deleted" property="deleted" jdbcType="INTEGER" />
+    <result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+    <result column="created_at" property="createdAt" jdbcType="VARCHAR" />
+    <result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
+    <result column="updated_at" property="updatedAt" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     <!--
@@ -50,7 +55,8 @@
     political, edu_degree, bachelor, position, employer, employer_type, job_title, certificate_type, 
     certificate_code, area, area_sub, address, postal_code, phone, mail, check_date, 
     check_status, valid_status, regist_date, valid_start_date, valid_end_date, society_type, 
-    group_name, credit_code, application_date
+    group_name, credit_code, application_date, deleted, created_by, created_at, updated_by, 
+    updated_at
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     <!--
@@ -86,7 +92,9 @@
       check_date, check_status, valid_status, 
       regist_date, valid_start_date, valid_end_date, 
       society_type, group_name, credit_code, 
-      application_date)
+      application_date, deleted, created_by, 
+      created_at, updated_by, updated_at
+      )
     values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{userType,jdbcType=VARCHAR}, 
       #{password,jdbcType=VARCHAR}, #{membershipPath,jdbcType=VARCHAR}, #{focusOn,jdbcType=VARCHAR}, 
       #{sex,jdbcType=VARCHAR}, #{birth,jdbcType=VARCHAR}, #{nationality,jdbcType=VARCHAR}, 
@@ -98,7 +106,9 @@
       #{checkDate,jdbcType=VARCHAR}, #{checkStatus,jdbcType=VARCHAR}, #{validStatus,jdbcType=VARCHAR}, 
       #{registDate,jdbcType=VARCHAR}, #{validStartDate,jdbcType=VARCHAR}, #{validEndDate,jdbcType=VARCHAR}, 
       #{societyType,jdbcType=VARCHAR}, #{groupName,jdbcType=VARCHAR}, #{creditCode,jdbcType=VARCHAR}, 
-      #{applicationDate,jdbcType=VARCHAR})
+      #{applicationDate,jdbcType=VARCHAR}, #{deleted,jdbcType=INTEGER}, #{createdBy,jdbcType=VARCHAR}, 
+      #{createdAt,jdbcType=VARCHAR}, #{updatedBy,jdbcType=VARCHAR}, #{updatedAt,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="cn.caam.gs.domain.db.base.entity.MUser" >
     <!--
@@ -209,6 +219,21 @@
       <if test="applicationDate != null" >
         application_date,
       </if>
+      <if test="deleted != null" >
+        deleted,
+      </if>
+      <if test="createdBy != null" >
+        created_by,
+      </if>
+      <if test="createdAt != null" >
+        created_at,
+      </if>
+      <if test="updatedBy != null" >
+        updated_by,
+      </if>
+      <if test="updatedAt != null" >
+        updated_at,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -312,6 +337,21 @@
       </if>
       <if test="applicationDate != null" >
         #{applicationDate,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null" >
+        #{deleted,jdbcType=INTEGER},
+      </if>
+      <if test="createdBy != null" >
+        #{createdBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createdAt != null" >
+        #{createdAt,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedBy != null" >
+        #{updatedBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedAt != null" >
+        #{updatedAt,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -421,6 +461,21 @@
       <if test="applicationDate != null" >
         application_date = #{applicationDate,jdbcType=VARCHAR},
       </if>
+      <if test="deleted != null" >
+        deleted = #{deleted,jdbcType=INTEGER},
+      </if>
+      <if test="createdBy != null" >
+        created_by = #{createdBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createdAt != null" >
+        created_at = #{createdAt,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedBy != null" >
+        updated_by = #{updatedBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedAt != null" >
+        updated_at = #{updatedAt,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -462,7 +517,12 @@
       society_type = #{societyType,jdbcType=VARCHAR},
       group_name = #{groupName,jdbcType=VARCHAR},
       credit_code = #{creditCode,jdbcType=VARCHAR},
-      application_date = #{applicationDate,jdbcType=VARCHAR}
+      application_date = #{applicationDate,jdbcType=VARCHAR},
+      deleted = #{deleted,jdbcType=INTEGER},
+      created_by = #{createdBy,jdbcType=VARCHAR},
+      created_at = #{createdAt,jdbcType=VARCHAR},
+      updated_by = #{updatedBy,jdbcType=VARCHAR},
+      updated_at = #{updatedAt,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

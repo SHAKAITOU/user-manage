@@ -29,11 +29,16 @@ AdminUserSearch.prototype.ID = {
     HIDE_SEARCH_PANEL_BTN_ID : "hideSearchPanelBtn",
     HID_HIDE_SEARCH          : "hideSearch",
 	HID_SELECTED_USER_ID     : "selectedUserId",
+	
+	ADD_BTN_ID               : "addBtn",
+	EXPORT_BTN_ID            : "exportBtn",
+	IMPORT_BTN_ID            : "importBtn",
     
     USER_LIST_CHECK_ALL_ID   : "user_check_all",
     USER_CHECK_PREF_ID       : ".user_check_",
     TABLE_BTN_RESETPW        : ".restPw",
     TABLE_BTN_DETAIL         : ".detail",
+	TABLE_BTN_DELETE         : ".delete",
     
     //div
     DIV_REFRESH_BODY         : "userListRefreshBody",
@@ -53,7 +58,19 @@ AdminUserSearch.prototype.init = function(){
     //keep self instance for call back
     var self = this;
     
-    $('[data-toggle="tooltip"]').tooltip();
+	//$('[data-toggle="tooltip"]').tooltip();
+	$('[data-toggle="tooltip"]').tooltip({
+	   trigger: 'manual'
+	 }).on('mouseover', function () {
+	   var $this = $(this);
+	   console.log("offsetWidth="+this.offsetWidth + " scrollWidth="+this.scrollWidth);
+	   if (this.offsetWidth < this.scrollWidth) {
+	     $this.tooltip('show');
+	   }
+	 }).on('mouseout', function () {
+	   var $this = $(this);
+	   $this.tooltip('hide');
+	 });
     
     //init bond event to btn
     self.initEvent();
@@ -75,25 +92,29 @@ AdminUserSearch.prototype.initEvent = function(){
     self.getObject(self.ID.REGIST_DATE_FROM_INPT).datepicker({
         format   : self.dateFormat,
         language : self.language,
-        clearBtn : self.clearBtn
+        clearBtn : self.clearBtn,
+		todayHighlight:true
     });
     
     self.getObject(self.ID.REGIST_DATE_TO_INPT).datepicker({
         format   : self.dateFormat,
         language : self.language,
-        clearBtn : self.clearBtn
+        clearBtn : self.clearBtn,
+		todayHighlight:true
     });
     
     self.getObject(self.ID.VALID_END_DATE_FROM_INPT).datepicker({
         format   : self.dateFormat,
         language : self.language,
-        clearBtn : self.clearBtn
+        clearBtn : self.clearBtn,
+		todayHighlight:true
     });
     
     self.getObject(self.ID.VALID_END_DATE_TO_INPT).datepicker({
         format   : self.dateFormat,
         language : self.language,
-        clearBtn : self.clearBtn
+        clearBtn : self.clearBtn,
+		todayHighlight:true
     });
     
     ShaInput.button.onClick(self.getObject(self.ID.SHOW_SEARCH_PANEL_BTN_ID),
@@ -151,7 +172,7 @@ AdminUserSearch.prototype.initEvent = function(){
     
     ShaInput.button.onClick(self.getObject(self.ID.SEARCH_BTN_ID),
     	function(event) {
-			ShaAjax.ajax.post(
+			ShaAjax.ajax.get(
                 self.jsContext.adminJsView.adminUserSearch.url_user_list, 
                 self.getForm().serializeArray(), 
                 function(data){
@@ -159,6 +180,19 @@ AdminUserSearch.prototype.initEvent = function(){
                     $('[data-toggle="tooltip"]').tooltip();
                 }
             ); 
+		}
+    );
+	
+	ShaInput.button.onClick(self.getObject(self.ID.ADD_BTN_ID),
+    	function(event) {
+			ShaAjax.ajax.post(
+	            self.jsContext.jsView.userDetail.url_user_detail_add_init, 
+	            //[{name:"id",     value:$(elem).attr("data")}],
+			    self.getForm().serializeArray(),  
+	            function(data){
+	                self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
+	            }
+	        ); 
 		}
     );
     
@@ -176,14 +210,62 @@ AdminUserSearch.prototype.initEvent = function(){
 	   	ShaInput.button.onClick($(elem),
 	    	function(event) {
 				self.getObject(self.ID.HID_SELECTED_USER_ID).val($(elem).attr("data"));
-				ShaAjax.ajax.post(
+				ShaAjax.ajax.get(
 	                self.jsContext.jsView.userDetail.url_user_detail_from_admin_init, 
-	                //[{name:"id",     value:$(elem).attr("data")}],
-				    self.getForm().serializeArray(),  
+	                [{name:"id",     value:$(elem).attr("data")}],
+				    //self.getForm().serializeArray(),  
 	                function(data){
 	                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
 	                }
 	            ); 
+			}
+	    );
+	});
+	
+	$tableBtnList = self.getObject(self.ID.USER_LIST_TABLE_ID).find(self.ID.TABLE_BTN_DELETE);
+	$tableBtnList.each(function(i, elem){
+	   	ShaInput.button.onClick($(elem),
+	    	function(event) {
+				ShaDialog.dialogs.confirm(
+					self.i18n["dialogs.confirm.delete.title"], 
+					self.i18n["dialogs.confirm.delete.msg"], 
+					function () {
+						ShaAjax.ajax.post(
+							self.jsContext.jsView.userDetail.url_user_detail_delete, 
+							[{name:"id",     value:$(elem).attr("data")}],
+							function (data) {
+								ShaDialog.dialogs.success(self.i18n["dialogs.delete.success.msg"]);
+								self.getObject(self.ID.SEARCH_BTN_ID).click();
+							}
+						);
+					}
+				);
+			}
+	    );
+	});
+	
+	$tableBtnList = self.getObject(self.ID.USER_LIST_TABLE_ID).find(self.ID.TABLE_BTN_RESETPW);
+	$tableBtnList.each(function(i, elem){
+		//check box init
+	   	ShaInput.button.onClick($(elem),
+	    	function(event) {
+				ShaDialog.dialogs.confirm(
+					self.i18n["PasswordReset.title"], 
+					self.i18n["PasswordReset.confirm.reset.title"], 
+					function () {
+						ShaAjax.ajax.post(
+							self.jsContext.jsView.passwordReset.url_user_reset,
+							[{name:"id",     value:$(elem).attr("data")}],
+							function (data) {
+								if (data == Pos.constants.setInfo.common.executeReturnTypeOk) {
+									ShaDialog.dialogs.success(self.i18n["PasswordReset.success.msg"]);
+								}else{
+									ShaDialog.dialogs.alert(self.i18n["PasswordReset.success.fail"]);
+								}
+							}
+						);
+					}
+				);
 			}
 	    );
 	});
@@ -194,7 +276,7 @@ AdminUserSearch.prototype.initEvent = function(){
 AdminUserSearch.prototype.doPageLink = function(){
 	//keep self instance for call back
 	var self = this;
-	ShaAjax.ajax.post(
+	ShaAjax.ajax.get(
         self.jsContext.adminJsView.adminUserSearch.url_user_list_growing, 
         self.getForm().serializeArray(), 
         function(data){

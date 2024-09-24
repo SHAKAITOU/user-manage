@@ -50,8 +50,14 @@ public enum FixedValueType {
     FEE_TYPE        ("F0022"),
     /** 学会区分(F0023) */
     SOCIETY_TYPE    ("F0023"),
-	/** 会员审核状态(F0013) */
-	USER_CHECK_STATUS    ("F0024"),
+	/** 会员审核状态(F0024) */
+	USER_CHECK_STATUS  ("F0024"),
+	/** 短信模板类型(F0025) */
+	SMS_TEMPLATE_TYPE  ("F0025"),
+	/** 有效状态(F0026) */
+	VALID_TYPE      ("F0026"),
+	/** 抬头类型(F0027) */
+	INVOICE_TYPE    ("F0027"),
 	;
 	
     /** type. */

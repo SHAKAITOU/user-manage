@@ -50,11 +50,9 @@ import cn.caam.gs.domain.tabledef.impl.T100MUser;
 public class AdminUserReviewSearchViewHelper extends HtmlViewHelper {
 	
 	public static final String URL_BASE = UrlConstants.ADMIN + UrlConstants.USER_REVIEW_LIST;
-	//init url
-	public static final String URL_C_INIT = UrlConstants.INIT;
-	//init url
-    public static final String URL_C_SEARCH = UrlConstants.SEARCH;
     
+    public static final String URL_C_INIT = UrlConstants.INIT;
+    public static final String URL_C_SEARCH = UrlConstants.SEARCH;
     public static final String URL_C_GROWING = UrlConstants.GROWING;
     
     public static final String SEARCH_MODE_WAIT_LIST          = "waitList";

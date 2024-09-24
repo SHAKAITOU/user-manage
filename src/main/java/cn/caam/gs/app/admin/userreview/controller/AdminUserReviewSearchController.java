@@ -8,7 +8,6 @@ import org.jsoup.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -16,7 +15,6 @@ import cn.caam.gs.app.admin.userreview.view.AdminUserReviewSearchViewHelper;
 import cn.caam.gs.app.admin.usersearch.form.UserSearchForm;
 import cn.caam.gs.app.admin.usersearch.output.UserListOutput;
 import cn.caam.gs.app.util.ControllerHelper;
-import cn.caam.gs.app.util.SessionConstants;
 import cn.caam.gs.common.controller.JcbcBaseController;
 import cn.caam.gs.service.impl.UserService;
 import lombok.AllArgsConstructor;
@@ -38,9 +36,9 @@ public class AdminUserReviewSearchController extends JcbcBaseController{
 			UserSearchForm pageForm,
 			HttpServletRequest request,
 			HttpServletResponse response) {
-		 if (StringUtil.isBlank(pageForm.getSearchMode())) {
-			 pageForm.setSearchMode(AdminUserReviewSearchViewHelper.SEARCH_MODE_WAIT_LIST);
-		 }
+		if (StringUtil.isBlank(pageForm.getSearchMode())) {
+			pageForm.setSearchMode(AdminUserReviewSearchViewHelper.SEARCH_MODE_WAIT_LIST);
+		}
 		 pageForm.setUserPageLinkIdPrefixIndex(0);
 	     UserListOutput userListOutput = userService.getUserList(pageForm);
 
@@ -48,15 +46,11 @@ public class AdminUserReviewSearchController extends JcbcBaseController{
 		        AdminUserReviewSearchViewHelper.getMainPage(request, pageForm, userListOutput));
 	}
 	
-	@PostMapping(path=AdminUserReviewSearchViewHelper.URL_C_SEARCH)
+	@GetMapping(path=AdminUserReviewSearchViewHelper.URL_C_SEARCH)
     public ModelAndView search(
             UserSearchForm pageForm,
             HttpServletRequest request,
             HttpServletResponse response) {
-//		if (request.getSession().getAttribute(SessionConstants.USER_REVIEW_SEARCH_FORM.getValue()) !=null) {
-//			pageForm = (UserSearchForm)request.getSession().getAttribute(SessionConstants.USER_REVIEW_SEARCH_FORM.getValue());
-//			request.getSession().setAttribute(SessionConstants.USER_REVIEW_SEARCH_FORM.getValue(), null);
-//		}
 		
 		if (StringUtil.isBlank(pageForm.getSearchMode())) {
 			pageForm.setSearchMode(AdminUserReviewSearchViewHelper.SEARCH_MODE_WAIT_LIST);
@@ -68,7 +62,7 @@ public class AdminUserReviewSearchController extends JcbcBaseController{
                 AdminUserReviewSearchViewHelper.refeshTable(request, pageForm, userListOutput));
     }
 	
-	@PostMapping(path=AdminUserReviewSearchViewHelper.URL_C_GROWING)
+	@GetMapping(path=AdminUserReviewSearchViewHelper.URL_C_GROWING)
     public ModelAndView growing(
             UserSearchForm pageForm,
             HttpServletRequest request,

@@ -4,6 +4,7 @@ package cn.caam.gs.common.html.element;
 import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.util.Strings;
 
 import cn.caam.gs.app.GlobalConstants;
 import cn.caam.gs.common.enums.CssAlignType;
@@ -32,7 +33,8 @@ public class TdSet {
     private String tooltipContext;
     private String footContext;
     private TdSetType outPutType;
-    private boolean wordWrap = false;
+    @Default
+    private boolean toolTip = false;
     
     public String html() {
         if(outPutType == TdSetType.INDEX) {
@@ -90,9 +92,7 @@ public class TdSet {
         } else {
             sb.append(" col-xs-"+grids+"'");
         }
-        if (wordWrap) {
-        	sb.append(" style=\"word-wrap:break-word;\"");
-        }else if (height > 0) {
+        if (height > 0) {
             sb.append(" height='"+height+"'");
         } else {
             sb.append(" height='"+GlobalConstants.TABLE_TD_HEIGHT+"' ");
@@ -121,7 +121,8 @@ public class TdSet {
         } else {
             sb.append(" col-xs-"+grids+"'");
         }
-        sb.append(" title='"+HtmlBaseHelper.filterSpecialCharacters(tooltipContext)+"'");
+        toolTip = !Strings.isBlank(tooltipContext);
+//        sb.append(" title='"+HtmlBaseHelper.filterSpecialCharacters(tooltipContext)+"'");
         if (height > 0) {
             sb.append(" height='"+height+"'");
         } else {
@@ -227,7 +228,11 @@ public class TdSet {
         StringBuffer sb = new StringBuffer();
         sb.append("<div style='display: table;height:100%;width:100%'>");
         sb.append("<div style='display: table-cell; vertical-align: middle;");
-        sb.append(" text-align: "+cssAlignType.getKey()+";'>");
+        sb.append(" text-align: "+cssAlignType.getKey()+";'");
+        if (toolTip) {
+        	 sb.append(" class='tooltip-container' data-toggle='tooltip' title='"+HtmlBaseHelper.filterSpecialCharacters(tooltipContext)+"'");
+        }
+        sb.append(">");
         sb.append(context);
         sb.append("</div>");
         sb.append("</div>");

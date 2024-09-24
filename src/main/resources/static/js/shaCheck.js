@@ -346,17 +346,6 @@ try{
 				var id = inputCheckItem.attr('id');
 				var errorId = id + "_error";
 				var errorMsg = errorItemName + Pos.constants.setInfo.jsView.login.msg_regist_pwNotSameError;
-				/*if(inputCheckItem.val() != inputCheckItemConfirm.val()){
-					var errorMsg = errorItemName + Pos.constants.setInfo.jsView.login.msg_regist_pwNotSameError;
-					inputCheckItem.after('<div id="'+ errorId +'" class="invalid-feedback">' + errorMsg + '</div>'); 
-					inputCheckItem.addClass('alert-input');
-					inputCheckItem.addClass('is-invalid');
-					ngFlag = true;
-					ShaCheck.check.moveToFirstItem(inputCheckItem);
-				}else{
-					inputCheckItem.removeClass('alert-input');
-					inputCheckItem.removeClass('is-invalid');
-				}*/
 				var isError = inputCheckItem.val() != inputCheckItemConfirm.val();
 				ngFlag = isError || ngFlag;
 				ShaCheck.check._changeClass(inputCheckItem, isError, errorId, errorMsg);
@@ -380,6 +369,7 @@ try{
 				var errorId = id + "_error";
 				var isError = false;
 				var errorMsg = '';
+				
 				if (ShaCheck.check.isBlank(inputCheckItem.val())){
 					errorMsg = errorItemName + ShaConstants.constants.NOT_BLANK_MSG;
 					isError = true;
@@ -388,16 +378,8 @@ try{
 					errorMsg = errorItemName + ShaConstants.constants.IPHONE_NUMBER_MSG;
 					isError = true;
 				}
-				if (isError){
-					inputCheckItem.after('<div id="'+ errorId +'" class="invalid-feedback">' + errorMsg + '</div>'); 
-					inputCheckItem.addClass('alert-input');
-					inputCheckItem.addClass('is-invalid');
-					ngFlag = true;
-					ShaCheck.check.moveToFirstItem(inputCheckItem);
-				}else{
-					inputCheckItem.removeClass('alert-input');
-					inputCheckItem.removeClass('is-invalid');
-				}
+				ngFlag = isError || ngFlag;
+				ShaCheck.check._changeClass(inputCheckItem, isError, errorId, errorMsg);
 			}
 			
 			return ngFlag;
@@ -414,14 +396,19 @@ try{
 			for( var i = 0; i < inputCheckItemList.length; i++ ){
 				var errorItemName = inputCheckItemList[i][0];
 				var inputCheckItem = inputCheckItemList[i][1];
+				var isExistedCheck= inputCheckItemList[i][2];
+				var userId= inputCheckItemList[i][3];
 				var id = inputCheckItem.attr('id');
 				var errorId = id + "_error";
 				var isError = false;
 				var errorMsg = '';
-	
+				if (ShaCheck.check.isBlank(inputCheckItem.val())){
+					continue;
+				}
+				
 				ShaAjax.ajax.post(
 					Pos.constants.setInfo.common.common.url_com_check_phone_number_exist,
-					"phoneNumber="+inputCheckItem.val(),
+					"phoneNumber="+inputCheckItem.val()+"&userId="+userId,
 					function(data){
 						if (data =='existed'){
 							if (isExistedCheck){
@@ -436,16 +423,8 @@ try{
 					false,
 				)
 				
-				if (isError){
-					inputCheckItem.after('<div id="'+ errorId +'" class="invalid-feedback">' + errorMsg + '</div>'); 
-					inputCheckItem.addClass('alert-input');
-					inputCheckItem.addClass('is-invalid');
-					ngFlag = true;
-					ShaCheck.check.moveToFirstItem(inputCheckItem);
-				}else{
-					inputCheckItem.removeClass('alert-input');
-					inputCheckItem.removeClass('is-invalid');
-				}
+				ngFlag = isError || ngFlag;
+				ShaCheck.check._changeClass(inputCheckItem, isError, errorId, errorMsg);
 			}
 			
 			return ngFlag;
@@ -470,16 +449,9 @@ try{
 					errorMsg = errorItemName + ShaConstants.constants.EMAIL_MSG;
 					isError = true;
 				}
-				if (isError){
-					inputCheckItem.after('<div id="'+ errorId +'" class="invalid-feedback">' + errorMsg + '</div>'); 
-					inputCheckItem.addClass('alert-input');
-					inputCheckItem.addClass('is-invalid');
-					ngFlag = true;
-					ShaCheck.check.moveToFirstItem(inputCheckItem);
-				}else{
-					inputCheckItem.removeClass('alert-input');
-					inputCheckItem.removeClass('is-invalid');
-				}
+				
+				ngFlag = isError || ngFlag;
+				ShaCheck.check._changeClass(inputCheckItem, isError, errorId, errorMsg);
 			}
 			
 			return ngFlag;
@@ -513,16 +485,71 @@ try{
 					false
 				)
 				
-				if (isError){
-					inputCheckItem.after('<div id="'+ errorId +'" class="invalid-feedback">' + errorMsg + '</div>'); 
-					inputCheckItem.addClass('alert-input');
-					inputCheckItem.addClass('is-invalid');
-					ngFlag = true;
-					ShaCheck.check.moveToFirstItem(inputCheckItem);
-				}else{
-					inputCheckItem.removeClass('alert-input');
-					inputCheckItem.removeClass('is-invalid');
+				ngFlag = isError || ngFlag;
+				ShaCheck.check._changeClass(inputCheckItem, isError, errorId, errorMsg);
+			}
+			
+			return ngFlag;
+		},
+		
+		checkUserCode : function(inputCheckItemList){
+			for( var i = 0; i < inputCheckItemList.length; i++ ){
+				var inputCheckItem = inputCheckItemList[i][1];
+				var id = inputCheckItem.attr('id');
+				var errorId = id + "_error";
+				$("#"+errorId).remove();
+			}
+			var ngFlag = false;
+			for( var i = 0; i < inputCheckItemList.length; i++ ){
+				var errorItemName = inputCheckItemList[i][0];
+				var inputCheckItem = inputCheckItemList[i][1];
+				var id = inputCheckItem.attr('id');
+				var errorId = id + "_error";
+				var isError = false;
+				var errorMsg = '';
+
+				if (!inputCheckItem.val().startsWith('M')){
+					errorMsg = ShaConstants.constants.USER_CODE_MSG;
+					isError = true;
 				}
+				
+				ngFlag = isError || ngFlag;
+				ShaCheck.check._changeClass(inputCheckItem, isError, errorId, errorMsg);
+			}
+			
+			return ngFlag;
+		},
+		
+		checkUserCodeExisted : function(inputCheckItemList){
+			for( var i = 0; i < inputCheckItemList.length; i++ ){
+				var inputCheckItem = inputCheckItemList[i][1];
+				var id = inputCheckItem.attr('id');
+				var errorId = id + "_error";
+				$("#"+errorId).remove();
+			}
+			var ngFlag = false;
+			for( var i = 0; i < inputCheckItemList.length; i++ ){
+				var errorItemName = inputCheckItemList[i][0];
+				var inputCheckItem = inputCheckItemList[i][1];
+				var id = inputCheckItem.attr('id');
+				var errorId = id + "_error";
+				var isError = false;
+				var errorMsg = '';
+
+				ShaAjax.ajax.post(
+					Pos.constants.setInfo.common.common.url_com_check_user_code_exist,
+					"userCode="+inputCheckItem.val(),
+					function(data){
+						if (data =='existed'){
+							errorMsg = errorItemName + ShaConstants.constants.USER_CODE_EXISTED_MSG;
+							isError = true;
+						}
+					},
+					false
+				)
+				
+				ngFlag = isError || ngFlag;
+				ShaCheck.check._changeClass(inputCheckItem, isError, errorId, errorMsg);
 			}
 			
 			return ngFlag;
@@ -547,16 +574,36 @@ try{
 					errorMsg = ShaConstants.constants.AUTHCODE_ERROR_MSG;
 					isError = true;
 				}
-				if (isError){
-					inputCheckItem.after('<div id="'+ errorId +'" class="invalid-feedback">' + errorMsg + '</div>'); 
-					inputCheckItem.addClass('alert-input');
-					inputCheckItem.addClass('is-invalid');
-					ngFlag = true;
-					ShaCheck.check.moveToFirstItem(inputCheckItem);
-				}else{
-					inputCheckItem.removeClass('alert-input');
-					inputCheckItem.removeClass('is-invalid');
+				
+				ngFlag = isError || ngFlag;
+				ShaCheck.check._changeClass(inputCheckItem, isError, errorId, errorMsg);
+			}
+			
+			return ngFlag;
+		},
+		
+		checkCreditCode : function(inputCheckItemList){
+			for( var i = 0; i < inputCheckItemList.length; i++ ){
+				var inputCheckItem = inputCheckItemList[i][1];
+				var id = inputCheckItem.attr('id');
+				var errorId = id + "_error";
+				$("#"+errorId).remove();
+			}
+			var ngFlag = false;
+			for( var i = 0; i < inputCheckItemList.length; i++ ){
+				var errorItemName = inputCheckItemList[i][0];
+				var inputCheckItem = inputCheckItemList[i][1];
+				var id = inputCheckItem.attr('id');
+				var errorId = id + "_error";
+				var isError = false;
+				var errorMsg = '';
+				if(ShaCheck.check._checkCreditCode(inputCheckItem)){
+					errorMsg = errorItemName + ShaConstants.constants.CREDIT_CODE_MSG;
+					isError = true;
 				}
+				
+				ngFlag = isError || ngFlag;
+				ShaCheck.check._changeClass(inputCheckItem, isError, errorId, errorMsg);
 			}
 			
 			return ngFlag;
@@ -586,8 +633,17 @@ try{
 				  case 'checkphonenumber':
 					ngFlag = ShaCheck.check.checkPhoneNumber(inputCheckItemList) || ngFlag;
 					continue;
+				  case 'checkphonenumberexisted':
+					ngFlag = ShaCheck.check.checkPhoneNumberExisted(inputCheckItemList) || ngFlag;
+					continue;
 				  case 'checkemail':
 					ngFlag = ShaCheck.check.checkEmail(inputCheckItemList) || ngFlag;
+					continue;
+				　　case 'checkusercode':
+					ngFlag = ShaCheck.check.checkUserCode(inputCheckItemList) || ngFlag;
+					continue;
+				  case 'checkusercodeexisted':
+					ngFlag = ShaCheck.check.checkUserCodeExisted(inputCheckItemList) || ngFlag;
 					continue;
 				  case 'checkconfirmpassword':
 					ngFlag = ShaCheck.check.checkConfirmPassword(inputCheckItemList) || ngFlag;
@@ -704,9 +760,25 @@ try{
 		    }
 		},
 		
+		_checkCreditCode : function(inputCheckItem){
+			var type = inputCheckItem.attr('type');
+			if(type == 'text' || type == 'password' || type == 'number'||
+					inputCheckItem.is('textarea')) {
+				var reg = new RegExp(/^[0-9A-HJ-NPQRTUWXY]{2}\d{6}[0-9A-HJ-NPQRTUWXY]{10}$/);
+	            if (!inputCheckItem.val().match(reg)) {
+	                return true;
+				} else {
+					return false;
+				}
+			}
+			
+			return false;
+		},
+		
 		_changeClass:function(inputCheckItem, isError, errorId, errorMsg){
 			if(isError){
-				var span = inputCheckItem.parent().children("span.password").last();
+				//var span = inputCheckItem.parent().children("span.password").last();
+				var span = inputCheckItem.parent().children().last();
 				var errorDiv = '<div id="'+ errorId +'" class="invalid-feedback">' + errorMsg + '</div>';
 				span.length ? span.after(errorDiv):inputCheckItem.after(errorDiv);
 				inputCheckItem.addClass('alert-input');

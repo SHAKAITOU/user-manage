@@ -15,8 +15,10 @@ import lombok.NoArgsConstructor;
 public class OrderSearchForm {
 
 	private MOrder order;
+	private String name;
 	private String payDateFrom;
 	private String payDateTo;
+	private String userId;
 	
 	@Default
 	private boolean hideSearch = false;

@@ -9,6 +9,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.LocaleResolver;
@@ -26,13 +27,13 @@ import cn.caam.gs.common.util.StringCommonUtil;
 @ComponentScan({"cn.caam.gs.*"})
 @MapperScan("cn.caam.gs.domain.db.*")
 @ServletComponentScan({"cn.caam.gs.*"})
+@Import(InterceptorConfig.class)
 public class ApplicationRun {
     
     @Bean
     public LocaleResolver localeResolver() {
         return new CustomerLocaleResolver();
     }
-
     
     @Bean
     public LocaleChangeInterceptor localeChangeInterceptor() {

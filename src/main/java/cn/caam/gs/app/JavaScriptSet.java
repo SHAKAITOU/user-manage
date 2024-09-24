@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.json.JSONObject;
 import org.springframework.core.env.Environment;
 
-import cn.caam.gs.app.admin.adminmanage.view.AdminManageSearchViewHelper;
 import cn.caam.gs.app.admin.adminmanage.view.AdminManageEditViewHelper;
+import cn.caam.gs.app.admin.adminmanage.view.AdminManageSearchViewHelper;
 import cn.caam.gs.app.admin.login.view.AdminLoginViewHelper;
 import cn.caam.gs.app.admin.menu.menu.AdminMenuViewHelper;
 import cn.caam.gs.app.admin.message.view.AdminMessagePushViewHelper;
@@ -31,6 +31,7 @@ import cn.caam.gs.app.common.view.MessageDetailViewHelper;
 import cn.caam.gs.app.common.view.OrderDetailViewHelper;
 import cn.caam.gs.app.common.view.PasswordChangeViewHelper;
 import cn.caam.gs.app.common.view.PasswordForgetViewHelper;
+import cn.caam.gs.app.common.view.PasswordResetViewHelper;
 import cn.caam.gs.app.common.view.UserDetailViewHelper;
 import cn.caam.gs.app.user.certi.view.UserCertiViewHelper;
 import cn.caam.gs.app.user.login.view.LoginViewHelper;
@@ -129,10 +130,13 @@ public class JavaScriptSet {
 		common.put("checkRequiredNumberValMsg", getContext("common.check.msg.requiredNumberVal"));
 		common.put("checkPhoneNumberMsg", getContext("common.check.msg.phoneNumberMsg"));
 		common.put("checkEmailMsg", getContext("common.check.msg.emailMsg"));
+		common.put("checkCreditCodeMsg", getContext("common.check.msg.creditCodeMsg"));
 		common.put("checkPhoneNumberExistedMsg", getContext("common.check.msg.phoneNumberExistedMsg"));
 		common.put("checkPhoneNumberNotExistedMsg", getContext("common.check.msg.phoneNumberNotExistedMsg"));
 		common.put("checkEmailExistedMsg", getContext("common.check.msg.emailExistedMsg"));
 		common.put("checkAuthCodeErrorMsg", getContext("common.check.msg.authCodeErrorMsg"));
+		common.put("checkUserCodeExistedMsg", getContext("common.check.msg.userCodeExistedMsg"));
+		common.put("checkUserCodeMsg", getContext("common.check.msg.userCodeMsg"));
 
 		// enum
 		common.put("executeReturnTypeOk", ExecuteReturnType.OK.getId());
@@ -181,7 +185,7 @@ public class JavaScriptSet {
 		common.put("learn_experience_max_l", GlobalConstants.LEARN_EXPERIENCE_MAX_L);
 		common.put("amount_max_l", GlobalConstants.AMOUNT_MAX_L);
 		common.put("bill_code_max_l", GlobalConstants.BILL_CODE_MAX_L);
-		common.put("bill_title_max_l", GlobalConstants.BILL_TITLE_MAX_L);
+		common.put("invoice_title_max_l", GlobalConstants.INVOICE_TITLE_MAX_L);
 		common.put("check_status_type_pass", UserCheckStatusType.PASS.getKey());
 
 		JSONObject msgObj = new JSONObject();
@@ -208,6 +212,7 @@ public class JavaScriptSet {
 		
 		jsView.put("passwordChange",       PasswordChangeViewHelper.getJsProperties());
 		jsView.put("passwordForget",       PasswordForgetViewHelper.getJsProperties());
+		jsView.put("passwordReset",        PasswordResetViewHelper.getJsProperties());
 		
 		return jsView;
 	}

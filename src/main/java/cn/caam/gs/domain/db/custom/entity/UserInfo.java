@@ -1,6 +1,7 @@
 package cn.caam.gs.domain.db.custom.entity;
 
 import cn.caam.gs.domain.db.base.entity.MUser;
+import cn.caam.gs.domain.db.base.entity.MUserCard;
 import cn.caam.gs.domain.db.base.entity.MUserExtend;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,8 +17,10 @@ import lombok.NoArgsConstructor;
 public class UserInfo {
 	
     private String id;
+    private String userCode;
 	private MUser user;
 	private MUserExtend userExtend;
+	private MUserCard userCard;
 	
 	/** 会员类型(F0002) */
 	private String userTypeName;

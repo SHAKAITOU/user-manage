@@ -24,6 +24,7 @@ import cn.caam.gs.common.html.element.bs5.DivAlertSet;
 import cn.caam.gs.common.html.element.bs5.DivHrSet;
 import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
 import cn.caam.gs.common.html.element.bs5.LabelDateInputSet;
+import cn.caam.gs.common.html.element.bs5.LabelNumberSet;
 import cn.caam.gs.common.html.element.bs5.LabelDateInputSet.LabelDateInputSetType;
 import cn.caam.gs.common.html.element.bs5.LabelTextAreaSet;
 import cn.caam.gs.common.html.element.bs5.LabelTextAreaSet.LabelTextAreaSetType;
@@ -91,6 +92,7 @@ public class ReviewOkViewHelper extends HtmlViewHelper {
         ColumnInfoForm clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_ID);
         String name      = clmForm.getPageName("");
         sb.append(hidden().get(name, orderInfo.getId()));
+        sb.append(hidden().get(T200MOrder.getColumnInfo(T200MOrder.COL_ORDER_AMOUNT).getName(), String.valueOf(orderInfo.getOrder().getOrderAmount())));
         return sb.toString();
     }
 
@@ -118,7 +120,7 @@ public class ReviewOkViewHelper extends HtmlViewHelper {
         
         //会员号(M/TYYMMDDHHmmSSR2)
         labelName = T200MOrder.getColumnInfo(T200MOrder.COL_USER_ID).getLabelName() + UtilConstants.COLON;
-        context   = orderInfo.getUserName() + "(" + orderInfo.getOrder().getUserId() + ")";
+        context   = orderInfo.getUserName() + "(" + orderInfo.getUserCode() + ")";
         contextList.add(DivAlertSet.builder().gridFlexType(GridFlexType.LEFT)
                 .grids(CssGridsType.G12).classType(CssClassType.INFO)
                 .contexts(new String[] {labelName, context}).build().html());
@@ -145,12 +147,25 @@ public class ReviewOkViewHelper extends HtmlViewHelper {
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
         contextList = new ArrayList<String>();
         
-        //加算有效结束日期(yyyy-MM-dd HH選択
-        ColumnInfoForm clmForm = T100MUser.getColumnInfo(T100MUser.COL_VALID_END_DATE);
+        //实收金额入力値
+        ColumnInfoForm clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_PAY_AMOUNT);
         String name      = clmForm.getPageName("");
         String id        = convertNameDotForId(name);
-        labelName = getContext("admin.order.addValidDate");
+        labelName = clmForm.getLabelName();
         String placeholder = clmForm.getPlaceholder();
+        contextList.add(LabelNumberSet.builder()
+                .id(id).name(name).labelName(labelName).notBlank(true).integerOnly(true)
+                .maxlength(GlobalConstants.AMOUNT_MAX_L).placeholder(placeholder)
+                .fontSize(font).grids(CssGridsType.G12).build().html());
+        sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+       
+        contextList = new ArrayList<String>();
+        //加算有效结束日期(yyyy-MM-dd HH選択
+        clmForm = T100MUser.getColumnInfo(T100MUser.COL_VALID_END_DATE);
+        name      = clmForm.getPageName("");
+        id        = convertNameDotForId(name);
+        labelName = getContext("admin.order.addValidDate");
+        placeholder = clmForm.getPlaceholder();
         String value = newValidDt;
         contextList.add(LabelDateInputSet.builder()
                 .id(id).name(name).labelName(labelName).value(value)
@@ -173,7 +188,7 @@ public class ReviewOkViewHelper extends HtmlViewHelper {
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
 
         
-        return borderCard().noTitleWithScroll("", CssClassType.SUCCESS, "", 370,
+        return borderCard().noTitleWithScroll("", CssClassType.SUCCESS, "", 410,
                 sbBody.toString());
     }
     

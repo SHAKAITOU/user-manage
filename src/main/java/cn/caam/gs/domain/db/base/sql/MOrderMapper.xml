@@ -22,6 +22,11 @@
     <result column="bill_status" property="billStatus" jdbcType="VARCHAR" />
     <result column="memo" property="memo" jdbcType="VARCHAR" />
     <result column="ans" property="ans" jdbcType="VARCHAR" />
+    <result column="invoice_type" property="invoiceType" jdbcType="VARCHAR" />
+    <result column="invoice_title" property="invoiceTitle" jdbcType="VARCHAR" />
+    <result column="credit_code" property="creditCode" jdbcType="VARCHAR" />
+    <result column="mail" property="mail" jdbcType="VARCHAR" />
+    <result column="invoice_amount" property="invoiceAmount" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Base_Column_List" >
     <!--
@@ -30,7 +35,7 @@
     -->
     id, user_id, pay_path, order_method, order_type, pay_type, order_amount, pay_amount, 
     pay_date, check_date, check_status, refund_date, refund_status, bill_status, memo, 
-    ans
+    ans, invoice_type, invoice_title, credit_code, mail, invoice_amount
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     <!--
@@ -60,13 +65,17 @@
       order_amount, pay_amount, pay_date, 
       check_date, check_status, refund_date, 
       refund_status, bill_status, memo, 
-      ans)
+      ans, invoice_type, invoice_title, 
+      credit_code, mail, invoice_amount
+      )
     values (#{id,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{payPath,jdbcType=VARCHAR}, 
       #{orderMethod,jdbcType=VARCHAR}, #{orderType,jdbcType=VARCHAR}, #{payType,jdbcType=VARCHAR}, 
       #{orderAmount,jdbcType=DECIMAL}, #{payAmount,jdbcType=DECIMAL}, #{payDate,jdbcType=VARCHAR}, 
       #{checkDate,jdbcType=VARCHAR}, #{checkStatus,jdbcType=VARCHAR}, #{refundDate,jdbcType=VARCHAR}, 
       #{refundStatus,jdbcType=VARCHAR}, #{billStatus,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, 
-      #{ans,jdbcType=VARCHAR})
+      #{ans,jdbcType=VARCHAR}, #{invoiceType,jdbcType=VARCHAR}, #{invoiceTitle,jdbcType=VARCHAR}, 
+      #{creditCode,jdbcType=VARCHAR}, #{mail,jdbcType=VARCHAR}, #{invoiceAmount,jdbcType=DECIMAL}
+      )
   </insert>
   <insert id="insertSelective" parameterType="cn.caam.gs.domain.db.base.entity.MOrder" >
     <!--
@@ -123,6 +132,21 @@
       <if test="ans != null" >
         ans,
       </if>
+      <if test="invoiceType != null" >
+        invoice_type,
+      </if>
+      <if test="invoiceTitle != null" >
+        invoice_title,
+      </if>
+      <if test="creditCode != null" >
+        credit_code,
+      </if>
+      <if test="mail != null" >
+        mail,
+      </if>
+      <if test="invoiceAmount != null" >
+        invoice_amount,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -172,6 +196,21 @@
       </if>
       <if test="ans != null" >
         #{ans,jdbcType=VARCHAR},
+      </if>
+      <if test="invoiceType != null" >
+        #{invoiceType,jdbcType=VARCHAR},
+      </if>
+      <if test="invoiceTitle != null" >
+        #{invoiceTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="creditCode != null" >
+        #{creditCode,jdbcType=VARCHAR},
+      </if>
+      <if test="mail != null" >
+        #{mail,jdbcType=VARCHAR},
+      </if>
+      <if test="invoiceAmount != null" >
+        #{invoiceAmount,jdbcType=DECIMAL},
       </if>
     </trim>
   </insert>
@@ -227,6 +266,21 @@
       <if test="ans != null" >
         ans = #{ans,jdbcType=VARCHAR},
       </if>
+      <if test="invoiceType != null" >
+        invoice_type = #{invoiceType,jdbcType=VARCHAR},
+      </if>
+      <if test="invoiceTitle != null" >
+        invoice_title = #{invoiceTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="creditCode != null" >
+        credit_code = #{creditCode,jdbcType=VARCHAR},
+      </if>
+      <if test="mail != null" >
+        mail = #{mail,jdbcType=VARCHAR},
+      </if>
+      <if test="invoiceAmount != null" >
+        invoice_amount = #{invoiceAmount,jdbcType=DECIMAL},
+      </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -250,7 +304,12 @@
       refund_status = #{refundStatus,jdbcType=VARCHAR},
       bill_status = #{billStatus,jdbcType=VARCHAR},
       memo = #{memo,jdbcType=VARCHAR},
-      ans = #{ans,jdbcType=VARCHAR}
+      ans = #{ans,jdbcType=VARCHAR},
+      invoice_type = #{invoiceType,jdbcType=VARCHAR},
+      invoice_title = #{invoiceTitle,jdbcType=VARCHAR},
+      credit_code = #{creditCode,jdbcType=VARCHAR},
+      mail = #{mail,jdbcType=VARCHAR},
+      invoice_amount = #{invoiceAmount,jdbcType=DECIMAL}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

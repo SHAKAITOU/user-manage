@@ -185,11 +185,11 @@ public class UserReviewSearchViewHelper extends HtmlViewHelper {
                     tr.addTd(td().get(PHONE_TD_HEIGHT, CssGridsType.G12, CssAlignType.LEFT, subRow1, subRow2));
                 } else {
                     // --col1--
-                    tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, true, checkStatusNmae));
+                    tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, checkStatusNmae));
                     // --col2--
-                    tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, true, checkDate));
+                    tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, checkDate));
                     // --col3--
-                    tr.addTd(td().get(CssGridsType.G8, CssAlignType.LEFT, true, memo));
+                    tr.addTd(td().get(CssGridsType.G8, CssAlignType.LEFT, memo));
                 }
                 
                 bodyList.add(tr);

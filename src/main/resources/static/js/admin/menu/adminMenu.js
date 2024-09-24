@@ -112,7 +112,7 @@ AdminMenu.prototype.initEvent = function(){
     $buttonList.each(function(i, elem){
 	    ShaInput.button.onClick($(elem),
 	    	function(event) {
-				ShaAjax.ajax.post(
+				ShaAjax.ajax.get(
 	                self.jsContext.adminJsView.adminOrderSearch.url_order_list_wait, 
 	                null, 
 	                function(data){
@@ -128,7 +128,7 @@ AdminMenu.prototype.initEvent = function(){
     $buttonList.each(function(i, elem){
 	    ShaInput.button.onClick($(elem),
 	    	function(event) {
-				ShaAjax.ajax.post(
+				ShaAjax.ajax.get(
 	                self.jsContext.adminJsView.adminOrderSearch.url_order_list_review, 
 	                null, 
 	                function(data){
@@ -144,7 +144,7 @@ AdminMenu.prototype.initEvent = function(){
     $buttonList.each(function(i, elem){
 	    ShaInput.button.onClick($(elem),
 	    	function(event) {
-				ShaAjax.ajax.post(
+				ShaAjax.ajax.get(
 	                self.jsContext.adminJsView.adminOrderSearch.url_order_list_pass, 
 	                null, 
 	                function(data){
@@ -297,7 +297,7 @@ AdminMenu.prototype.initEvent = function(){
     	self.ajustNavi();
 	};
     
-    $buttonList = self.getObjectList(self.ID.CLASS_NM_USER_SEARCH);
+    $buttonList = self.getObjectList(self.ID.CLASS_NM_PERSONAL_REVIEW_SEARCH);
     $buttonList[0].click();
     
 };

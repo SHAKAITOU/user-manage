@@ -5,6 +5,7 @@ public enum BillType implements EnumImpl {
     UNIFIED             (EnumIndex.startIndex(1), "01",  true,    CssClassType.INFO),
     SPECIAL_VALUE_ADDED (EnumIndex.getNext(),     "02",  true,    CssClassType.DANGER),
     NORMAL_VALUE_ADDED  (EnumIndex.getNext(),     "03",  true,    CssClassType.INFO),
+    UNKNOWN  (EnumIndex.getNext(),     "",  true,    CssClassType.PRIMARY),
 	;
     
 
@@ -53,7 +54,7 @@ public enum BillType implements EnumImpl {
     		}
     	}
     	
-    	return null;
+    	return UNKNOWN;
     }
     
     public static BillType keyOf(String key) {
@@ -63,6 +64,6 @@ public enum BillType implements EnumImpl {
     		}
     	}
     	
-    	return null;
+    	return UNKNOWN;
     }
 }

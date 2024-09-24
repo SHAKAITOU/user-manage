@@ -114,7 +114,7 @@ public class MessageDetailViewHelper extends HtmlViewHelper {
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
         contextList = new ArrayList<String>();
         
-        
+        contextList = new ArrayList<String>();
         //内容
         sbBody.append(borderCard().noTitleWithScroll("", CssClassType.SUCCESS, "", 200,
                 setPanel(request, message)));

@@ -4,7 +4,9 @@
     <resultMap id="OrderInfoForm" 
                 type="cn.caam.gs.domain.db.custom.entity.OrderInfo">
         <id property="id" column="id"/>
+        <result property="userCode"       column="userCode"/>
         <result property="userName"       column="userName"/>
+        <result property="userTypeName"       column="userTypeName"/>
         <result property="payPathName"       column="payPathName"/>
         <result property="orderMethodName"   column="orderMethodName"/>
         <result property="orderTypeName"     column="orderTypeName"/>
@@ -14,6 +16,7 @@
         <result property="billStatusName"      column="billStatusName"/>
         <result property="billTypeName"      column="billTypeName"/>
         <result property="voteMethodName"      column="voteMethodName"/>
+        <result property="invoiceTypeName"      column="invoiceTypeName"/>
         <association property="order" 
             resultMap="cn.caam.gs.domain.db.base.mapper.MOrderMapper.BaseResultMap">
             <id column="id" property="id" />
@@ -36,7 +39,9 @@
     </resultMap>
     <sql id="baseSelect">
 	    mo.*,
+	    muc.user_code AS userCode,
 	    mu.name      AS userName,
+	    F0002.name   AS userTypeName,
 	    F0012.name   AS payPathName,
 	    F0020.name   AS orderMethodName,
 	    F0015.name   AS orderTypeName,
@@ -45,11 +50,14 @@
 	    F0016.name   AS refundStatusName,
 	    F0018.name   AS billStatusName,
 	    F0017.name   AS billTypeName,
-	    F0019.name   AS voteMethodName
+	    F0019.name   AS voteMethodName,
+	    F0027.name   AS invoiceTypeName
     </sql>
     <sql id="baseJoin">
     	LEFT JOIN m_user mu ON mo.user_id = mu.id
+    	LEFT JOIN m_user_card muc ON mu.id = muc.user_id AND muc.valid_status='1'
 		LEFT JOIN m_bill mb ON mo.id = mb.id
+		LEFT JOIN m_fixed_value F0002   ON mu.user_type       = F0002.value   AND F0002.code   = 'F0002'
 		LEFT JOIN m_fixed_value F0012   ON mo.pay_path        = F0012.value   AND F0012.code   = 'F0012'
 		LEFT JOIN m_fixed_value F0020   ON mo.order_method    = F0020.value   AND F0020.code   = 'F0020'
 		LEFT JOIN m_fixed_value F0015   ON mo.order_type      = F0015.value   AND F0015.code   = 'F0015'
@@ -59,6 +67,7 @@
 		LEFT JOIN m_fixed_value F0018   ON mo.bill_status     = F0018.value   AND F0018.code   = 'F0018'
 		LEFT JOIN m_fixed_value F0017   ON mb.bill_type       = F0017.value   AND F0017.code   = 'F0017'
 		LEFT JOIN m_fixed_value F0019   ON mb.vote_method     = F0019.value   AND F0019.code   = 'F0019'
+		LEFT JOIN m_fixed_value F0027   ON mo.invoice_type    = F0027.value   AND F0027.code   = 'F0027'
     </sql>
     <sql id="baseCondition">
 		<if test="order != null and order.userId != null and order.userId != ''" >
@@ -86,12 +95,16 @@
 	        	and STR_TO_DATE(mo.pay_date, '%Y-%m-%d %T') <= STR_TO_DATE(concat(#{payDateTo, jdbcType=NVARCHAR}, ' 23:59:59'), '%Y-%m-%d %T')
 	        ]]>
 		</if>
+		<if test="name != null and name != ''" >
+	        and mu.name like concat(concat('%', #{name, jdbcType=NVARCHAR}), '%') 
+		</if>
     </sql>
     <!-- SQL CHIP -->
 	<select id="getOrderListCount" resultType="int">
 		SELECT COUNT(mo.id)
 		FROM
 		    m_order mo 
+		    LEFT JOIN m_user mu ON mo.user_id = mu.id
 		WHERE 1=1
 		    <include refid="baseCondition"/>
 	</select>
@@ -156,6 +169,9 @@
 		        	and STR_TO_DATE(mb.bill_date, '%Y-%m-%d %T') <= STR_TO_DATE(concat(#{billDateTo, jdbcType=NVARCHAR}, ' 23:59:59'), '%Y-%m-%d %T')
 		        ]]>
 			</if>
+			<if test="name != null and name != ''" >
+	        	and mu.name like concat(concat('%', #{name, jdbcType=NVARCHAR}), '%') 
+			</if>
 	</select>
 	<!-- SQL CHIP -->
 	<select id="getBillList" resultMap="OrderInfoForm">
@@ -178,6 +194,9 @@
 		        <![CDATA[
 		        	and STR_TO_DATE(mb.bill_date, '%Y-%m-%d %T') <= STR_TO_DATE(concat(#{billDateTo, jdbcType=NVARCHAR}, ' 23:59:59'), '%Y-%m-%d %T')
 		        ]]>
+			</if>
+			<if test="name != null and name != ''" >
+	        	and mu.name like concat(concat('%', #{name, jdbcType=NVARCHAR}), '%') 
 			</if>
 		ORDER BY mo.bill_status, mo.pay_date DESC
 		LIMIT #{limit} OFFSET #{offset}

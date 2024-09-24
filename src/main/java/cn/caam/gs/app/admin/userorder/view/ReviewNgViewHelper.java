@@ -124,7 +124,7 @@ public class ReviewNgViewHelper extends HtmlViewHelper {
         
         //会员号(M/TYYMMDDHHmmSSR2)
         labelName = T200MOrder.getColumnInfo(T200MOrder.COL_USER_ID).getLabelName() + UtilConstants.COLON;
-        context   = orderInfo.getUserName() + "(" + orderInfo.getOrder().getUserId() + ")";
+        context   = orderInfo.getUserName() + "(" + orderInfo.getUserCode() + ")";
         contextList.add(DivAlertSet.builder().gridFlexType(GridFlexType.LEFT)
                 .grids(CssGridsType.G12).classType(CssClassType.INFO)
                 .contexts(new String[] {labelName, context}).build().html());

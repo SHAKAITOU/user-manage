@@ -45,7 +45,7 @@ public class AdminManageSearchController extends JcbcBaseController{
 		        AdminManageSearchViewHelper.getMainPage(request, pageForm, userListOutput));
 	}
 	
-	@PostMapping(path=AdminManageSearchViewHelper.URL_C_SEARCH)
+	@GetMapping(path=AdminManageSearchViewHelper.URL_C_SEARCH)
     public ModelAndView search(
             AdminManageSearchForm pageForm,
             HttpServletRequest request,
@@ -57,7 +57,7 @@ public class AdminManageSearchController extends JcbcBaseController{
                 AdminManageSearchViewHelper.refeshTable(request, pageForm, userListOutput));
     }
 	
-	@PostMapping(path=AdminManageSearchViewHelper.URL_C_GROWING)
+	@GetMapping(path=AdminManageSearchViewHelper.URL_C_GROWING)
     public ModelAndView growing(
             AdminManageSearchForm pageForm,
             HttpServletRequest request,

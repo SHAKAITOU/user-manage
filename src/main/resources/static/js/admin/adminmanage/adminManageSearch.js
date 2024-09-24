@@ -89,7 +89,7 @@ AdminManageSearch.prototype.initEvent = function(){
     
     ShaInput.button.onClick(self.getObject(self.ID.SEARCH_BTN_ID),
     	function(event) {
-			ShaAjax.ajax.post(
+			ShaAjax.ajax.get(
                 self.jsContext.adminJsView.adminManageSearch.url_user_list, 
                 self.getForm().serializeArray(), 
                 function(data){
@@ -123,14 +123,23 @@ AdminManageSearch.prototype.initEvent = function(){
 		//check box init
 	   	ShaInput.button.onClick($(elem),
 	    	function(event) {
-				ShaAjax.ajax.post(
-	                self.jsContext.adminJsView.adminUserReview.url_init, 
-	                [{name:"id",     value:$(elem).attr("data")}],
-				    //self.getForm().serializeArray(),  
-	                function(data){
-	                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
-	                }
-	            ); 
+				ShaDialog.dialogs.confirm(
+					self.i18n["PasswordReset.title"], 
+					self.i18n["PasswordReset.confirm.reset.title"], 
+					function () {
+						ShaAjax.ajax.post(
+							self.jsContext.jsView.passwordReset.url_admin_reset,
+							[{name:"id",     value:$(elem).attr("data")}],
+							function (data) {
+								if (data == Pos.constants.setInfo.common.executeReturnTypeOk) {
+									ShaDialog.dialogs.success(self.i18n["PasswordReset.success.msg"]);
+								}else{
+									ShaDialog.dialogs.alert(self.i18n["PasswordReset.success.fail"]);
+								}
+							}
+						);
+					}
+				);
 			}
 	    );
 	});
@@ -154,7 +163,7 @@ AdminManageSearch.prototype.initEvent = function(){
 AdminManageSearch.prototype.doPageLink = function(){
 	//keep self instance for call back
 	var self = this;
-	ShaAjax.ajax.post(
+	ShaAjax.ajax.get(
         self.jsContext.adminJsView.adminManageSearch.url_user_list_growing, 
         self.getForm().serializeArray(), 
         function(data){

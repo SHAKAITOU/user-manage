@@ -62,9 +62,9 @@ try{
 			ShaDialog.dialogs.progress(true);
 			
 			var paramData = null;
-			if(arguments.length === 2){
+			//if(arguments.length === 2){
 				paramData = formData;
-			}
+			//}
 			
 			$.ajax({
 				   type: "GET",
@@ -78,6 +78,17 @@ try{
 					    400: function(data) {
 					    	ShaDialog.dialogs.progress(false);
 					    	ShaDialog.dialogs.alert(data.responseJSON.message);
+					    },
+						401: function(xhr, status) {
+							ShaDialog.dialogs.progress(false);
+							let location = xhr.getResponseHeader('Location') != "" ? 
+								xhr.getResponseHeader('Location'):"/login/logout";
+							ShaDialog.dialogs.alertWithCallBack(
+			    				ShaConstants.constants.HTTP_STATUS_500_ACCESS_DENY_MSG,
+			    				function(){
+			    					ShaRestful.restful.get(location);
+			    				}
+							);
 					    },
 					    403: function() {
 					    	ShaDialog.dialogs.progress(false);
@@ -140,6 +151,16 @@ try{
 					    400: function(data) {
 					    	ShaDialog.dialogs.progress(false);
 					    	ShaDialog.dialogs.alert(data.responseJSON.message);
+					    },
+						401: function(data) {
+							ShaDialog.dialogs.progress(false);
+							let location = xhr.getResponseHeader('Location') != "" ? xhr.getResponseHeader('Location'):"/login/logout";
+							ShaDialog.dialogs.alertWithCallBack(
+			    				ShaConstants.constants.HTTP_STATUS_500_ACCESS_DENY_MSG,
+			    				function(){
+			    					ShaRestful.restful.get(location);
+			    				}
+							);
 					    },
 					    403: function() {
 					    	ShaDialog.dialogs.progress(false);
@@ -222,6 +243,17 @@ try{
 					    	ShaDialog.dialogs.progress(false);
 					    	ShaDialog.dialogs.alert(data.responseJSON.message);
 					    },
+						401: function(data) {
+							ShaDialog.dialogs.progress(false);
+							let location = xhr.getResponseHeader('Location') != "" ? 
+								xhr.getResponseHeader('Location'):"/login/logout";
+							ShaDialog.dialogs.alertWithCallBack(
+			    				ShaConstants.constants.HTTP_STATUS_500_ACCESS_DENY_MSG,
+			    				function(){
+			    					ShaRestful.restful.get(location);
+			    				}
+							);
+					    },
 					    403: function() {
 					    	ShaDialog.dialogs.progress(false);
 					    	ShaDialog.dialogs.alert(ShaConstants.constants.HTTP_STATUS_403_MSG);
@@ -292,6 +324,17 @@ try{
 						    400: function(data) {
 						    	ShaDialog.dialogs.progress(false);
 						    	ShaDialog.dialogs.alert(data.responseJSON.message);
+						    },
+							401: function(data) {
+								ShaDialog.dialogs.progress(false);
+								let location = xhr.getResponseHeader('Location') != "" ? 
+									xhr.getResponseHeader('Location'):"/login/logout";
+								ShaDialog.dialogs.alertWithCallBack(
+				    				ShaConstants.constants.HTTP_STATUS_500_ACCESS_DENY_MSG,
+				    				function(){
+				    					ShaRestful.restful.get(location);
+				    				}
+								);
 						    },
 						    403: function() {
 						    	ShaDialog.dialogs.progress(false);

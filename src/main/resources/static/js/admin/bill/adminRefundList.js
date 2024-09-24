@@ -99,7 +99,7 @@ AdminRefundList.prototype.initEvent = function(){
 	
     ShaInput.button.onClick(self.getObject(self.ID.SEARCH_BTN_ID),
     	function(event) {
-			ShaAjax.ajax.post(
+			ShaAjax.ajax.get(
                 self.jsContext.adminJsView.adminRefundSearch.url_refund_list, 
                 self.getForm().serializeArray(), 
                 function(data){
@@ -155,7 +155,7 @@ AdminRefundList.prototype.initEvent = function(){
 AdminRefundList.prototype.doPageLink = function(){
 	//keep self instance for call back
 	var self = this;
-	ShaAjax.ajax.post(
+	ShaAjax.ajax.get(
         self.jsContext.adminJsView.adminRefundSearch.url_refund_list_growing, 
         self.getForm().serializeArray(), 
         function(data){

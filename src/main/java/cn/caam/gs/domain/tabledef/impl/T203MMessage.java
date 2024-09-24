@@ -22,7 +22,7 @@ public class T203MMessage extends BaseTableDef implements BaseDdl{
         // name | pk | type | charMaxLength | numPrecision | numScale | nullable | default | comment
         new ColumnInfoForm(COL_ID,                  true,     MySqlType.CHARACTER_VARYING.getType(), 50,  null, null, false,  "", getLabelName(TABLE_NAME, COL_ID),          getPlaceholder(TABLE_NAME, COL_ID)),
         new ColumnInfoForm(COL_MSG_TYPE,            false,    MySqlType.CHARACTER_VARYING.getType(), 3 ,  null, null, false , "", getLabelName(TABLE_NAME, COL_MSG_TYPE),    getPlaceholder(TABLE_NAME, COL_MSG_TYPE)),
-        new ColumnInfoForm(COL_USER_ID,             false,    MySqlType.CHARACTER_VARYING.getType(), 20 , null, null, true ,  "", getLabelName(TABLE_NAME, COL_USER_ID),     getPlaceholder(TABLE_NAME, COL_USER_ID)),
+        new ColumnInfoForm(COL_USER_ID,             false,    MySqlType.CHARACTER_VARYING.getType(), 50 , null, null, true ,  "", getLabelName(TABLE_NAME, COL_USER_ID),     getPlaceholder(TABLE_NAME, COL_USER_ID)),
         new ColumnInfoForm(COL_TITLE,               false,    MySqlType.CHARACTER_VARYING.getType(), 255 , null, null, false ,  "", getLabelName(TABLE_NAME, COL_TITLE),     getPlaceholder(TABLE_NAME, COL_TITLE)),
         new ColumnInfoForm(COL_MSG,                 false,    MySqlType.TEXT.getType(),             null, null, null, false , "", getLabelName(TABLE_NAME, COL_MSG),         getPlaceholder(TABLE_NAME, COL_MSG)),
         new ColumnInfoForm(COL_REGIST_DATE,         false,    MySqlType.CHARACTER_VARYING.getType(), 20 , null, null, true ,  "", getLabelName(TABLE_NAME, COL_REGIST_DATE), getPlaceholder(TABLE_NAME, COL_REGIST_DATE)),

@@ -14,6 +14,7 @@ import cn.caam.gs.app.UrlConstants;
 import cn.caam.gs.app.dbmainten.form.ColumnInfoForm;
 import cn.caam.gs.app.util.HtmlViewHelper;
 import cn.caam.gs.common.bean.ViewData;
+import cn.caam.gs.common.enums.AcceptFileType;
 import cn.caam.gs.common.enums.CellWidthType;
 import cn.caam.gs.common.enums.CssAlignType;
 import cn.caam.gs.common.enums.CssClassType;
@@ -110,7 +111,7 @@ public class RefundViewHelper extends HtmlViewHelper {
         
         //会员号(M/TYYMMDDHHmmSSR2)
         labelName = T200MOrder.getColumnInfo(T200MOrder.COL_USER_ID).getLabelName() + UtilConstants.COLON;
-        context   = orderInfo.getUserName() + "(" + orderInfo.getOrder().getUserId() + ")";
+        context   = orderInfo.getUserName() + "(" + orderInfo.getUserCode() + ")";
         contextList.add(DivAlertSet.builder().gridFlexType(GridFlexType.LEFT)
                 .grids(CssGridsType.G12).classType(CssClassType.INFO)
                 .contexts(new String[] {labelName, context}).build().html());
@@ -173,7 +174,7 @@ public class RefundViewHelper extends HtmlViewHelper {
         
         labelName   = getContext("common.page.File");
         contextList.add(LabelFileSet.builder()
-                .id(idFile).idLablel(idLbl).name(name).labelName(labelName).placeholder(placeholder)
+                .id(idFile).idLablel(idLbl).name(name).labelName(labelName).placeholder(placeholder).acceptFileType(AcceptFileType.IMAGE)
                 .fontSize(font).grids(CssGridsType.G8).build().html());
 
         

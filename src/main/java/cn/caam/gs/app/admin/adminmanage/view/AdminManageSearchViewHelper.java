@@ -53,9 +53,7 @@ public class AdminManageSearchViewHelper extends HtmlViewHelper {
 	public static final String URL_BASE = UrlConstants.ADMIN + UrlConstants.ADMIN_LIST;
 	//init url
 	public static final String URL_C_INIT = UrlConstants.INIT;
-	//init url
     public static final String URL_C_SEARCH = UrlConstants.SEARCH;
-    
     public static final String URL_C_GROWING = UrlConstants.GROWING;
     
     public static final String PREFIX_NAME                    = "user.";

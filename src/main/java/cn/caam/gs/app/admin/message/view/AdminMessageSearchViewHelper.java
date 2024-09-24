@@ -13,9 +13,7 @@ import org.springframework.stereotype.Component;
 import cn.caam.gs.app.GlobalConstants;
 import cn.caam.gs.app.UrlConstants;
 import cn.caam.gs.app.common.form.MessageSearchForm;
-import cn.caam.gs.app.common.form.OrderSearchForm;
 import cn.caam.gs.app.common.output.MessageListOutput;
-import cn.caam.gs.app.common.output.OrderListOutput;
 import cn.caam.gs.app.dbmainten.form.ColumnInfoForm;
 import cn.caam.gs.app.util.HtmlViewHelper;
 import cn.caam.gs.app.util.LoginInfoHelper;
@@ -44,11 +42,12 @@ import cn.caam.gs.common.html.element.bs5.LabelDateInputSet.LabelDateInputSetTyp
 import cn.caam.gs.common.html.element.bs5.LabelInputSet;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet.LabelSelectSetType;
-import cn.caam.gs.common.util.PaginationHolder;
 import cn.caam.gs.common.html.element.bs5.PTextSet;
-import cn.caam.gs.common.html.element.bs5.SpanTextSet;
+import cn.caam.gs.common.util.PaginationHolder;
 import cn.caam.gs.domain.db.custom.entity.FixValueInfo;
 import cn.caam.gs.domain.db.custom.entity.MessageInfo;
+import cn.caam.gs.domain.tabledef.impl.T100MUser;
+import cn.caam.gs.domain.tabledef.impl.T105MUserCard;
 import cn.caam.gs.domain.tabledef.impl.T203MMessage;
 
 @Component
@@ -57,9 +56,7 @@ public class AdminMessageSearchViewHelper extends HtmlViewHelper {
 	public static final String URL_BASE = UrlConstants.ADMIN + "/message";
 	//init url
 	public static final String URL_C_INIT = UrlConstants.INIT;
-	//init url
     public static final String URL_C_SEARCH = UrlConstants.SEARCH;
-    
     public static final String URL_C_GROWING = UrlConstants.GROWING;
     
     public static final String PREFIX_NAME                    = "message.";
@@ -135,7 +132,7 @@ public class AdminMessageSearchViewHelper extends HtmlViewHelper {
         sb.append(divRow().cellBlank(5));
         sb.append(setBreadCrumb());
         sb.append("<div id='" + SEARCH_PANEL_ID + "'>");
-        sb.append(setCardForSearchPanel(request));
+        sb.append(setCardForSearchPanel(request, pageForm));
         sb.append("</div>");
         sb.append(DivChevronSet.builder().idUp(HIDE_SEARCH_PANEL_BTN_ID).idDown(SHOW_SEARCH_PANEL_BTN_ID).build().html());
         sb.append("<div id='" + LIST_REFRESH_BODY_ID + "'>");
@@ -152,15 +149,15 @@ public class AdminMessageSearchViewHelper extends HtmlViewHelper {
 
     //--------------------header SearchPanel -----------------
     
-    private static String setCardForSearchPanel(HttpServletRequest request) {
+    private static String setCardForSearchPanel(HttpServletRequest request, MessageSearchForm pageForm) {
         StringBuffer sbBody = new StringBuffer();
         sbBody.append(borderCard().noTitleNoScroll("", CssClassType.SUCCESS, "", 
                 "",
-                setSearchPanel(request)));
+                setSearchPanel(request, pageForm)));
         
         return sbBody.toString();
     }
-    private static String setSearchPanel(HttpServletRequest request) {
+    private static String setSearchPanel(HttpServletRequest request, MessageSearchForm pageForm) {
         @SuppressWarnings("unchecked")
         Map<FixedValueType, List<FixValueInfo>> fixedValueMap = 
                 (Map<FixedValueType, List<FixValueInfo>>)request.getSession().getAttribute(SessionConstants.FIXED_VALUE.getValue());
@@ -185,19 +182,44 @@ public class AdminMessageSearchViewHelper extends HtmlViewHelper {
         }
         contextList.add(LabelSelectSet.builder()
                 .id(id).name(name).labelName(labelName)
-                .radios(radios).selectedValue(GlobalConstants.DFL_SELECT_ALL)
+                .radios(radios).selectedValue(pageForm.getMessage() != null ? nonNull(pageForm.getMessage().getMsgType()):"")
                 .fontSize(font).grids(CssGridsType.G2).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
         
+        //会员名称選択
+        clmForm = T100MUser.getColumnInfo(T100MUser.COL_NAME);
+        name      = "userName";//clmForm.getPageName("");
+        id        = convertNameDotForId(name);
+        labelName = clmForm.getLabelName();
+//        placeholder = clmForm.getPlaceholder();
+        placeholder = getContext("common.search.input.prefixNname") + labelName;
+        contextList.add(LabelInputSet.builder()
+                .id(id).name(name).labelName(labelName).value(nonNull(pageForm.getUserName()))
+                .maxlength(GlobalConstants.USER_NAME_MAX_L).placeholder(placeholder)
+                .fontSize(font).grids(CssGridsType.G3).build().html());
+        
         //会员号(M/TYYMMDDHHmmSSR2)選択
-        clmForm = T203MMessage.getColumnInfo(T203MMessage.COL_USER_ID);
+        clmForm = T105MUserCard.getColumnInfo(T105MUserCard.COL_USER_CODE);
+        name      = clmForm.getPageName("");
+        id        = convertNameDotForId(name);
+        labelName = clmForm.getLabelName();
+//        placeholder = clmForm.getPlaceholder();
+        placeholder = getContext("common.search.input.prefixNname") + labelName;
+        contextList.add(LabelInputSet.builder()
+                .id(id).name(name).labelName(labelName).value(nonNull(pageForm.getUserCode()))
+                .maxlength(GlobalConstants.USER_ID_MAX_L).placeholder(placeholder)
+                .fontSize(font).grids(CssGridsType.G3).build().html());
+        
+        //标题選択
+        clmForm = T203MMessage.getColumnInfo(T203MMessage.COL_TITLE);
         name      = clmForm.getPageName(PREFIX_NAME);
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
-        placeholder = clmForm.getPlaceholder();
+//        placeholder = clmForm.getPlaceholder();
+        placeholder = getContext("common.search.input.prefixNname") + labelName;
         contextList.add(LabelInputSet.builder()
-                .id(id).name(name).labelName(labelName)
-                .maxlength(GlobalConstants.USER_ID_MAX_L).placeholder(placeholder)
-                .fontSize(font).grids(CssGridsType.G3).build().html());
+                .id(id).name(name).labelName(labelName).value(pageForm.getMessage() != null ? nonNull(pageForm.getMessage().getTitle()):"")
+                .maxlength(GlobalConstants.MESSAGE_TITLE_MAX_L).placeholder(placeholder)
+                .fontSize(font).grids(CssGridsType.G4).build().html());
         
         //消息时间(yyyy-MM-dd HH選択
         clmForm = T203MMessage.getColumnInfo(T203MMessage.COL_REGIST_DATE);
@@ -206,20 +228,20 @@ public class AdminMessageSearchViewHelper extends HtmlViewHelper {
         labelName = clmForm.getLabelName() + getContext("common.page.start");
         placeholder = clmForm.getPlaceholder();
         contextList.add(LabelDateInputSet.builder()
-                .id(id).name(name).labelName(labelName).placeholder(placeholder)
-                .fontSize(font).grids(CssGridsType.G3).outPutType(LabelDateInputSetType.WITH_LABEL_FOOT).build().html());
+                .id(id).name(name).labelName(labelName).placeholder(placeholder).value(nonNull(pageForm.getRegistDateFrom()))
+                .fontSize(font).grids(CssGridsType.G2).outPutType(LabelDateInputSetType.WITH_LABEL_FOOT).build().html());
         
         name      = clmForm.getPageName("") + "To";
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName() + getContext("common.page.end");
         contextList.add(LabelDateInputSet.builder()
-                .id(id).name(name).labelName(labelName).placeholder(placeholder)
-                .fontSize(font).grids(CssGridsType.G3).outPutType(LabelDateInputSetType.WITH_LABEL_FOOT).build().html());
+                .id(id).name(name).labelName(labelName).placeholder(placeholder).value(nonNull(pageForm.getRegistDateTo()))
+                .fontSize(font).grids(CssGridsType.G2).outPutType(LabelDateInputSetType.WITH_LABEL_FOOT).build().html());
         
         name = getContext("common.page.search");
         contextList.add(ButtonSet.builder()
                 .id(SEARCH_BTN_ID).buttonName(name).isBorderOnly(true)
-                .grids(CssGridsType.G1).outPutType(ButtonSetType.NORMAL).gridFlexType(GridFlexType.RIGHT)
+                .grids(CssGridsType.G1).outPutType(ButtonSetType.NORMAL).gridFlexType(GridFlexType.LEFT)
                 .iconSet(IconSet.builder().type(IconSetType.SEARCH).css(IconSetCss.NOMAL_10).build())
                 .build().html());
         
@@ -304,8 +326,10 @@ public class AdminMessageSearchViewHelper extends HtmlViewHelper {
             String subRow1 = divRow().get(CellWidthType.ONE,     aligs, T203MMessage.getColumnInfo(T203MMessage.COL_TITLE).getLabelName());
             List<GridFlexType> flexs = new ArrayList<>();
             flexs.add(GridFlexType.LEFT);
+            flexs.add(GridFlexType.LEFT);
             flexs.add(GridFlexType.RIGHT);
-            String subRow2 = divRow().getFlex(CellWidthType.TWO_4_8, flexs, T203MMessage.getColumnInfo(T203MMessage.COL_MSG_TYPE).getLabelName(), 
+            String subRow2 = divRow().getFlex(CellWidthType.THREE_4_4_4, flexs, T203MMessage.getColumnInfo(T203MMessage.COL_MSG_TYPE).getLabelName(), 
+                                                                        T100MUser.getColumnInfo(T100MUser.COL_NAME).getLabelName(),
                                                                         T203MMessage.getColumnInfo(T203MMessage.COL_USER_ID).getLabelName());
             flexs = new ArrayList<>();
             flexs.add(GridFlexType.LEFT);
@@ -317,17 +341,20 @@ public class AdminMessageSearchViewHelper extends HtmlViewHelper {
             // --[
             // --col1--标题
             String context  = T203MMessage.getColumnInfo(T203MMessage.COL_TITLE).getLabelName();
-            headTr.addTh(th().get(CssGridsType.G6, CssAlignType.LEFT, context));
+            headTr.addTh(th().get(CssGridsType.G5, CssAlignType.CENTER, context));
             // --col2--站内消息类型(F0021)
             context         = T203MMessage.getColumnInfo(T203MMessage.COL_MSG_TYPE).getLabelName();
             headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, context));
-            // --col3--会员号(M/TYYMMDDHHmmSSR2)
+            // --col3--会员名
+            context         = T100MUser.getColumnInfo(T100MUser.COL_NAME).getLabelName();
+            headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, context));
+            // --col4--会员号(M/TYYMMDDHHmmSSR2)
             context         = T203MMessage.getColumnInfo(T203MMessage.COL_USER_ID).getLabelName();
             headTr.addTh(th().get(CssGridsType.G2, CssAlignType.CENTER, context));
-            // --col4--消息时间(yyyy-MM-dd HH
+            // --col5--消息时间(yyyy-MM-dd HH
             context         = T203MMessage.getColumnInfo(T203MMessage.COL_REGIST_DATE).getLabelName();
             headTr.addTh(th().get(CssGridsType.G2, CssAlignType.CENTER, context));
-            // --col5--操作
+            // --col6--操作
             context         = getContext("common.page.do");
             headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, context));
             // --]
@@ -343,9 +370,11 @@ public class AdminMessageSearchViewHelper extends HtmlViewHelper {
                 String msgType = PTextSet.builder()
                         .context(info.getMsgTypeName())
                         .classType(MsgType.keyOf(info.getMessage().getMsgType()).getClassType()).build().html();
-                String userId = nonNull(info.getMessage().getUserId());
+                String userCode = nonNull(info.getUserCode());
+                String userName = nonNull(info.getUserName());
                 String registDt = info.getMessage().getRegistDate();
                 String title = trimFitForTd(CssGridsType.G12.getKey(), info.getMessage().getTitle(), true);
+//                String title =  nonNull(info.getMessage().getTitle());
                 String btnDetail = button().forTableBorderNameRight(IconSetType.DETAIL, CssClassType.INFO, 
                         "", getContext("admin.userList.btn.detail"), info.getId(), TABLE_BTN_DETAIL);
                 if (isPhoneMode(request)) {
@@ -355,8 +384,9 @@ public class AdminMessageSearchViewHelper extends HtmlViewHelper {
                     String subRow1 = divRow().get(CellWidthType.ONE,     aligs, title);
                     List<GridFlexType> flexs = new ArrayList<>();
                     flexs.add(GridFlexType.LEFT);
+                    flexs.add(GridFlexType.LEFT);
                     flexs.add(GridFlexType.RIGHT);
-                    String subRow2 = divRow().getFlex(CellWidthType.TWO_4_8, flexs, msgType, userId);
+                    String subRow2 = divRow().getFlex(CellWidthType.THREE_4_4_4, flexs, msgType, userName, userCode);
                     flexs = new ArrayList<>();
                     flexs.add(GridFlexType.LEFT);
                     flexs.add(GridFlexType.RIGHT);
@@ -364,14 +394,16 @@ public class AdminMessageSearchViewHelper extends HtmlViewHelper {
                     tr.addTd(td().get(PHONE_TD_HEIGHT, CssGridsType.G12, CssAlignType.LEFT, subRow1, subRow2, subRow3));
                 } else {
                     // --col1--
-                    tr.addTd(td().get(CssGridsType.G6, CssAlignType.LEFT, title));
+                    tr.addTd(td().withTooltip(CssGridsType.G5, title, CssAlignType.LEFT, title));
                     // --col2--
                     tr.addTd(td().get(CssGridsType.G1, CssAlignType.CENTER, msgType));
-                 // --col3--
-                    tr.addTd(td().withTrim(CssGridsType.G2, CssAlignType.CENTER, userId));
                     // --col3--
-                    tr.addTd(td().withTrim(CssGridsType.G2, CssAlignType.CENTER, registDt));
+                    tr.addTd(td().withTrim(CssGridsType.G1, CssAlignType.CENTER, userName));
                     // --col4--
+                    tr.addTd(td().withTrim(CssGridsType.G2, CssAlignType.CENTER, userCode));
+                    // --col5--
+                    tr.addTd(td().withTrim(CssGridsType.G2, CssAlignType.CENTER, registDt));
+                    // --col6--
                     tr.addTd(td().get(CssGridsType.G1, CssAlignType.CENTER, btnDetail));
                 }
                 

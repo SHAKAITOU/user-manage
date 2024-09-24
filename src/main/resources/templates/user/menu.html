@@ -31,6 +31,54 @@
         
         menu.init();
     });
+	
+    const historyList = ["/userdetail/init", "/userorder/init", "/userview/init", "/message/init"];//全部小写
+    const excludeList = [];//全部小写
+    window.addEventListener('popstate', function(event) {
+   	  console.log("popstate location:"+ window.location+"  state:"+event.state+" hash:"+window.location.hash+" history_length:"+window.history.length);
+   	  var url = window.location.hash ? window.location.hash.substring(1):"";
+   	console.log("url:"+url);
+   	  //if (url == null || url == '' || !historyList.includes(url.substring(1).toLowerCase())) return;
+   	  if ((url.endsWith("/init") || url.endsWith("/search") ||url.endsWith("/growing") || historyList.includes(url.toLowerCase()))
+   		&& !excludeList.includes(url.toLowerCase())){
+	   	  console.log("popstate success url:"+ url.substring(1));
+	   	  ShaAjax.ajax.get(
+	            url, 
+	  	        event.state, 
+	  	        function(data){
+	  	        	$('#mainBody').html(data);
+	  	            $('[data-toggle="tooltip"]').tooltip();
+	  	        }
+	  	   ); 
+   	  }
+   	});
+    
+    $(document).ajaxSuccess(function(event, xhr, settings) {
+	   	console.log("ajaxSuccess1 url:"+settings.url+" data:"+settings.data+" type:"+settings.type+" history_length:"+window.history.length);
+	   	if (settings.type != "GET") return;
+	   	
+	   	var url = settings.url;
+	   	var data = settings.data;
+	   	if(url.indexOf("?") != -1){
+	   	    url  = settings.url.split("?")[0];
+	   	    data = settings.url.split("?")[1];
+	   	}
+	   	
+	   	console.log("ajaxSuccess2 url:"+url+" data:"+data);
+	   	if ((url.endsWith("/init") || url.endsWith("/search") ||url.endsWith("/growing") || historyList.includes(url.toLowerCase()))
+	    		&& !excludeList.includes(url.toLowerCase())){
+	       	var currentPath = window.location.hash;
+	       	if (currentPath != '') currentPath = currentPath.substring(1);
+	       	
+	   		if (currentPath == url){
+	   			window.history.replaceState(data ,"", "#"+url);
+	   			console.log("replaceState url:"+"#"+url+" data:"+data+" history_length:"+window.history.length);
+	   		}else{
+	   			window.history.pushState(data ,"", "#"+url);
+	   			console.log("pushState url:"+"#"+url+" data:"+data+" history_length:"+window.history.length);
+	   		}
+	   	}
+    });
 /*]]>*/
 /*]]>*/
 </script>

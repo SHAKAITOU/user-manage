@@ -31,6 +31,7 @@ OrderList.prototype.ID = {
     
     ORDER_LIST_TABLE_ID          : "orderListTable",
     TABLE_BTN_DETAIL             : ".detail",
+	TABLE_BTN_DOWNLOAD           : ".download",
     
     //div
     ORDER_LIST_REFRESH_BODY_ID  : "orderListRefreshBody",
@@ -120,6 +121,39 @@ OrderList.prototype.initEvent = function(){
 			}
 	    );
     	
+    });
+	
+    $tableBtnList = self.getObject(self.ID.ORDER_LIST_TABLE_ID).find(self.ID.TABLE_BTN_DOWNLOAD);
+    $tableBtnList.each(function(i, elem){
+		ShaInput.button.onClick($(elem),
+			function(event) {
+			ShaAjax.ajax.getWithDownloadFile(
+	           self.jsContext.common.orderDetail.url_invoice_download+"/"+$(elem).attr("data"),
+			   null,
+	           function(data, filename){
+					if (data.size == 0){
+						ShaDialog.dialogs.alert(self.i18n["dialogs.fail.title"]);
+						return;
+					}
+		            if (ShaUtil.other.isChrome() || ShaUtil.other.isSafari()){
+		              // chrome
+		              const link = document.createElement('a');
+		              link.href = window.URL.createObjectURL(data);
+		              link.download = filename;
+		              link.click();
+					  window.URL.revokeObjectURL(link.href);
+		            } else if (ShaUtil.other.isIE()) {
+		              // IE
+		              //const blob = new Blob([data], {type: 'application/force-download'});
+		              window.navigator.msSaveBlob(data, filename);
+		            } else {
+		              // Firefox
+		              const file = new File([data], filename, {type: 'application/force-download'});
+		              window.open(URL.createObjectURL(file));
+		            }
+	           }
+	       );
+	   });
     });
     
     ShaInput.button.onClick(self.getObject(self.ID.ADD_BTN_ID),

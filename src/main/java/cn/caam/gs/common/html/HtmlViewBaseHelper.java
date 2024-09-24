@@ -1,9 +1,15 @@
 package cn.caam.gs.common.html;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import cn.caam.gs.app.GlobalConstants;
+import cn.caam.gs.common.html.element.HtmlRadio;
 
 
 @Component
@@ -297,6 +303,14 @@ public class HtmlViewBaseHelper extends HtmlBaseHelper {
         }
         sb.append("</form>");
         return sb.toString();
+    }
+    
+    public static void addDefaultHtmlRadio(List<HtmlRadio> radios, String labelName) {
+    	radios.add(getDefaultHtmlRadio(labelName));
+    }
+    
+    public static HtmlRadio getDefaultHtmlRadio(String labelName) {
+    	return new HtmlRadio(GlobalConstants.DFL_SELECT_DEFAULT, getContext("AvailabilityType.SELECT")+labelName);
     }
     
     

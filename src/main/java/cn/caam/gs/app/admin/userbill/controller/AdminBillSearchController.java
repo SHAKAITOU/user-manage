@@ -44,13 +44,17 @@ public class AdminBillSearchController extends JcbcBaseController{
 	    MOrder order = new MOrder();
         order.setCheckStatus(GlobalConstants.DFL_SELECT_ALL);
         pageForm.setOrder(order);
-	    OrderListOutput listOutput = new OrderListOutput();
+        
+        pageForm.setBillPageLinkIdPrefixIndex(0);
+	    pageForm.setOffset(pageForm.getLimit()*pageForm.getBillPageLinkIdPrefixIndex());
+        pageForm.getOrder().setCheckStatus(CheckStatusType.PASS.getKey());
+        OrderListOutput listOutput = orderService.getBillList(pageForm);
 
 		return ControllerHelper.getModelAndView(
 		        AdminBillSearchViewHelper.getMainPage(request, pageForm, listOutput));
 	}
 	
-	@PostMapping(path=AdminBillSearchViewHelper.URL_C_SEARCH)
+	@GetMapping(path=AdminBillSearchViewHelper.URL_C_SEARCH)
     public ModelAndView search(
             BillSearchForm pageForm,
             HttpServletRequest request,
@@ -65,7 +69,7 @@ public class AdminBillSearchController extends JcbcBaseController{
                 AdminBillSearchViewHelper.refeshTable(request, pageForm, listOutput));
     }
 	
-	@PostMapping(path=AdminBillSearchViewHelper.URL_C_GROWING)
+	@GetMapping(path=AdminBillSearchViewHelper.URL_C_GROWING)
     public ModelAndView growing(
             BillSearchForm pageForm,
             HttpServletRequest request,

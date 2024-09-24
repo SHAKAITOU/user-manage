@@ -1196,3 +1196,82 @@ html {
 	background-size:650px 500px;
 	background-image: url('/img/certi/chinaCertiPage4.png');
 }
+
+.input-group .input-group-text {
+	display:inline-block;
+    min-width: 110px;
+}
+
+ .datepicker,
+.table-condensed {
+  width: 300px;
+  height:300px;
+}
+
+.datepicker { font-size: 14px; }
+
+
+@media (min-width: 577px) {
+	.table-fixed td div div {
+	  white-space: nowrap;
+	  overflow: hidden;
+	  text-overflow: ellipsis;
+	  max-width: 100px; /* 你可以根据需要设置最大宽度 */
+	}
+}
+
+
+@media (max-width: 576px) {
+	.table-fixed td div div div div {
+	  white-space: nowrap;
+	  overflow: hidden;
+	  text-overflow: ellipsis;
+	  max-width: 100%;  /*你可以根据需要设置最大宽度 */
+	}
+}
+
+
+@media (max-width: 576px) {
+  .tooltip-inner {
+    font-size: 14px; /* 小屏幕字体大小 */
+    background-color: #0e8ee7; /* 更改为您想要的颜色 */
+  }
+}
+ 
+@media (min-width: 577px) {
+  .tooltip-inner {
+    font-size: 16px; /* 默认字体大小 */
+    background-color: #0e8ee7; /* 更改为您想要的颜色 */
+    max-width: 600px !important;/* 修改宽度*/
+  }
+}
+
+.tooltip {
+  max-width: none; /* 移除 Bootstrap 的默认最大宽度限制 */
+}
+ 
+.tooltip-inner {
+  max-width: ６00px; /* 设置最大宽度 */
+  overflow: hidden; /* 超出部分隐藏 */
+}
+ 
+/* 当 tooltip 的位置超出视口时，隐藏它 */
+.tooltip.bs-tooltip-auto[x-placement^=bottom] .tooltip-arrow,
+.tooltip.bs-tooltip-auto[x-placement^=bottom] .tooltip-inner {
+  margin-top: 0;
+}
+ 
+.tooltip.bs-tooltip-auto[x-placement^=top] .tooltip-arrow,
+.tooltip.bs-tooltip-auto[x-placement^=top] .tooltip-inner {
+  margin-bottom: 0;
+}
+ 
+.tooltip.bs-tooltip-auto[x-placement^=right] .tooltip-arrow,
+.tooltip.bs-tooltip-auto[x-placement^=right] .tooltip-inner {
+  margin-left: 0;
+}
+ 
+.tooltip.bs-tooltip-auto[x-placement^=left] .tooltip-arrow,
+.tooltip.bs-tooltip-auto[x-placement^=left] .tooltip-inner {
+  margin-right: 0;
+}

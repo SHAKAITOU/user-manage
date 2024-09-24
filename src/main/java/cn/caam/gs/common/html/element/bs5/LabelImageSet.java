@@ -45,6 +45,7 @@ public class LabelImageSet {
         
         if(imgHeight > 0) {
             sb.append(" height:"+imgHeight+"px;");
+            sb.append(" object-fit:contain;");
         }
         sb.append(" ' ");
         if(!StringUtils.isBlank(src)) {

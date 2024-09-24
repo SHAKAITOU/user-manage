@@ -1,12 +1,15 @@
 package cn.caam.gs.service.impl;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +27,8 @@ import cn.caam.gs.common.enums.BillStatusType;
 import cn.caam.gs.common.enums.CheckStatusType;
 import cn.caam.gs.common.enums.FixedValueType;
 import cn.caam.gs.common.enums.MsgType;
+import cn.caam.gs.common.enums.OrderType;
+import cn.caam.gs.common.enums.PayType;
 import cn.caam.gs.common.enums.ReFundStatusType;
 import cn.caam.gs.common.enums.SexType;
 import cn.caam.gs.common.html.element.HtmlRadio;
@@ -114,6 +119,8 @@ public class OrderService extends BaseService {
 	    order.setPayDate(LocalDateUtility.getCurrentDateTimeString(DateTimePattern.UUUUHMMHDDHHQMIQSS));
 	    order.setCheckStatus(CheckStatusType.WAIT_FOR_REVIEW.getKey());
 	    order.setBillStatus(BillStatusType.TO_BE_INVOICED.getKey());
+	    order.setOrderType(OrderType.RENEWAL.getKey());
+//	    order.setPayType(PayType.OFFLINE.getKey());
 	    mOrderMapper.insert(order);
 	    
 	    MImage image = new MImage();
@@ -150,6 +157,7 @@ public class OrderService extends BaseService {
         MUser userDb = userMapper.selectByPrimaryKey(orderDb.getUserId());
         MOrder order = new MOrder();
         order.setId(pageForm.getId());
+        order.setPayAmount(pageForm.getPayAmount());;
         order.setCheckStatus(CheckStatusType.PASS.getKey());
         order.setCheckDate(LocalDateUtility.getCurrentDateTimeString());
         order.setAns(pageForm.getAns());
@@ -214,8 +222,8 @@ public class OrderService extends BaseService {
     public void addBill(BillForm pageForm) throws IOException {
 
         MOrder order = pageForm.getOrder();
-        order.setPayDate(LocalDateUtility.getCurrentDateTimeString());
-        order.setPayAmount(pageForm.getBill().getBillAmount());
+        //order.setPayDate(LocalDateUtility.getCurrentDateTimeString());
+        //order.setPayAmount(pageForm.getBill().getBillAmount());
         order.setBillStatus(BillStatusType.INVOICED.getKey());
         mOrderMapper.updateByPrimaryKeySelective(order);
         
@@ -270,7 +278,7 @@ public class OrderService extends BaseService {
         bill.setId(order.getId());
         bill.setUserId(order.getUserId());
         bill.setBillAmount(order.getOrderAmount());
-        bill.setBillTitle(getContext("admin.refund.btn.tobe"));
+        bill.setInvoiceTitle(getContext("admin.refund.btn.tobe"));
         bill.setBillMemo(pageForm.getBill().getBillMemo());;
         if (billDb == null) {
             billMapper.insert(bill);
@@ -302,5 +310,13 @@ public class OrderService extends BaseService {
         message.setUserId(order.getUserId());
         messageService.addMessage(message, MsgType.PERSONAL);
     }
+    
+    public void downloadInvoice(String orderId, OutputStream  outputStream) throws Exception{
+    	MImage imageDb = mImageMapper.selectByPrimaryKey(orderId);
+    	
+		 if (imageDb != null && imageDb.getBillPhoto() != null && imageDb.getBillPhoto().length > 0){
+			IOUtils.copy(new ByteArrayInputStream(imageDb.getBillPhoto()), outputStream);
+		 }
+	}
 	
 }

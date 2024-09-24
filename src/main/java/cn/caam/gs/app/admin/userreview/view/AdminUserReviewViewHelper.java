@@ -202,7 +202,8 @@ public class AdminUserReviewViewHelper extends HtmlViewHelper {
         List<FixValueInfo> checkStatusList = fixedValueMap.get(FixedValueType.USER_CHECK_STATUS);
         radios = new ArrayList<>();
         for (FixValueInfo fValueInfo : checkStatusList) {
-        	if (!UserCheckStatusType.WAIT_FOR_REVIEW.getKey().equals(fValueInfo.getValueObj().getValue())) {
+        	if (!UserCheckStatusType.NEW.getKey().equals(fValueInfo.getValueObj().getValue()) &&
+        			!UserCheckStatusType.WAIT_FOR_REVIEW.getKey().equals(fValueInfo.getValueObj().getValue())) {
         		radios.add(new HtmlRadio(fValueInfo.getValueObj().getValue(), fValueInfo.getValueObj().getName()));
         	}
         }
@@ -314,11 +315,11 @@ public class AdminUserReviewViewHelper extends HtmlViewHelper {
                     tr.addTd(td().get(PHONE_TD_HEIGHT, CssGridsType.G12, CssAlignType.LEFT, subRow1, subRow2));
                 } else {
                     // --col1--
-                    tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, true, checkStatusNmae));
+                    tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, checkStatusNmae));
                     // --col2--
-                    tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, true, checkDate));
+                    tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, checkDate));
                     // --col3--
-                    tr.addTd(td().get(CssGridsType.G8, CssAlignType.LEFT, true, memo));
+                    tr.addTd(td().get(CssGridsType.G8, CssAlignType.LEFT, memo));
                 }
                 
                 bodyList.add(tr);

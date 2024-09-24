@@ -7,10 +7,11 @@ import org.apache.commons.lang3.StringUtils;
 import cn.caam.gs.app.GlobalConstants;
 import cn.caam.gs.common.enums.CssFontSizeType;
 import cn.caam.gs.common.enums.CssGridsType;
+import cn.caam.gs.common.enums.OnInputMode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.NoArgsConstructor;
 import lombok.Builder.Default;
+import lombok.NoArgsConstructor;
 
 @Builder
 @AllArgsConstructor
@@ -33,6 +34,10 @@ public class LabelInputSet {
     private int maxlength = 0;
     @Default
     boolean disabled = false;
+    @Builder.Default
+    boolean readonly = false;
+    
+    private OnInputMode onInputMode;
 
     public String html() {
         return get();
@@ -40,8 +45,8 @@ public class LabelInputSet {
 
     private String get() {
         StringBuffer sb = new StringBuffer();
-        sb.append("<div class='input-group mb-3'>");
-        sb.append("<span class='input-group-text " 
+        sb.append("<div class='input-group mb-3'>");//style='display:inline-block;width:150px;'
+        sb.append("<span  class='input-group-text " 
                 + (Objects.nonNull(fontSize) ? fontSize.getKey() : "label-14" ) 
                 + "'>" + labelName);
         if (notBlank) {
@@ -68,10 +73,16 @@ public class LabelInputSet {
         if (Objects.nonNull(value)) {
             sb.append(" value='"+ value + "'");
         }
+        if (readonly) {
+            sb.append(" readonly ");
+        }
         if (disabled) {
             sb.append(" disabled ");
         }
         sb.append("style='background-color:" + (disabled ? GlobalConstants.INPUT_DISABLED_BG_COLOER:GlobalConstants.INPUT_BG_COLOER) + "' ");
+        if (!Objects.isNull(onInputMode)) {
+        	sb.append(" oninput=\"value=value.replace("+onInputMode.getRegex()+",'')\"");
+        }
         sb.append(">");
         if(StringUtils.isNotEmpty(footHtml)) {
             sb.append("<div class='input-group-append'>");

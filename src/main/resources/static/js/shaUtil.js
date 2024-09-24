@@ -497,6 +497,16 @@ try{
 			return /iPad/i.test(ua) || /iPhone OS 3_1_2/i.test(ua) || /iPhone OS 3_2_2/i.test(ua);
 		},
 		
+		isChrome : function(){
+			var ua = navigator.userAgent;
+			return ua.indexOf("Chrome") > -1;
+		},
+		
+		isSafari : function(){
+			var ua = navigator.userAgent;
+			return ua.indexOf("Safari") > -1;
+		},
+				
 		isIE : function(){
 			var ua = window.navigator.userAgent;
 

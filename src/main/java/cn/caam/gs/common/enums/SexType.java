@@ -3,7 +3,8 @@ package cn.caam.gs.common.enums;
 public enum SexType implements EnumImpl {
 
 	MAN			(EnumIndex.startIndex(0), 	"01",  	true,	"SexType.MAN", CssClassType.INFO),
-	WOMEN		(EnumIndex.getNext(), 		"02",   true,	"SexType.WOMEN", CssClassType.INFO);
+	WOMEN		(EnumIndex.getNext(), 		"02",   true,	"SexType.WOMEN", CssClassType.INFO),
+	UNKNOWN		(EnumIndex.getNext(), 		 "",   true,	"SexType.UNKNOWN", CssClassType.DANGER);
 	
     /** type. */
     private int id;
@@ -51,16 +52,16 @@ public enum SexType implements EnumImpl {
     		}
     	}
     	
-    	return null;
+    	return UNKNOWN;
     }
     
     public static SexType keyOf(String key) {
     	for(SexType type : SexType.values()) {
-    		if(key.equals(type.getKey())) {
+    		if(type.getKey().equals(key)) {
     			return type;
     		}
     	}
     	
-    	return null;
+    	return UNKNOWN;
     }
 }

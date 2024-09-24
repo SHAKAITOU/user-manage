@@ -2,17 +2,14 @@ package cn.caam.gs.common.html.element.bs5;
 
 import java.util.Objects;
 
-import org.apache.commons.lang3.StringUtils;
-
 import cn.caam.gs.app.GlobalConstants;
+import cn.caam.gs.common.enums.AcceptFileType;
 import cn.caam.gs.common.enums.CssFontSizeType;
 import cn.caam.gs.common.enums.CssGridsType;
-import cn.caam.gs.common.html.element.bs5.IconSet.IconSetCss;
-import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.NoArgsConstructor;
 import lombok.Builder.Default;
+import lombok.NoArgsConstructor;
 
 @Builder
 @AllArgsConstructor
@@ -33,6 +30,8 @@ public class LabelFileSet {
     private int maxlength = 0;
     @Builder.Default
     boolean disabled = false;
+    @Default
+    AcceptFileType acceptFileType = null;
 
     public String html() {
         return get();
@@ -73,6 +72,9 @@ public class LabelFileSet {
         }
         if (disabled) {
             sb.append(" disabled ");
+        }
+        if (acceptFileType != null) {
+        	 sb.append(" accept='"+acceptFileType.getAccept()+"'");
         }
         sb.append("style='background-color:" + (disabled ? GlobalConstants.INPUT_DISABLED_BG_COLOER:GlobalConstants.INPUT_BG_COLOER) + "' >");
         sb.append("<label class='custom-file-label "

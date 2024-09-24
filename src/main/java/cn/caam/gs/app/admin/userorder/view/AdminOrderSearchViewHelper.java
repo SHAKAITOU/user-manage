@@ -8,12 +8,11 @@ import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 
 import cn.caam.gs.app.GlobalConstants;
 import cn.caam.gs.app.UrlConstants;
-import cn.caam.gs.app.admin.usersearch.form.UserSearchForm;
-import cn.caam.gs.app.admin.usersearch.output.UserListOutput;
 import cn.caam.gs.app.common.form.OrderSearchForm;
 import cn.caam.gs.app.common.output.OrderListOutput;
 import cn.caam.gs.app.dbmainten.form.ColumnInfoForm;
@@ -38,17 +37,19 @@ import cn.caam.gs.common.html.element.TrSet;
 import cn.caam.gs.common.html.element.bs5.BreadCrumbSet;
 import cn.caam.gs.common.html.element.bs5.ButtonSet;
 import cn.caam.gs.common.html.element.bs5.ButtonSet.ButtonSetType;
-import cn.caam.gs.common.html.element.bs5.IconSet.IconSetCss;
-import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
 import cn.caam.gs.common.html.element.bs5.DivChevronSet;
 import cn.caam.gs.common.html.element.bs5.IconSet;
+import cn.caam.gs.common.html.element.bs5.IconSet.IconSetCss;
+import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
 import cn.caam.gs.common.html.element.bs5.LabelDateInputSet;
 import cn.caam.gs.common.html.element.bs5.LabelDateInputSet.LabelDateInputSetType;
+import cn.caam.gs.common.html.element.bs5.LabelInputSet;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet.LabelSelectSetType;
-import cn.caam.gs.common.util.PaginationHolder;
 import cn.caam.gs.common.html.element.bs5.PTextSet;
 import cn.caam.gs.common.html.element.bs5.SpanTextSet;
+import cn.caam.gs.common.util.PaginationHolder;
+import cn.caam.gs.common.util.StringUtility;
 import cn.caam.gs.domain.db.custom.entity.FixValueInfo;
 import cn.caam.gs.domain.db.custom.entity.OrderInfo;
 import cn.caam.gs.domain.tabledef.impl.T100MUser;
@@ -87,6 +88,7 @@ public class AdminOrderSearchViewHelper extends HtmlViewHelper {
     public static final String TABLE_HEIGHT_WHEN_HIDE_SEARCH  = "tableHeightWhenHideSearch";
     public static final String TABLE_HEIGHT_WHEN_SHOW_SEARCH  = "tableHeightWhenShowSearch";
     
+    public static final String TABLE_BTN_USER_DETAIL          = "userDetail";
     public static final String TABLE_BTN_DETAIL               = "detail";
     public static final String TABLE_BTN_PUT_TO_REVIEW        = "putToReview";
     public static final String TABLE_BTN_START_REVIEW         = "startReview";
@@ -149,7 +151,7 @@ public class AdminOrderSearchViewHelper extends HtmlViewHelper {
         sb.append(divRow().cellBlank(5));
         sb.append(setBreadCrumb(pageForm));
         sb.append("<div id='" + SEARCH_PANEL_ID + "'>");
-        sb.append(setCardForSearchPanel(request));
+        sb.append(setCardForSearchPanel(request, pageForm));
         sb.append("</div>");
         sb.append(DivChevronSet.builder().idUp(HIDE_SEARCH_PANEL_BTN_ID).idDown(SHOW_SEARCH_PANEL_BTN_ID)
                 .inVlisable(pageForm.isInVisableSearch()).build().html());
@@ -175,15 +177,15 @@ public class AdminOrderSearchViewHelper extends HtmlViewHelper {
 
     //--------------------header SearchPanel -----------------
     
-    private static String setCardForSearchPanel(HttpServletRequest request) {
+    private static String setCardForSearchPanel(HttpServletRequest request, OrderSearchForm pageForm) {
         StringBuffer sbBody = new StringBuffer();
         sbBody.append(borderCard().noTitleNoScroll("", CssClassType.SUCCESS, "", 
                 "",
-                setSearchPanel(request)));
+                setSearchPanel(request, pageForm)));
         
         return sbBody.toString();
     }
-    private static String setSearchPanel(HttpServletRequest request) {
+    private static String setSearchPanel(HttpServletRequest request, OrderSearchForm pageForm) {
         @SuppressWarnings("unchecked")
         Map<FixedValueType, List<FixValueInfo>> fixedValueMap = 
                 (Map<FixedValueType, List<FixValueInfo>>)request.getSession().getAttribute(SessionConstants.FIXED_VALUE.getValue());
@@ -191,13 +193,22 @@ public class AdminOrderSearchViewHelper extends HtmlViewHelper {
         List<String> contextList = new ArrayList<String>();
         sbBody.append(divRow().cellBlank(5));
         
-        //-----row 1-------------[
-        
-        //订单类型(F0015)選択
-        ColumnInfoForm clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_ORDER_TYPE);
-        String name      = clmForm.getPageName(PREFIX_NAME);
+        //name入力値
+        ColumnInfoForm clmForm = T100MUser.getColumnInfo(T100MUser.COL_NAME);
+        String name      = clmForm.getPageName("");
         String id        = convertNameDotForId(name);
         String labelName = clmForm.getLabelName();
+        String placeholder = clmForm.getPlaceholder();
+        contextList.add(LabelInputSet.builder()
+                .id(id).name(name).labelName(labelName).value(nonNull(pageForm.getName()))
+                .maxlength(GlobalConstants.USER_NAME_MAX_L).placeholder(placeholder)
+                .fontSize(font).grids(CssGridsType.G3).build().html());
+        
+        //订单类型(F0015)選択
+        clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_ORDER_TYPE);
+        name      = clmForm.getPageName(PREFIX_NAME);
+        id        = convertNameDotForId(name);
+        labelName = clmForm.getLabelName();
         List<FixValueInfo> orderTypeList = fixedValueMap.get(FixedValueType.ORDER_TYPE);
         List<HtmlRadio> radios = new ArrayList<>();
         radios.add(new HtmlRadio(GlobalConstants.DFL_SELECT_ALL, getContext("AvailabilityType.ALL")));
@@ -206,8 +217,8 @@ public class AdminOrderSearchViewHelper extends HtmlViewHelper {
         }
         contextList.add(LabelSelectSet.builder()
                 .id(id).name(name).labelName(labelName)
-                .radios(radios).selectedValue(GlobalConstants.DFL_SELECT_ALL)
-                .fontSize(font).grids(CssGridsType.G3).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
+                .radios(radios).selectedValue(nonNull(pageForm.getOrder().getOrderType()))
+                .fontSize(font).grids(CssGridsType.G2).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
         
         //开票状态(F0018)選択
         clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_BILL_STATUS);
@@ -221,8 +232,8 @@ public class AdminOrderSearchViewHelper extends HtmlViewHelper {
             radios.add(new HtmlRadio(fValueInfo.getValueObj().getValue(), fValueInfo.getValueObj().getName()));
         }
         contextList.add(LabelSelectSet.builder()
-                .id(id).name(name).labelName(labelName)
-                .radios(radios).selectedValue(GlobalConstants.DFL_SELECT_ALL)
+                .id(id).name(name).labelName(labelName).selectedValue(nonNull(pageForm.getOrder().getBillStatus()))
+                .radios(radios).selectedValue(nonNull(pageForm.getOrder().getBillStatus()))
                 .fontSize(font).grids(CssGridsType.G2).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
         
         //订单时间選択
@@ -230,17 +241,17 @@ public class AdminOrderSearchViewHelper extends HtmlViewHelper {
         name      = clmForm.getPageName("") + "From";
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName() + getContext("common.page.start");
-        String placeholder = T100MUser.getColumnInfo(T100MUser.COL_VALID_END_DATE).getPlaceholder();
+        placeholder = T100MUser.getColumnInfo(T100MUser.COL_VALID_END_DATE).getPlaceholder();
         contextList.add(LabelDateInputSet.builder()
-                .id(id).name(name).labelName(labelName).placeholder(placeholder)
-                .fontSize(font).grids(CssGridsType.G3).outPutType(LabelDateInputSetType.WITH_LABEL_FOOT).build().html());
+                .id(id).name(name).labelName(labelName).placeholder(placeholder).value(nonNull(pageForm.getPayDateFrom()))
+                .fontSize(font).grids(CssGridsType.G2).outPutType(LabelDateInputSetType.WITH_LABEL_FOOT).build().html());
         
         name      = clmForm.getPageName("") + "To";
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName() + getContext("common.page.end");
         contextList.add(LabelDateInputSet.builder()
-                .id(id).name(name).labelName(labelName).placeholder(placeholder)
-                .fontSize(font).grids(CssGridsType.G3).outPutType(LabelDateInputSetType.WITH_LABEL_FOOT).build().html());
+                .id(id).name(name).labelName(labelName).placeholder(placeholder).value(nonNull(pageForm.getPayDateTo()))
+                .fontSize(font).grids(CssGridsType.G2).outPutType(LabelDateInputSetType.WITH_LABEL_FOOT).build().html());
         
         name = getContext("common.page.search");
         contextList.add(ButtonSet.builder()
@@ -314,49 +325,61 @@ public class AdminOrderSearchViewHelper extends HtmlViewHelper {
             // --col1--
             List<CssAlignType> aligs = new ArrayList<>();
             aligs.add(CssAlignType.LEFT);
-            aligs.add(CssAlignType.RIGHT);
-            String subRow1 = divRow().get(CellWidthType.TWO_6_6, aligs, T200MOrder.getColumnInfo(T200MOrder.COL_ID).getLabelName(), 
-                                                                        T200MOrder.getColumnInfo(T200MOrder.COL_ORDER_AMOUNT).getLabelName());
-            aligs = new ArrayList<>();
             aligs.add(CssAlignType.LEFT);
             aligs.add(CssAlignType.CENTER);
+            String subRow1 = divRow().get(CellWidthType.THREE_6_3_3, aligs, T200MOrder.getColumnInfo(T200MOrder.COL_ID).getLabelName(), 
+                                                                        T100MUser.getColumnInfo(T100MUser.COL_NAME).getLabelName(),
+                                                                        getContext("order.amountTile"));
+            aligs = new ArrayList<>();
+            aligs.add(CssAlignType.LEFT);
+            aligs.add(CssAlignType.LEFT);
             aligs.add(CssAlignType.CENTER);
             String subRow2 = divRow().get(CellWidthType.THREE_6_3_3, aligs, T200MOrder.getColumnInfo(T200MOrder.COL_ORDER_TYPE).getLabelName(), 
                                                                         T200MOrder.getColumnInfo(T200MOrder.COL_CHECK_STATUS).getLabelName(),
                                                                         T200MOrder.getColumnInfo(T200MOrder.COL_BILL_STATUS).getLabelName());
             aligs = new ArrayList<>();
             aligs.add(CssAlignType.LEFT);
-            aligs.add(CssAlignType.RIGHT);
-            String subRow3 = divRow().get(CellWidthType.TWO_6_6, aligs, T200MOrder.getColumnInfo(T200MOrder.COL_PAY_DATE).getLabelName(),
+            aligs.add(CssAlignType.LEFT);
+            aligs.add(CssAlignType.CENTER);
+            String subRow3 = divRow().get(CellWidthType.THREE_6_3_3, aligs, T200MOrder.getColumnInfo(T200MOrder.COL_PAY_DATE).getLabelName(),
+            		"",
                                                                         getContext("common.page.do"));
             headTr.addTh(th().get(PHONE_TD_HEIGHT, CssGridsType.G12, CssAlignType.LEFT, subRow1, subRow2, subRow3));
             // --]
         } else {
-            // --col1--
-            ColumnInfoForm clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_ID);
+        	// --col1--
+            ColumnInfoForm clmForm = T100MUser.getColumnInfo(T100MUser.COL_NAME);
             String context  = clmForm.getLabelName();
-            headTr.addTh(th().get(CssGridsType.G2, CssAlignType.LEFT, clmForm.getLabelName()));
+            headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, clmForm.getLabelName()));
             // --col2--
+            clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_ID);
+            context  = clmForm.getLabelName();
+            headTr.addTh(th().get(CssGridsType.G2, CssAlignType.CENTER, clmForm.getLabelName()));
+            // --col3--
             clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_ORDER_AMOUNT);
             context  = clmForm.getLabelName();
             headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, clmForm.getLabelName()));
-            // --col3--
-            clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_ORDER_TYPE);
-            context  = clmForm.getLabelName();
-            headTr.addTh(th().get(CssGridsType.G2, CssAlignType.CENTER, clmForm.getLabelName()));
             // --col4--
-            clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_CHECK_STATUS);
+            clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_PAY_AMOUNT);
             context  = clmForm.getLabelName();
-            headTr.addTh(th().get(CssGridsType.G2, CssAlignType.CENTER, clmForm.getLabelName()));
+            headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, clmForm.getLabelName()));
             // --col5--
-            clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_BILL_STATUS);
+            clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_ORDER_TYPE);
             context  = clmForm.getLabelName();
             headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, clmForm.getLabelName()));
             // --col6--
+            clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_CHECK_STATUS);
+            context  = clmForm.getLabelName();
+            headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, clmForm.getLabelName()));
+            // --col7--
+            clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_BILL_STATUS);
+            context  = clmForm.getLabelName();
+            headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, clmForm.getLabelName()));
+            // --col8--
             clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_PAY_DATE);
             context  = clmForm.getLabelName();
             headTr.addTh(th().get(CssGridsType.G2, CssAlignType.CENTER, clmForm.getLabelName()));
-            // --col7--
+            // --col9--
             context         = getContext("common.page.do");
             headTr.addTh(th().get(CssGridsType.G2, CssAlignType.CENTER, context));
         }
@@ -387,11 +410,16 @@ public class AdminOrderSearchViewHelper extends HtmlViewHelper {
                         .context(orderInfo.getCheckStatusName())
                         .classType(CheckStatusType.keyOf(orderInfo.getOrder().getCheckStatus()).getClassType()).build().html();
                 
+                String name = nonNull(orderInfo.getUserName());
                 String amount = formatCurrencyZH(orderInfo.getOrder().getOrderAmount());
+                String payAmount = formatCurrencyZH(orderInfo.getOrder().getPayAmount());
                 String payDate = orderInfo.getOrder().getPayDate();
                 String btn = button().forTableBorderNameRight(IconSetType.DETAIL, CssClassType.INFO, 
+                        "", getContext("admin.order.btn.userDetail"), orderInfo.getOrder().getUserId(), TABLE_BTN_USER_DETAIL);
+                btn += isPhoneMode(request) ? "":"&nbsp;";
+                btn += button().forTableBorderNameRight(IconSetType.DETAIL, CssClassType.INFO, 
                         "", getContext("common.page.info"), orderInfo.getId(), TABLE_BTN_DETAIL);
-                btn += "&nbsp;";
+                btn += isPhoneMode(request) ? "":"&nbsp;";
                 if (pageForm.getOrder().getCheckStatus().equals(CheckStatusType.WAIT_FOR_REVIEW.getKey())) {
                     btn += button().forTableBorderNameLeft(IconSetType.HAND_RIGHT, CssClassType.SUCCESS, 
                             "", getContext("admin.order.btn.putToReview"), orderInfo.getId(), TABLE_BTN_PUT_TO_REVIEW);
@@ -401,36 +429,46 @@ public class AdminOrderSearchViewHelper extends HtmlViewHelper {
                 }
 
                 if (isPhoneMode(request)) {
+                	if(Strings.isBlank(payAmount)) {
+                		payAmount = StringUtility.padLeft(payAmount, 4, "-");
+                	}
                     // --col1--
                     List<CssAlignType> aligs = new ArrayList<>();
                     aligs.add(CssAlignType.LEFT);
+                    aligs.add(CssAlignType.LEFT);
                     aligs.add(CssAlignType.RIGHT);
-                    String subRow1 = divRow().get(CellWidthType.TWO_8_4, aligs, orderInfo.getId(), amount);
+                    String orderId = SpanTextSet.builder().fontSize(CssFontSizeType.LABEL_12)
+        	                .context(orderInfo.getId()).build().html();
+                    String subRow1 = divRow().get(CellWidthType.THREE_6_3_3, aligs, orderId, name, amount+"/"+payAmount);
                     aligs = new ArrayList<>();
                     aligs.add(CssAlignType.LEFT);
-                    aligs.add(CssAlignType.CENTER);
-                    aligs.add(CssAlignType.CENTER);
+                    aligs.add(CssAlignType.LEFT);
+                    aligs.add(CssAlignType.RIGHT);
                     String subRow2 = divRow().get(CellWidthType.THREE_6_3_3, aligs, orderTypeName, checkStatusName, billStatusName);
                     aligs = new ArrayList<>();
                     aligs.add(CssAlignType.LEFT);
                     aligs.add(CssAlignType.RIGHT);
-                    String subRow3 = divRow().get(CellWidthType.TWO_6_6, aligs, payDate, btn);
+                    String subRow3 = divRow().get(CellWidthType.TWO_5_7, aligs, payDate, btn);
                             
                     tr.addTd(td().get(PHONE_TD_HEIGHT, CssGridsType.G12, CssAlignType.LEFT, subRow1, subRow2, subRow3));
                 } else {
-                    // --col1--
-                    tr.addTd(td().get(CssGridsType.G2, CssAlignType.LEFT, orderInfo.getId()));
+                	// --col1--
+                    tr.addTd(td().get(CssGridsType.G1, CssAlignType.CENTER, name));
                     // --col2--
-                    tr.addTd(td().get(CssGridsType.G1, CssAlignType.CENTER, amount));
+                    tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, orderInfo.getId()));
                     // --col3--
-                    tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, orderTypeName));
+                    tr.addTd(td().get(CssGridsType.G1, CssAlignType.CENTER, amount));
                     // --col4--
-                    tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, checkStatusName));
+                    tr.addTd(td().get(CssGridsType.G1, CssAlignType.CENTER, payAmount));
                     // --col5--
-                    tr.addTd(td().get(CssGridsType.G1, CssAlignType.CENTER, billStatusName));
+                    tr.addTd(td().get(CssGridsType.G1, CssAlignType.CENTER, orderTypeName));
                     // --col6--
-                    tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, payDate));
+                    tr.addTd(td().get(CssGridsType.G1, CssAlignType.CENTER, checkStatusName));
                     // --col7--
+                    tr.addTd(td().get(CssGridsType.G1, CssAlignType.CENTER, billStatusName));
+                    // --col8--
+                    tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, payDate));
+                    // --col9--
                     tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, btn));
                 }
                 bodyList.add(tr);

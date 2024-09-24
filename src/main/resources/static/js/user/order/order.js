@@ -27,6 +27,11 @@ Order.prototype.ID = {
     ITEM_ORDER_METHOD             : "orderMethod",
     ITEM_ORDER_TYPE               : "orderType",
 	ITEM_ORDER_AMOUNT             : "orderAmount",
+	ITEM_INVOICE_TYPE             : "invoiceType",
+	ITEM_INVOICE_TITLE            : "invoiceTitle",
+	ITEM_CREDIT_CODE              : "creditCode",
+	ITEM_MAIL                     : "mail",
+	
     PREFIX_IMAGE_NAME             : "image_",
 	ITEM_ORDER_PHOTO              : "orderPhotoFile",
 	BTN_ORDER_PHOTO_OPEN          : "orderPhotoFileOpen",
@@ -97,6 +102,16 @@ Order.prototype.initEvent = function(){
 	    }
 	);
 	
+	ShaInput.button.onChange(self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_INVOICE_TYPE), 
+		function(event) {
+			if (self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_INVOICE_TYPE).val() === '01') {//个人
+				 self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_CREDIT_CODE).closest('.row').hide();
+			   } else {
+				 self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_CREDIT_CODE).closest('.row').show();
+			   }
+	    }
+	);
+	
 	//init event to BTN_BACK
 	ShaInput.button.onClick(self.getObject(self.ID.BTN_ADD), 
 		function(event) {
@@ -139,12 +154,17 @@ Order.prototype.check = function(){
     var inputCheckItemList = [
         [ self.i18n["m_order.order_amount"], 	self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_ORDER_AMOUNT)], 
         [ self.i18n["m_image.order_photo"], 	self.getObject(self.ID.ITEM_ORDER_PHOTO_NAME)], 
+		[ self.i18n["m_order.invoice_title"], 	self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_INVOICE_TITLE)], 
+		[ self.i18n["m_order.mail"], 	        self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_MAIL)], 
     ];
+	if (self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_INVOICE_TYPE).val() !== '01') {//个人
+		inputCheckItemList.push([ self.i18n["m_order.credit_code"], 	self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_CREDIT_CODE)]);
+	}
     
     if (ShaCheck.check.checkNotBlank(inputCheckItemList)) {
 		return true;
 	}
-	
+		
 	inputCheckItemList = [
         [ self.i18n["m_order.order_amount"], 	self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_ORDER_AMOUNT)]
     ];
@@ -152,14 +172,23 @@ Order.prototype.check = function(){
 	if (ShaCheck.check.checkNotNumber(inputCheckItemList)) {
 		return true;
 	}
-		
-	inputCheckItemList = [
+	
+	/*inputCheckItemList = [
         [ self.i18n["m_order.order_amount"], 	self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_ORDER_AMOUNT), ShaConstants.constants.MIN_BILL_AMOUNT, ShaConstants.constants.MAX_BILL_AMOUNT]
     ];
-    
 	if (ShaCheck.check.checkNumberRange(inputCheckItemList)) {
 		return true;
+	}*/
+	
+	if (self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_INVOICE_TYPE).val() !== '01' &&
+		ShaCheck.check.checkCreditCode([[ self.i18n["m_order.credit_code"], self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_CREDIT_CODE)]])){
+		return true;
 	}
+	
+	if (ShaCheck.check.checkEmail([[ self.i18n["m_order.mail"], self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_MAIL)]])){
+		return true;
+	}
+		
 	return false;
 };
 

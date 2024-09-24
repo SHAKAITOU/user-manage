@@ -31,6 +31,7 @@ AdminOrderList.prototype.ID = {
     HID_INVISABLE_SEARCH         : "inVisableSearch",
     
     ORDER_LIST_TABLE_ID          : "orderListTable",
+	TABLE_BTN_USER_DETAIL        : ".userDetail",
     TABLE_BTN_DETAIL             : ".detail",
     TABLE_BTN_PUT_TO_REVIEW      : ".putToReview",
     TABLE_BTN_START_REVIEW       : ".startReview",
@@ -99,7 +100,7 @@ AdminOrderList.prototype.initEvent = function(){
 	
     ShaInput.button.onClick(self.getObject(self.ID.SEARCH_BTN_ID),
     	function(event) {
-			ShaAjax.ajax.post(
+			ShaAjax.ajax.get(
                 self.jsContext.adminJsView.adminOrderSearch.url_order_list, 
                 self.getForm().serializeArray(), 
                 function(data){
@@ -109,6 +110,23 @@ AdminOrderList.prototype.initEvent = function(){
             ); 
 		}
     );
+	
+	$tableBtnList = self.getObject(self.ID.ORDER_LIST_TABLE_ID).find(self.ID.TABLE_BTN_USER_DETAIL);
+	$tableBtnList.each(function(i, elem){
+		//check box init
+	   	ShaInput.button.onClick($(elem),
+	    	function(event) {
+				ShaAjax.ajax.get(
+	                self.jsContext.jsView.userDetail.url_user_detail_from_admin_init, 
+	                [{name:"id",     value:$(elem).attr("data")}],
+				    //self.getForm().serializeArray(),  
+	                function(data){
+	                    self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
+	                }
+	            ); 
+			}
+	    );
+	});
     
     ShaInput.table.adjustCellWidthToFitHead(self.getForm(), self.ID.ORDER_LIST_TABLE_ID);
     ShaInput.table.addClickActiveToTr(self.getForm(), self.ID.ORDER_LIST_TABLE_ID);
@@ -197,7 +215,7 @@ AdminOrderList.prototype.initEvent = function(){
 AdminOrderList.prototype.doPageLink = function(){
 	//keep self instance for call back
 	var self = this;
-	ShaAjax.ajax.post(
+	ShaAjax.ajax.get(
         self.jsContext.adminJsView.adminOrderSearch.url_order_list_growing, 
         self.getForm().serializeArray(), 
         function(data){

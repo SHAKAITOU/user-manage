@@ -9,26 +9,38 @@ import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.logging.log4j.util.Strings;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
 import cn.caam.gs.app.GlobalConstants;
 import cn.caam.gs.app.UrlConstants;
 import cn.caam.gs.app.common.form.UserDetailForm;
+import cn.caam.gs.app.common.output.OrderListOutput;
 import cn.caam.gs.app.dbmainten.form.ColumnInfoForm;
 import cn.caam.gs.app.util.LoginInfoHelper;
 import cn.caam.gs.app.util.SessionConstants;
 import cn.caam.gs.common.bean.ViewData;
+import cn.caam.gs.common.enums.AcceptFileType;
+import cn.caam.gs.common.enums.BillStatusType;
 import cn.caam.gs.common.enums.CellWidthType;
+import cn.caam.gs.common.enums.CheckStatusType;
 import cn.caam.gs.common.enums.CssAlignType;
 import cn.caam.gs.common.enums.CssClassType;
 import cn.caam.gs.common.enums.CssFontSizeType;
 import cn.caam.gs.common.enums.CssGridsType;
 import cn.caam.gs.common.enums.FixedValueType;
+import cn.caam.gs.common.enums.GridFlexType;
+import cn.caam.gs.common.enums.OnInputMode;
 import cn.caam.gs.common.enums.LoginAccountType;
+import cn.caam.gs.common.enums.OrderType;
 import cn.caam.gs.common.enums.PageModeType;
+import cn.caam.gs.common.enums.ReFundStatusType;
+import cn.caam.gs.common.enums.UserType;
 import cn.caam.gs.common.html.HtmlViewBaseHelper;
 import cn.caam.gs.common.html.element.HtmlRadio;
+import cn.caam.gs.common.html.element.TabSet;
+import cn.caam.gs.common.html.element.TrSet;
 import cn.caam.gs.common.html.element.bs5.BreadCrumbSet;
 import cn.caam.gs.common.html.element.bs5.DivChevronSet;
 import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
@@ -45,10 +57,16 @@ import cn.caam.gs.common.html.element.bs5.LabelSelectSet;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet.LabelSelectSetType;
 import cn.caam.gs.common.html.element.bs5.LabelTextAreaSet;
 import cn.caam.gs.common.html.element.bs5.LabelTextAreaSet.LabelTextAreaSetType;
+import cn.caam.gs.common.util.LocalDateUtility;
+import cn.caam.gs.common.util.StringUtility;
+import cn.caam.gs.common.html.element.bs5.PTextSet;
 import cn.caam.gs.domain.db.base.entity.MFixedValue;
 import cn.caam.gs.domain.db.custom.entity.FixValueInfo;
+import cn.caam.gs.domain.db.custom.entity.OrderInfo;
 import cn.caam.gs.domain.tabledef.impl.T100MUser;
 import cn.caam.gs.domain.tabledef.impl.T101MUserExtend;
+import cn.caam.gs.domain.tabledef.impl.T105MUserCard;
+import cn.caam.gs.domain.tabledef.impl.T200MOrder;
 
 /**
  * View helper.
@@ -67,6 +85,11 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
     //edit url
     public static final String URL_USER_DETAIL_EDIT = UrlConstants.EDIT;
     
+    public static final String URL_USER_DETAIL_ADD_INIT = "/addInit";
+    public static final String URL_USER_DETAIL_ADD      = UrlConstants.ADD;
+    
+    public static final String URL_USER_DETAIL_DELETE = UrlConstants.DELETE;
+    
     public static final String URL_USER_DETAIL_PRINT = UrlConstants.PRINT;
     public static final String URL_USER_DETAIL_DOWNLOAD = UrlConstants.DOWNLOAD;
     
@@ -74,6 +97,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
     public static final String USER_DETAIL_FORM_NAME         = "userDetailForm";
     public static final String PREFIX_NAME                   = "userInfo.user.";
     public static final String PREFIX_EXTEND_NAME            = "userInfo.userExtend.";
+    public static final String PREFIX_USER_CARD_NAME         = "userInfo.userCard.";
     
     public static final String BTN_OPEN_EDIT_BASE            = "btnOpenEditBase";
     public static final String BTN_CLOSE_EDIT_BASE           = "btnCloseEditBase";
@@ -88,42 +112,57 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
     public static final String BASE_PANEL_CARD_ID            = "basePanelCard";
     public static final String SELF_PANEL_CARD_ID            = "selfPanelCard";
     public static final String HID_HIDE_SEARCH               = "hideSearch";
+    
+    public static final String HIDE_ITEM_PAGE_MODE_TYPE      = "mode_type";
+    
+    public static final String TAB_ID                         = "detailTab";
+    public static final String TAB_TITLE_USER_ID              = "userTab";
+    public static final String TAB_TITLE_ORDER_ID             = "orderTab";
+    public static final String TAB_TITLE_USER_CARD_ID         = "userCardTab";
+    public static final String TAB_BODY_USER_ID               = "userTabBody";
+    public static final String TAB_BODY_ORDER_ID              = "orderTabBody";
+    public static final String TAB_BODY_USER_CARD_ID          = "userCardTabBody";
+    
+    public static final String ORDER_LIST_TABLE_ID            = "orderListTable";
+    public static final String ORDER_LIST_REFRESH_BODY_ID     = "orderListRefreshBody";
+    
     public static final int    IMG_WIDTH                     = 250;
     public static final int    IMG_HEIGHT                    = 250;
     public static final int    HEADER_HEIGHT                 = 360;
     public static final int    SEARCH_PANEL_HEIGHT           = 90;
     
+    public static final int PHONE_TD_HEIGHT = 70;
+    
     public static final CssFontSizeType font = GlobalConstants.INPUT_FONT_SIZE;
 
     public static ViewData getMainPage(
             HttpServletRequest request, 
-            UserDetailForm userDetailForm) {
+            UserDetailForm userDetailForm,
+            OrderListOutput orderListOutput,
+            PageModeType pageModeType) {
         Map<String, Object> dataMap = new HashMap<>();
         ViewData viewData = ViewData.builder()
-                .pageContext(getDetailContext(request, userDetailForm))
+                .pageContext(pageModeType == PageModeType.EDIT_BY_ADMIN ?
+                				getAdminMainPageContext(request, userDetailForm, orderListOutput, pageModeType) :getDetailContext(request, userDetailForm, pageModeType))
                 .jsClassName(USER_DETAIL_JS_CLASS)
                 .dataMap(dataMap).build();
+        
         return viewData;
     }
 
     public static String getDetailContext(
             HttpServletRequest request, 
-            UserDetailForm userDetailForm) {
-    	return getDetailContext(request, userDetailForm, PageModeType.EDIT);
-    }
-    public static String getDetailContext(
-            HttpServletRequest request, 
             UserDetailForm userDetailForm, PageModeType pageModeType) {
         
-        @SuppressWarnings("unchecked")
-        Map<FixedValueType, List<FixValueInfo>> fixedValueMap = 
-                (Map<FixedValueType, List<FixValueInfo>>)request.getSession().getAttribute(SessionConstants.FIXED_VALUE.getValue());
+//        @SuppressWarnings("unchecked")
+//        Map<FixedValueType, List<FixValueInfo>> fixedValueMap = 
+//                (Map<FixedValueType, List<FixValueInfo>>)request.getSession().getAttribute(SessionConstants.FIXED_VALUE.getValue());
         StringBuffer body = new StringBuffer();
         
-        if (PageModeType.EDIT.equals(pageModeType)) {
+        if (PageModeType.VIEW != pageModeType) {
         	 // hidden
             // ----------hidden------[
-            body.append(setDetailHidden(request, userDetailForm));
+            body.append(setDetailHidden(request, userDetailForm, pageModeType));
             // ----------hidden------]
             // ----------hidden------[
         	body.append(setBreadCrumb());
@@ -131,25 +170,53 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         }
         // body
         // ----------body------[
-        body.append(buildBaseDetailBody(fixedValueMap, userDetailForm, pageModeType));
-        body.append(DivChevronSet.builder().idUp(HIDE_BASE_PANEL_BTN_ID).idDown(SHOW_BASE_PANEL_BTN_ID).build().html());
-        body.append(buildSelfDetailBody(fixedValueMap, userDetailForm, pageModeType));
-        body.append(DivChevronSet.builder().idUp(HIDE_SELF_PANEL_BTN_ID).idDown(SHOW_SELF_PANEL_BTN_ID).build().html());
-        body.append(buildExtendDetailBody(request,fixedValueMap, userDetailForm, pageModeType));
+        body.append(setUserCardPanel(request, userDetailForm, pageModeType));
+//        body.append(buildBaseDetailBody(fixedValueMap, userDetailForm, pageModeType));
+//        body.append(DivChevronSet.builder().idUp(HIDE_BASE_PANEL_BTN_ID).idDown(SHOW_BASE_PANEL_BTN_ID).build().html());
+//        body.append(buildSelfDetailBody(fixedValueMap, userDetailForm, pageModeType));
+//        body.append(DivChevronSet.builder().idUp(HIDE_SELF_PANEL_BTN_ID).idDown(SHOW_SELF_PANEL_BTN_ID).build().html());
+//        body.append(buildExtendDetailBody(request,fixedValueMap, userDetailForm, pageModeType));
         // ----------body------]
-        if (PageModeType.EDIT.equals(pageModeType)) {
+        if (PageModeType.VIEW != pageModeType) {
 	        // --bottom btn--
 	        body.append(divRow().cellBlank(5));
 	        body.append(buildFooter(request));
 	        body.append(divRow().cellBlank(5));
 	        // --bottom btn--
         }
-        if (PageModeType.EDIT.equals(pageModeType)) {
+        if (PageModeType.VIEW != pageModeType) {
         	return getForm(USER_DETAIL_FORM_NAME, body.toString());
         }else {
         	return body.toString();
         }
         
+    }
+    
+    public static String setUserCardPanel(
+            HttpServletRequest request, 
+            UserDetailForm userDetailForm, PageModeType pageModeType) {
+        
+        @SuppressWarnings("unchecked")
+        Map<FixedValueType, List<FixValueInfo>> fixedValueMap = 
+                (Map<FixedValueType, List<FixValueInfo>>)request.getSession().getAttribute(SessionConstants.FIXED_VALUE.getValue());
+        StringBuffer body = new StringBuffer();
+        // body
+        // ----------body------[
+        body.append(buildBaseDetailBody(fixedValueMap, userDetailForm, pageModeType));
+        body.append(DivChevronSet.builder().idUp(HIDE_BASE_PANEL_BTN_ID).idDown(SHOW_BASE_PANEL_BTN_ID).build().html());
+        body.append(buildSelfDetailBody(fixedValueMap, userDetailForm, pageModeType));
+        body.append(DivChevronSet.builder().idUp(HIDE_SELF_PANEL_BTN_ID).idDown(SHOW_SELF_PANEL_BTN_ID).build().html());
+        body.append(buildExtendDetailBody(request,fixedValueMap, userDetailForm, pageModeType));
+//        // ----------body------]
+//        if (PageModeType.VIEW != pageModeType) {
+//	        // --bottom btn--
+//	        body.append(divRow().cellBlank(5));
+//	        body.append(buildFooter(request));
+//	        body.append(divRow().cellBlank(5));
+//	        // --bottom btn--
+//        }
+        
+        return body.toString();
     }
     
     //--------------------header BreadCrumb -----------------
@@ -158,12 +225,13 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         return BreadCrumbSet.builder().labelNames(names).build().html();
     }
 
-    private static String setDetailHidden(HttpServletRequest request, UserDetailForm userDetailForm) {
+    private static String setDetailHidden(HttpServletRequest request, UserDetailForm userDetailForm, PageModeType pageModeType) {
         StringBuffer sb = new StringBuffer();
         ColumnInfoForm clmForm = T100MUser.getColumnInfo(T100MUser.COL_ID);
         String name      = clmForm.getPageName(PREFIX_NAME);
-        String value     = userDetailForm.getUserInfo().getUser().getId();
+        String value     = nonNull(userDetailForm.getUserInfo().getUser().getId());
         sb.append(hidden().get(name, value));
+        sb.append(hidden().get(HIDE_ITEM_PAGE_MODE_TYPE, pageModeType.getKey()));
         return sb.toString();
     }
     
@@ -181,19 +249,20 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
     private static String buildBaseDetail(Map<FixedValueType, List<FixValueInfo>> fixedValueMap, UserDetailForm userDetailForm, PageModeType pageModeType) {
         StringBuffer sb = new StringBuffer();
         
-        boolean disabled = PageModeType.VIEW.equals(pageModeType);
         List<String> contextList = new ArrayList<String>();
         //------row1----------[
         //会员号(M/TYYMMDDHHmmSSR2)入力値
-        ColumnInfoForm clmForm = T100MUser.getColumnInfo(T100MUser.COL_ID);
-        String name      = clmForm.getPageName(PREFIX_NAME) + "Show";
+        ColumnInfoForm clmForm = T105MUserCard.getColumnInfo(T105MUserCard.COL_USER_CODE);
+        String name      = clmForm.getPageName(PREFIX_USER_CARD_NAME);
         String id        = convertNameDotForId(name);
         String labelName = clmForm.getLabelName();
         String placeholder = clmForm.getPlaceholder();
-        String value = userDetailForm.getUserInfo().getUser().getId();
+        String value = !Objects.isNull(userDetailForm.getUserInfo().getUserCard()) ? nonNull(userDetailForm.getUserInfo().getUserCard().getUserCode()):"";
         contextList.add(LabelInputSet.builder()
-                .id(id).name(name).labelName(labelName).value(value).disabled(disabled)
+                .id(id).name(name).labelName(labelName).value(value).disabled(PageModeType.INSERT_BY_ADMIN != pageModeType)
+                .notBlank(PageModeType.INSERT_BY_ADMIN == pageModeType)
                 .maxlength(GlobalConstants.USER_NAME_MAX_L).placeholder(placeholder)
+                .onInputMode(OnInputMode.NUMBERS_UPPERLETTERS)
                 .fontSize(font).grids(CssGridsType.G6).build().html());
         
         //会员类型(F0002) 入力値
@@ -202,15 +271,25 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value = userDetailForm.getUserInfo().getUser().getUserType();
+        value = nonNull(userDetailForm.getUserInfo().getUser().getUserType());
         List<HtmlRadio> radios = new ArrayList<>();
         List<FixValueInfo> userTypeList = fixedValueMap.get(FixedValueType.USER_TYPE);
         for (FixValueInfo fValueInfo : userTypeList) {
-            radios.add(new HtmlRadio(fValueInfo.getValueObj().getValue(), fValueInfo.getValueObj().getName()));
+//            radios.add(new HtmlRadio(fValueInfo.getValueObj().getValue(), fValueInfo.getValueObj().getName()));
+        	 if (fValueInfo.getValueObj().getValue().equals(UserType.PERSON.getKey())) {
+                 for (MFixedValue fValue : fValueInfo.getSubList()) {
+                	 if (pageModeType == PageModeType.INSERT_BY_ADMIN && fValue.getValue().equals(UserType.PERSON_GANSU.getKey())) {
+                		continue;
+                	 }
+                	 radios.add(new HtmlRadio(fValue.getValue(), fValue.getName()));
+                 }
+                 break;
+             }
         }
         contextList.add(LabelSelectSet.builder()
                 .id(id).name(name).labelName(labelName)
-                .radios(radios).selectedValue(value).disabled(disabled)
+                .radios(radios).selectedValue(value)
+                .disabled(PageModeType.INSERT_BY_ADMIN != pageModeType && PageModeType.EDIT_BY_ADMIN != pageModeType)
                 .fontSize(font).grids(CssGridsType.G6).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
         
         sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
@@ -223,11 +302,12 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value = userDetailForm.getUserInfo().getUser().getRegistDate();
-        contextList.add(LabelInputSet.builder()
-                .id(id).name(name).labelName(labelName).value(value).disabled(disabled)
-                .maxlength(GlobalConstants.USER_NAME_MAX_L).placeholder(placeholder)
-                .fontSize(font).grids(CssGridsType.G6).build().html());
+        value = LocalDateUtility.formatDateZH(nonNull(nonNull(userDetailForm.getUserInfo().getUser().getRegistDate())));
+        contextList.add(LabelDateInputSet.builder()
+                .id(id).name(name).labelName(labelName).value(value)
+                .disabled(PageModeType.INSERT_BY_ADMIN != pageModeType && PageModeType.EDIT_BY_ADMIN != pageModeType)
+                .placeholder(placeholder)
+                .fontSize(font).grids(CssGridsType.G6).outPutType(LabelDateInputSetType.WITH_LABEL_FOOT).build().html());
         
         //有效结束日期(yyyy-MM-dd HH 入力値
         clmForm = T100MUser.getColumnInfo(T100MUser.COL_VALID_END_DATE);
@@ -235,13 +315,15 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value = userDetailForm.getUserInfo().getUser().getValidEndDate();
-        contextList.add(LabelInputSet.builder()
-                .id(id).name(name).labelName(labelName).value(value).disabled(disabled)
-                .maxlength(GlobalConstants.USER_NAME_MAX_L).placeholder(placeholder)
-                .fontSize(font).grids(CssGridsType.G6).build().html());
+        value = LocalDateUtility.formatDateZH(nonNull(nonNull(userDetailForm.getUserInfo().getUser().getValidEndDate())));
+        contextList.add(LabelDateInputSet.builder()
+                .id(id).name(name).labelName(labelName).value(value).disabled(PageModeType.INSERT_BY_ADMIN != pageModeType)
+                .placeholder(placeholder)
+                .fontSize(font).grids(CssGridsType.G6).outPutType(LabelDateInputSetType.WITH_LABEL_FOOT).build().html());
         sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
         //------row2----------]
+        
+        contextList = new ArrayList<String>();
         
         return sb.toString();
     }
@@ -258,28 +340,25 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
                 divContainer().get(sb.toString()));
     }
     
-    private static String getValue(String value) {
-    	return Objects.isNull(value) ? "":value;
-    }
-
     private static String buildSelfDetail(Map<FixedValueType, List<FixValueInfo>> fixedValueMap, UserDetailForm userDetailForm, PageModeType pageModeType) {
         StringBuffer sb = new StringBuffer();
         
-        boolean disabled = PageModeType.VIEW.equals(pageModeType);
+        boolean disabled = PageModeType.INSERT_BY_ADMIN != pageModeType ;
         List<CssAlignType> aligs = new ArrayList<>();
         // bottom button
 
+        boolean isAdminEdit = PageModeType.INSERT_BY_ADMIN == pageModeType || PageModeType.EDIT_BY_ADMIN == pageModeType;
         String id = "";
         String context = "";
         String comp1 = "";
         // bottom button
-        if (!PageModeType.VIEW.equals(pageModeType)) {
+        if (!(PageModeType.VIEW ==pageModeType || PageModeType.INSERT_BY_ADMIN == pageModeType)) {
 	        id = BTN_OPEN_EDIT_BASE;
 	        context = getContext("common.page.openEdit");
-	        comp1 = button().getBorder(IconSetType.CHECK, CssClassType.DANGER, id, context, disabled);
+	        comp1 = button().getBorder(IconSetType.CHECK, CssClassType.DANGER, id, context);
 	        id = BTN_CLOSE_EDIT_BASE;
 	        context = getContext("common.page.closeEdit");
-	        String comp2 = button().getBorder(IconSetType.CLOSE, CssClassType.DARK, id, context, disabled);
+	        String comp2 = button().getBorder(IconSetType.CLOSE, CssClassType.DARK, id, context);
 	
 	        aligs.add(CssAlignType.LEFT);
 	        sb.append(divRow().get(CellWidthType.ONE, aligs, concactWithSpace(comp1, comp2)));
@@ -296,7 +375,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         id        = convertNameDotForId(name);
         String labelName = clmForm.getLabelName();
         String placeholder = clmForm.getPlaceholder();
-        String value = getValue(userDetailForm.getUserInfo().getUser().getName());
+        String value = nonNull(userDetailForm.getUserInfo().getUser().getName());
         contextList.add(LabelInputSet.builder()
                 .id(id).name(name).labelName(labelName).value(value).disabled(disabled)
                 .notBlank(true).maxlength(GlobalConstants.USER_NAME_MAX_L).placeholder(placeholder)
@@ -307,7 +386,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         name      = clmForm.getPageName(PREFIX_NAME);
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
-        value = getValue(userDetailForm.getUserInfo().getUser().getSex());
+        value = nonNull(userDetailForm.getUserInfo().getUser().getSex());
         List<HtmlRadio> radios = new ArrayList<>();
         List<FixValueInfo> sexList = fixedValueMap.get(FixedValueType.SEX);
         for (FixValueInfo fValueInfo : sexList) {
@@ -330,10 +409,10 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value = getValue(userDetailForm.getUserInfo().getUser().getBirth());
+        value = nonNull(userDetailForm.getUserInfo().getUser().getBirth());
         contextList.add(LabelDateInputSet.builder()
                 .id(id).name(name).labelName(labelName).value(value)
-                .placeholder(placeholder).notBlank(true).disabled(disabled)
+                .placeholder(placeholder).notBlank(!isAdminEdit).disabled(disabled)
                 .fontSize(font).grids(CssGridsType.G6).outPutType(LabelDateInputSetType.WITH_LABEL_FOOT).build().html());
         
         //民族(F0005) 入力値
@@ -342,8 +421,9 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value = getValue(userDetailForm.getUserInfo().getUser().getNationality());
-        radios = new ArrayList<>();
+        value = nonNull(userDetailForm.getUserInfo().getUser().getNationality());
+        radios = new ArrayList<HtmlRadio>();
+        addDefaultHtmlRadio(radios, labelName);
         List<FixValueInfo> nationalityList = fixedValueMap.get(FixedValueType.NATIONALITY);
         for (FixValueInfo fValueInfo : nationalityList) {
             radios.add(new HtmlRadio(fValueInfo.getValueObj().getValue(), fValueInfo.getValueObj().getName()));
@@ -365,8 +445,9 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value = getValue(userDetailForm.getUserInfo().getUser().getPolitical());
+        value = nonNull(userDetailForm.getUserInfo().getUser().getPolitical());
         radios = new ArrayList<>();
+        addDefaultHtmlRadio(radios, labelName);
         List<FixValueInfo> politicalList = fixedValueMap.get(FixedValueType.POLITICAL);
         for (FixValueInfo fValueInfo : politicalList) {
             radios.add(new HtmlRadio(fValueInfo.getValueObj().getValue(), fValueInfo.getValueObj().getName()));
@@ -383,8 +464,9 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value = getValue(userDetailForm.getUserInfo().getUser().getEduDegree());
+        value = nonNull(userDetailForm.getUserInfo().getUser().getEduDegree());
         radios = new ArrayList<>();
+        addDefaultHtmlRadio(radios, labelName);
         List<FixValueInfo> eduDegreeList = fixedValueMap.get(FixedValueType.EDU_DEGREE);
         for (FixValueInfo fValueInfo : eduDegreeList) {
             radios.add(new HtmlRadio(fValueInfo.getValueObj().getValue(), fValueInfo.getValueObj().getName()));
@@ -406,8 +488,9 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value = getValue(userDetailForm.getUserInfo().getUser().getBachelor());
+        value = nonNull(userDetailForm.getUserInfo().getUser().getBachelor());
         radios = new ArrayList<>();
+        addDefaultHtmlRadio(radios, labelName);
         List<FixValueInfo> bachelorList = fixedValueMap.get(FixedValueType.BACHELOR);
         for (FixValueInfo fValueInfo : bachelorList) {
             radios.add(new HtmlRadio(fValueInfo.getValueObj().getValue(), fValueInfo.getValueObj().getName()));
@@ -423,8 +506,9 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value = getValue(userDetailForm.getUserInfo().getUser().getPosition());
+        value = nonNull(userDetailForm.getUserInfo().getUser().getPosition());
         radios = new ArrayList<>();
+        addDefaultHtmlRadio(radios, labelName);
         List<FixValueInfo> positionList = fixedValueMap.get(FixedValueType.POSITION);
         for (FixValueInfo fValueInfo : positionList) {
             radios.add(new HtmlRadio(fValueInfo.getValueObj().getValue(), fValueInfo.getValueObj().getName()));
@@ -446,10 +530,10 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value = getValue(userDetailForm.getUserInfo().getUser().getEmployer());
+        value = nonNull(userDetailForm.getUserInfo().getUser().getEmployer());
         contextList.add(LabelInputSet.builder()
                 .id(id).name(name).labelName(labelName).value(value).disabled(disabled)
-                .notBlank(true).maxlength(GlobalConstants.EMPLOYER_MAX_L).placeholder(placeholder)
+                .notBlank(!isAdminEdit).maxlength(GlobalConstants.EMPLOYER_MAX_L).placeholder(placeholder)
                 .fontSize(font).grids(CssGridsType.G6).build().html());
         
         //单位性质(F0008) 入力値
@@ -458,8 +542,9 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value = getValue(userDetailForm.getUserInfo().getUser().getEmployerType());
+        value = nonNull(userDetailForm.getUserInfo().getUser().getEmployerType());
         radios = new ArrayList<>();
+        addDefaultHtmlRadio(radios, labelName);
         List<FixValueInfo> employerTypeList = fixedValueMap.get(FixedValueType.EMPLOYER_TYPE);
         for (FixValueInfo fValueInfo : employerTypeList) {
             radios.add(new HtmlRadio(fValueInfo.getValueObj().getValue(), fValueInfo.getValueObj().getName()));
@@ -473,7 +558,6 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         //------row5----------]
         //------row6----------[
         contextList = new ArrayList<String>();
-
         
         //职称(F0009) 入力値
         clmForm  = T100MUser.getColumnInfo(T100MUser.COL_JOB_TITLE);
@@ -481,10 +565,11 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value = getValue(userDetailForm.getUserInfo().getUser().getJobTitle());
+        value = nonNull(userDetailForm.getUserInfo().getUser().getJobTitle());
         radios = new ArrayList<>();
         List<FixValueInfo> jobTitleList = fixedValueMap.get(FixedValueType.JOB_TITLE);
         Map<HtmlRadio, List<HtmlRadio>> radioMap = new LinkedHashMap<HtmlRadio, List<HtmlRadio>>();
+        radioMap.put(getDefaultHtmlRadio(labelName), null);
         for (FixValueInfo fValueInfo : jobTitleList) {
             List<HtmlRadio> subList = new ArrayList<HtmlRadio>();
             if (fValueInfo.getSubList() != null && fValueInfo.getSubList().size() > 0) {
@@ -508,7 +593,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value = getValue(userDetailForm.getUserInfo().getUser().getCertificateType());
+        value = nonNull(userDetailForm.getUserInfo().getUser().getCertificateType());
         radios = new ArrayList<>();
         List<FixValueInfo> certificateTypeList = fixedValueMap.get(FixedValueType.CERTIFICATE_TYPE);
         for (FixValueInfo fValueInfo : certificateTypeList) {
@@ -530,10 +615,11 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value = getValue(userDetailForm.getUserInfo().getUser().getCertificateCode());
+        value = nonNull(userDetailForm.getUserInfo().getUser().getCertificateCode());
         contextList.add(LabelInputSet.builder()
                 .id(id).name(name).labelName(labelName).value(value).disabled(disabled)
-                .notBlank(true).maxlength(GlobalConstants.CERTIFICATE_CODE_MAX_L).placeholder(placeholder)
+                .notBlank(!isAdminEdit).maxlength(GlobalConstants.CERTIFICATE_CODE_MAX_L).placeholder(placeholder)
+                .onInputMode(OnInputMode.NUMBERS_UPPERLETTERS)
                 .fontSize(font).grids(CssGridsType.G6).build().html());
         
         //所在地区(F0011) 入力値
@@ -542,10 +628,11 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value = getValue(userDetailForm.getUserInfo().getUser().getArea());
+        value = nonNull(userDetailForm.getUserInfo().getUser().getArea());
         radios = new ArrayList<>();
         List<FixValueInfo> areaList = fixedValueMap.get(FixedValueType.AREA);
         radioMap = new LinkedHashMap<HtmlRadio, List<HtmlRadio>>();
+        radioMap.put(getDefaultHtmlRadio(labelName), null);
         for (FixValueInfo fValueInfo : areaList) {
             List<HtmlRadio> subList = new ArrayList<HtmlRadio>();
             if (fValueInfo.getSubList() != null && fValueInfo.getSubList().size() > 0) {
@@ -573,10 +660,10 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value = getValue(userDetailForm.getUserInfo().getUser().getPostalCode());
+        value = nonNull(userDetailForm.getUserInfo().getUser().getPostalCode());
         contextList.add(LabelNumberSet.builder()
                 .id(id).name(name).labelName(labelName).value(value).integerOnly(true).disabled(disabled)
-                .notBlank(true).maxlength(GlobalConstants.POST_CODE_MAX_L).placeholder(placeholder)
+                .notBlank(!isAdminEdit).maxlength(GlobalConstants.POST_CODE_MAX_L).placeholder(placeholder)
                 .fontSize(font).grids(CssGridsType.G6).build().html());
         
         //通讯地址(max128)
@@ -585,10 +672,10 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value = getValue(userDetailForm.getUserInfo().getUser().getAddress());
+        value = nonNull(userDetailForm.getUserInfo().getUser().getAddress());
         contextList.add(LabelInputSet.builder()
                 .id(id).name(name).labelName(labelName).value(value).disabled(disabled)
-                .notBlank(true).maxlength(GlobalConstants.ADDRESS_MAX_L).placeholder(placeholder)
+                .notBlank(!isAdminEdit).maxlength(GlobalConstants.ADDRESS_MAX_L).placeholder(placeholder)
                 .fontSize(font).grids(CssGridsType.G6).build().html());
         
         sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
@@ -597,14 +684,48 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         //------row9----------[
         contextList = new ArrayList<String>();
         
+        //phone入力値
+        clmForm = T100MUser.getColumnInfo(T100MUser.COL_PHONE);
+        name      = clmForm.getPageName(PREFIX_NAME);
+        id        = convertNameDotForId(name);
+        labelName = clmForm.getLabelName();
+        placeholder = clmForm.getPlaceholder();
+        value = nonNull(userDetailForm.getUserInfo().getUser().getPhone());
+        contextList.add(LabelInputSet.builder()
+                .id(id).name(name).labelName(labelName).value(value)
+                .disabled(disabled).notBlank(true)
+                .onInputMode(OnInputMode.NUMBERS_ONLY)
+                .maxlength(GlobalConstants.PHONE_MAX_L).placeholder(placeholder)
+                .fontSize(font).grids(CssGridsType.G6).build().html());
+        
+        //mail入力値
+        clmForm = T100MUser.getColumnInfo(T100MUser.COL_MAIL);
+        name      = clmForm.getPageName(PREFIX_NAME);
+        id        = convertNameDotForId(name);
+        labelName = clmForm.getLabelName();
+        placeholder = clmForm.getPlaceholder();
+        value = nonNull(userDetailForm.getUserInfo().getUser().getMail());
+        contextList.add(LabelInputSet.builder()
+                .id(id).name(name).labelName(labelName).value(value)
+                .disabled(disabled).notBlank(true)
+                .maxlength(GlobalConstants.MAIL_MAX_L).placeholder(placeholder)
+                .onInputMode(OnInputMode.EMAIL)
+                .fontSize(font).grids(CssGridsType.G6).build().html());
+        sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+        //------row9----------]
+        
+        //------row10----------[
+        contextList = new ArrayList<String>();
+        
         //入会途径(F0012) 入力値
         clmForm  = T100MUser.getColumnInfo(T100MUser.COL_MEMBERSHIP_PATH);
         name      = clmForm.getPageName(PREFIX_NAME);
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value = getValue(userDetailForm.getUserInfo().getUser().getMembershipPath());
+        value = nonNull(userDetailForm.getUserInfo().getUser().getMembershipPath());
         radios = new ArrayList<>();
+        addDefaultHtmlRadio(radios, labelName);
         List<FixValueInfo> membershipPathList = fixedValueMap.get(FixedValueType.MEMBERSHIP_PATH);
         for (FixValueInfo fValueInfo : membershipPathList) {
             radios.add(new HtmlRadio(fValueInfo.getValueObj().getValue(), fValueInfo.getValueObj().getName()));
@@ -620,8 +741,9 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
-        value = getValue(userDetailForm.getUserInfo().getUser().getFocusOn());
+        value = nonNull(userDetailForm.getUserInfo().getUser().getFocusOn());
         radios = new ArrayList<>();
+        addDefaultHtmlRadio(radios, labelName);
         List<FixValueInfo> focusOnList = fixedValueMap.get(FixedValueType.MEMBERSHIP_PATH);
         for (FixValueInfo fValueInfo : focusOnList) {
             radios.add(new HtmlRadio(fValueInfo.getValueObj().getValue(), fValueInfo.getValueObj().getName()));
@@ -632,7 +754,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
                 .fontSize(font).grids(CssGridsType.G6).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
         
         sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
-        //------row9----------]
+        //------row10----------]
         contextList = new ArrayList<String>();
         
         return sb.toString();
@@ -651,13 +773,14 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
     private static String buildExtendDetail(HttpServletRequest request, Map<FixedValueType, List<FixValueInfo>> fixedValueMap, UserDetailForm userDetailForm, PageModeType pageModeType) {
         StringBuffer sb = new StringBuffer();
         
-        boolean disabled = PageModeType.VIEW.equals(pageModeType);
+        boolean isAdminEdit = PageModeType.INSERT_BY_ADMIN == pageModeType || PageModeType.EDIT_BY_ADMIN == pageModeType;
+        boolean disabled = PageModeType.INSERT_BY_ADMIN != pageModeType ;
         List<CssAlignType> aligs = new ArrayList<>();
         String id = "";
         String context = "";
         String comp1 = "";
         // bottom button
-        if (!PageModeType.VIEW.equals(pageModeType)) {
+        if (!(PageModeType.VIEW ==pageModeType || PageModeType.INSERT_BY_ADMIN == pageModeType)) {
 	        id = BTN_OPEN_EDIT_EXTEND;
 	        context = getContext("common.page.openEdit");
 	        comp1 = button().getBorder(IconSetType.CHECK, CssClassType.DANGER, id, context);
@@ -701,7 +824,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
         //------row1----------]
         //------row2----------[
-        
+        aligs = new ArrayList<>();
         contextList = new ArrayList<String>();
         clmForm     = T101MUserExtend.getColumnInfo(T101MUserExtend.COL_PHOTO);
         name        = clmForm.getPageName("") + "File";
@@ -710,6 +833,9 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         String idLbl       = idFile + "Lbl";
         String idFileName  = idFile + "Name";
         String idOldFile   = idFile + "Old";
+        String idFileDownload   = idFile + "Download";
+        String src = Base64.encodeBase64String(userDetailForm.getUserInfo().getUserExtend().getPhoto());
+        String ext = userDetailForm.getUserInfo().getUserExtend().getPhotoExt();
         
         value       = "";
         labelName   = clmForm.getLabelName();
@@ -721,22 +847,29 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         labelName   = getContext("common.page.File");
         value       = "";
         contextList.add(LabelFileSet.builder()
-                .id(idFile).idLablel(idLbl).name(name).labelName(labelName).placeholder(placeholder).disabled(disabled)
+                .id(idFile).idLablel(idLbl).name(name).labelName(labelName).placeholder(placeholder).disabled(disabled).acceptFileType(AcceptFileType.IMAGE)
                 .fontSize(font).grids(CssGridsType.G4).build().html());
 
         
         context = getContext("common.page.showImg");
-        comp1 = button().getBorder(IconSetType.EYE, CssClassType.INFO, CssGridsType.G2, idFileOpen, context);
-        contextList.add(comp1);
-    
+        comp1 = button().getBorder(IconSetType.EYE, CssClassType.INFO, idFileOpen, context);
+        String comp2 = "";
+        if (!Strings.isBlank(src)) {
+	        context = getContext("common.page.download");
+	        comp2 = button().getBorder(IconSetType.DOWNLOAD, CssClassType.INFO, idFileDownload, context);
+        }
+        contextList.add(concactWithSpace(comp1, comp2));
+        
         sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
         
         //------row2----------]
         //------row3----------[
         
         contextList = new ArrayList<String>();
-        String src = Base64.encodeBase64String(userDetailForm.getUserInfo().getUserExtend().getPhoto());
-        String ext = userDetailForm.getUserInfo().getUserExtend().getPhotoExt();
+        if (src == null) {
+            src = getNoImgDataString();
+            ext = "jpeg";
+        }
         context = LabelImageSet.builder()
                 .id(idOldFile)
                 .imgWidth(IMG_WIDTH).imgHeight(IMG_HEIGHT)
@@ -757,6 +890,9 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         idLbl       = idFile + "Lbl";
         idFileName  = idFile + "Name";
         idOldFile   = idFile + "Old";
+        idFileDownload   = idFile + "Download";
+        src = Base64.encodeBase64String(userDetailForm.getUserInfo().getUserExtend().getEducationalAt());
+        ext = userDetailForm.getUserInfo().getUserExtend().getEducationalAtExt();
         
         value       = "";
         labelName   = clmForm.getLabelName();
@@ -768,13 +904,18 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         labelName   = getContext("common.page.File");
         value       = "";
         contextList.add(LabelFileSet.builder()
-                .id(idFile).idLablel(idLbl).name(name).labelName(labelName).placeholder(placeholder).disabled(disabled)
+                .id(idFile).idLablel(idLbl).name(name).labelName(labelName).placeholder(placeholder).disabled(disabled).acceptFileType(AcceptFileType.IMAGE)
                 .fontSize(font).grids(CssGridsType.G4).build().html());
 
         
         context = getContext("common.page.showImg");
-        comp1 = button().getBorder(IconSetType.EYE, CssClassType.INFO, CssGridsType.G2, idFileOpen, context);
-        contextList.add(comp1);
+        comp1 = button().getBorder(IconSetType.EYE, CssClassType.INFO, idFileOpen, context);
+        comp2 = "";
+        if (!Strings.isBlank(src)) {
+	        context = getContext("common.page.download");
+	        comp2 = button().getBorder(IconSetType.DOWNLOAD, CssClassType.INFO, idFileDownload, context);
+        }
+        contextList.add(concactWithSpace(comp1, comp2));
     
         sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
         
@@ -783,8 +924,6 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         //------row5----------[
 
         contextList = new ArrayList<String>();
-        src = Base64.encodeBase64String(userDetailForm.getUserInfo().getUserExtend().getEducationalAt());
-        ext = userDetailForm.getUserInfo().getUserExtend().getEducationalAtExt();
         if (src == null) {
             src = getNoImgDataString();
             ext = "jpeg";
@@ -810,6 +949,9 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         idLbl       = idFile + "Lbl";
         idFileName  = idFile + "Name";
         idOldFile   = idFile + "Old";
+        idFileDownload   = idFile + "Download";
+        src = Base64.encodeBase64String(userDetailForm.getUserInfo().getUserExtend().getBachelorAt());
+        ext = userDetailForm.getUserInfo().getUserExtend().getBachelorAtExt();
         
         value       = "";
         labelName   = clmForm.getLabelName();
@@ -821,13 +963,18 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         labelName   = getContext("common.page.File");
         value       = "";
         contextList.add(LabelFileSet.builder()
-                .id(idFile).idLablel(idLbl).name(name).labelName(labelName).placeholder(placeholder).disabled(disabled)
+                .id(idFile).idLablel(idLbl).name(name).labelName(labelName).placeholder(placeholder).disabled(disabled).acceptFileType(AcceptFileType.IMAGE)
                 .fontSize(font).grids(CssGridsType.G4).build().html());
 
         
         context = getContext("common.page.showImg");
-        comp1 = button().getBorder(IconSetType.EYE, CssClassType.INFO, CssGridsType.G2, idFileOpen, context);
-        contextList.add(comp1);
+        comp1 = button().getBorder(IconSetType.EYE, CssClassType.INFO, idFileOpen, context);
+        comp2 = "";
+        if (!Strings.isBlank(src)) {
+	        context = getContext("common.page.download");
+	        comp2 = button().getBorder(IconSetType.DOWNLOAD, CssClassType.INFO, idFileDownload, context);
+        }
+        contextList.add(concactWithSpace(comp1, comp2));
     
         sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
         
@@ -835,8 +982,6 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         //------row7----------[
 
         contextList = new ArrayList<String>();
-        src = Base64.encodeBase64String(userDetailForm.getUserInfo().getUserExtend().getBachelorAt());
-        ext = userDetailForm.getUserInfo().getUserExtend().getBachelorAtExt();
         if (src == null) {
             src = getNoImgDataString();
             ext = "jpeg";
@@ -862,6 +1007,9 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         idLbl       = idFile + "Lbl";
         idFileName  = idFile + "Name";
         idOldFile   = idFile + "Old";
+        idFileDownload   = idFile + "Download";
+        src = Base64.encodeBase64String(userDetailForm.getUserInfo().getUserExtend().getVocationalAt());
+        ext = userDetailForm.getUserInfo().getUserExtend().getVocationalAtExt();
         
         value       = "";
         labelName   = clmForm.getLabelName();
@@ -873,13 +1021,18 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         labelName   = getContext("common.page.File");
         value       = "";
         contextList.add(LabelFileSet.builder()
-                .id(idFile).idLablel(idLbl).name(name).labelName(labelName).placeholder(placeholder).disabled(disabled)
+                .id(idFile).idLablel(idLbl).name(name).labelName(labelName).placeholder(placeholder).disabled(disabled).acceptFileType(AcceptFileType.IMAGE)
                 .fontSize(font).grids(CssGridsType.G4).build().html());
 
         
         context = getContext("common.page.showImg");
-        comp1 = button().getBorder(IconSetType.EYE, CssClassType.INFO, CssGridsType.G2, idFileOpen, context);
-        contextList.add(comp1);
+        comp1 = button().getBorder(IconSetType.EYE, CssClassType.INFO, idFileOpen, context);
+        comp2 = "";
+        if (!Strings.isBlank(src)) {
+	        context = getContext("common.page.download");
+	        comp2 = button().getBorder(IconSetType.DOWNLOAD, CssClassType.INFO, idFileDownload, context);
+        }
+        contextList.add(concactWithSpace(comp1, comp2));
     
         sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
         
@@ -887,8 +1040,6 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         //------row9----------[
 
         contextList = new ArrayList<String>();
-        src = Base64.encodeBase64String(userDetailForm.getUserInfo().getUserExtend().getVocationalAt());
-        ext = userDetailForm.getUserInfo().getUserExtend().getVocationalAtExt();
         if (src == null) {
             src = getNoImgDataString();
             ext = "jpeg";
@@ -916,7 +1067,8 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         placeholder = clmForm.getPlaceholder();
         value       = userDetailForm.getUserInfo().getUserExtend().getMajor();
         contextList.add(LabelInputSet.builder()
-                .id(id).name(name).labelName(labelName).value(value).notBlank(true).disabled(disabled)
+                .id(id).name(name).labelName(labelName).value(value)
+                .notBlank(!isAdminEdit).disabled(disabled)
                 .maxlength(GlobalConstants.MAJOR_MAX_L).placeholder(placeholder)
                 .fontSize(font).grids(CssGridsType.G6).build().html());
         
@@ -947,7 +1099,8 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         placeholder = clmForm.getPlaceholder();
         value       = userDetailForm.getUserInfo().getUserExtend().getLearnExperience();
         contextList.add(LabelTextAreaSet.builder()
-                .id(id).name(name).labelName(labelName).value(value).notBlank(true).disabled(disabled)
+                .id(id).name(name).labelName(labelName).value(value)
+                .notBlank(!isAdminEdit).disabled(disabled)
                 .maxlength(GlobalConstants.LEARN_EXPERIENCE_MAX_L)
                 .placeholder(placeholder).outPutType(LabelTextAreaSetType.WITH_LABEL)
                 .fontSize(font).rows(4).grids(CssGridsType.G12).build().html());
@@ -966,7 +1119,8 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         placeholder = clmForm.getPlaceholder();
         value       = userDetailForm.getUserInfo().getUserExtend().getWorkExperience();
         contextList.add(LabelTextAreaSet.builder()
-                .id(id).name(name).labelName(labelName).value(value).notBlank(true).disabled(disabled)
+                .id(id).name(name).labelName(labelName).value(value)
+                .notBlank(!isAdminEdit).disabled(disabled)
                 .maxlength(GlobalConstants.LEARN_EXPERIENCE_MAX_L)
                 .placeholder(placeholder).outPutType(LabelTextAreaSetType.WITH_LABEL)
                 .fontSize(font).rows(4).grids(CssGridsType.G12).build().html());
@@ -1019,7 +1173,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         idFile      = convertNameDotForId(name);
         idFileOpen  = idFile + "Open";
         String idFilePrint = idFile + "Print";
-        String idFileDownload = idFile + "Download";
+        idFileDownload = idFile + "Download";
         idLbl       = idFile + "Lbl";
         idFileName  = idFile + "Name";
         idOldFile   = idFile + "Old";
@@ -1033,13 +1187,13 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
 	        placeholder = clmForm.getPlaceholder();
 	        contextList.add(LabelInputSet.builder()
 	                .id(idFileName).labelName(labelName).placeholder(placeholder).disabled(disabled)
-	                .fontSize(font).build().html());
+	                .fontSize(font).grids(CssGridsType.G4).build().html());
 	        
 	        labelName   = getContext("userDetail.uploadApplicationForm");
 	        value       = "";
 	        contextList.add(LabelFileSet.builder()
-	                .id(idFile).idLablel(idLbl).name(name).labelName(labelName).placeholder(placeholder).disabled(disabled)
-	                .fontSize(font).build().html());
+	                .id(idFile).idLablel(idLbl).name(name).labelName(labelName).placeholder(placeholder).disabled(disabled).acceptFileType(AcceptFileType.PDF)
+	                .fontSize(font).grids(CssGridsType.G4).build().html());
 	        
 	        context = getContext("userDetail.print");
 	        comp1 = button().getBorder(IconSetType.PRINT, CssClassType.SUCCESS, idFilePrint, context);
@@ -1057,7 +1211,8 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
 	        aligs.add(CssAlignType.LEFT);
 	        aligs.add(CssAlignType.LEFT);
 	        aligs.add(CssAlignType.LEFT);
-  	        sb.append(divRow().get(CellWidthType.THREE_4_4_4, aligs, contextList.get(0), contextList.get(1), concactWithSpace(contextList.get(2),contextList.get(3))));
+//  	        sb.append(divRow().get(CellWidthType.THREE_4_4_4, aligs, contextList.get(0), contextList.get(1), concactWithSpace(contextList.get(2),contextList.get(3))));
+  	        sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
         }
         
         if (LoginInfoHelper.isAdminLogin(request) && isApplicationForm) {
@@ -1073,6 +1228,175 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         
         return sb.toString();
     }
+    
+    public static String getAdminMainPageContext(
+            HttpServletRequest request, 
+            UserDetailForm userDetailForm,
+            OrderListOutput orderListOutput,
+            PageModeType pageModeType) {
+        StringBuffer sb = new StringBuffer();
+        sb.append(divRow().cellBlank(5));
+        // ----------hidden------[
+        sb.append(setDetailHidden(request, userDetailForm, pageModeType));
+        // ----------hidden------]
+        // ----------hidden------[
+        sb.append(setBreadCrumb());
+    	// ----------hidden------[
+        String tabHtml = TabSet.builder()
+                .id(TAB_ID)
+            .tabTitleIds(new String [] {TAB_TITLE_USER_ID, TAB_TITLE_ORDER_ID, TAB_TITLE_USER_CARD_ID})
+            .tabTitles(new String [] {
+                    getContext("userDetail.user.tab.title"), 
+                    getContext("userDetail.order.tab.title"),
+                    getContext("userDetail.userCard.tab.title")})
+            .tabBodyIds(new String [] {TAB_BODY_USER_ID, TAB_BODY_ORDER_ID, TAB_BODY_USER_CARD_ID})
+            .tabBodys(new String [] {
+            		setUserCardPanel(request, userDetailForm, pageModeType), 
+            		setOrderCardPanel(request, orderListOutput),
+                    ""})
+            .build().html();
+        sb.append(tabHtml);
+        
+        // --bottom btn--
+        sb.append(divRow().cellBlank(5));
+        sb.append(buildFooter(request));
+        sb.append(divRow().cellBlank(5));
+        
+        return getForm(USER_DETAIL_FORM_NAME, sb.toString());
+    }
+    
+    public static String setOrderCardPanel(
+            HttpServletRequest request,
+            OrderListOutput orderListOutput) {
+        List<OrderInfo> orderList = orderListOutput.getOrderList();
+        //head
+        TrSet headTr = tr().head(CssClassType.INFO);
+        // --[
+        if (isPhoneMode(request)) {
+            // --col1--
+            List<CssAlignType> aligs = new ArrayList<>();
+            aligs.add(CssAlignType.LEFT);
+            aligs.add(CssAlignType.LEFT);
+            aligs.add(CssAlignType.RIGHT);
+            String subRow1 = divRow().get(CellWidthType.THREE_6_3_3, aligs, T200MOrder.getColumnInfo(T200MOrder.COL_ID).getLabelName(), 
+                                                                        T100MUser.getColumnInfo(T100MUser.COL_NAME).getLabelName(),
+                                                                        getContext("order.amountTile"));
+            String subRow2 = divRow().get(CellWidthType.THREE_6_3_3, aligs, T200MOrder.getColumnInfo(T200MOrder.COL_ORDER_TYPE).getLabelName(), 
+                                                                        T200MOrder.getColumnInfo(T200MOrder.COL_CHECK_STATUS).getLabelName(),
+                                                                        T200MOrder.getColumnInfo(T200MOrder.COL_BILL_STATUS).getLabelName());
+            List<GridFlexType> flexs = new ArrayList<>();
+            flexs.add(GridFlexType.LEFT);
+            flexs.add(GridFlexType.RIGHT);
+            String subRow3 = divRow().getFlex(CellWidthType.TWO_6_6, flexs, T200MOrder.getColumnInfo(T200MOrder.COL_PAY_DATE).getLabelName(),
+                                                                        getContext("common.page.do"));
+            headTr.addTh(th().get(PHONE_TD_HEIGHT, CssGridsType.G12, CssAlignType.LEFT, subRow1, subRow2, subRow3));
+            // --]
+        } else {
+            // --col1--
+            ColumnInfoForm clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_ID);
+            String context  = clmForm.getLabelName();
+            headTr.addTh(th().get(CssGridsType.G2, CssAlignType.LEFT, clmForm.getLabelName()));
+            // --col2--
+            clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_ORDER_AMOUNT);
+            context  = clmForm.getLabelName();
+            headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, clmForm.getLabelName()));
+           // --col3--
+            clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_PAY_AMOUNT);
+            context  = clmForm.getLabelName();
+            headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, clmForm.getLabelName()));
+            // --col4--
+            clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_ORDER_TYPE);
+            context  = clmForm.getLabelName();
+            headTr.addTh(th().get(CssGridsType.G2, CssAlignType.CENTER, clmForm.getLabelName()));
+            // --col5--
+            clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_CHECK_STATUS);
+            context  = clmForm.getLabelName();
+            headTr.addTh(th().get(CssGridsType.G2, CssAlignType.CENTER, clmForm.getLabelName()));
+            // --col6--
+            clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_BILL_STATUS);
+            context  = clmForm.getLabelName();
+            headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, clmForm.getLabelName()));
+            // --col7--
+            clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_PAY_DATE);
+            context  = clmForm.getLabelName();
+            headTr.addTh(th().get(CssGridsType.G2, CssAlignType.CENTER, clmForm.getLabelName()));
+            // --col8--
+            context         = getContext("common.page.do");
+            headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, context));
+        }
+        
+        //body
+        List<TrSet> bodyList = new ArrayList<>();
+        if(Objects.nonNull(orderList)) {
+            for(int i=0; i<orderList.size(); i++) {
+                OrderInfo orderInfo = orderList.get(i);
+                Map<String, String> properties = new HashMap<String, String>();
+                properties.put("rowDataKey", String.valueOf(orderInfo.getId()));
+                TrSet tr = tr().row(properties);
+                String orderTypeName = PTextSet.builder()
+                        .context(orderInfo.getOrderTypeName())
+                        .classType(OrderType.keyOf(orderInfo.getOrder().getOrderType()).getClassType()).build().html();
+                String billStatusName = "";
+                if (orderInfo.getOrder().getCheckStatus().equals(CheckStatusType.REFUSED.getKey())) {
+                    billStatusName = PTextSet.builder()
+                        .context(orderInfo.getRefundStatusName())
+                        .classType(ReFundStatusType.keyOf(orderInfo.getOrder().getRefundStatus()).getClassType()).build().html();
+                } else {
+                    billStatusName = PTextSet.builder()
+                        .context(orderInfo.getBillStatusName())
+                        .classType(BillStatusType.keyOf(orderInfo.getOrder().getBillStatus()).getClassType()).build().html();
+                }
+                String checkStatusName = PTextSet.builder()
+                        .context(orderInfo.getCheckStatusName())
+                        .classType(CheckStatusType.keyOf(orderInfo.getOrder().getCheckStatus()).getClassType()).build().html();
+                
+                String amount = formatCurrencyZH(orderInfo.getOrder().getOrderAmount());
+                String payAmount = formatCurrencyZH(orderInfo.getOrder().getPayAmount());
+                String payDate = orderInfo.getOrder().getPayDate();
+             // --col2--
+                String btnContext = "";
+                if (isPhoneMode(request)) {
+                	if(Strings.isBlank(payAmount)) {
+                		payAmount = StringUtility.padLeft(payAmount, 4, "-");
+                	}
+                    // --col1--
+                    List<CssAlignType> aligs = new ArrayList<>();
+                    aligs.add(CssAlignType.LEFT);
+                    aligs.add(CssAlignType.LEFT);
+                    aligs.add(CssAlignType.RIGHT);
+                    String subRow1 = divRow().get(CellWidthType.THREE_6_3_3, aligs, orderInfo.getId(), orderInfo.getUserName(), amount+"/"+payAmount);
+                    String subRow2 = divRow().get(CellWidthType.THREE_6_3_3, aligs, orderTypeName, checkStatusName, billStatusName);
+                    List<GridFlexType> flexs = new ArrayList<>();
+                    flexs.add(GridFlexType.LEFT);
+                    flexs.add(GridFlexType.RIGHT);
+                    String subRow3 = divRow().getFlex(CellWidthType.TWO_6_6, flexs, payDate, btnContext);
+                    tr.addTd(td().get(PHONE_TD_HEIGHT, CssGridsType.G12, CssAlignType.LEFT, subRow1, subRow2, subRow3));
+                } else {
+                    // --col1--
+                    tr.addTd(td().get(CssGridsType.G2, CssAlignType.LEFT, orderInfo.getId()));
+                    // --col2--
+                    tr.addTd(td().get(CssGridsType.G1, CssAlignType.CENTER, amount));
+                    // --col3--
+                    tr.addTd(td().get(CssGridsType.G1, CssAlignType.CENTER, payAmount));
+                    // --col4--
+                    tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, orderTypeName));
+                    // --col5--
+                    tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, checkStatusName));
+                    // --col6--
+                    tr.addTd(td().get(CssGridsType.G1, CssAlignType.CENTER, billStatusName));
+                    // --col7--
+                    tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, payDate));
+                    // --col8--
+                    tr.addTd(td().get(CssGridsType.G1, CssAlignType.CENTER, btnContext));
+                }
+                bodyList.add(tr);
+            }
+        }
+        
+        return borderCard().noTitleWithScroll("", CssClassType.SUCCESS, "", 300,
+        		table().get(ORDER_LIST_TABLE_ID, 200, headTr, bodyList));
+    }
+    
     private static String buildFooter(HttpServletRequest request) {
         StringBuffer sb = new StringBuffer();
         List<CssAlignType> aligs = new ArrayList<>();
@@ -1100,12 +1424,20 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         return sb.toString();
     }
     
+    public static boolean isPhoneMode(HttpServletRequest request) {
+	    int outWidth = LoginInfoHelper.getMediaWidth(request);
+	    return outWidth > 800 ? false : true;
+	}
+    
     public static Map<String, String> getJsProperties() {
         Map<String, String> js = new HashMap<String, String>();
         // url
         js.put("url_user_detail_init",				URL_BASE + URL_USER_DETAIL_INIT);
         js.put("url_user_detail_from_admin_init",	URL_BASE + URL_USER_DETAIL_FROM_ADMIN_INIT);
+        js.put("url_user_detail_add_init",			URL_BASE + URL_USER_DETAIL_ADD_INIT);
+        js.put("url_user_detail_add",				URL_BASE + URL_USER_DETAIL_ADD);
         js.put("url_user_detail_edit",				URL_BASE + URL_USER_DETAIL_EDIT);
+        js.put("url_user_detail_delete",			URL_BASE + URL_USER_DETAIL_DELETE);
         js.put("url_user_detail_print",				URL_BASE + URL_USER_DETAIL_PRINT);
         js.put("url_user_detail_download",			URL_BASE + URL_USER_DETAIL_DOWNLOAD);
         return js;

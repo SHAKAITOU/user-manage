@@ -50,6 +50,18 @@ AdminBillList.prototype.init = function(){
 	//keep self instance for call back
 	var self = this;
 
+	$('[data-toggle="tooltip"]').tooltip({
+	   trigger: 'manual'
+	 }).on('mouseover', function () {
+	   var $this = $(this);
+	   if (this.offsetWidth < this.scrollWidth) {
+	     $this.tooltip('show');
+	   }
+	 }).on('mouseout', function () {
+	   var $this = $(this);
+	   $this.tooltip('hide');
+	 });
+		 
 	//init bond event to btn
 	self.initEvent();
 	
@@ -98,7 +110,7 @@ AdminBillList.prototype.initEvent = function(){
 	
     ShaInput.button.onClick(self.getObject(self.ID.SEARCH_BTN_ID),
     	function(event) {
-			ShaAjax.ajax.post(
+			ShaAjax.ajax.get(
                 self.jsContext.adminJsView.adminBillSearch.url_bill_list, 
                 self.getForm().serializeArray(), 
                 function(data){
@@ -153,7 +165,7 @@ AdminBillList.prototype.initEvent = function(){
 AdminBillList.prototype.doPageLink = function(){
 	//keep self instance for call back
 	var self = this;
-	ShaAjax.ajax.post(
+	ShaAjax.ajax.get(
         self.jsContext.adminJsView.adminBillSearch.url_bill_list_growing, 
         self.getForm().serializeArray(), 
         function(data){

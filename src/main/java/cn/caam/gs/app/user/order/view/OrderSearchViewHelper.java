@@ -8,6 +8,7 @@ import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 
 import cn.caam.gs.app.GlobalConstants;
@@ -36,17 +37,17 @@ import cn.caam.gs.common.html.element.TrSet;
 import cn.caam.gs.common.html.element.bs5.BreadCrumbSet;
 import cn.caam.gs.common.html.element.bs5.ButtonSet;
 import cn.caam.gs.common.html.element.bs5.ButtonSet.ButtonSetType;
-import cn.caam.gs.common.html.element.bs5.IconSet.IconSetCss;
-import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
 import cn.caam.gs.common.html.element.bs5.DivChevronSet;
 import cn.caam.gs.common.html.element.bs5.IconSet;
+import cn.caam.gs.common.html.element.bs5.IconSet.IconSetCss;
+import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
 import cn.caam.gs.common.html.element.bs5.LabelDateInputSet;
 import cn.caam.gs.common.html.element.bs5.LabelDateInputSet.LabelDateInputSetType;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet.LabelSelectSetType;
-import cn.caam.gs.common.util.PaginationHolder;
 import cn.caam.gs.common.html.element.bs5.PTextSet;
-import cn.caam.gs.common.html.element.bs5.SpanTextSet;
+import cn.caam.gs.common.util.PaginationHolder;
+import cn.caam.gs.common.util.StringUtility;
 import cn.caam.gs.domain.db.custom.entity.FixValueInfo;
 import cn.caam.gs.domain.db.custom.entity.OrderInfo;
 import cn.caam.gs.domain.tabledef.impl.T100MUser;
@@ -202,7 +203,7 @@ public class OrderSearchViewHelper extends HtmlViewHelper {
         name      = clmForm.getPageName("") + "From";
         id        = convertNameDotForId(name);
         labelName = clmForm.getLabelName() + getContext("common.page.start");
-        String placeholder = T100MUser.getColumnInfo(T100MUser.COL_VALID_END_DATE).getPlaceholder();
+        String placeholder = T200MOrder.getColumnInfo(T200MOrder.COL_PAY_DATE).getPlaceholder();
         contextList.add(LabelDateInputSet.builder()
                 .id(id).name(name).labelName(labelName).placeholder(placeholder)
                 .fontSize(font).grids(CssGridsType.G3).outPutType(LabelDateInputSetType.WITH_LABEL_FOOT).build().html());
@@ -296,17 +297,18 @@ public class OrderSearchViewHelper extends HtmlViewHelper {
             // --col1--
             List<CssAlignType> aligs = new ArrayList<>();
             aligs.add(CssAlignType.LEFT);
+            aligs.add(CssAlignType.LEFT);
             aligs.add(CssAlignType.RIGHT);
-            String subRow1 = divRow().get(CellWidthType.TWO_6_6, aligs, T200MOrder.getColumnInfo(T200MOrder.COL_ID).getLabelName(), 
+            String subRow1 = divRow().get(CellWidthType.THREE_6_3_3, aligs, T200MOrder.getColumnInfo(T200MOrder.COL_ID).getLabelName(), 
+                                                                        T100MUser.getColumnInfo(T100MUser.COL_NAME).getLabelName(),
                                                                         T200MOrder.getColumnInfo(T200MOrder.COL_ORDER_AMOUNT).getLabelName());
-            String subRow2 = divRow().get(CellWidthType.TWO_6_6, aligs, T200MOrder.getColumnInfo(T200MOrder.COL_ORDER_TYPE).getLabelName(), 
-                                                                        T200MOrder.getColumnInfo(T200MOrder.COL_CHECK_STATUS).getLabelName());
+            String subRow2 = divRow().get(CellWidthType.THREE_6_3_3, aligs, T200MOrder.getColumnInfo(T200MOrder.COL_ORDER_TYPE).getLabelName(), 
+                                                                        T200MOrder.getColumnInfo(T200MOrder.COL_CHECK_STATUS).getLabelName(),
+                                                                        T200MOrder.getColumnInfo(T200MOrder.COL_BILL_STATUS).getLabelName());
             List<GridFlexType> flexs = new ArrayList<>();
             flexs.add(GridFlexType.LEFT);
-            flexs.add(GridFlexType.CENTER);
             flexs.add(GridFlexType.RIGHT);
-            String subRow3 = divRow().getFlex(CellWidthType.THREE_3_6_3, flexs, T200MOrder.getColumnInfo(T200MOrder.COL_BILL_STATUS).getLabelName(),
-                                                                        T200MOrder.getColumnInfo(T200MOrder.COL_PAY_DATE).getLabelName(),
+            String subRow3 = divRow().getFlex(CellWidthType.TWO_6_6, flexs, T200MOrder.getColumnInfo(T200MOrder.COL_PAY_DATE).getLabelName(),
                                                                         getContext("common.page.do"));
             headTr.addTh(th().get(PHONE_TD_HEIGHT, CssGridsType.G12, CssAlignType.LEFT, subRow1, subRow2, subRow3));
             // --]
@@ -370,18 +372,24 @@ public class OrderSearchViewHelper extends HtmlViewHelper {
              // --col2--
                 String btnContext = button().forTableBorderNameLeft(IconSetType.DETAIL, CssClassType.INFO, 
                         "", getContext("common.page.info"), orderInfo.getId(), "detail");
+                if (!Strings.isBlank(orderInfo.getOrder().getBillStatus()) 
+                		&& orderInfo.getOrder().getBillStatus().equals(BillStatusType.INVOICED.getKey())) {
+	                btnContext += "&nbsp;";
+	                btnContext += button().forTableBorderNameLeft(IconSetType.DOWNLOAD, CssClassType.SUCCESS, 
+	                        "", getContext("order.downloadBtn"), orderInfo.getId(), "download");
+                }
                 if (isPhoneMode(request)) {
                     // --col1--
                     List<CssAlignType> aligs = new ArrayList<>();
                     aligs.add(CssAlignType.LEFT);
+                    aligs.add(CssAlignType.LEFT);
                     aligs.add(CssAlignType.RIGHT);
-                    String subRow1 = divRow().get(CellWidthType.TWO_8_4, aligs, orderInfo.getId(), amount);
-                    String subRow2 = divRow().get(CellWidthType.TWO_7_5, aligs, orderTypeName, checkStatusName);
+                    String subRow1 = divRow().get(CellWidthType.THREE_6_3_3, aligs, orderInfo.getId(), orderInfo.getUserName(), amount);
+                    String subRow2 = divRow().get(CellWidthType.THREE_6_3_3, aligs, orderTypeName, checkStatusName, billStatusName);
                     List<GridFlexType> flexs = new ArrayList<>();
                     flexs.add(GridFlexType.LEFT);
-                    flexs.add(GridFlexType.CENTER);
                     flexs.add(GridFlexType.RIGHT);
-                    String subRow3 = divRow().getFlex(CellWidthType.THREE_3_6_3, flexs, billStatusName, payDate, btnContext);
+                    String subRow3 = divRow().getFlex(CellWidthType.TWO_6_6, flexs, payDate, btnContext);
                     tr.addTd(td().get(PHONE_TD_HEIGHT, CssGridsType.G12, CssAlignType.LEFT, subRow1, subRow2, subRow3));
                 } else {
                     // --col1--

@@ -2,16 +2,20 @@ package cn.caam.gs.common.enums;
 
 public enum UserType {
 
-    /** 个人会员 */
-    PERSON		("01"),
-    /** 普通会员 */
-    PERSON_REGULAR 		("0101"),
-    /** 普通会员(学生) */
-    PERSON_REGULAR_STUDENT		("0102"),
-    /** 外籍会员 */
-    PERSON_FOREIGN		("0103"),
-    /** 会士会员 */
-    PERSON_FELLOW		("0104"),
+	  /** 个人会员 */
+	  PERSON		("01"),
+	  /** 甘肃协会会员 */
+	  PERSON_GANSU 		("0101"),
+	  /** 中国协会会员 */
+	  PERSON_CHINA      ("0105"),
+//    /** 普通会员 */
+//    PERSON_REGULAR 		("0101"),
+//    /** 普通会员(学生) */
+//    PERSON_REGULAR_STUDENT		("0102"),
+//    /** 外籍会员 */
+//    PERSON_FOREIGN		("0103"),
+//    /** 会士会员 */
+//    PERSON_FELLOW		("0104"),
     /** 团体会员单位 */
     GROUP		("02"),
     /** 团体会员单位 */

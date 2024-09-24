@@ -1,5 +1,7 @@
 package cn.caam.gs.service.impl;
 
+import java.util.UUID;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,20 +9,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import cn.caam.gs.app.common.output.UserCheckHistoryListOutput;
-import cn.caam.gs.app.util.SessionConstants;
+import cn.caam.gs.app.util.LoginInfoHelper;
 import cn.caam.gs.common.enums.MsgType;
 import cn.caam.gs.common.enums.SexType;
+import cn.caam.gs.common.enums.SmsConfigType;
 import cn.caam.gs.common.enums.UserCheckStatusType;
 import cn.caam.gs.common.enums.ValidType;
 import cn.caam.gs.common.util.CommonUtil;
 import cn.caam.gs.common.util.EncryptorUtil;
 import cn.caam.gs.common.util.LocalDateUtility;
 import cn.caam.gs.common.util.LocalDateUtility.DateTimePattern;
-import cn.caam.gs.config.SmsConfig;
-import cn.caam.gs.domain.db.base.entity.MAdmin;
 import cn.caam.gs.domain.db.base.entity.MMessage;
 import cn.caam.gs.domain.db.base.entity.MUser;
+import cn.caam.gs.domain.db.base.entity.MUserCard;
 import cn.caam.gs.domain.db.base.entity.MUserCheckHistory;
+import cn.caam.gs.domain.db.base.mapper.MUserCardMapper;
 import cn.caam.gs.domain.db.base.mapper.MUserCheckHistoryMapper;
 import cn.caam.gs.domain.db.base.mapper.MUserMapper;
 import cn.caam.gs.domain.db.custom.mapper.OptionalUserCheckHistoryInfoMapper;
@@ -47,7 +50,10 @@ public class UserCheckHistoryService extends BaseService {
 	MessageService messageService;
 	
 	@Autowired
-    SmsConfig smsConfig;
+	SmsSendService smsSendService;
+	
+	@Autowired
+	MUserCardMapper userCardMapper;
     
 	public UserCheckHistoryListOutput getUserCheckHistoryList(String userId) {
 		UserCheckHistoryListOutput listOutput = new UserCheckHistoryListOutput();
@@ -77,14 +83,10 @@ public class UserCheckHistoryService extends BaseService {
 		mUserCheckHistory.setId(EncryptorUtil.generateUserReviewId());
 		mUserCheckHistory.setUserId(userId);
 		mUserCheckHistory.setCheckDate(LocalDateUtility.getCurrentDateTimeString(DateTimePattern.UUUUHMMHDDHHQMIQSS));
-		MAdmin adminUserInfo = (MAdmin)request.getSession().getAttribute(SessionConstants.LOGIN_INFO.getValue());
-		if (adminUserInfo != null) {
-			mUserCheckHistory.setCreatedBy(adminUserInfo.getId());
-		}
+		mUserCheckHistory.setCreatedBy(LoginInfoHelper.getLoginId(request));
 		mUserCheckHistory.setCreatedAt(LocalDateUtility.getCurrentDateTimeString(DateTimePattern.UUUUHMMHDDHHQMIQSS));
 		
 		mMUserCheckHistoryMapper.insert(mUserCheckHistory);
-		
 		
 		MUser user = new MUser();
         user.setId(mUserCheckHistory.getUserId());
@@ -96,6 +98,20 @@ public class UserCheckHistoryService extends BaseService {
         }
         userDb.setCheckDate(mUserCheckHistory.getCheckDate());
         userMapper.updateByPrimaryKeySelective(user);
+        
+        if (UserCheckStatusType.PASS.getKey().equals(user.getCheckStatus())) {//审核通过
+			MUserCard userCard = new MUserCard();
+			//UUID
+			userCard.setId(UUID.randomUUID().toString());
+			userCard.setUserId(user.getId());
+			userCard.setValidStatus(ValidType.VALID.getKey());
+			//G20240704000001
+			userCard.setUserCode(EncryptorUtil.generateGansuUserCode());
+			userCard.setCreatedBy(LoginInfoHelper.getLoginId(request));
+			userCard.setCreatedAt(LocalDateUtility.getCurrentDateTimeString(DateTimePattern.UUUUHMMHDDHHQMIQSS));
+			
+			userCardMapper.insert(userCard);
+        }
         
         MMessage message = new MMessage();
         /*
@@ -110,7 +126,11 @@ public class UserCheckHistoryService extends BaseService {
         
         //发送审核结果短信
         if (CommonUtil.isMobilePhoneNumber(userDb.getPhone())) {
-//        	HuaWeiSMSUtil.sendUserReviewMessage(smsConfig, smsConfig.getUserReviewTemplateId(), userDb.getPhone(), msg);
+        	try {
+        		sendUserReviewMessage(userDb.getCheckStatus(), userDb.getPhone());
+        	}catch(Exception ex) {
+        		ex.printStackTrace();
+        	}
         }
 		
 		return true;
@@ -146,4 +166,16 @@ public class UserCheckHistoryService extends BaseService {
 		return "";
 	}
 	
+	public String sendUserReviewMessage(String checkStatus, String phone) throws Exception{
+		if (UserCheckStatusType.PASS.getKey().equals(checkStatus)) {
+			smsSendService.sendUserReviewMessage(SmsConfigType.USER_REVIEW_OK, phone);
+			
+		}else if (UserCheckStatusType.REFUSED.getKey().equals(checkStatus)) {
+			smsSendService.sendUserReviewMessage(SmsConfigType.USER_REVIEW_NG, phone);
+			
+		}else if (UserCheckStatusType.RETURN.getKey().equals(checkStatus)) {
+			smsSendService.sendUserReviewMessage(SmsConfigType.USER_REVIEW_RETURN, phone);
+		}
+		return "";
+	}
 }

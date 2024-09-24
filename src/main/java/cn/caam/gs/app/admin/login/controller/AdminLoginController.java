@@ -4,6 +4,7 @@ package cn.caam.gs.app.admin.login.controller;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -23,8 +25,10 @@ import cn.caam.gs.app.JavaScriptSet;
 import cn.caam.gs.app.UrlConstants;
 import cn.caam.gs.app.admin.login.view.AdminLoginViewHelper;
 import cn.caam.gs.app.admin.menu.menu.AdminMenuViewHelper;
+import cn.caam.gs.app.admin.usersearch.view.AdminUserSearchViewHelper;
 import cn.caam.gs.app.user.login.form.IndexForm;
 import cn.caam.gs.app.user.login.form.LoginForm;
+import cn.caam.gs.app.util.LoginInfoHelper;
 import cn.caam.gs.app.util.SessionConstants;
 import cn.caam.gs.common.controller.ScreenBaseController;
 import cn.caam.gs.common.enums.ExecuteReturnType;
@@ -64,7 +68,7 @@ public class AdminLoginController extends ScreenBaseController{
     
     
 
-	@GetMapping("")
+	@GetMapping({"", "/"})
 	public ModelAndView index(
 			@RequestParam Map<String,String> allRequestParams,
 			HttpServletRequest request,
@@ -115,17 +119,24 @@ public class AdminLoginController extends ScreenBaseController{
 	}
 	
 
-	@PostMapping(path=AdminLoginViewHelper.URL_C_USER_LOGIN)
+	//@PostMapping(path=AdminLoginViewHelper.URL_C_USER_LOGIN)
+	@RequestMapping(value = AdminLoginViewHelper.URL_C_USER_LOGIN, method = {RequestMethod.GET,RequestMethod.POST})
 	public ModelAndView menu(
 	        LoginForm loginForm, Locale loc, 
 			HttpServletRequest request,
 			HttpServletResponse response) {
 		
+		if (LoginInfoHelper.isAdminLogin(request)) {
+			ModelAndView mav = new ModelAndView();
+			mav.setViewName(AdminMenuViewHelper.HTML_MENU_MENU);
+			return mav;
+		}
+		
 		boolean okFlag = false;
 		boolean noSession = false;
 		MAdmin userInfo = userService.getLoginAdminInfo(loginForm.getUserCode());
 		
-		String ePw = EncryptorUtil.encrypt(loginForm.getPassword());
+		String ePw = EncryptorUtil.encrypt(Optional.ofNullable(loginForm.getPassword()).orElse(""));
 		
 		if (request.getSession().getAttribute(SessionConstants.VERIFY_CODE.getValue()) == null) {
 		    okFlag = false;

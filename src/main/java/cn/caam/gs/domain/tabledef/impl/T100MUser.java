@@ -46,6 +46,11 @@ public class T100MUser extends BaseTableDef implements BaseDdl{
     public static final String COL_SOCIETY_TYPE     = "society_type";
     public static final String COL_GROUP_NAME       = "group_name";
     public static final String COL_CREDIT_CODE      = "credit_code";
+    public static final String COL_DELETED          = "deleted";
+    public static final String COL_CREATED_BY		= "created_by";
+    public static final String COL_CREATED_AT		= "created_at";
+    public static final String COL_UPDATED_BY		= "updated_by";
+    public static final String COL_UPDATED_AT		= "updated_at";
     
     public static final ColumnInfoForm[] cols = new ColumnInfoForm[] {
         // name | pk | type | charMaxLength | numPrecision | numScale | nullable | default | label
@@ -80,9 +85,14 @@ public class T100MUser extends BaseTableDef implements BaseDdl{
         new ColumnInfoForm(COL_VALID_START_DATE, false,    MySqlType.CHARACTER_VARYING.getType(), 20 , null, null, false, "", getLabelName(TABLE_NAME, COL_VALID_START_DATE), getPlaceholder(TABLE_NAME, COL_VALID_START_DATE)),
         new ColumnInfoForm(COL_VALID_END_DATE,   false,    MySqlType.CHARACTER_VARYING.getType(), 20 , null, null, false, "", getLabelName(TABLE_NAME, COL_VALID_END_DATE),   getPlaceholder(TABLE_NAME, COL_VALID_END_DATE)),
         new ColumnInfoForm(COL_SOCIETY_TYPE,     false,    MySqlType.CHARACTER_VARYING.getType(), 6 , null, null, false, "",  getLabelName(TABLE_NAME, COL_SOCIETY_TYPE),     getPlaceholder(TABLE_NAME, COL_SOCIETY_TYPE)),
-        new ColumnInfoForm(COL_VALID_STATUS,     false,    MySqlType.CHARACTER_VARYING.getType(), 120 , null, null, false, "",  getLabelName(TABLE_NAME, COL_GROUP_NAME),     getPlaceholder(TABLE_NAME, COL_GROUP_NAME)),
+        new ColumnInfoForm(COL_GROUP_NAME,       false,    MySqlType.CHARACTER_VARYING.getType(), 120 , null, null, false, "",  getLabelName(TABLE_NAME, COL_GROUP_NAME),     getPlaceholder(TABLE_NAME, COL_GROUP_NAME)),
         new ColumnInfoForm(COL_CREDIT_CODE,      false,    MySqlType.CHARACTER_VARYING.getType(), 1206 , null, null, false, "",  getLabelName(TABLE_NAME, COL_CREDIT_CODE),   getPlaceholder(TABLE_NAME, COL_CREDIT_CODE)),
         new ColumnInfoForm(COL_APPLICATION_DATE, false,    MySqlType.CHARACTER_VARYING.getType(), 20 , null, null, false, "", getLabelName(TABLE_NAME, COL_APPLICATION_DATE), getPlaceholder(TABLE_NAME, COL_APPLICATION_DATE)),
+        new ColumnInfoForm(COL_DELETED,          false,    MySqlType.INTEGER.getType(),         null , 2,    0,   false ,  "", getLabelName(TABLE_NAME, COL_DELETED), getPlaceholder(TABLE_NAME, COL_DELETED)),
+        new ColumnInfoForm(COL_CREATED_BY,       false,    MySqlType.CHARACTER_VARYING.getType(), 20 , null, null, true ,  "", getLabelName(TABLE_NAME, COL_CREATED_BY),     getPlaceholder(TABLE_NAME, COL_CREATED_BY)),
+        new ColumnInfoForm(COL_CREATED_AT,       false,    MySqlType.CHARACTER_VARYING.getType(), 20 , null, null, true ,  "", getLabelName(TABLE_NAME, COL_CREATED_AT),     getPlaceholder(TABLE_NAME, COL_CREATED_AT)),
+        new ColumnInfoForm(COL_UPDATED_BY,       false,    MySqlType.CHARACTER_VARYING.getType(), 20 , null, null, true ,  "", getLabelName(TABLE_NAME, COL_UPDATED_BY),     getPlaceholder(TABLE_NAME, COL_UPDATED_BY)),
+        new ColumnInfoForm(COL_UPDATED_AT,       false,    MySqlType.CHARACTER_VARYING.getType(), 20 , null, null, true ,  "", getLabelName(TABLE_NAME, COL_UPDATED_AT),     getPlaceholder(TABLE_NAME, COL_UPDATED_AT)),
     };
     
     public ColumnInfoForm[] columnInfos() {

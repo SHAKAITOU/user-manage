@@ -25,7 +25,7 @@ public class AdminMenuViewHelper extends HtmlViewHelper {
 		StringBuffer sb = new StringBuffer();
 		sb.append(divRow().cellBlank(5));
 		sb.append(divContainer().get(
-				divRow().get(CellWidthType.ONE, "<h1 width='400px'>主婦ヘルパー管理</h1>")));
+				divRow().get(CellWidthType.ONE, "<h1 width='400px'>xxxxxxxxxx</h1>")));
 		sb.append(divRow().cellBlank(5));
 		sb.append(getMenuBarInfo(session));
 		sb.append(getMenuBody());

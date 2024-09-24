@@ -15,33 +15,31 @@ import cn.caam.gs.app.dbmainten.form.ColumnInfoForm;
 import cn.caam.gs.app.util.HtmlViewHelper;
 import cn.caam.gs.app.util.SessionConstants;
 import cn.caam.gs.common.bean.ViewData;
+import cn.caam.gs.common.enums.AcceptFileType;
 import cn.caam.gs.common.enums.CellWidthType;
 import cn.caam.gs.common.enums.CssAlignType;
 import cn.caam.gs.common.enums.CssClassType;
 import cn.caam.gs.common.enums.CssFontSizeType;
 import cn.caam.gs.common.enums.CssGridsType;
 import cn.caam.gs.common.enums.FixedValueType;
+import cn.caam.gs.common.enums.InvoiceType;
 import cn.caam.gs.common.enums.OrderMethodType;
 import cn.caam.gs.common.enums.OrderType;
 import cn.caam.gs.common.enums.PayType;
 import cn.caam.gs.common.html.element.HtmlRadio;
 import cn.caam.gs.common.html.element.bs5.DivHrSet;
-import cn.caam.gs.common.html.element.bs5.LabelDateInputSet;
+import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
 import cn.caam.gs.common.html.element.bs5.LabelFileSet;
 import cn.caam.gs.common.html.element.bs5.LabelInputSet;
 import cn.caam.gs.common.html.element.bs5.LabelNumberSet;
-import cn.caam.gs.common.html.element.bs5.LabelDateInputSet.LabelDateInputSetType;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet;
-import cn.caam.gs.common.html.element.bs5.LabelTextAreaSet;
-import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet.LabelSelectSetType;
+import cn.caam.gs.common.html.element.bs5.LabelTextAreaSet;
 import cn.caam.gs.common.html.element.bs5.LabelTextAreaSet.LabelTextAreaSetType;
 import cn.caam.gs.domain.db.base.entity.MUserTypeSettings;
 import cn.caam.gs.domain.db.custom.entity.FixValueInfo;
 import cn.caam.gs.domain.db.custom.entity.OrderInfo;
 import cn.caam.gs.domain.db.custom.entity.UserInfo;
-import cn.caam.gs.domain.tabledef.impl.T100MUser;
-import cn.caam.gs.domain.tabledef.impl.T101MUserExtend;
 import cn.caam.gs.domain.tabledef.impl.T200MOrder;
 import cn.caam.gs.domain.tabledef.impl.T202MImage;
 
@@ -96,7 +94,7 @@ public class OrderViewHelper extends HtmlViewHelper {
     
     private static String setCardForOrderPanel(HttpServletRequest request, MUserTypeSettings mUserTypeSettings) {
         StringBuffer sbBody = new StringBuffer();
-        sbBody.append(borderCard().noTitleWithScroll("", CssClassType.SUCCESS, "", 385,
+        sbBody.append(borderCard().noTitleWithScroll("", CssClassType.SUCCESS, "", 565,
                 setOrderPanel(request, mUserTypeSettings)));
         
         return sbBody.toString();
@@ -144,13 +142,14 @@ public class OrderViewHelper extends HtmlViewHelper {
         List<FixValueInfo> orderTypeList = fixedValueMap.get(FixedValueType.ORDER_TYPE);
         radios = new ArrayList<>();
         for (FixValueInfo fValueInfo : orderTypeList) {
-            if (fValueInfo.getValueObj().getValue().equals(OrderType.RENEWAL_WITH_IMG.getKey())) {
+            if (fValueInfo.getValueObj().getValue().equals(OrderType.JOIN.getKey()) ||
+            		fValueInfo.getValueObj().getValue().equals(OrderType.RENEWAL.getKey())) {
                 radios.add(new HtmlRadio(fValueInfo.getValueObj().getValue(), fValueInfo.getValueObj().getName()));
             }
         }
         contextList.add(LabelSelectSet.builder()
                 .id(id).name(name).labelName(labelName)
-                .radios(radios).selectedValue(OrderType.RENEWAL_WITH_IMG.getKey())
+                .radios(radios).selectedValue(OrderType.RENEWAL.getKey())
                 .fontSize(font).grids(CssGridsType.G12).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
 
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
@@ -192,7 +191,7 @@ public class OrderViewHelper extends HtmlViewHelper {
         }
         contextList.add(LabelSelectSet.builder()
                 .id(id).name(name).labelName(labelName)
-                .radios(radios).selectedValue(PayType.ONLINE.getKey())
+                .radios(radios).selectedValue(PayType.OFFLINE.getKey())
                 .fontSize(font).grids(CssGridsType.G12).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
 
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
@@ -263,7 +262,7 @@ public class OrderViewHelper extends HtmlViewHelper {
         labelName   = getContext("common.page.File");
         value       = "";
         contextList.add(LabelFileSet.builder()
-                .id(idFile).idLablel(idLbl).name(name).labelName(labelName).placeholder(placeholder)
+                .id(idFile).idLablel(idLbl).name(name).labelName(labelName).placeholder(placeholder).acceptFileType(AcceptFileType.IMAGE)
                 .fontSize(font).grids(CssGridsType.G8).build().html());
 
         
@@ -272,7 +271,74 @@ public class OrderViewHelper extends HtmlViewHelper {
         contextList.add(comp1);
     
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
-        //------row7----------]
+        //------row8----------]
+        
+        //-----row 9-------------[
+        contextList = new ArrayList<String>();
+        
+        //抬头类型(F0027)選択
+        clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_INVOICE_TYPE);
+        name      = clmForm.getPageName(PREFIX_NAME);
+        id        = convertNameDotForId(name);
+        labelName = clmForm.getLabelName();
+        List<FixValueInfo> invoiceTypeList = fixedValueMap.get(FixedValueType.INVOICE_TYPE);
+        radios = new ArrayList<>();
+        for (FixValueInfo fValueInfo : invoiceTypeList) {
+             radios.add(new HtmlRadio(fValueInfo.getValueObj().getValue(), fValueInfo.getValueObj().getName()));
+        }
+        contextList.add(LabelSelectSet.builder()
+                .id(id).name(name).labelName(labelName)
+                .radios(radios).selectedValue(InvoiceType.ORGANIZATION.getKey())
+                .fontSize(font).grids(CssGridsType.G12).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
+
+        sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+        //-----row 9-------------]
+        
+        //-----row 10-------------[
+        contextList = new ArrayList<String>();
+        //发票抬头入力値
+        clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_INVOICE_TITLE);
+        name      = clmForm.getPageName(PREFIX_NAME);
+        id        = convertNameDotForId(name);
+        labelName = clmForm.getLabelName();
+        placeholder = clmForm.getPlaceholder();
+        contextList.add(LabelInputSet.builder()
+                .id(id).name(name).labelName(labelName).notBlank(true)
+                .maxlength(GlobalConstants.INVOICE_TITLE_MAX_L).placeholder(placeholder)
+                .fontSize(font).grids(CssGridsType.G12).build().html());
+        sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+        //-----row 10-------------]
+        
+        //-----row 11-------------[
+        contextList = new ArrayList<String>();
+        //统一社会信用代码入力値
+        clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_CREDIT_CODE);
+        name      = clmForm.getPageName(PREFIX_NAME);
+        id        = convertNameDotForId(name);
+        labelName = clmForm.getLabelName();
+        placeholder = clmForm.getPlaceholder();
+        contextList.add(LabelInputSet.builder()
+                .id(id).name(name).labelName(labelName).notBlank(true)
+                .maxlength(GlobalConstants.CREDIT_CODE_MAX_L).placeholder(placeholder)
+                .fontSize(font).grids(CssGridsType.G12).build().html());
+        sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+        //-----row 11-------------]
+        
+        //-----row 12-------------[
+        contextList = new ArrayList<String>();
+        //mail入力値
+        clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_MAIL);
+        name      = clmForm.getPageName(PREFIX_NAME);
+        id        = convertNameDotForId(name);
+        labelName = clmForm.getLabelName();
+        placeholder = clmForm.getPlaceholder();
+        contextList.add(LabelInputSet.builder()
+                .id(convertNameDotForId(name)).name(name).labelName(labelName).value(userInfo.getUser().getMail())
+                .notBlank(true).maxlength(GlobalConstants.MAIL_MAX_L).placeholder(placeholder)
+                .fontSize(font).grids(CssGridsType.G12).build().html());
+        
+        sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+      //-----row 12-------------]
         
         return sbBody.toString();
     }

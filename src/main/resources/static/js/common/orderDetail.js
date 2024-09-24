@@ -27,7 +27,9 @@ OrderDetail.prototype.ID = {
 	SHOW_ORDER_IMG_BTN_ID    : "showOrderImg",
 	ORDER_IMG_ID             : "orderImg",
 	SHOW_BILL_IMG_BTN_ID     : "showBillImg",
+	DOWNLOAD_BILL_IMG_BTN_ID : "downloadBillImg",
     BILL_IMG_ID              : "billImg",
+	ITEM_HID_ID              : "id"
 
 };
 //------------------------------------------]
@@ -100,9 +102,40 @@ OrderDetail.prototype.initEvent = function(){
 				ShaDialog.dialogs.subSubDialogLargeCenter(title,html);
 		    }
 		    newImg.src = self.getObject(self.ID.BILL_IMG_ID).attr("src");
-			
 		}
 	);
+	
+	ShaInput.button.onClick(self.getObject(self.ID.DOWNLOAD_BILL_IMG_BTN_ID), 
+		function(event) {
+			ShaAjax.ajax.getWithDownloadFile(
+	           self.jsContext.common.orderDetail.url_invoice_download+"/"+self.getObject(self.ID.ITEM_HID_ID).val(),
+			   null,
+	           function(data, filename){
+				if (data.size == 0){
+					ShaDialog.dialogs.alert(self.i18n["dialogs.fail.title"]);
+					return;
+				}
+	            if (ShaUtil.other.isChrome() || ShaUtil.other.isSafari()){
+	              // chrome
+	              const link = document.createElement('a');
+	              link.href = window.URL.createObjectURL(data);
+	              link.download = filename;
+	              link.click();
+				  window.URL.revokeObjectURL(link.href);
+	            } else if (ShaUtil.other.isIE()) {
+	              // IE
+	              //const blob = new Blob([data], {type: 'application/force-download'});
+	              window.navigator.msSaveBlob(data, filename);
+	            } else {
+	              // Firefox
+	              const file = new File([data], filename, {type: 'application/force-download'});
+	              window.open(URL.createObjectURL(file));
+	            }
+	           }
+	       ); 
+		}
+	);
+	
 	
     //init event to BTN_CLOSE
 	ShaInput.button.onClick(self.getObject(self.ID.BTN_CLOSE), 

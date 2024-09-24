@@ -24,7 +24,7 @@ public class T103MUserCheckHistory extends BaseTableDef implements BaseDdl{
     public static final ColumnInfoForm[] cols = new ColumnInfoForm[] {
         // name | pk | type | charMaxLength | numPrecision | numScale | nullable | default | comment
         new ColumnInfoForm(COL_ID,                  true,     MySqlType.CHARACTER_VARYING.getType(), 50,  null, null, false,  "", getLabelName(TABLE_NAME, COL_ID),          getPlaceholder(TABLE_NAME, COL_ID)),
-        new ColumnInfoForm(COL_USER_ID,             false,    MySqlType.CHARACTER_VARYING.getType(), 20 , null, null, false , "", getLabelName(TABLE_NAME, COL_USER_ID),     getPlaceholder(TABLE_NAME, COL_USER_ID)),
+        new ColumnInfoForm(COL_USER_ID,             false,    MySqlType.CHARACTER_VARYING.getType(), 50 , null, null, false , "", getLabelName(TABLE_NAME, COL_USER_ID),     getPlaceholder(TABLE_NAME, COL_USER_ID)),
         new ColumnInfoForm(COL_CHECK_STATUS,        false,    MySqlType.CHARACTER_VARYING.getType(), 3 ,  null, null, false , "", getLabelName(TABLE_NAME, COL_CHECK_STATUS),    getPlaceholder(TABLE_NAME, COL_CHECK_STATUS)),
         new ColumnInfoForm(COL_CHECK_DATE,          false,    MySqlType.CHARACTER_VARYING.getType(), 20 , null, null, false , "", getLabelName(TABLE_NAME, COL_CHECK_DATE),     getPlaceholder(TABLE_NAME, COL_CHECK_DATE)),
         new ColumnInfoForm(COL_MEMO,                false,    MySqlType.TEXT.getType(),             null, null, null, true ,  "", getLabelName(TABLE_NAME, COL_MEMO),         getPlaceholder(TABLE_NAME, COL_MEMO)),

@@ -139,6 +139,10 @@ public class HtmlBaseHelper {
         return StringUtility.formatCurrencyZH(amount);
     }
     
+    public static String formatCurrencyZH(BigDecimal amount, int scale) {
+        return StringUtility.formatCurrencyZH(amount, scale);
+    }
+    
     public static String filterSpecialCharacters(String context) {
         return context.replace("\"", UtilConstants.DUBLE_QUOTE_MARK)
                 .replace("<", UtilConstants.LEFT_ANGLE)
