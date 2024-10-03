@@ -27,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author 000001A009A6A
  *
  */
+@Deprecated
 @Slf4j
 @Controller
 @AllArgsConstructor

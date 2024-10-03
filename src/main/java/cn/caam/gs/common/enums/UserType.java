@@ -38,7 +38,7 @@ public enum UserType {
     
     public static UserType keyOf(String key) {
     	for(UserType type : UserType.values()) {
-    		if(key.equals(type.getKey())) {
+    		if(type.getKey().equals(key)) {
     			return type;
     		}
     	}

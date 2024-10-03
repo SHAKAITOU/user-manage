@@ -69,6 +69,14 @@ public class GlobalConstants {
     public static final int AUTH_CODE_EXPIRED_MINUTE		= 3;
     public static final int AUTH_CODE_SEND_INTERVAL_MINUTE	= 1;
     
+    public static final int   IMAGE_RESIZE_WIDTH_PC       = 800;
+    public static final int   IMAGE_RESIZE_HEIGHT_PC      = 800;
+    public static final int   IMAGE_RESIZE_WIDTH_MOBILE   = 500;
+    public static final int   IMAGE_RESIZE_HEIGHT_MOBILE  = 500;
+    public static final int   IMAGE_RESIZE_WIDTH_SAVE     = 2000;
+    public static final int   IMAGE_RESIZE_HEIGHT_SAVE    = 2000;
+    
+    
     
     
     /** 頁LINK表示数(PC) */
@@ -78,4 +86,14 @@ public class GlobalConstants {
 
     public static final String APPLICATION_FORM_TEMPLATE_FILE = "static/template/甘肃针灸学会普通会员入会申请表.docx";
     public static final String APPLICATION_FORM_NAME = "甘肃针灸学会普通会员入会申请表";
+    
+    public static final String CHINA_CERTI_IMAGE1 = "static/img/certi/chinaCertiPage1.png";
+    public static final String CHINA_CERTI_IMAGE2 = "static/img/certi/chinaCertiPage2.png";
+    public static final String CHINA_CERTI_IMAGE3 = "static/img/certi/chinaCertiPage3.png";
+    public static final String CHINA_CERTI_IMAGE4 = "static/img/certi/chinaCertiPage4.png";
+    
+    public static final String GANSU_CERTI_IMAGE1 = "static/img/certi/chinaCertiPage1.png";
+    public static final String GANSU_CERTI_IMAGE2 = "static/img/certi/chinaCertiPage2.png";
+    public static final String GANSU_CERTI_IMAGE3 = "static/img/certi/chinaCertiPage3.png";
+    public static final String GANSU_CERTI_IMAGE4 = "static/img/certi/chinaCertiPage4.png";
 }

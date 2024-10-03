@@ -137,8 +137,8 @@ INSERT INTO m_sms_config(id,template_type,template_id,template_name,api_url,app_
 --20240907 --
 DELETE FROM m_fixed_value WHERE code='F0002';
 INSERT INTO m_fixed_value VALUES ('F0002', '01', '个人会员',         1);
-INSERT INTO m_fixed_value VALUES ('F0002', '0101', '甘肃会员',       1);
-INSERT INTO m_fixed_value VALUES ('F0002', '0105', '中国会员',       2);
+INSERT INTO m_fixed_value VALUES ('F0002', '0101', '甘肃针灸学会会员',       1);
+INSERT INTO m_fixed_value VALUES ('F0002', '0105', '中国针灸学会会员',       2);
 
 ALTER TABLE m_user modify COLUMN  id  VARCHAR(50), ALGORITHM=INPLACE, LOCK=NONE;
 ALTER TABLE m_user_extend modify COLUMN  id  VARCHAR(50), ALGORITHM=INPLACE, LOCK=NONE;

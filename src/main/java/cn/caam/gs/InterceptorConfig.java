@@ -21,6 +21,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
 		.excludePathPatterns("/admin/*.js.map")
 	    .excludePathPatterns("/login","/login/init","/login/userLogin","/login/sendAuthCode","/login/logout","/login/refeshImg")
 	    .excludePathPatterns("/login/userRegist/**", "/login/userLogin/sendAuthCode")
+	    .excludePathPatterns("/userDetail/memberInfo/*")
 	    .excludePathPatterns("/passwordForget", "/passwordForget/**")
 	    .excludePathPatterns("/passwordChange", "/passwordChange/**")
 	    .excludePathPatterns("/common", "/common/**");

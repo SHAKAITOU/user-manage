@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+  th:with="lang=${#locale.language}" th:lang="${lang}">
+  <head th:fragment="base-head(title, links, mainKind)">
+    <title th:text="${title}"></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no"/>
+    
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}"/>
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap-theme.css}"/>
+    
+    <link rel="stylesheet" th:href="@{/css/bootstrap-cerulean.css}"/>
+    
+    <!-- fontawesome -->
+    <link rel="stylesheet" th:href="@{/css/all.css}"/>
+
+	<link rel="stylesheet" th:href="@{/css/base.css}"/>
+    <link rel="stylesheet" th:href="@{/css/icon.css}"/>
+    <link rel="stylesheet" th:href="@{/css/jsgantt.css}"/>
+    <th:block th:replace="${links} ?: ~{}" />
+</head>
+<div class="container h-100">
+        <div class="d-flex align-items-center justify-content-center h-100">
+            <h1 class="display-4">[[${userInfo.userTypeName}]]信息</h1>
+        </div>
+    </div>
+  <div class="container">
+  
+  
+  <div class="row">
+    <div class="col-xl-12 col-xxl-12 col-lg-12 col-md-12 col-sm-12 ">
+      <div class="input-group mb-3 text-center">
+         <span class="input-group-text label-16">姓名</span><input type="text" class="form-control label-16" id="name" name="name" th:value="${userInfo.user.name}" style="background-color:#FFFFFF" readonly>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xl-12 col-xxl-12 col-lg-12 col-md-12 col-sm-12 ">
+      <div class="input-group mb-3 text-center">
+         <span class="input-group-text label-16">性别</span><input type="text" class="form-control label-16" id="sex" name="sex" th:value="${userInfo.sexName}" style="background-color:#FFFFFF" readonly>
+      </div>
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="col-xl-12 col-xxl-12 col-lg-12 col-md-12 col-sm-12 ">
+      <div class="input-group mb-3 text-center">
+         <span class="input-group-text label-16">会员类别</span><input type="text" class="form-control label-16" id="user_type" name="user_type" value="普通会员" style="background-color:#FFFFFF" readonly>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xl-12 col-xxl-12 col-lg-12 col-md-12 col-sm-12 ">
+      <div class="input-group mb-3 text-center">
+         <span class="input-group-text label-16">有效期</span><input type="text" class="form-control label-16" id="valid_end_date" name="valid_end_date" th:value="${validEndDate}" style="background-color:#FFFFFF" readonly>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xl-12 col-xxl-12 col-lg-12 col-md-12 col-sm-12 ">
+      <div class="input-group mb-3 text-center">
+         <span class="input-group-text label-16">会员编号</span><input type="text" class="form-control label-16" id="user_code" name="user_code" th:value="${userInfo.userCode}" style="background-color:#FFFFFF" readonly>
+      </div>
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="col-xl-12 col-xxl-12 col-lg-12 col-md-12 col-sm-12 ">
+      <div class="input-group mb-3 text-center">
+         <span class="input-group-text label-16">所属机构</span><input type="text" class="form-control label-16" id="society_type" name="society_type" th:value="${userInfo.membershipPathName}" style="background-color:#FFFFFF" readonly>
+      </div>
+    </div>
+  </div>
+  
+</div>
+
+</html>

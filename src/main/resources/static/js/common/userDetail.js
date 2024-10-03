@@ -125,6 +125,8 @@ UserDetail.prototype.ID = {
 	TAB_BODY_ORDER_ID             : "orderTabBody",
     TAB_BODY_USER_CARD_ID         : "userCardTabBody",
 	
+	BTN_DOWNLOAD_CERT             : "btnDownloadCert",
+	
 	DIV_MAINBODY                  : "mainBody",
 
 };
@@ -413,6 +415,15 @@ UserDetail.prototype.initEvent = function(){
 			self.download("application_form");
 	    }
 	);
+	
+	//init event to BTN_DOWNLOAD_CERT
+	ShaInput.button.onClick(self.getObject(self.ID.BTN_DOWNLOAD_CERT), 
+		function(event) {
+			self.download("user_certificate");
+	    }
+	);
+	
+	
 		
 	ShaInput.button.onChange(self.getObject(self.ID.ITEM_PHOTO), 
 		function(event) {

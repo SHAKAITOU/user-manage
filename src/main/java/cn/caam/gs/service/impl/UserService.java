@@ -1,16 +1,21 @@
 package cn.caam.gs.service.impl;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,9 +42,11 @@ import cn.caam.gs.app.admin.adminmanage.output.AdminUserListOutput;
 import cn.caam.gs.app.admin.usersearch.form.UserSearchForm;
 import cn.caam.gs.app.admin.usersearch.output.UserListOutput;
 import cn.caam.gs.app.common.form.UserDetailForm;
+import cn.caam.gs.app.common.view.UserCertiCommonViewHelper;
 import cn.caam.gs.app.user.regist.form.RegistForm;
 import cn.caam.gs.app.util.LoginInfoHelper;
 import cn.caam.gs.app.util.SessionConstants;
+import cn.caam.gs.app.util.UserInfoHelper;
 import cn.caam.gs.common.enums.CheckStatusType;
 import cn.caam.gs.common.enums.DeleteType;
 import cn.caam.gs.common.enums.DownloadFileType;
@@ -47,7 +54,10 @@ import cn.caam.gs.common.enums.SmsConfigType;
 import cn.caam.gs.common.enums.UserCheckStatusType;
 import cn.caam.gs.common.enums.UserType;
 import cn.caam.gs.common.enums.ValidType;
+import cn.caam.gs.common.html.element.bs5.CertiImgDivSet;
+import cn.caam.gs.common.util.CertificateCreateUtil;
 import cn.caam.gs.common.util.EncryptorUtil;
+import cn.caam.gs.common.util.ImageUtil;
 import cn.caam.gs.common.util.LocalDateUtility;
 import cn.caam.gs.common.util.LocalDateUtility.DatePattern;
 import cn.caam.gs.common.util.LocalDateUtility.DateTimePattern;
@@ -67,7 +77,9 @@ import cn.caam.gs.domain.db.custom.mapper.OptionalAdminUserInfoMapper;
 import cn.caam.gs.domain.db.custom.mapper.OptionalUserInfoMapper;
 import cn.caam.gs.service.BaseService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class UserService extends BaseService {
@@ -162,7 +174,7 @@ public class UserService extends BaseService {
 		}
 		return URLEncoder.encode(userCode+"_"+name+"."+ext,"UTF-8");
 	}
-	public void downloadFile(String userId, DownloadFileType fileType, HttpServletResponse response) throws Exception{
+	public void downloadFile(HttpServletRequest request, String userId, DownloadFileType fileType, HttpServletResponse response) throws Exception{
 		 UserInfo userInfo = this.getUserInfo(userId);
 		 
 		 response.setHeader(HttpHeaders.PRAGMA, "No-cache");
@@ -216,7 +228,38 @@ public class UserService extends BaseService {
 			response.setContentType("application/vnd.openxmlformats-officedocument.wordprocessingml.document;charset=UTF-8");
 			outputAppliactionForm(userId, response.getOutputStream());
 			
+		 }else if (fileType == DownloadFileType.USER_CERTIFICATE) {//证明书zip
+			response.setHeader(HttpHeaders.PRAGMA, "No-cache");
+			response.setHeader(HttpHeaders.CACHE_CONTROL, "No-cache");
+			
+			String filename = createDownloadImageFileName(userInfo.getUserCode(), "电子会员证", "zip");
+			response.setHeader("Content-Disposition", "attachment; filename="+filename+";"+"filename*=utf-8''"+filename);
+		    response.setContentType("application/octet-stream");
+		    
+		    List<byte[]> imgList=new ArrayList<>();
+		    UserType userType = UserType.keyOf(userInfo.getUser().getUserType());
+	        List<DownloadFileType> imageList = UserInfoHelper.getCertficateImageList(userType);
+	        for(DownloadFileType downloadFileType:imageList) {
+	        	Map<String, CertificateCreateUtil.DrawOject> map = UserInfoHelper.getMapDrawObject(request, userInfo, downloadFileType);
+	        	byte[] bytes = UserInfoHelper.drawCertImage(downloadFileType.getFilePath(), map);
+	        	imgList.add(bytes);
+	        }
+	        
+	        try(ZipOutputStream zipOutputStream=new ZipOutputStream(new BufferedOutputStream(response.getOutputStream()))){
+	        	int index = 1;
+	            for(byte[] bytes:imgList){
+	                zipOutputStream.putNextEntry(new ZipEntry(index+".png"));
+	                zipOutputStream.write(bytes);
+	                zipOutputStream.closeEntry();
+	                index++;
+	            }
+	        }catch (Exception e){
+	        	log.error(e.getMessage(), e);
+	            e.printStackTrace();
+	        }
+			
 		 }
+		 
 	}
 	
 	public boolean checkPasswordCorrect(HttpServletRequest request, String password) {
@@ -495,29 +538,29 @@ public class UserService extends BaseService {
 			userExtend.setHonors(userExtendInput.getHonors());
 			//2寸证件照
 			if (userDetailForm.getPhotoFile() != null && !StringUtils.isBlank(userDetailForm.getPhotoFile().getOriginalFilename())) {
-				userExtend.setPhoto(userDetailForm.getPhotoFile().getBytes());
 				userExtend.setPhotoExt(userDetailForm.getPhotoFile().getOriginalFilename().split("\\.")[1]);
+				userExtend.setPhoto(userDetailForm.getPhotoFile().getBytes());
 			}
 			//学历证书附件
 			if (userDetailForm.getEducationalAtFile() != null && !StringUtils.isBlank(userDetailForm.getEducationalAtFile().getOriginalFilename())) {
-				userExtend.setEducationalAt(userDetailForm.getEducationalAtFile().getBytes());
 				userExtend.setEducationalAtExt(userDetailForm.getEducationalAtFile().getOriginalFilename().split("\\.")[1]);
+				userExtend.setEducationalAt(resizeImage(userDetailForm.getEducationalAtFile().getBytes(), userExtend.getEducationalAtExt()));
 			}
 			//学位证书附件
 			if (userDetailForm.getBachelorAtFile() != null && !StringUtils.isBlank(userDetailForm.getBachelorAtFile().getOriginalFilename())) {
-				userExtend.setBachelorAt(userDetailForm.getBachelorAtFile().getBytes());
 				userExtend.setBachelorAtExt(userDetailForm.getBachelorAtFile().getOriginalFilename().split("\\.")[1]);
+				userExtend.setBachelorAt(resizeImage(userDetailForm.getBachelorAtFile().getBytes(), userExtend.getBachelorAtExt()));
 			}
 			//职业证书附件
 			if (userDetailForm.getVocationalAtFile() != null && !StringUtils.isBlank(userDetailForm.getVocationalAtFile().getOriginalFilename())) {
-				userExtend.setVocationalAt(userDetailForm.getVocationalAtFile().getBytes());
 				userExtend.setVocationalAtExt(userDetailForm.getVocationalAtFile().getOriginalFilename().split("\\.")[1]);
+				userExtend.setVocationalAt(resizeImage(userDetailForm.getVocationalAtFile().getBytes(), userExtend.getVocationalAtExt()));
 			}
 			
 			//入会申请表
 			if (userDetailForm.getApplicationFormFile() != null && !StringUtils.isBlank(userDetailForm.getApplicationFormFile().getOriginalFilename())) {
-				userExtend.setApplicationForm(userDetailForm.getApplicationFormFile().getBytes());
 				userExtend.setApplicationFormExt(userDetailForm.getApplicationFormFile().getOriginalFilename().split("\\.")[1]);
+				userExtend.setApplicationForm(resizeImage(userDetailForm.getApplicationFormFile().getBytes(), userExtend.getApplicationFormExt()));
 			}
 			
 			if (isUpdate) {
@@ -572,6 +615,33 @@ public class UserService extends BaseService {
 		
 		MUserExtend userExtendInput = Optional.ofNullable(userInfo.getUserExtend()).orElse(new MUserExtend());
 		userExtendInput.setId(userInput.getId());
+		//2寸证件照
+		if (userDetailForm.getPhotoFile() != null && !StringUtils.isBlank(userDetailForm.getPhotoFile().getOriginalFilename())) {
+			userExtendInput.setPhotoExt(userDetailForm.getPhotoFile().getOriginalFilename().split("\\.")[1]);
+			userExtendInput.setPhoto(userDetailForm.getPhotoFile().getBytes());
+		}
+		//学历证书附件
+		if (userDetailForm.getEducationalAtFile() != null && !StringUtils.isBlank(userDetailForm.getEducationalAtFile().getOriginalFilename())) {
+			userExtendInput.setEducationalAtExt(userDetailForm.getEducationalAtFile().getOriginalFilename().split("\\.")[1]);
+			userExtendInput.setEducationalAt(resizeImage(userDetailForm.getEducationalAtFile().getBytes(), userExtendInput.getEducationalAtExt()));
+		}
+		//学位证书附件
+		if (userDetailForm.getBachelorAtFile() != null && !StringUtils.isBlank(userDetailForm.getBachelorAtFile().getOriginalFilename())) {
+			userExtendInput.setBachelorAtExt(userDetailForm.getBachelorAtFile().getOriginalFilename().split("\\.")[1]);
+			userExtendInput.setBachelorAt(resizeImage(userDetailForm.getBachelorAtFile().getBytes(), userExtendInput.getBachelorAtExt()));
+		}
+		//职业证书附件
+		if (userDetailForm.getVocationalAtFile() != null && !StringUtils.isBlank(userDetailForm.getVocationalAtFile().getOriginalFilename())) {
+			userExtendInput.setVocationalAtExt(userDetailForm.getVocationalAtFile().getOriginalFilename().split("\\.")[1]);
+			userExtendInput.setVocationalAt(resizeImage(userDetailForm.getVocationalAtFile().getBytes(), userExtendInput.getVocationalAtExt()));
+		}
+		
+		//入会申请表
+		if (userDetailForm.getApplicationFormFile() != null && !StringUtils.isBlank(userDetailForm.getApplicationFormFile().getOriginalFilename())) {
+			userExtendInput.setApplicationFormExt(userDetailForm.getApplicationFormFile().getOriginalFilename().split("\\.")[1]);
+			userExtendInput.setApplicationForm(resizeImage(userDetailForm.getApplicationFormFile().getBytes(), userExtendInput.getApplicationFormExt()));
+		}
+		
 		userExtendMapper.insert(userExtendInput);
 		
 		MUserCard userCard = Optional.ofNullable(userInfo.getUserCard()).orElse(new MUserCard());
@@ -589,6 +659,14 @@ public class UserService extends BaseService {
 		userCardMapper.insert(userCard);
 		
 		return userInput.getId();
+	}
+	
+	private  byte[] resizeImage(byte[] src, String ext) throws IOException{
+		if (!Strings.isBlank(ext) && ("jpg".equals(ext.toLowerCase()) || "jpeg".equals(ext.toLowerCase()))) {
+			return ImageUtil.resizeImage(src, GlobalConstants.IMAGE_RESIZE_WIDTH_SAVE, GlobalConstants.IMAGE_RESIZE_HEIGHT_SAVE);
+		}
+		
+		return src;
 	}
 	
 	@Transactional

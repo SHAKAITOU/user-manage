@@ -38,7 +38,7 @@ public class CertiImg1DivSet {
 
     private String getChina() {
         StringBuffer sb = new StringBuffer();
-        sb.append("<div class='certi-china-bgImg1'>");
+        sb.append("<div class='certi-china-bgImg1 center-block'>");
         sb.append("</div>");
         
         return getContext(sb.toString());

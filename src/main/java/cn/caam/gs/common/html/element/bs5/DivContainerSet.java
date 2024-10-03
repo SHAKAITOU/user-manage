@@ -46,7 +46,7 @@ public class DivContainerSet {
     
     private String getScroll() {
         StringBuffer sb = new StringBuffer();
-        sb.append("<div class='container div-scrollable'");
+        sb.append("<div class='container div-scrollable center-block'");
         if(!StringUtils.isEmpty(id)) {
             sb.append(" id='"+id+"'");
         }

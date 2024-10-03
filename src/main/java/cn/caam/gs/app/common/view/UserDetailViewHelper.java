@@ -31,8 +31,8 @@ import cn.caam.gs.common.enums.CssFontSizeType;
 import cn.caam.gs.common.enums.CssGridsType;
 import cn.caam.gs.common.enums.FixedValueType;
 import cn.caam.gs.common.enums.GridFlexType;
-import cn.caam.gs.common.enums.OnInputMode;
 import cn.caam.gs.common.enums.LoginAccountType;
+import cn.caam.gs.common.enums.OnInputMode;
 import cn.caam.gs.common.enums.OrderType;
 import cn.caam.gs.common.enums.PageModeType;
 import cn.caam.gs.common.enums.ReFundStatusType;
@@ -57,9 +57,10 @@ import cn.caam.gs.common.html.element.bs5.LabelSelectSet;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet.LabelSelectSetType;
 import cn.caam.gs.common.html.element.bs5.LabelTextAreaSet;
 import cn.caam.gs.common.html.element.bs5.LabelTextAreaSet.LabelTextAreaSetType;
+import cn.caam.gs.common.html.element.bs5.PTextSet;
+import cn.caam.gs.common.util.ImageUtil;
 import cn.caam.gs.common.util.LocalDateUtility;
 import cn.caam.gs.common.util.StringUtility;
-import cn.caam.gs.common.html.element.bs5.PTextSet;
 import cn.caam.gs.domain.db.base.entity.MFixedValue;
 import cn.caam.gs.domain.db.custom.entity.FixValueInfo;
 import cn.caam.gs.domain.db.custom.entity.OrderInfo;
@@ -92,6 +93,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
     
     public static final String URL_USER_DETAIL_PRINT = UrlConstants.PRINT;
     public static final String URL_USER_DETAIL_DOWNLOAD = UrlConstants.DOWNLOAD;
+    public static final String URL_USER_DETAIL_MEMBER_INFO = "/memberInfo";
     
     public static final String USER_DETAIL_JS_CLASS          = "UserDetail";
     public static final String USER_DETAIL_FORM_NAME         = "userDetailForm";
@@ -177,13 +179,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
 //        body.append(DivChevronSet.builder().idUp(HIDE_SELF_PANEL_BTN_ID).idDown(SHOW_SELF_PANEL_BTN_ID).build().html());
 //        body.append(buildExtendDetailBody(request,fixedValueMap, userDetailForm, pageModeType));
         // ----------body------]
-        if (PageModeType.VIEW != pageModeType) {
-	        // --bottom btn--
-	        body.append(divRow().cellBlank(5));
-	        body.append(buildFooter(request));
-	        body.append(divRow().cellBlank(5));
-	        // --bottom btn--
-        }
+       
         if (PageModeType.VIEW != pageModeType) {
         	return getForm(USER_DETAIL_FORM_NAME, body.toString());
         }else {
@@ -200,7 +196,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         Map<FixedValueType, List<FixValueInfo>> fixedValueMap = 
                 (Map<FixedValueType, List<FixValueInfo>>)request.getSession().getAttribute(SessionConstants.FIXED_VALUE.getValue());
         StringBuffer body = new StringBuffer();
-        // body
+        
         // ----------body------[
         body.append(buildBaseDetailBody(fixedValueMap, userDetailForm, pageModeType));
         body.append(DivChevronSet.builder().idUp(HIDE_BASE_PANEL_BTN_ID).idDown(SHOW_BASE_PANEL_BTN_ID).build().html());
@@ -208,13 +204,14 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         body.append(DivChevronSet.builder().idUp(HIDE_SELF_PANEL_BTN_ID).idDown(SHOW_SELF_PANEL_BTN_ID).build().html());
         body.append(buildExtendDetailBody(request,fixedValueMap, userDetailForm, pageModeType));
 //        // ----------body------]
-//        if (PageModeType.VIEW != pageModeType) {
-//	        // --bottom btn--
-//	        body.append(divRow().cellBlank(5));
-//	        body.append(buildFooter(request));
-//	        body.append(divRow().cellBlank(5));
-//	        // --bottom btn--
-//        }
+        
+        if (PageModeType.VIEW != pageModeType) {
+	        // --bottom btn--
+	        body.append(divRow().cellBlank(5));
+	        body.append(buildFooter(request));
+	        body.append(divRow().cellBlank(5));
+	        // --bottom btn--
+        }
         
         return body.toString();
     }
@@ -891,7 +888,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         idFileName  = idFile + "Name";
         idOldFile   = idFile + "Old";
         idFileDownload   = idFile + "Download";
-        src = Base64.encodeBase64String(userDetailForm.getUserInfo().getUserExtend().getEducationalAt());
+        src = resizeImageToBase64(request, userDetailForm.getUserInfo().getUserExtend().getEducationalAt());//Base64.encodeBase64String(userDetailForm.getUserInfo().getUserExtend().getEducationalAt());
         ext = userDetailForm.getUserInfo().getUserExtend().getEducationalAtExt();
         
         value       = "";
@@ -950,7 +947,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         idFileName  = idFile + "Name";
         idOldFile   = idFile + "Old";
         idFileDownload   = idFile + "Download";
-        src = Base64.encodeBase64String(userDetailForm.getUserInfo().getUserExtend().getBachelorAt());
+        src = resizeImageToBase64(request, userDetailForm.getUserInfo().getUserExtend().getBachelorAt());//Base64.encodeBase64String(userDetailForm.getUserInfo().getUserExtend().getBachelorAt());
         ext = userDetailForm.getUserInfo().getUserExtend().getBachelorAtExt();
         
         value       = "";
@@ -1008,7 +1005,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         idFileName  = idFile + "Name";
         idOldFile   = idFile + "Old";
         idFileDownload   = idFile + "Download";
-        src = Base64.encodeBase64String(userDetailForm.getUserInfo().getUserExtend().getVocationalAt());
+        src = resizeImageToBase64(request, userDetailForm.getUserInfo().getUserExtend().getVocationalAt());//Base64.encodeBase64String(userDetailForm.getUserInfo().getUserExtend().getVocationalAt());
         ext = userDetailForm.getUserInfo().getUserExtend().getVocationalAtExt();
         
         value       = "";
@@ -1253,14 +1250,9 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
             .tabBodys(new String [] {
             		setUserCardPanel(request, userDetailForm, pageModeType), 
             		setOrderCardPanel(request, orderListOutput),
-                    ""})
+            		setUserCertiPanel(request, userDetailForm)})
             .build().html();
         sb.append(tabHtml);
-        
-        // --bottom btn--
-        sb.append(divRow().cellBlank(5));
-        sb.append(buildFooter(request));
-        sb.append(divRow().cellBlank(5));
         
         return getForm(USER_DETAIL_FORM_NAME, sb.toString());
     }
@@ -1397,6 +1389,14 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         		table().get(ORDER_LIST_TABLE_ID, 200, headTr, bodyList));
     }
     
+    public static String setUserCertiPanel(
+            HttpServletRequest request, 
+            UserDetailForm userDetailForm) {
+    	return UserCertiCommonViewHelper.getDetailContext(request, userDetailForm);
+    }
+    
+    
+    
     private static String buildFooter(HttpServletRequest request) {
         StringBuffer sb = new StringBuffer();
         List<CssAlignType> aligs = new ArrayList<>();
@@ -1428,6 +1428,22 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
 	    int outWidth = LoginInfoHelper.getMediaWidth(request);
 	    return outWidth > 800 ? false : true;
 	}
+    
+    public static String resizeImageToBase64(HttpServletRequest request, byte[] bytes) {
+    	try {
+    		return ImageUtil.resizeImageToBase64(bytes, 
+    			isPhoneMode(request) ? GlobalConstants.IMAGE_RESIZE_WIDTH_MOBILE:GlobalConstants.IMAGE_RESIZE_WIDTH_PC,
+    					isPhoneMode(request) ? GlobalConstants.IMAGE_RESIZE_HEIGHT_MOBILE:GlobalConstants.IMAGE_RESIZE_HEIGHT_PC);
+    	}catch (Exception e) {
+			e.printStackTrace();
+		}
+    	return null;
+    }
+    
+    public static String getMemeberInfo(HttpServletRequest request) {
+    	return "";
+    }
+    
     
     public static Map<String, String> getJsProperties() {
         Map<String, String> js = new HashMap<String, String>();

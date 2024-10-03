@@ -4,8 +4,8 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 
-import cn.caam.gs.common.enums.CssAlignType;
 import cn.caam.gs.common.enums.CssGridsType;
+import cn.caam.gs.common.enums.GridFlexType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
@@ -14,32 +14,46 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class LabelImageSet {
+public class CertiImgDivSet {
 
-    private int labelWidth; 
-    private String labelName; 
+    @Default
+    private CertiImgDivType certiImgDivType  = CertiImgDivType.CHINA;
+    private CssGridsType grids;
+    private GridFlexType gridFlexType;
     private String id;
+    private String src;
+    private String extent;
     @Default
     private int imgWidth = 0;
     @Default
     private int imgHeight = 0;
-    private String src;
     private String base64String;
-    private String extent;
-    private LabelImageSetType outPutType;
-    private CssGridsType grids;
-    private CssAlignType aligntType;
+    @Default
+    private boolean visible = true;
     
     public String html() {
-        if(outPutType == LabelImageSetType.WITH_LABEL) {
-            return getWithLabel();
-        }else {
-            return get();
+        if (certiImgDivType == CertiImgDivType.CHINA) {
+            return getChina();
+        } else {
+            return getGansu();
         }
+        
     }
     
-    private String get() {
+    private String getGansu() {
+//        StringBuffer sb = new StringBuffer();
+//        
+//        return getContext(sb.toString());
+    	return getChina();
+    }
+
+    private String getChina() {
         StringBuffer sb = new StringBuffer();
+        sb.append("<div class='center-block");
+        if (!visible) {
+        	sb.append(" d-none");
+        }
+        sb.append("'>");
         sb.append("<img style='");
         if (imgWidth > 0) {
             sb.append(" width:"+imgWidth+"px;");
@@ -56,17 +70,8 @@ public class LabelImageSet {
             sb.append(" src='data:image/"+extent+";base64, "+base64String+"'");
         }
         sb.append(" id='" + id + "'>");
-        return getContext(sb.toString());
-    }
-    
-    private String getWithLabel() {
-        StringBuffer sb = new StringBuffer();
-        sb.append("<div class='input-group'>");
-        sb.append("<div class='td-t2d input-group-append' style='width:" + labelWidth + "px;'>");
-        sb.append("<span class='item-input-label'>" + labelName + "</span>");
         sb.append("</div>");
-        sb.append(get());
-        sb.append("</div>");
+        
         return getContext(sb.toString());
     }
     
@@ -78,10 +83,7 @@ public class LabelImageSet {
             + " col-xxl-" + grids.getKey() 
             + " col-lg-" + grids.getKey()
             + " col-md-12 col-sm-12"
-            );
-            sb.append(aligntType == CssAlignType.CENTER ? " text-center":""); 
-            sb.append(" '>");
-            
+            + " " + (Objects.nonNull(gridFlexType) ? gridFlexType.getKey() : GridFlexType.LEFT.getKey()) + " '>");
             sb.append(coreStr);
             sb.append("</div>");
         } else {
@@ -89,17 +91,17 @@ public class LabelImageSet {
         }
         return sb.toString();
     }
+    
+    public enum CertiImgDivType {
 
-    public enum LabelImageSetType {
-
-        SIMPLE             (1),
-        WITH_LABEL         (2),
+        CHINA                     (1),
+        GANSU                     (2),
         ;
         
         /** type. */
         private int key;
 
-        private LabelImageSetType(int key) {
+        private CertiImgDivType(int key) {
             this.key = key;
         }
 
@@ -107,12 +109,12 @@ public class LabelImageSet {
             return key;
         }
 
-        public LabelImageSetType[] list() {
-            return LabelImageSetType.values();
+        public CertiImgDivType[] list() {
+            return CertiImgDivType.values();
         }
         
-        public static LabelImageSetType keyOf(int key) {
-            for(LabelImageSetType type : LabelImageSetType.values()) {
+        public static CertiImgDivType keyOf(int key) {
+            for(CertiImgDivType type : CertiImgDivType.values()) {
                 if(key == type.getKey()) {
                     return type;
                 }

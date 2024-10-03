@@ -59,10 +59,11 @@ import cn.caam.gs.domain.tabledef.impl.T101MUserExtend;
  * View helper.
  */
 @Component
+@Deprecated
 public class UserCertiViewHelper extends HtmlViewBaseHelper {
     
     // base url
-    public static final String URL_BASE = "/userCerti";  
+    public static final String URL_BASE = "/userCerti_";  
     // init url
     public static final String URL_USER_CERTI_INIT = UrlConstants.INIT;
     

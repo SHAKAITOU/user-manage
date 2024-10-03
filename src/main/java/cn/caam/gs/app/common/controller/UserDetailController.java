@@ -2,6 +2,7 @@ package cn.caam.gs.app.common.controller;
 
 
 import java.net.URLEncoder;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,6 +26,7 @@ import cn.caam.gs.app.common.form.OrderSearchForm;
 import cn.caam.gs.app.common.form.UserDetailForm;
 import cn.caam.gs.app.common.output.OrderListOutput;
 import cn.caam.gs.app.common.view.UserDetailViewHelper;
+import cn.caam.gs.app.user.login.view.LoginViewHelper;
 import cn.caam.gs.app.util.ControllerHelper;
 import cn.caam.gs.app.util.LoginInfoHelper;
 import cn.caam.gs.app.util.SessionConstants;
@@ -33,6 +35,7 @@ import cn.caam.gs.common.enums.DownloadFileType;
 import cn.caam.gs.common.enums.ExecuteReturnType;
 import cn.caam.gs.common.enums.LoginAccountType;
 import cn.caam.gs.common.enums.PageModeType;
+import cn.caam.gs.common.util.LocalDateUtility;
 import cn.caam.gs.common.util.MessageSourceUtil;
 import cn.caam.gs.domain.db.base.entity.MOrder;
 import cn.caam.gs.domain.db.base.entity.MUser;
@@ -230,6 +233,24 @@ public class UserDetailController extends ScreenBaseController{
             HttpServletRequest request,
             HttpServletResponse response)  throws Exception {
 	    DownloadFileType fileType = DownloadFileType.keyOf(type);
-	    userService.downloadFile(id, fileType, response);
+	    userService.downloadFile(request, id, fileType, response);
+    }
+	
+	@GetMapping(path=UserDetailViewHelper.URL_USER_DETAIL_MEMBER_INFO+"/{id}")
+    public ModelAndView getMemberInfo(
+    		@PathVariable("id") String id,
+            HttpServletRequest request,
+            HttpServletResponse response)  throws Exception {
+		ModelAndView mav = new ModelAndView();
+		UserInfo userInfo = userService.getUserInfo(id);
+		if(Objects.isNull(userInfo)) {
+			userInfo = new UserInfo();
+			userInfo.setUser(new MUser());
+		}
+		mav.addObject("userInfo", userInfo);
+		mav.addObject("validEndDate", LocalDateUtility.formatDateZH(userInfo.getUser().getValidEndDate()));
+		mav.setViewName("user/memberInfo.html");
+		
+		return mav;
     }
 }

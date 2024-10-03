@@ -47,8 +47,8 @@ INSERT INTO m_fixed_value VALUES ('F0001', '02', '女', 2);
 -- INSERT INTO m_fixed_value VALUES ('F0002', '02', '团体会员单位',   2);
 -- INSERT INTO m_fixed_value VALUES ('F0002', '0201', '团体会员单位',   1);
 INSERT INTO m_fixed_value VALUES ('F0002', '01', '个人会员',         1);
-INSERT INTO m_fixed_value VALUES ('F0002', '0101', '甘肃会员',       1);
-INSERT INTO m_fixed_value VALUES ('F0002', '0105', '中国会员',       2);
+INSERT INTO m_fixed_value VALUES ('F0002', '0101', '甘肃针灸学会会员',       1);
+INSERT INTO m_fixed_value VALUES ('F0002', '0105', '中国针灸学会会员',       2);
 
 -- 政治面貌 --
 INSERT INTO m_fixed_value VALUES ('F0003', '01', '中共党员',       1);
