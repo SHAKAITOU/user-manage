@@ -6,4 +6,11 @@
         ORDER BY code, value,show_index asc
     </select>
     
+    <select id="selectByName" resultMap="cn.caam.gs.domain.db.base.mapper.MFixedValueMapper.BaseResultMap">
+        SELECT * FROM m_fixed_value
+        WHERE code = #{code, jdbcType=NVARCHAR}
+          AND name = #{name, jdbcType=NVARCHAR}
+        ORDER BY code, value,show_index asc
+    </select>
+    
 </mapper>

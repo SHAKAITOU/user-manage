@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,9 +41,10 @@ import cn.caam.gs.app.admin.adminmanage.form.AdminManageSearchForm;
 import cn.caam.gs.app.admin.adminmanage.form.AdminUserDetailForm;
 import cn.caam.gs.app.admin.adminmanage.output.AdminUserListOutput;
 import cn.caam.gs.app.admin.usersearch.form.UserSearchForm;
+import cn.caam.gs.app.admin.usersearch.output.AdminUserImportResult;
 import cn.caam.gs.app.admin.usersearch.output.UserListOutput;
 import cn.caam.gs.app.common.form.UserDetailForm;
-import cn.caam.gs.app.common.view.UserCertiCommonViewHelper;
+import cn.caam.gs.app.dbmainten.form.ColumnInfoForm;
 import cn.caam.gs.app.user.regist.form.RegistForm;
 import cn.caam.gs.app.util.LoginInfoHelper;
 import cn.caam.gs.app.util.SessionConstants;
@@ -50,19 +52,26 @@ import cn.caam.gs.app.util.UserInfoHelper;
 import cn.caam.gs.common.enums.CheckStatusType;
 import cn.caam.gs.common.enums.DeleteType;
 import cn.caam.gs.common.enums.DownloadFileType;
+import cn.caam.gs.common.enums.ExecuteReturnType;
+import cn.caam.gs.common.enums.ImportUserUpdateType;
+import cn.caam.gs.common.enums.SexType;
 import cn.caam.gs.common.enums.SmsConfigType;
 import cn.caam.gs.common.enums.UserCheckStatusType;
 import cn.caam.gs.common.enums.UserType;
 import cn.caam.gs.common.enums.ValidType;
-import cn.caam.gs.common.html.element.bs5.CertiImgDivSet;
 import cn.caam.gs.common.util.CertificateCreateUtil;
+import cn.caam.gs.common.util.CommonUtil;
+import cn.caam.gs.common.util.DateUtility;
+import cn.caam.gs.common.util.DateUtility.DateFormat;
 import cn.caam.gs.common.util.EncryptorUtil;
+import cn.caam.gs.common.util.ExcelUtil;
 import cn.caam.gs.common.util.ImageUtil;
 import cn.caam.gs.common.util.LocalDateUtility;
 import cn.caam.gs.common.util.LocalDateUtility.DatePattern;
 import cn.caam.gs.common.util.LocalDateUtility.DateTimePattern;
 import cn.caam.gs.common.util.LocalDateUtility.TimePattern;
 import cn.caam.gs.common.util.PasswordGenerator;
+import cn.caam.gs.common.util.StringUtility;
 import cn.caam.gs.domain.db.base.entity.MAdmin;
 import cn.caam.gs.domain.db.base.entity.MUser;
 import cn.caam.gs.domain.db.base.entity.MUserCard;
@@ -75,6 +84,9 @@ import cn.caam.gs.domain.db.custom.entity.AdminUserInfo;
 import cn.caam.gs.domain.db.custom.entity.UserInfo;
 import cn.caam.gs.domain.db.custom.mapper.OptionalAdminUserInfoMapper;
 import cn.caam.gs.domain.db.custom.mapper.OptionalUserInfoMapper;
+import cn.caam.gs.domain.tabledef.impl.T100MUser;
+import cn.caam.gs.domain.tabledef.impl.T101MUserExtend;
+import cn.caam.gs.domain.tabledef.impl.T105MUserCard;
 import cn.caam.gs.service.BaseService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -213,13 +225,19 @@ public class UserService extends BaseService {
 				IOUtils.copy(new ByteArrayInputStream(userInfo.getUserExtend().getVocationalAt()), response.getOutputStream());
 			 }
 		 }else if (fileType == DownloadFileType.APPLICATION_FORM) {//申请资料pdf
-			 String filename = URLEncoder.encode(GlobalConstants.APPLICATION_FORM_NAME+".pdf","UTF-8");
-			 response.setHeader("Content-Disposition", "attachment; filename="+filename+";"+"filename*=utf-8''"+filename);
-			 response.setContentType("application/pdf;charset=UTF-8");
-			 if (userInfo.getUserExtend().getApplicationForm() != null && userInfo.getUserExtend().getApplicationForm().length > 0){
-				IOUtils.copy(new ByteArrayInputStream(userInfo.getUserExtend().getApplicationForm()), response.getOutputStream());
-			 }
-			 
+//			 String filename = URLEncoder.encode(GlobalConstants.APPLICATION_FORM_NAME+".pdf","UTF-8");
+//			 response.setHeader("Content-Disposition", "attachment; filename="+filename+";"+"filename*=utf-8''"+filename);
+//			 response.setContentType("application/pdf;charset=UTF-8");
+//			 if (userInfo.getUserExtend().getApplicationForm() != null && userInfo.getUserExtend().getApplicationForm().length > 0){
+//				IOUtils.copy(new ByteArrayInputStream(userInfo.getUserExtend().getApplicationForm()), response.getOutputStream());
+//			 }
+			 String ext = Strings.isBlank(userInfo.getUserExtend().getApplicationFormExt()) ? "jpg":userInfo.getUserExtend().getApplicationFormExt();
+				String filename = createDownloadImageFileName(userInfo.getUser().getName(), GlobalConstants.APPLICATION_FORM_NAME, ext);
+				response.setHeader("Content-Disposition", "attachment; filename="+filename+";"+"filename*=utf-8''"+filename);
+				response.setContentType("application/"+ext+";charset=UTF-8");
+				if (userInfo.getUserExtend().getApplicationForm()!= null && userInfo.getUserExtend().getApplicationForm().length > 0){
+					IOUtils.copy(new ByteArrayInputStream(userInfo.getUserExtend().getApplicationForm()), response.getOutputStream());
+				 }
 		 }else if (fileType == DownloadFileType.APPLICATION_FORM_TEMPLATE) {//申请资料模版word
 			 response.setHeader(HttpHeaders.PRAGMA, "No-cache");
 			response.setHeader(HttpHeaders.CACHE_CONTROL, "No-cache");
@@ -466,6 +484,10 @@ public class UserService extends BaseService {
 				}
 				//手机号
 				user.setPhone(userInput.getPhone());
+				//有效日期
+				if(!Strings.isBlank(userInput.getValidEndDate())) {
+					user.setValidEndDate(userInput.getValidEndDate()+" 00:00:00");
+				}
 			}
 			
 			userMapper.updateByPrimaryKeySelective(user);
@@ -709,6 +731,170 @@ public class UserService extends BaseService {
 	}
 	
 	@Transactional
+	public List<AdminUserImportResult> importUserInfo(HttpServletRequest request, List<UserInfo> userInfoList, ImportUserUpdateType updateType) throws IOException{
+		List<AdminUserImportResult> result = new ArrayList<AdminUserImportResult>();
+		for(UserInfo userInfo:userInfoList) {
+			AdminUserImportResult importResult = checkUserInfo(userInfo, updateType);
+			result.add(importResult);
+			if (importResult.getExecuteReturnType() == ExecuteReturnType.NG) {
+				continue;
+			}
+			
+			MUser userInput = userInfo.getUser();
+			//UUID
+			userInput.setId(UUID.randomUUID().toString());
+			userInput.setUserType(userInfo.getUserCode().startsWith("M") ? UserType.PERSON_CHINA.getKey():UserType.PERSON_GANSU.getKey());
+			//审核状态：审核通过
+			userInput.setCheckStatus(CheckStatusType.PASS.getKey());
+			//申请时间
+			userInput.setApplicationDate(LocalDateUtility.getCurrentDateTimeString());
+			//有效状态
+			userInput.setValidStatus(ValidType.VALID.getKey());
+			//删除状态
+			userInput.setDeleted(DeleteType.UNDELETED.getkey());
+//			//入会时间
+//			if(!Strings.isBlank(userInput.getRegistDate())) {
+//				userInput.setRegistDate(userInput.getRegistDate()+" 00:00:00");
+//			}
+//			//有效日期
+//			if(!Strings.isBlank(userInput.getValidEndDate())) {
+//				userInput.setValidEndDate(userInput.getValidEndDate()+" 23:59:59");
+//			}
+			userInput.setCreatedBy(LoginInfoHelper.getLoginId(request));
+			userInput.setCreatedAt(LocalDateUtility.getCurrentDateTimeString(DateTimePattern.UUUUHMMHDDHHQMIQSS));
+			userMapper.insert(userInput);
+			
+			MUserExtend userExtendInput = userInfo.getUserExtend();
+			userExtendInput.setId(userInput.getId());
+			userExtendMapper.insert(userExtendInput);
+			
+			MUserCard userCard = userInfo.getUserCard();
+			//UUID
+			userCard.setId(UUID.randomUUID().toString());
+			userCard.setUserId(userInput.getId());
+			userCard.setValidStatus(ValidType.VALID.getKey());
+			userCard.setCreatedBy(LoginInfoHelper.getLoginId(request));
+			userCard.setCreatedAt(LocalDateUtility.getCurrentDateTimeString(DateTimePattern.UUUUHMMHDDHHQMIQSS));
+			userCardMapper.insert(userCard);
+		}
+		
+		return result;
+	}
+	
+	public AdminUserImportResult checkUserInfo(UserInfo userInfo, ImportUserUpdateType updateType) {
+		AdminUserImportResult importResult = new AdminUserImportResult();
+		String msg = "";
+		//会员登记号
+		ColumnInfoForm clmForm = T105MUserCard.getColumnInfo(T105MUserCard.COL_USER_CODE);
+		if (Strings.isBlank(userInfo.getUserCode())) {
+			msg += getContext("userImport.requiredCheck.msg", clmForm.getLabelName()) + "|";
+		}else if(!CommonUtil.checkUserCode(userInfo.getUserCode())) {
+			 msg += getContext("userImport.valideCheck.msg", clmForm.getLabelName()) + "|";
+		 }else if (updateType == ImportUserUpdateType.INSERT_ONLY && 
+				 isUserCodeExist(userInfo.getUserCode())) {
+			 msg += getContext("userImport.existedCheck.msg", clmForm.getLabelName()) + "|";
+		 }
+		//姓名
+		 if (updateType == ImportUserUpdateType.INSERT_ONLY && Strings.isBlank(userInfo.getUser().getName())) {
+			 clmForm = T100MUser.getColumnInfo(T100MUser.COL_NAME);
+			 msg += getContext("userImport.requiredCheck.msg", clmForm.getLabelName()) + "|";
+		 }
+		 
+		//性别
+		 if ("男".equals(userInfo.getSexName())) {
+			 userInfo.getUser().setSex(SexType.MAN.getKey());
+		 }else if ("女".equals(userInfo.getSexName())) {
+			 userInfo.getUser().setSex(SexType.WOMEN.getKey());
+		 }
+		//证件号码（身份证）
+		 if (!Strings.isBlank(userInfo.getUser().getCertificateCode()) && 
+				 userInfo.getUser().getCertificateCode().length() > 18) {
+			 userInfo.getUser().setCertificateCode(null);
+		 }
+		//政治面貌
+		 userInfo.getUser().setPolitical(CommonUtil.getPoliticalValue(userInfo.getPoliticalName()));
+		//职称
+		//学历
+		 userInfo.getUser().setEduDegree(CommonUtil.getEduDegreeValue(userInfo.getEduDegreeName()));
+		 //学位
+		 userInfo.getUser().setBachelor(CommonUtil.getBachelorValue(userInfo.getEduDegreeName()));
+		//出生年
+		//出生月
+		//出生日
+		 if(!Strings.isBlank(userInfo.getUser().getBirth())) {
+			 String[] date = userInfo.getUser().getBirth().split("-");
+			 userInfo.getUser().setBirth(null);
+			 if (date.length == 3) {
+				 date[0] = date[0].replaceAll("[^0-9]", "");
+				 date[1] = StringUtility.padLeft(date[1].replaceAll("[^0-9]", ""), 2, "0");
+				 date[2] = StringUtility.padLeft(date[2].replaceAll("[^0-9]", ""), 2, "0");
+				 if (!Strings.isBlank(date[0]) && date[0].length() == 4) {
+					 userInfo.getUser().setBirth(date[0]+"-"+date[1]+"-"+date[2]);
+				 }
+			 }
+		 }
+		//专业
+		//通信地址（工作单位、详细联系地址、邮编）"
+		//通信地址
+		//邮编
+		//﹡电子信箱
+		//﹡联系电话（手机）
+		 if (!Strings.isBlank(userInfo.getUser().getPhone()) && isPhoneNumberExist(userInfo.getUser().getPhone())) {
+			 clmForm = T100MUser.getColumnInfo(T100MUser.COL_PHONE);
+			 msg += getContext("userImport.existedCheck.msg", clmForm.getLabelName()) + "|";
+		 }
+		 
+		//审批日期（YYYY-MM-DD） 2013|2019/7/2|2022-03-01|2015.8.7|2014.12
+		 String registDate = userInfo.getUser().getRegistDate();
+		 userInfo.getUser().setRegistDate(null);
+		 if (!Strings.isBlank(registDate)) {
+			 registDate = registDate.replace(".", "-").replace("/", "-");
+			 String[] date = registDate.split("-");
+			 if (date.length == 1) {
+				 date = new String[] {date[0], "01", "01"};
+			 }else if (date.length == 2) {
+				 date = new String[] {date[0], date[1], "01"};
+			 }
+			 date[0] = date[0].replaceAll("[^0-9]", "");
+			 date[1] = StringUtility.padLeft(date[1].replaceAll("[^0-9]", ""), 2, "0");
+			 date[2] = StringUtility.padLeft(date[2].replaceAll("[^0-9]", ""), 2, "0");
+			 LocalDate localDate = DateUtility.parseDate(date[0]+"-"+date[1]+"-"+date[2], DateFormat.UUUUHMMHDD.getFormat());
+			 if (localDate != null) {
+				 userInfo.getUser().setRegistDate(DateUtility.formatDate(localDate, DateFormat.UUUUHMMHDD.getFormat())+" 00:00:00");
+			 }
+		 }
+		 
+		//续费时间（YYYY-MM-DD） 2023|2020/8/7总会续费|2017年省学会表格要求更改|2023/9/17神志病
+		 String validStartDate = userInfo.getUser().getValidStartDate();
+		 userInfo.getUser().setValidStartDate(null);
+		 if (!Strings.isBlank(validStartDate)) {
+			 validStartDate = validStartDate.replace(".", "-").replace("/", "-");
+			 String[] date = validStartDate.split("-");
+			 if (date.length == 3) {
+				 date[0] = date[0].replaceAll("[^0-9]", "");
+				 date[1] = StringUtility.padLeft(date[1].replaceAll("[^0-9]", ""), 2, "0");
+				 date[2] = StringUtility.padLeft(date[2].replaceAll("[^0-9]", ""), 2, "0");
+				 validStartDate = date[0]+"-"+date[1]+"-"+date[2];
+				 LocalDate localDate = DateUtility.parseDate(validStartDate, DateFormat.UUUUHMMHDD.getFormat());
+				 if (localDate != null) {
+					 userInfo.getUser().setValidStartDate(DateUtility.formatDate(localDate, DateFormat.UUUUHMMHDD.getFormat())+" 00:00:00");
+					 userInfo.getUser().setValidEndDate(DateUtility.formatDate(localDate.plusYears(5), DateFormat.UUUUHMMHDD.getFormat())+" 00:00:00");
+				 }
+			 }
+		 }
+		 
+		if (!Strings.isBlank(msg)) {
+			importResult.setExecuteReturnType(ExecuteReturnType.NG);
+			importResult.setResult(getContext("userImport.line.Check.msg", String.valueOf(userInfo.getIndex()), msg));;
+		}else {
+			importResult.setExecuteReturnType(ExecuteReturnType.OK);
+			importResult.setResult(getContext("userImport.line.Check.msg", String.valueOf(userInfo.getIndex()), getContext("userImport.success.msg")));
+		}
+		
+		return importResult;
+	}
+	
+	@Transactional
 	public void deleteUserInfo(HttpServletRequest request, String userId) throws IOException{
 		String adminUserId = null;
 		MAdmin adminUserInfo = (MAdmin)request.getSession().getAttribute(SessionConstants.LOGIN_INFO.getValue());
@@ -758,4 +944,124 @@ public class UserService extends BaseService {
 		
 		adminMapper.insert(mAdmin);
 	}
+	
+	public void exportUserInfo(HttpServletResponse response, UserSearchForm pageForm) throws IOException{
+		List<String> headerList = new ArrayList<String>();
+		headerList.add(T105MUserCard.getColumnInfo(T105MUserCard.COL_USER_CODE).getLabelName());
+		headerList.add(T100MUser.getColumnInfo(T100MUser.COL_USER_TYPE).getLabelName());
+		headerList.add(T100MUser.getColumnInfo(T100MUser.COL_NAME).getLabelName());
+		headerList.add(T100MUser.getColumnInfo(T100MUser.COL_SEX).getLabelName());
+		headerList.add(T100MUser.getColumnInfo(T100MUser.COL_BIRTH).getLabelName());
+		headerList.add(T100MUser.getColumnInfo(T100MUser.COL_PHONE).getLabelName());
+		headerList.add(T100MUser.getColumnInfo(T100MUser.COL_MAIL).getLabelName());
+		headerList.add(T100MUser.getColumnInfo(T100MUser.COL_NATIONALITY).getLabelName());
+		headerList.add(T100MUser.getColumnInfo(T100MUser.COL_POLITICAL).getLabelName());
+		headerList.add(T100MUser.getColumnInfo(T100MUser.COL_EDU_DEGREE).getLabelName());
+		headerList.add(T100MUser.getColumnInfo(T100MUser.COL_BACHELOR).getLabelName());
+		headerList.add(T100MUser.getColumnInfo(T100MUser.COL_POSITION).getLabelName());
+		headerList.add(T100MUser.getColumnInfo(T100MUser.COL_EMPLOYER_TYPE).getLabelName());
+		headerList.add(T100MUser.getColumnInfo(T100MUser.COL_EMPLOYER).getLabelName());
+		headerList.add(T100MUser.getColumnInfo(T100MUser.COL_JOB_TITLE).getLabelName());
+		headerList.add(T100MUser.getColumnInfo(T100MUser.COL_CERTIFICATE_TYPE).getLabelName());
+		headerList.add(T100MUser.getColumnInfo(T100MUser.COL_CERTIFICATE_CODE).getLabelName());
+//		headerList.add(T100MUser.getColumnInfo(T100MUser.COL_AREA).getLabelName());
+//		headerList.add(T100MUser.getColumnInfo(T100MUser.COL_AREA_SUB).getLabelName());
+		headerList.add(T100MUser.getColumnInfo(T100MUser.COL_ADDRESS).getLabelName());
+		headerList.add(T100MUser.getColumnInfo(T100MUser.COL_POSTAL_CODE).getLabelName());
+//		headerList.add(T100MUser.getColumnInfo(T100MUser.COL_APPLICATION_DATE).getLabelName());
+//		headerList.add(T100MUser.getColumnInfo(T100MUser.COL_CHECK_DATE).getLabelName());
+//		headerList.add(T100MUser.getColumnInfo(T100MUser.COL_CHECK_STATUS).getLabelName());
+		headerList.add(T100MUser.getColumnInfo(T100MUser.COL_VALID_STATUS).getLabelName());
+		headerList.add(T100MUser.getColumnInfo(T100MUser.COL_REGIST_DATE).getLabelName());
+		headerList.add("有效日期");
+		headerList.add(T100MUser.getColumnInfo(T100MUser.COL_SOCIETY_TYPE).getLabelName());
+//		headerList.add(T100MUser.getColumnInfo(T100MUser.COL_GROUP_NAME).getLabelName());
+		headerList.add(T100MUser.getColumnInfo(T100MUser.COL_MEMBERSHIP_PATH).getLabelName());
+		headerList.add(T100MUser.getColumnInfo(T100MUser.COL_FOCUS_ON).getLabelName());
+		headerList.add(T101MUserExtend.getColumnInfo(T101MUserExtend.COL_INTRODUCER1).getLabelName());
+		headerList.add(T101MUserExtend.getColumnInfo(T101MUserExtend.COL_INTRODUCER2).getLabelName());
+//		headerList.add(T101MUserExtend.getColumnInfo(T101MUserExtend.COL_PHOTO).getLabelName());
+//		headerList.add(T101MUserExtend.getColumnInfo(T101MUserExtend.COL_PHOTO_EXT).getLabelName());
+		headerList.add(T101MUserExtend.getColumnInfo(T101MUserExtend.COL_MAJOR).getLabelName());
+//		headerList.add(T101MUserExtend.getColumnInfo(T101MUserExtend.COL_EDUCATIONAL_AT).getLabelName());
+//		headerList.add(T101MUserExtend.getColumnInfo(T101MUserExtend.COL_EDUCATIONAL_AT_EXT).getLabelName());
+//		headerList.add(T101MUserExtend.getColumnInfo(T101MUserExtend.COL_BACHELOR_AT).getLabelName());
+//		headerList.add(T101MUserExtend.getColumnInfo(T101MUserExtend.COL_BACHELOR_AT_EXT).getLabelName());
+//		headerList.add(T101MUserExtend.getColumnInfo(T101MUserExtend.COL_VOCATIONAL_AT).getLabelName());
+//		headerList.add(T101MUserExtend.getColumnInfo(T101MUserExtend.COL_VOCATIONAL_AT_EXT).getLabelName());
+		headerList.add(T101MUserExtend.getColumnInfo(T101MUserExtend.COL_RESEARCH_DIR).getLabelName().replace("<br/>", ""));
+		headerList.add(T101MUserExtend.getColumnInfo(T101MUserExtend.COL_LEARN_EXPERIENCE).getLabelName().replace("<br/>", ""));
+		headerList.add(T101MUserExtend.getColumnInfo(T101MUserExtend.COL_WORK_EXPERIENCE).getLabelName().replace("<br/>", ""));
+		headerList.add(T101MUserExtend.getColumnInfo(T101MUserExtend.COL_PAPERS).getLabelName().replace("<br/>", ""));
+		headerList.add(T101MUserExtend.getColumnInfo(T101MUserExtend.COL_HONORS).getLabelName().replace("<br/>", ""));
+//		headerList.add(T101MUserExtend.getColumnInfo(T101MUserExtend.COL_APPLICATION_FORM).getLabelName());
+//		headerList.add(T101MUserExtend.getColumnInfo(T101MUserExtend.COL_APPLICATION_FORM_EXT).getLabelName());
+
+	    List<UserInfo> userInfoList = optionalUserInfoMapper.getUserList(pageForm);
+	    List<List<String>> excelData = new ArrayList<List<String>>();
+	    excelData.add(headerList);
+	    
+	    for(UserInfo userInfo:userInfoList) {
+	    	List<String> list = new ArrayList<String>();
+	    	list.add(nonNull(userInfo.getUserCode()));//T105MUserCard.COL_USER_CODE
+	    	list.add(nonNull(userInfo.getUserTypeName()));//T100MUser.COL_USER_TYPE
+	    	list.add(nonNull(userInfo.getUser().getName()));//T100MUser.COL_NAME
+	    	list.add(nonNull(userInfo.getSexName()));//T100MUser.COL_SEX
+	    	list.add(nonNull(userInfo.getUser().getBirth()));//T100MUser.COL_BIRTH
+	    	list.add(nonNull(userInfo.getUser().getPhone()));//T100MUser.COL_PHONE
+	    	list.add(nonNull(userInfo.getUser().getMail()));//T100MUser.COL_MAIL
+	    	list.add(nonNull(userInfo.getNationalityName()));//T100MUser.COL_NATIONALITY
+	    	list.add(nonNull(userInfo.getPoliticalName()));//T100MUser.COL_POLITICAL
+	    	list.add(nonNull(userInfo.getEduDegreeName()));//T100MUser.COL_EDU_DEGREE
+	    	list.add(nonNull(userInfo.getBachelorName()));//T100MUser.COL_BACHELOR
+	    	list.add(nonNull(userInfo.getPositionName()));//T100MUser.COL_POSITION
+	    	list.add(nonNull(userInfo.getEmployerTypeName()));//T100MUser.COL_EMPLOYER_TYPE
+	    	list.add(nonNull(userInfo.getUser().getEmployer()));//T100MUser.COL_EMPLOYER
+	    	list.add(nonNull(userInfo.getJobTitleName()));//T100MUser.COL_JOB_TITLE
+	    	list.add(nonNull(userInfo.getCertificateTypeName()));//T100MUser.COL_CERTIFICATE_TYPE
+	    	list.add(nonNull(userInfo.getUser().getCertificateCode()));//T100MUser.COL_CERTIFICATE_CODE
+//	    	list.add(nonNull(userInfo));//T100MUser.COL_AREA
+//	    	list.add(nonNull(userInfo));//T100MUser.COL_AREA_SUB
+	    	list.add(nonNull(userInfo.getUser().getAddress()));//T100MUser.COL_ADDRESS
+	    	list.add(nonNull(userInfo.getUser().getPostalCode()));//T100MUser.COL_POSTAL_CODE
+//	    	list.add(nonNull(userInfo));//T100MUser.COL_APPLICATION_DATE
+//	    	list.add(nonNull(userInfo));//T100MUser.COL_CHECK_DATE
+//	    	list.add(nonNull(userInfo));//T100MUser.COL_CHECK_STATUS
+	    	list.add(nonNull(getContext(CommonUtil.getValidStatus(userInfo.getUser().getValidEndDate()).getMsg())));//T100MUser.COL_VALID_STATUS
+	    	list.add(nonNull(LocalDateUtility.formatDateZH(nonNull(userInfo.getUser().getRegistDate()))));//T100MUser.COL_REGIST_DATE
+//	    	list.add(nonNull(userInfo));//T100MUser.COL_VALID_START_DATE
+	    	list.add(nonNull(LocalDateUtility.formatDateZH(nonNull(userInfo.getUser().getValidEndDate()))));//T100MUser.COL_VALID_END_DATE
+	    	list.add(nonNull(userInfo.getSocietyTypeName()));//T100MUser.COL_SOCIETY_TYPE
+//	    	list.add(nonNull(userInfo));//T100MUser.COL_GROUP_NAME
+	    	list.add(nonNull(userInfo.getMembershipPathName()));//T100MUser.COL_MEMBERSHIP_PATH
+	    	list.add(nonNull(userInfo.getFocusOnName()));//T100MUser.COL_FOCUS_ON
+	    	list.add(nonNull(userInfo.getUserExtend().getIntroducer1()));//T101MUserExtend.COL_INTRODUCER1
+	    	list.add(nonNull(userInfo.getUserExtend().getIntroducer2()));//T101MUserExtend.COL_INTRODUCER2
+//	    	list.add(nonNull(userInfo));//T101MUserExtend.COL_PHOTO
+//	    	list.add(nonNull(userInfo));//T101MUserExtend.COL_PHOTO_EXT
+	    	list.add(nonNull(userInfo.getUserExtend().getMajor()));//T101MUserExtend.COL_MAJOR
+//	    	list.add(nonNull(userInfo));//T101MUserExtend.COL_EDUCATIONAL_AT
+//	    	list.add(nonNull(userInfo));//T101MUserExtend.COL_EDUCATIONAL_AT_EXT
+//	    	list.add(nonNull(userInfo));//T101MUserExtend.COL_BACHELOR_AT
+//	    	list.add(nonNull(userInfo));//T101MUserExtend.COL_BACHELOR_AT_EXT
+//	    	list.add(nonNull(userInfo));//T101MUserExtend.COL_VOCATIONAL_AT
+//	    	list.add(nonNull(userInfo));//T101MUserExtend.COL_VOCATIONAL_AT_EXT
+	    	list.add(nonNull(userInfo.getUserExtend().getResearchDir()));//T101MUserExtend.COL_RESEARCH_DIR
+	    	list.add(nonNull(userInfo.getUserExtend().getLearnExperience()));//T101MUserExtend.COL_LEARN_EXPERIENCE
+	    	list.add(nonNull(userInfo.getUserExtend().getWorkExperience()));//T101MUserExtend.COL_WORK_EXPERIENCE
+	    	list.add(nonNull(userInfo.getUserExtend().getPapers()));//T101MUserExtend.COL_PAPERS
+	    	list.add(nonNull(userInfo.getUserExtend().getHonors()));//T101MUserExtend.COL_HONORS
+//	    	list.add(nonNull(userInfo));//T101MUserExtend.COL_APPLICATION_FORM
+//	    	list.add(nonNull(userInfo));//T101MUserExtend.COL_APPLICATION_FORM_EXT
+	    	
+	    	excelData.add(list);
+	    
+	    }
+
+	    ExcelUtil.exportExcel(response, excelData, "会员一览", "会员一览", 15);
+	}
+	
+	public static String nonNull(String value) {
+        return Objects.nonNull(value) ? value : "";
+    }
 }

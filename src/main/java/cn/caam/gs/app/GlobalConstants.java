@@ -17,7 +17,7 @@ public class GlobalConstants {
     public static final int DEFAULT_MEDIA_WIDTH            = 1100;
     public static final int TD_DEFAULT_HEIGHT              = 30;
     public static final int TH_DEFAULT_HEIGHT              = 30;
-    public static final int DEFAULT_GROWING_CNT            = RowCntType.ROW_10.getId();
+    public static final int DEFAULT_GROWING_CNT            = RowCntType.ROW_20.getId();
     public static final String INPUT_BG_COLOER             = "#FFFAF0";
     public static final String INPUT_DISABLED_BG_COLOER    = "#EEEEEE";
     public static final int TABLE_TD_HEIGHT                = 30;
@@ -35,6 +35,7 @@ public class GlobalConstants {
     public static final String DFL_SEX                     = "01";
     
     public static final int USER_ID_MAX_L              = 20;
+    public static final int USER_CODE_MAX_L            = 20;
     public static final int USER_NAME_MAX_L            = 70;
     public static final int USER_PW_MIN_L              = 8;
     public static final int USER_PW_MAX_L              = 40;
@@ -96,4 +97,6 @@ public class GlobalConstants {
     public static final String GANSU_CERTI_IMAGE2 = "static/img/certi/chinaCertiPage2.png";
     public static final String GANSU_CERTI_IMAGE3 = "static/img/certi/chinaCertiPage3.png";
     public static final String GANSU_CERTI_IMAGE4 = "static/img/certi/chinaCertiPage4.png";
+    
+    public static final String UPLODA_FILE_SAVE_PATH = System.getProperty("user.dir") + "/upload";
 }

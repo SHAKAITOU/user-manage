@@ -62,7 +62,8 @@ ReviewOk.prototype.initEvent = function(){
     self.getObject(self.ID.ITEM_VALID_END_DATE).datepicker({
         format   : self.dateFormat,
         language : self.language,
-        clearBtn : self.clearBtn
+        clearBtn : self.clearBtn,
+		todayHighlight:true
     });
 	
 	//init event to BTN_OK

@@ -13,7 +13,7 @@ public enum DownloadFileType {
       /** 职业证书附件 */
 	  VOCATIONAL		("04", "vocational", ".jpg", ""),
 	  /** 申请资料pdf */
-	  APPLICATION_FORM		("05", "application_form", ".pdf", ""),
+	  APPLICATION_FORM		("05", "application_form", ".jpg", ""),
 	  /** 申请资料模版word */
 	  APPLICATION_FORM_TEMPLATE		("06", "application_form_template", ".docx", ""),
 	  /** 中国协会证明书1 */

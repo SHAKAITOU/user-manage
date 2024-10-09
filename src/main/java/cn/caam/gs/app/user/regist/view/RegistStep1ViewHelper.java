@@ -115,7 +115,7 @@ public class RegistStep1ViewHelper extends HtmlViewBaseHelper {
         value       = Objects.nonNull(registForm.getUser()) ? registForm.getUser().getMail() : "";
         contextList.add(LabelInputSet.builder()
                 .id(convertNameDotForId(name)).name(name).labelName(labelName).value(value)
-                .notBlank(true).maxlength(GlobalConstants.MAIL_MAX_L).placeholder(placeholder)
+                .notBlank(false).maxlength(GlobalConstants.MAIL_MAX_L).placeholder(placeholder)
                 .fontSize(font).grids(CssGridsType.G12).build().html());
         
         sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
@@ -127,8 +127,9 @@ public class RegistStep1ViewHelper extends HtmlViewBaseHelper {
         labelName = getContext("login.regist.selectAuthMethod");
         List<HtmlRadio> radios = new ArrayList<>();
         radios.add(new HtmlRadio(GET_AUTH_CODE_BY_PHONE, getContext("login.regist.getAuthCodeByPhone")));
-        radios.add(new HtmlRadio(GET_AUTH_CODE_BY_MAIL,  getContext("login.regist.getAuthCodeByMail")));
-        value       = Objects.nonNull(registForm.getMauthCode()) && GET_AUTH_CODE_BY_MAIL.equals(registForm.getMauthCode().getAuthMethod()) ? GET_AUTH_CODE_BY_MAIL: GET_AUTH_CODE_BY_PHONE;
+//        radios.add(new HtmlRadio(GET_AUTH_CODE_BY_MAIL,  getContext("login.regist.getAuthCodeByMail")));
+//        value       = Objects.nonNull(registForm.getMauthCode()) && GET_AUTH_CODE_BY_MAIL.equals(registForm.getMauthCode().getAuthMethod()) ? GET_AUTH_CODE_BY_MAIL: GET_AUTH_CODE_BY_PHONE;
+        value = GET_AUTH_CODE_BY_PHONE;
         contextList.add(LabelSelectSet.builder()
                 .id(convertNameDotForId(name)).name(name).labelName(labelName)
                 .radios(radios).selectedValue(value)

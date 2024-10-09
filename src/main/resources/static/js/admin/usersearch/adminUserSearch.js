@@ -195,6 +195,47 @@ AdminUserSearch.prototype.initEvent = function(){
 	        ); 
 		}
     );
+	
+	ShaInput.button.onClick(self.getObject(self.ID.IMPORT_BTN_ID),
+    	function(event) {
+			ShaAjax.pop.postDialogMiddleCenter(
+				self.i18n["userImport.title"],
+				self.jsContext.adminJsView.adminUserImport.url_init, 
+				null);
+		}
+    );
+	
+	ShaInput.button.onClick(self.getObject(self.ID.EXPORT_BTN_ID),
+    	function(event) {
+			ShaAjax.ajax.getWithDownloadFile(
+		       self.jsContext.adminJsView.adminUserSearch.url_user_export, 
+			   "userSearchForm",
+		       function(data, filename){
+					if (data.size == 0){
+						ShaDialog.dialogs.alert(self.i18n["dialogs.fail.title"]);
+						return;
+					}
+		            if (ShaUtil.other.isChrome() || ShaUtil.other.isSafari()){
+		              // chrome
+		              const link = document.createElement('a');
+		              link.href = window.URL.createObjectURL(data);
+		              link.download = filename;
+		              link.click();
+					  window.URL.revokeObjectURL(link.href);
+		            } else if (ShaUtil.other.isIE()) {
+		              // IE
+		              //const blob = new Blob([data], {type: 'application/force-download'});
+		              window.navigator.msSaveBlob(data, filename);
+		            } else {
+		              // Firefox
+		              const file = new File([data], filename, {type: 'application/force-download'});
+		              window.open(URL.createObjectURL(file));
+		            }
+		       }
+		   ); 
+		}
+    );
+	
     
     //initPageLink
     ShaPage.pageLink.initPageLink(self.ID.PAGE_LINK_ID_PREFIX,

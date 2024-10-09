@@ -1,6 +1,5 @@
 package cn.caam.gs.app.admin.usersearch.view;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,7 +8,6 @@ import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import cn.caam.gs.app.GlobalConstants;
@@ -46,8 +44,8 @@ import cn.caam.gs.common.html.element.bs5.LabelInputSet;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet.LabelSelectSetType;
 import cn.caam.gs.common.html.element.bs5.PTextSet;
+import cn.caam.gs.common.util.CommonUtil;
 import cn.caam.gs.common.util.LocalDateUtility;
-import cn.caam.gs.common.util.LocalDateUtility.DateTimePattern;
 import cn.caam.gs.common.util.PaginationHolder;
 import cn.caam.gs.domain.db.base.entity.MFixedValue;
 import cn.caam.gs.domain.db.base.entity.MUser;
@@ -64,6 +62,7 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
 	public static final String URL_C_INIT = UrlConstants.INIT;
     public static final String URL_C_SEARCH = UrlConstants.SEARCH;
     public static final String URL_C_GROWING = UrlConstants.GROWING;
+    public static final String URL_C_EXPORT = UrlConstants.EXPORT;
     
     public static final String PREFIX_NAME                    = "user.";
 	
@@ -504,7 +503,7 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
                 String employer = nonNull(userInfo.getUser().getEmployer());
                 String registDate = LocalDateUtility.formatDateZH(nonNull(userInfo.getUser().getRegistDate()));
                 String validEndDate = LocalDateUtility.formatDateZH(nonNull(userInfo.getUser().getValidEndDate()));
-                String validStatus = nonNull(getValidStatus(userInfo.getUser().getValidEndDate()));
+                String validStatus = getValidStatus(nonNull(userInfo.getUser().getValidEndDate()));
                 String button = button().forTableBorderNameLeft(IconSetType.DETAIL, CssClassType.INFO, 
                         "", getContext("admin.userList.btn.detail"), userInfo.getId(), TABLE_BTN_DETAIL);
                 button += "&nbsp;&nbsp;";
@@ -562,22 +561,23 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
     }
     
     private static String getValidStatus(String validEndDateStr) {
-        UserExpiredType sts = UserExpiredType.VALID;
-        if (!StringUtils.isEmpty(validEndDateStr)) {
-            LocalDateTime validEndDate = LocalDateUtility.parseLocalDateTime(validEndDateStr, DateTimePattern.UUUUHMMHDDHHQMIQSS);
-            LocalDateTime currentDt = LocalDateTime.now();
-            if (validEndDate.isAfter(currentDt)) {
-                if (LocalDateUtility.getDateDifference(validEndDate.toLocalDate(), currentDt.toLocalDate()) <= 5) {
-                    sts = UserExpiredType.EXPIRED_SOON;
-                }
-            } else {
-                if (LocalDateUtility.getDateDifference(currentDt.toLocalDate(), validEndDate.toLocalDate()) >= 60) {
-                    sts = UserExpiredType.VARY_EXPIRED;
-                } else {
-                    sts = UserExpiredType.EXPIRED;
-                }
-            }
-        }
+//        UserExpiredType sts = UserExpiredType.VALID;
+//        if (!StringUtils.isEmpty(validEndDateStr)) {
+//            LocalDateTime validEndDate = LocalDateUtility.parseLocalDateTime(validEndDateStr, DateTimePattern.UUUUHMMHDDHHQMIQSS);
+//            LocalDateTime currentDt = LocalDateTime.now();
+//            if (validEndDate.isAfter(currentDt)) {
+//                if (LocalDateUtility.getDateDifference(validEndDate.toLocalDate(), currentDt.toLocalDate()) <= 5) {
+//                    sts = UserExpiredType.EXPIRED_SOON;
+//                }
+//            } else {
+//                if (LocalDateUtility.getDateDifference(currentDt.toLocalDate(), validEndDate.toLocalDate()) >= 60) {
+//                    sts = UserExpiredType.VARY_EXPIRED;
+//                } else {
+//                    sts = UserExpiredType.EXPIRED;
+//                }
+//            }
+//        }
+    	UserExpiredType sts = CommonUtil.getValidStatus(validEndDateStr);
         return PTextSet.builder().classType(sts.getClassType())
                 .context(getContext(sts.getMsg())).build().html();
     }
@@ -604,6 +604,7 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
 		js.put("url_init",              URL_BASE + URL_C_INIT);
 		js.put("url_user_list",         URL_BASE + URL_C_SEARCH);
 		js.put("url_user_list_growing", URL_BASE + URL_C_GROWING);
+		js.put("url_user_export",       URL_BASE + URL_C_EXPORT);
 
 		return js;
 	}

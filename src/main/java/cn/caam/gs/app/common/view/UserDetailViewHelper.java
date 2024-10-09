@@ -314,7 +314,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         placeholder = clmForm.getPlaceholder();
         value = LocalDateUtility.formatDateZH(nonNull(nonNull(userDetailForm.getUserInfo().getUser().getValidEndDate())));
         contextList.add(LabelDateInputSet.builder()
-                .id(id).name(name).labelName(labelName).value(value).disabled(PageModeType.INSERT_BY_ADMIN != pageModeType)
+                .id(id).name(name).labelName(labelName).value(value).disabled(PageModeType.INSERT_BY_ADMIN != pageModeType && PageModeType.EDIT_BY_ADMIN != pageModeType)
                 .placeholder(placeholder)
                 .fontSize(font).grids(CssGridsType.G6).outPutType(LabelDateInputSetType.WITH_LABEL_FOOT).build().html());
         sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
@@ -1163,64 +1163,130 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
         //------row14----------]
         
-        //------row15----------[
+        
+        
         contextList = new ArrayList<String>();
         clmForm     = T101MUserExtend.getColumnInfo(T101MUserExtend.COL_APPLICATION_FORM);
         name        = clmForm.getPageName("") + "File";
         idFile      = convertNameDotForId(name);
         idFileOpen  = idFile + "Open";
-        String idFilePrint = idFile + "Print";
-        idFileDownload = idFile + "Download";
         idLbl       = idFile + "Lbl";
         idFileName  = idFile + "Name";
         idOldFile   = idFile + "Old";
+        idFileDownload   = idFile + "Download";
+        String idFilePrint = idFile + "Print";
         
-        boolean isApplicationForm = userDetailForm.getUserInfo().getUserExtend().getApplicationForm() != null &&
-        		userDetailForm.getUserInfo().getUserExtend().getApplicationForm().length > 0;
+        src = resizeImageToBase64(request, userDetailForm.getUserInfo().getUserExtend().getApplicationForm());//Base64.encodeBase64String(userDetailForm.getUserInfo().getUserExtend().getApplicationForm());
+        ext = userDetailForm.getUserInfo().getUserExtend().getVocationalAtExt();
         
-        if (LoginInfoHelper.isUserLogin(request)) {
-	        value       = "";
-	        labelName   = clmForm.getLabelName();
-	        placeholder = clmForm.getPlaceholder();
-	        contextList.add(LabelInputSet.builder()
-	                .id(idFileName).labelName(labelName).placeholder(placeholder).disabled(disabled)
-	                .fontSize(font).grids(CssGridsType.G4).build().html());
-	        
-	        labelName   = getContext("userDetail.uploadApplicationForm");
-	        value       = "";
-	        contextList.add(LabelFileSet.builder()
-	                .id(idFile).idLablel(idLbl).name(name).labelName(labelName).placeholder(placeholder).disabled(disabled).acceptFileType(AcceptFileType.PDF)
-	                .fontSize(font).grids(CssGridsType.G4).build().html());
-	        
-	        context = getContext("userDetail.print");
-	        comp1 = button().getBorder(IconSetType.PRINT, CssClassType.SUCCESS, idFilePrint, context);
-	        contextList.add(comp1);
-	        
-	        if (isApplicationForm) {
-		        context = getContext("userDetail.download");
-		        comp1 = button().getBorder(IconSetType.DOWNLOAD, CssClassType.SUCCESS, idFileDownload, context);
-		        contextList.add(comp1);
-	        }else {
-	        	contextList.add("");
-	        }
-	        
-	        aligs = new ArrayList<>();
-	        aligs.add(CssAlignType.LEFT);
-	        aligs.add(CssAlignType.LEFT);
-	        aligs.add(CssAlignType.LEFT);
-//  	        sb.append(divRow().get(CellWidthType.THREE_4_4_4, aligs, contextList.get(0), contextList.get(1), concactWithSpace(contextList.get(2),contextList.get(3))));
-  	        sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+        value       = "";
+        labelName   = clmForm.getLabelName();
+        placeholder = clmForm.getPlaceholder();
+        contextList.add(LabelInputSet.builder()
+                .id(idFileName).labelName(labelName).placeholder(placeholder).disabled(disabled)
+                .fontSize(font).grids(CssGridsType.G6).build().html());
+        
+        labelName   = getContext("common.page.File");
+        value       = "";
+        contextList.add(LabelFileSet.builder()
+                .id(idFile).idLablel(idLbl).name(name).labelName(labelName).placeholder(placeholder).disabled(disabled).acceptFileType(AcceptFileType.IMAGE)
+                .fontSize(font).grids(CssGridsType.G4).build().html());
+
+        
+        context = getContext("common.page.showImg");
+        comp1 = button().getBorder(IconSetType.EYE, CssClassType.INFO, idFileOpen, context);
+        comp2 = "";
+        if (!Strings.isBlank(src)) {
+	        context = getContext("common.page.download");
+	        comp2 = button().getBorder(IconSetType.DOWNLOAD, CssClassType.INFO, idFileDownload, context);
         }
+        contextList.add(concactWithSpace(comp1, comp2));
+    
+        sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
         
-        if (LoginInfoHelper.isAdminLogin(request) && isApplicationForm) {
-        	contextList = new ArrayList<String>();
-        	context = getContext("userDetail.download");
-  	        comp1 = button().getBorder(IconSetType.DOWNLOAD, CssClassType.SUCCESS, CssGridsType.G12, idFileDownload, context);
-  	        contextList.add(comp1);
-  	        
-  	        sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+        //------row8----------]
+        //------row9----------[
+
+        contextList = new ArrayList<String>();
+        if (src == null) {
+            src = getNoImgDataString();
+            ext = "jpeg";
         }
-        //------row15----------]
+        context = LabelImageSet.builder()
+                .id(idOldFile)
+                .imgWidth(IMG_WIDTH).imgHeight(IMG_HEIGHT)
+                .grids(CssGridsType.G6)
+                .base64String(src).extent(ext).build().html();
+        contextList.add(context);
+        
+        sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+        sb.append(divRow().cellBlank(5));
+        
+        contextList = new ArrayList<String>();
+    	context = getContext("userDetail.print");
+        comp1 = button().getBorder(IconSetType.PRINT, CssClassType.SUCCESS, CssGridsType.G12, idFilePrint, context);
+        contextList.add(comp1);
+        
+        sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+        
+        //------row15----------[
+//        contextList = new ArrayList<String>();
+//        clmForm     = T101MUserExtend.getColumnInfo(T101MUserExtend.COL_APPLICATION_FORM);
+//        name        = clmForm.getPageName("") + "File";
+//        idFile      = convertNameDotForId(name);
+//        idFileOpen  = idFile + "Open";
+//        String idFilePrint = idFile + "Print";
+//        idFileDownload = idFile + "Download";
+//        idLbl       = idFile + "Lbl";
+//        idFileName  = idFile + "Name";
+//        idOldFile   = idFile + "Old";
+//        
+//        boolean isApplicationForm = userDetailForm.getUserInfo().getUserExtend().getApplicationForm() != null &&
+//        		userDetailForm.getUserInfo().getUserExtend().getApplicationForm().length > 0;
+//        
+//        if (LoginInfoHelper.isUserLogin(request)) {
+//	        value       = "";
+//	        labelName   = clmForm.getLabelName();
+//	        placeholder = clmForm.getPlaceholder();
+//	        contextList.add(LabelInputSet.builder()
+//	                .id(idFileName).labelName(labelName).placeholder(placeholder).disabled(disabled)
+//	                .fontSize(font).grids(CssGridsType.G4).build().html());
+//	        
+//	        labelName   = getContext("userDetail.uploadApplicationForm");
+//	        value       = "";
+//	        contextList.add(LabelFileSet.builder()
+//	                .id(idFile).idLablel(idLbl).name(name).labelName(labelName).placeholder(placeholder).disabled(disabled).acceptFileType(AcceptFileType.IMAGE)
+//	                .fontSize(font).grids(CssGridsType.G4).build().html());
+//	        
+//	        context = getContext("userDetail.print");
+//	        comp1 = button().getBorder(IconSetType.PRINT, CssClassType.SUCCESS, idFilePrint, context);
+//	        contextList.add(comp1);
+//	        
+//	        if (isApplicationForm) {
+//		        context = getContext("userDetail.download");
+//		        comp1 = button().getBorder(IconSetType.DOWNLOAD, CssClassType.SUCCESS, idFileDownload, context);
+//		        contextList.add(comp1);
+//	        }else {
+//	        	contextList.add("");
+//	        }
+//	        
+//	        aligs = new ArrayList<>();
+//	        aligs.add(CssAlignType.LEFT);
+//	        aligs.add(CssAlignType.LEFT);
+//	        aligs.add(CssAlignType.LEFT);
+////  	        sb.append(divRow().get(CellWidthType.THREE_4_4_4, aligs, contextList.get(0), contextList.get(1), concactWithSpace(contextList.get(2),contextList.get(3))));
+//  	        sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+//        }
+//        
+//        if (LoginInfoHelper.isAdminLogin(request) && isApplicationForm) {
+//        	contextList = new ArrayList<String>();
+//        	context = getContext("userDetail.download");
+//  	        comp1 = button().getBorder(IconSetType.DOWNLOAD, CssClassType.SUCCESS, CssGridsType.G12, idFileDownload, context);
+//  	        contextList.add(comp1);
+//  	        
+//  	        sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+//        }
+//        //------row15----------]
         
         
         return sb.toString();

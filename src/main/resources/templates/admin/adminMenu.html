@@ -30,7 +30,7 @@
     });
     
     const historyList = ["/userdetail/admininit"];//全部小写
-    const excludeList = [""];//全部小写
+    const excludeList = ["/admin/userimport/init","/admin/userimport/import"];//全部小写
     window.addEventListener('popstate', function(event) {
    	  console.log("popstate location:"+ window.location+"  state:"+event.state+" hash:"+window.location.hash+" history_length:"+window.history.length);
    	  var url = window.location.hash ? window.location.hash.substring(1):"";
@@ -65,6 +65,7 @@
     	var currentPath = window.location.hash;
     	if (currentPath != '') currentPath = currentPath.substring(1);
     	console.log("ajaxSuccess2 url:"+url+" data:"+data);
+    	if (excludeList.includes(url.toLowerCase())) return;
     	if ((url.endsWith("/init") || url.indexOf("/search") !== -1 ||url.endsWith("/growing") || historyList.includes(url.toLowerCase()))
      		&& !excludeList.includes(url.toLowerCase())){
     		

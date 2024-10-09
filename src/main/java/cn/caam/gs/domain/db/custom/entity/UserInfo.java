@@ -56,5 +56,11 @@ public class UserInfo {
     private String checkStatusName;
     /** 学会区分(F0023)*/
     private String societyTypeName;
+    
+    /** csv行号*/
+    private int index;
+    
+    /** 导入标记*/
+    private boolean isImport;
 
 }

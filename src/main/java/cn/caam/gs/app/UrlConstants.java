@@ -73,6 +73,8 @@ public class UrlConstants {
 	public static final String COMMIT       = "/commit";
     public static final String CONFIRM      = "/confirm";
     public static final String DOWNLOAD		= "/download";
+    public static final String IMPORT		= "/import";
+    public static final String EXPORT		= "/export";
 	//BATCH
 	public static final String BATCH 			= "/batch";
 	/* ===================ADMIN ROLE URL========================= */
@@ -83,6 +85,8 @@ public class UrlConstants {
 	public static final String ADMIN_LIST        = "/adminList";
 
 	public static final String USER_LIST        = "/userList";
+	
+	public static final String USER_IMPORT        = "/userImport";
 	
 	public static final String USER_REVIEW_LIST = "/userReviewList";
 	

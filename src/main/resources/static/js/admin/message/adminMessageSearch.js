@@ -82,13 +82,15 @@ AdminMessageSearch.prototype.initEvent = function(){
     self.getObject(self.ID.REGIST_DATE_FROM_INPT).datepicker({
         format   : self.dateFormat,
         language : self.language,
-        clearBtn : self.clearBtn
+        clearBtn : self.clearBtn,
+		todayHighlight:true
     });
     
     self.getObject(self.ID.REGIST_DATE_TO_INPT).datepicker({
         format   : self.dateFormat,
         language : self.language,
-        clearBtn : self.clearBtn
+        clearBtn : self.clearBtn,
+		todayHighlight:true
     });
     
     ShaInput.button.onClick(self.getObject(self.ID.SHOW_SEARCH_PANEL_BTN_ID),

@@ -69,9 +69,9 @@ public class RegistStep2Controller extends ScreenBaseController{
 	    	return ExecuteReturnType.NG.getId();
 	    }
 	    
-	    if (userService.isEmailExist(registForm.getUser().getMail())) {
-	    	return ExecuteReturnType.NG.getId();
-	    }
+//	    if (userService.isEmailExist(registForm.getUser().getMail())) {
+//	    	return ExecuteReturnType.NG.getId();
+//	    }
 	    
 	    pageForm.getUser().setPhone(registForm.getUser().getPhone());
 	    pageForm.getUser().setMail(registForm.getUser().getMail());

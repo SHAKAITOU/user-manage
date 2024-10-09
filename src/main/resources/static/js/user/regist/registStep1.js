@@ -113,7 +113,7 @@ RegistStep1.prototype.check = function(){
 	const checkMultiItemsMap = new Map();
 	var inputCheckItemList = [
         [ self.i18n["m_user.phone"], 			self.getObject(self.ID.ITEM_PHONE)], 
-        [ self.i18n["m_user.mail"], 			self.getObject(self.ID.ITEM_MAIL)], 
+       // [ self.i18n["m_user.mail"], 			self.getObject(self.ID.ITEM_MAIL)], 
     ];
 	checkMultiItemsMap.set('checkNotBlank', inputCheckItemList);
 
@@ -129,8 +129,8 @@ RegistStep1.prototype.check = function(){
 		return true;
 	}
 	
-	if (ShaCheck.check.checkPhoneNumberExisted([[ self.i18n["m_user.phone"], 	self.getObject(self.ID.ITEM_PHONE), true, ""]]) ||
-		ShaCheck.check.checkEmailExisted([[ self.i18n["m_user.mail"], 			self.getObject(self.ID.ITEM_MAIL)]])){
+	if (ShaCheck.check.checkPhoneNumberExisted([[ self.i18n["m_user.phone"], 	self.getObject(self.ID.ITEM_PHONE), true, ""]]) /*||
+		ShaCheck.check.checkEmailExisted([[ self.i18n["m_user.mail"], 			self.getObject(self.ID.ITEM_MAIL)]])*/){
 		return true;
 	}
 	

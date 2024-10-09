@@ -24,6 +24,7 @@ import cn.caam.gs.app.admin.userorder.view.ReviewOrderViewHelper;
 import cn.caam.gs.app.admin.userreview.view.AdminUserReviewMultiViewHelper;
 import cn.caam.gs.app.admin.userreview.view.AdminUserReviewSearchViewHelper;
 import cn.caam.gs.app.admin.userreview.view.AdminUserReviewViewHelper;
+import cn.caam.gs.app.admin.usersearch.view.AdminUserImportViewHelper;
 import cn.caam.gs.app.admin.usersearch.view.AdminUserSearchViewHelper;
 import cn.caam.gs.app.admin.usertypesettings.view.UserTypeSettingsViewHelper;
 import cn.caam.gs.app.common.view.CommonViewHelper;
@@ -231,6 +232,7 @@ public class JavaScriptSet {
 		jsView.put("adminUserReviewSearch",	AdminUserReviewSearchViewHelper.getJsProperties());
 		
 		jsView.put("adminUserSearch",    AdminUserSearchViewHelper.getJsProperties());
+		jsView.put("adminUserImport",    AdminUserImportViewHelper.getJsProperties());
 		
 		jsView.put("adminMessageSearch", AdminMessageSearchViewHelper.getJsProperties());
 		jsView.put("adminMessagePush",   AdminMessagePushViewHelper.getJsProperties());

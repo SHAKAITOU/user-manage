@@ -34,6 +34,7 @@ public class DateCommonUtil {
     public static final String DATE_FORMAT_YYYYHMMHDDHHQMIQSS_SSS = "yyyy-MM-dd HH:mm:ss.SSS";
     
     public static final String DATE_FORMAT_YYYYHMMHDDHHQMIQSS_SSSZ = "yyyy-MM-dd HH:mm:ss.SSSZ";
+    public static final String DATE_FORMAT_YYYYSMMSDDHHQMIQSS_SSS_DIGITONLY = "yyyyMMddHHmmssSSS";
     
     public static final String TIME_FORMAT_HHQMI = "HH:mm";
     

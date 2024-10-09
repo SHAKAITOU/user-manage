@@ -93,6 +93,7 @@ UserDetail.prototype.ID = {
 	BTN_APPLICATION_FORM_DOWNLOAD : "applicationFormFileDownload",
 	ITEM_APPLICATION_FORM_LBL     : "applicationFormFileLbl",
 	ITEM_APPLICATION_FORM_NAME    : "applicationFormFileName",
+	IMG_APPLICATION_FORM_OLD      : "applicationFormFileOld",
 	
 	PREFIX_USER_CARD_ID           : "userInfo_userCard_",
 	ITEM_USER_CODE                : "userCode",
@@ -387,18 +388,16 @@ UserDetail.prototype.initEvent = function(){
 	//init event to BTN_APPLICATION_FORM_OPEN
 	ShaInput.button.onClick(self.getObject(self.ID.BTN_APPLICATION_FORM_OPEN), 
 		function(event) {
-			if (self.getObject(self.ID.ITEM_APPLICATION_FORM).val() === "") {
-				return;
-			}
-    		ShaInput.img.previewInDialog(
-				self.getForm(), 
-    			self.ID.ITEM_APPLICATION_FORM,
-    			function(imgData) {
-					var title = self.i18n["m_user_extend.application_form"];
-					var html = ShaInput.img.previewImgCardHtml(260, 250, "ShaDialog.dialogs.subSubDialogClose();", imgData);
-					ShaDialog.dialogs.subSubDialogSmallCenter(title,html);
-				}
-    		);
+			var newImg = new Image();
+		    newImg.onload = function() {
+		    	var imgH = newImg.height;
+		    	var imgW = newImg.width;
+		    	var title = self.i18n["m_user_extend.application_form"];
+				var html = ShaInput.img.previewOrigImgCardHtml(770, 450, imgW, imgH,
+					"ShaDialog.dialogs.subSubDialogClose();", self.getObject(self.ID.IMG_APPLICATION_FORM_OLD).attr("src"));
+				ShaDialog.dialogs.subSubDialogLargeCenter(title,html);
+		    }
+			newImg.src = self.getObject(self.ID.IMG_APPLICATION_FORM_OLD).attr("src");
 	    }
 	);
 	
@@ -528,7 +527,7 @@ UserDetail.prototype.initEvent = function(){
 	ShaInput.button.onChange(self.getObject(self.ID.ITEM_APPLICATION_FORM), 
 			function(event) {
 	    		var files = self.getObject(self.ID.ITEM_APPLICATION_FORM).prop('files');
-	    		var fileExtension = ['pdf'];
+	    		var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
 		        if ($.inArray(files[0].name.split('.').pop().toLowerCase(), fileExtension) == -1) {
 		            ShaDialog.dialogs.alert(self.i18n["common.check.file.wrongExt"]);
 		            self.getObject(self.ID.ITEM_APPLICATION_FORM).val("");
@@ -537,6 +536,15 @@ UserDetail.prototype.initEvent = function(){
 		            self.getObject(self.ID.ITEM_APPLICATION_FORM).val("");
 				} else {
 					self.getObject(self.ID.ITEM_APPLICATION_FORM_NAME).val(files[0].name);
+					const file = files[0];
+					// 使用fileReader对象可以读取文件信息 ---- 将图片转换为 base64
+				    const reader = new FileReader();
+				    // 将选中的文件转换为base64 --- 异步操作
+				    reader.readAsDataURL(file);
+				    // 转换完成执行 this.result 就表示 转换成的结果
+				    reader.onload = function () {
+					self.getObject(self.ID.IMG_APPLICATION_FORM_OLD).attr("src",this.result);
+				    }
 				}
 		    }
 		);

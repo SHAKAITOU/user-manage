@@ -7,6 +7,8 @@ public enum MySqlType {
 	NUMERIC					("numeric"),
 	TEXT					("text"),
 	BLOB                    ("blob"),
+	DATE                    ("date"),
+	DATETIME                ("datetime"),
 	;
 	
     /** type. */

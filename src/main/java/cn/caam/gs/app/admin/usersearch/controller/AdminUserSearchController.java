@@ -10,7 +10,6 @@ import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -60,9 +59,8 @@ public class AdminUserSearchController extends JcbcBaseController{
 	    if (!Strings.isBlank(pageForm.getSelectedUserId())) {
 	    	UserSearchForm userSearchForm = (UserSearchForm)request.getSession().getAttribute(SessionConstants.USER_SEARCH_FORM.getValue());
 	    	if (userSearchForm != null) pageForm = userSearchForm;
-	    }else {
-	    	pageForm.setUserPageLinkIdPrefixIndex(0);
 	    }
+	    pageForm.setUserPageLinkIdPrefixIndex(0);
 	    request.getSession().setAttribute(SessionConstants.USER_SEARCH_FORM.getValue(), null);
 	    
         UserListOutput userListOutput = userService.getUserList(pageForm);
@@ -80,5 +78,17 @@ public class AdminUserSearchController extends JcbcBaseController{
 	    UserListOutput userListOutput = userService.getUserList(pageForm);
         return ControllerHelper.getModelAndView(
                 AdminUserSearchViewHelper.refeshTable(request, pageForm, userListOutput));
+    }
+	
+	@GetMapping(path=AdminUserSearchViewHelper.URL_C_EXPORT)
+    public void export(
+            UserSearchForm pageForm,
+            HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+	    pageForm.setUserPageLinkIdPrefixIndex(0);
+	    pageForm.setLimit(99999999);
+	    request.getSession().setAttribute(SessionConstants.USER_SEARCH_FORM.getValue(), null);
+	    
+        userService.exportUserInfo(response, pageForm);
     }
 }
