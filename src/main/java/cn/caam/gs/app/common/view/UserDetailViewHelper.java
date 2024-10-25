@@ -1,6 +1,7 @@
 package cn.caam.gs.app.common.view;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -340,23 +341,35 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
     private static String buildSelfDetail(Map<FixedValueType, List<FixValueInfo>> fixedValueMap, UserDetailForm userDetailForm, PageModeType pageModeType) {
         StringBuffer sb = new StringBuffer();
         
-        boolean disabled = PageModeType.INSERT_BY_ADMIN != pageModeType ;
+        //boolean disabled = PageModeType.INSERT_BY_ADMIN != pageModeType ;
+        boolean disabled = false;
         List<CssAlignType> aligs = new ArrayList<>();
         // bottom button
 
         boolean isAdminEdit = PageModeType.INSERT_BY_ADMIN == pageModeType || PageModeType.EDIT_BY_ADMIN == pageModeType;
         String id = "";
         String context = "";
-        String comp1 = "";
+//        String comp1 = "";
         // bottom button
         if (!(PageModeType.VIEW ==pageModeType || PageModeType.INSERT_BY_ADMIN == pageModeType)) {
-	        id = BTN_OPEN_EDIT_BASE;
-	        context = getContext("common.page.openEdit");
-	        comp1 = button().getBorder(IconSetType.CHECK, CssClassType.DANGER, id, context);
-	        id = BTN_CLOSE_EDIT_BASE;
-	        context = getContext("common.page.closeEdit");
-	        String comp2 = button().getBorder(IconSetType.CLOSE, CssClassType.DARK, id, context);
-	
+//	        id = BTN_OPEN_EDIT_BASE;
+//	        context = getContext("common.page.openEdit");
+//	        comp1 = button().getBorder(IconSetType.CHECK, CssClassType.DANGER, id, context);
+//	        id = BTN_CLOSE_EDIT_BASE;
+//	        context = getContext("common.page.closeEdit");
+//	        String comp2 = button().getBorder(IconSetType.CLOSE, CssClassType.DARK, id, context);1
+//	
+//	        aligs.add(CssAlignType.LEFT);
+//	        sb.append(divRow().get(CellWidthType.ONE, aligs, concactWithSpace(comp1, comp2)));
+//	        sb.append(divRow().cellBlank(5));
+	        
+        	id = "btnTop";
+            context = getContext("userDetail.moveTop");
+            String comp1 = button().getBorder(IconSetType.TO_UP, CssClassType.INFO, "", context, "", id);
+            
+	        id = "btnOk";
+	        context = getContext("common.page.ok");
+	        String comp2 = button().getBorder(IconSetType.SEND, CssClassType.SUCCESS, "", context, "", id);
 	        aligs.add(CssAlignType.LEFT);
 	        sb.append(divRow().get(CellWidthType.ONE, aligs, concactWithSpace(comp1, comp2)));
 	        sb.append(divRow().cellBlank(5));
@@ -704,7 +717,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         value = nonNull(userDetailForm.getUserInfo().getUser().getMail());
         contextList.add(LabelInputSet.builder()
                 .id(id).name(name).labelName(labelName).value(value)
-                .disabled(disabled).notBlank(true)
+                .disabled(disabled).notBlank(false)
                 .maxlength(GlobalConstants.MAIL_MAX_L).placeholder(placeholder)
                 .onInputMode(OnInputMode.EMAIL)
                 .fontSize(font).grids(CssGridsType.G6).build().html());
@@ -740,15 +753,15 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         placeholder = clmForm.getPlaceholder();
         value = nonNull(userDetailForm.getUserInfo().getUser().getFocusOn());
         radios = new ArrayList<>();
-        addDefaultHtmlRadio(radios, labelName);
+//        addDefaultHtmlRadio(radios, labelName);
         List<FixValueInfo> focusOnList = fixedValueMap.get(FixedValueType.MEMBERSHIP_PATH);
         for (FixValueInfo fValueInfo : focusOnList) {
             radios.add(new HtmlRadio(fValueInfo.getValueObj().getValue(), fValueInfo.getValueObj().getName()));
         }
         contextList.add(LabelSelectSet.builder()
                 .id(id).name(name).labelName(labelName)
-                .radios(radios).selectedValue(value).disabled(disabled)
-                .fontSize(font).grids(CssGridsType.G6).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
+                .radios(radios).selectedValues(Arrays.asList(value.split(","))).disabled(disabled)
+                .fontSize(font).grids(CssGridsType.G6).outPutType(LabelSelectSetType.MULTI_SELECT_WITH_LABEL).build().html());
         
         sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
         //------row10----------]
@@ -771,20 +784,32 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         StringBuffer sb = new StringBuffer();
         
         boolean isAdminEdit = PageModeType.INSERT_BY_ADMIN == pageModeType || PageModeType.EDIT_BY_ADMIN == pageModeType;
-        boolean disabled = PageModeType.INSERT_BY_ADMIN != pageModeType ;
+//        boolean disabled = PageModeType.INSERT_BY_ADMIN != pageModeType ;
+        boolean disabled = false;
         List<CssAlignType> aligs = new ArrayList<>();
         String id = "";
         String context = "";
         String comp1 = "";
         // bottom button
         if (!(PageModeType.VIEW ==pageModeType || PageModeType.INSERT_BY_ADMIN == pageModeType)) {
-	        id = BTN_OPEN_EDIT_EXTEND;
-	        context = getContext("common.page.openEdit");
-	        comp1 = button().getBorder(IconSetType.CHECK, CssClassType.DANGER, id, context);
-	        id = BTN_CLOSE_EDIT_EXTEND;
-	        context = getContext("common.page.closeEdit");
-	        String comp2 = button().getBorder(IconSetType.CLOSE, CssClassType.DARK, id, context);
-	    
+//	        id = BTN_OPEN_EDIT_EXTEND;
+//	        context = getContext("common.page.openEdit");
+//	        comp1 = button().getBorder(IconSetType.CHECK, CssClassType.DANGER, id, context);
+//	        id = BTN_CLOSE_EDIT_EXTEND;
+//	        context = getContext("common.page.closeEdit");
+//	        String comp2 = button().getBorder(IconSetType.CLOSE, CssClassType.DARK, id, context);
+//	    
+//	        aligs.add(CssAlignType.LEFT);
+//	        sb.append(divRow().get(CellWidthType.ONE, aligs, concactWithSpace(comp1, comp2)));
+//	        sb.append(divRow().cellBlank(5));
+        	
+        	id = "btnTop";
+            context = getContext("userDetail.moveTop");
+            comp1 = button().getBorder(IconSetType.TO_UP, CssClassType.INFO, "", context, "", id);
+            
+	        id = "btnOk";
+	        context = getContext("common.page.ok");
+	        String comp2 = button().getBorder(IconSetType.SEND, CssClassType.SUCCESS, "", context, "", id);
 	        aligs.add(CssAlignType.LEFT);
 	        sb.append(divRow().get(CellWidthType.ONE, aligs, concactWithSpace(comp1, comp2)));
 	        sb.append(divRow().cellBlank(5));
@@ -888,7 +913,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         idFileName  = idFile + "Name";
         idOldFile   = idFile + "Old";
         idFileDownload   = idFile + "Download";
-        src = resizeImageToBase64(request, userDetailForm.getUserInfo().getUserExtend().getEducationalAt());//Base64.encodeBase64String(userDetailForm.getUserInfo().getUserExtend().getEducationalAt());
+        src = resizeImageToBase64(request, userDetailForm.getUserInfo().getUserExtend().getEducationalAt(), userDetailForm.getUserInfo().getUserExtend().getEducationalAtExt());//Base64.encodeBase64String(userDetailForm.getUserInfo().getUserExtend().getEducationalAt());
         ext = userDetailForm.getUserInfo().getUserExtend().getEducationalAtExt();
         
         value       = "";
@@ -947,7 +972,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         idFileName  = idFile + "Name";
         idOldFile   = idFile + "Old";
         idFileDownload   = idFile + "Download";
-        src = resizeImageToBase64(request, userDetailForm.getUserInfo().getUserExtend().getBachelorAt());//Base64.encodeBase64String(userDetailForm.getUserInfo().getUserExtend().getBachelorAt());
+        src = resizeImageToBase64(request, userDetailForm.getUserInfo().getUserExtend().getBachelorAt(), userDetailForm.getUserInfo().getUserExtend().getBachelorAtExt());//Base64.encodeBase64String(userDetailForm.getUserInfo().getUserExtend().getBachelorAt());
         ext = userDetailForm.getUserInfo().getUserExtend().getBachelorAtExt();
         
         value       = "";
@@ -1005,7 +1030,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         idFileName  = idFile + "Name";
         idOldFile   = idFile + "Old";
         idFileDownload   = idFile + "Download";
-        src = resizeImageToBase64(request, userDetailForm.getUserInfo().getUserExtend().getVocationalAt());//Base64.encodeBase64String(userDetailForm.getUserInfo().getUserExtend().getVocationalAt());
+        src = resizeImageToBase64(request, userDetailForm.getUserInfo().getUserExtend().getVocationalAt(), userDetailForm.getUserInfo().getUserExtend().getVocationalAtExt());//Base64.encodeBase64String(userDetailForm.getUserInfo().getUserExtend().getVocationalAt());
         ext = userDetailForm.getUserInfo().getUserExtend().getVocationalAtExt();
         
         value       = "";
@@ -1097,7 +1122,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         value       = userDetailForm.getUserInfo().getUserExtend().getLearnExperience();
         contextList.add(LabelTextAreaSet.builder()
                 .id(id).name(name).labelName(labelName).value(value)
-                .notBlank(!isAdminEdit).disabled(disabled)
+                .notBlank(false).disabled(disabled)
                 .maxlength(GlobalConstants.LEARN_EXPERIENCE_MAX_L)
                 .placeholder(placeholder).outPutType(LabelTextAreaSetType.WITH_LABEL)
                 .fontSize(font).rows(4).grids(CssGridsType.G12).build().html());
@@ -1117,7 +1142,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         value       = userDetailForm.getUserInfo().getUserExtend().getWorkExperience();
         contextList.add(LabelTextAreaSet.builder()
                 .id(id).name(name).labelName(labelName).value(value)
-                .notBlank(!isAdminEdit).disabled(disabled)
+                .notBlank(false).disabled(disabled)
                 .maxlength(GlobalConstants.LEARN_EXPERIENCE_MAX_L)
                 .placeholder(placeholder).outPutType(LabelTextAreaSetType.WITH_LABEL)
                 .fontSize(font).rows(4).grids(CssGridsType.G12).build().html());
@@ -1176,7 +1201,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         idFileDownload   = idFile + "Download";
         String idFilePrint = idFile + "Print";
         
-        src = resizeImageToBase64(request, userDetailForm.getUserInfo().getUserExtend().getApplicationForm());//Base64.encodeBase64String(userDetailForm.getUserInfo().getUserExtend().getApplicationForm());
+        src = resizeImageToBase64(request, userDetailForm.getUserInfo().getUserExtend().getApplicationForm(), userDetailForm.getUserInfo().getUserExtend().getApplicationFormExt());//Base64.encodeBase64String(userDetailForm.getUserInfo().getUserExtend().getApplicationForm());
         ext = userDetailForm.getUserInfo().getUserExtend().getVocationalAtExt();
         
         value       = "";
@@ -1470,11 +1495,12 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         
         String id = "btnTop";
         String context = getContext("userDetail.moveTop");
-        String comp1 = button().getBorder(IconSetType.TO_UP, CssClassType.INFO, id, context);
+        String comp1 = button().getBorder(IconSetType.TO_UP, CssClassType.INFO, "", context, "", id);
 
         id = "btnOk";
         context = getContext("common.page.ok");
-        String comp2 = button().getBorder(IconSetType.SEND, CssClassType.SUCCESS, id, context);
+//        String comp2 = button().getBorder(IconSetType.SEND, CssClassType.SUCCESS, id, context);
+        String comp2 = button().getBorder(IconSetType.SEND, CssClassType.SUCCESS, "", context, "", id);
         
         id = "btnBack";
         context = getContext("common.page.btn.back");
@@ -1495,11 +1521,11 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
 	    return outWidth > 800 ? false : true;
 	}
     
-    public static String resizeImageToBase64(HttpServletRequest request, byte[] bytes) {
+    public static String resizeImageToBase64(HttpServletRequest request, byte[] bytes, String type) {
     	try {
     		return ImageUtil.resizeImageToBase64(bytes, 
     			isPhoneMode(request) ? GlobalConstants.IMAGE_RESIZE_WIDTH_MOBILE:GlobalConstants.IMAGE_RESIZE_WIDTH_PC,
-    					isPhoneMode(request) ? GlobalConstants.IMAGE_RESIZE_HEIGHT_MOBILE:GlobalConstants.IMAGE_RESIZE_HEIGHT_PC);
+    					isPhoneMode(request) ? GlobalConstants.IMAGE_RESIZE_HEIGHT_MOBILE:GlobalConstants.IMAGE_RESIZE_HEIGHT_PC, type);
     	}catch (Exception e) {
 			e.printStackTrace();
 		}

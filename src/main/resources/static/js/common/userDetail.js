@@ -114,8 +114,8 @@ UserDetail.prototype.ID = {
 	BTN_OPEN_EDIT_EXTEND          : "btnOpenEditExtend",
 	BTN_CLOSE_EDIT_EXTEND         : "btnCloseEditExtend",
 	BTN_OPEN_PHOTO                : "btnOpenPhoto",
-	BTN_TOP              		  : "btnTop",
-	BTN_OK              		  : "btnOk",
+	BTN_TOP              		  : ".btnTop",
+	BTN_OK              		  : ".btnOk",
 	BTN_BACK              		  : "btnBack",
 	
 	TAB_ID                        : "detailTab",
@@ -142,6 +142,11 @@ UserDetail.prototype.init = function(){
 	//init bond event to btn
 	self.initEvent();
 
+	$(document).ready(function () {
+	    $('.selectpicker').selectpicker({
+		        "width":100, 'maxOptions':60
+		    });
+	});
 };
 
 // init event
@@ -207,7 +212,7 @@ UserDetail.prototype.initEvent = function(){
 	//self.setReadonlyBaseDetail();
 	//self.setReadonlySelfDetail();
 	//self.setReadonlyExtendDetail();
-	self.changeOkButtonEnable();
+	//self.changeOkButtonEnable();
 	
 	ShaInput.button.onClick(self.getObject(self.ID.BTN_OPEN_EDIT_BASE), 
 		function(event) {
@@ -550,14 +555,68 @@ UserDetail.prototype.initEvent = function(){
 		);
 	
 	//init event to BTN_TOP
-	ShaInput.button.onClick(self.getObject(self.ID.BTN_TOP),
+	$topBtnList = self.getForm().find(self.ID.BTN_TOP);
+	$topBtnList.each(function(i, elem){
+	   	ShaInput.button.onClick($(elem),
+				function(event) {
+					scrollTo(0,0);
+				}
+			);
+		}
+	);
+	/*ShaInput.button.onClick(self.getObject(self.ID.BTN_TOP),
 	   	function(event) {
 			scrollTo(0,0);
 		}
-	);
+	);*/
 			
 	//init event to BTN_OK
-	ShaInput.button.onClick(self.getObject(self.ID.BTN_OK), 
+	$okBtnList = self.getForm().find(self.ID.BTN_OK);
+	$okBtnList.each(function(i, elem){
+		//check box init
+	   	ShaInput.button.onClick($(elem),
+		function(event) {
+				if(self.check()) {
+		            return;
+		        }
+				
+				if (self.getObject(self.ID.HIDE_ITEM_PAGE_MODE_TYPE).val() == self.ID.PAGE_MODE_TYPE_INSERT_BY_ADMIN){
+					ShaDialog.dialogs.confirm(
+						self.i18n["dialogs.confirm.add.title"], 
+						self.i18n["dialogs.confirm.add.msg"], 
+						function () {
+							ShaAjax.ajax.postWithUploadFile(
+								url = self.jsContext.jsView.userDetail.url_user_detail_add,
+								"userDetailForm", 
+								function (data) {
+									ShaDialog.dialogs.success(self.i18n["dialogs.add.success.msg"]);
+									self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
+									window.scrollTo(0, 0);
+								}
+							);
+						}
+					);
+				}else{
+			        ShaDialog.dialogs.confirm(
+						self.i18n["dialogs.confirm.edit.title"], 
+						self.i18n["dialogs.confirm.edit.msg"], 
+						function () {
+							ShaAjax.ajax.postWithUploadFile(
+								self.jsContext.jsView.userDetail.url_user_detail_edit,
+								"userDetailForm", 
+								function (data) {
+									ShaDialog.dialogs.success(self.i18n["dialogs.edit.success.msg"]);
+									self.getObjectInForm(self.mainForm, self.ID.DIV_MAINBODY).html(data);
+									window.scrollTo(0, 0);
+								}
+							);
+						}
+					);
+				}
+		    }
+	    );
+	});
+	/*ShaInput.button.onClick(self.getObject(self.ID.BTN_OK), 
 		function(event) {
 			if(self.check()) {
 	            return;
@@ -597,7 +656,7 @@ UserDetail.prototype.initEvent = function(){
 				);
 			}
 	    }
-	);
+	);*/
 	
 	//init event to BTN_BACK
 	ShaInput.button.onClick(self.getObject(self.ID.BTN_BACK),
@@ -820,11 +879,11 @@ UserDetail.prototype.check = function(){
 	   ]);
 	}
 	
-	if (ShaInput.obj.isEnabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_MAIL))){
+	/*if (ShaInput.obj.isEnabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_MAIL))){
 		inputCheckItemList = inputCheckItemList.concat([
 	       [ self.i18n["m_user.mail"], 	            self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_MAIL)], 
 	   ]);
-	}
+	}*/
 	
 	if (ShaInput.obj.isEnabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_BIRTH)) && 
 		self.getObject(self.ID.HIDE_ITEM_PAGE_MODE_TYPE).val() == self.ID.PAGE_MODE_TYPE_EDIT_BY_USER){
@@ -841,8 +900,8 @@ UserDetail.prototype.check = function(){
 			self.getObject(self.ID.HIDE_ITEM_PAGE_MODE_TYPE).val() == self.ID.PAGE_MODE_TYPE_EDIT_BY_USER){
 		inputCheckItemList = inputCheckItemList.concat([
 	       [ self.i18n["m_user_extend.major"], 	                                    self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_MAJOR)], 
-	       [ self.i18n["m_user_extend.learn_experience"].replace(/(<br\/>)*/g,""), 	self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_LEARN_EXPERIENCE)], 
-		   [ self.i18n["m_user_extend.work_experience"].replace(/(<br\/>)*/g,""),   self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_WORK_EXPERIENCE)], 
+	      // [ self.i18n["m_user_extend.learn_experience"].replace(/(<br\/>)*/g,""), 	self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_LEARN_EXPERIENCE)], 
+		  // [ self.i18n["m_user_extend.work_experience"].replace(/(<br\/>)*/g,""),   self.getObject(self.ID.PREFIX_EXTEND_ID + self.ID.ITEM_WORK_EXPERIENCE)], 
 	   ]);
 	}
 	
@@ -860,7 +919,7 @@ UserDetail.prototype.check = function(){
 		checkMultiItemsMap.set('checkPhoneNumber', [[ self.i18n["m_user.phone"], 	self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_PHONE)]]);
 	}
 	
-	if (ShaInput.obj.isEnabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_MAIL))){
+	if (ShaInput.obj.isEnabled(self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_MAIL)) && self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_MAIL).val() !=''){
 		checkMultiItemsMap.set('checkEmail', [[ self.i18n["m_user.mail"], 	self.getObject(self.ID.PREFIX_ID + self.ID.ITEM_MAIL)]]);
 	}
 	

@@ -489,11 +489,16 @@ public class OrderDetailViewHelper extends HtmlViewHelper {
                 strRow1 += UtilConstants.HTML_SPACE + UtilConstants.HTML_SPACE + button().forTableBorder(IconSetType.DOWNLOAD, CssClassType.SUCCESS, DOWNLOAD_BILL_IMG_BTN_ID);
                 String src = "";
                 try {
-                	File tempFile = PdfUtil.pdfToImage(new ByteArrayInputStream(orderInfo.getOrderImg().getBillPhoto()));
-                	if (tempFile.exists()) {
-                		src = Base64.encodeBase64String(Files.readAllBytes(tempFile.toPath()));
-                		tempFile.delete();
+                	if ("pdf".equalsIgnoreCase(orderInfo.getOrderImg().getBillPhotoExt())) {
+                		File tempFile = PdfUtil.pdfToImage(new ByteArrayInputStream(orderInfo.getOrderImg().getBillPhoto()));
+                    	if (tempFile.exists()) {
+                    		src = Base64.encodeBase64String(Files.readAllBytes(tempFile.toPath()));
+                    		tempFile.delete();
+                    	}
+                	}else {
+                		src = Base64.encodeBase64String(orderInfo.getOrderImg().getBillPhoto());
                 	}
+                	
                 }catch(Exception ex) {
                 	ex.printStackTrace();
                 }

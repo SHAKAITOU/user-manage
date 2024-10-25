@@ -30,6 +30,7 @@ import cn.caam.gs.common.enums.CssGridsType;
 import cn.caam.gs.common.enums.FixedValueType;
 import cn.caam.gs.common.enums.GridFlexType;
 import cn.caam.gs.common.enums.OrderType;
+import cn.caam.gs.common.enums.PayType;
 import cn.caam.gs.common.enums.ReFundStatusType;
 import cn.caam.gs.common.html.HtmlPageLinkedHelper;
 import cn.caam.gs.common.html.element.HtmlRadio;
@@ -47,7 +48,6 @@ import cn.caam.gs.common.html.element.bs5.LabelSelectSet;
 import cn.caam.gs.common.html.element.bs5.LabelSelectSet.LabelSelectSetType;
 import cn.caam.gs.common.html.element.bs5.PTextSet;
 import cn.caam.gs.common.util.PaginationHolder;
-import cn.caam.gs.common.util.StringUtility;
 import cn.caam.gs.domain.db.custom.entity.FixValueInfo;
 import cn.caam.gs.domain.db.custom.entity.OrderInfo;
 import cn.caam.gs.domain.tabledef.impl.T100MUser;
@@ -218,7 +218,7 @@ public class OrderSearchViewHelper extends HtmlViewHelper {
         name = getContext("common.page.search");
         contextList.add(ButtonSet.builder()
                 .id(SEARCH_BTN_ID).buttonName(name).isBorderOnly(true)
-                .grids(CssGridsType.G1).outPutType(ButtonSetType.NORMAL).gridFlexType(GridFlexType.RIGHT)
+                .grids(CssGridsType.G1).outPutType(ButtonSetType.NORMAL).gridFlexType(GridFlexType.LEFT)
                 .iconSet(IconSet.builder().type(IconSetType.SEARCH).css(IconSetCss.NOMAL_10).build())
                 .build().html());
 
@@ -320,24 +320,28 @@ public class OrderSearchViewHelper extends HtmlViewHelper {
             // --col2--
             clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_ORDER_AMOUNT);
             context  = clmForm.getLabelName();
-            headTr.addTh(th().get(CssGridsType.G2, CssAlignType.CENTER, clmForm.getLabelName()));
+            headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, clmForm.getLabelName()));
             // --col3--
             clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_ORDER_TYPE);
             context  = clmForm.getLabelName();
             headTr.addTh(th().get(CssGridsType.G2, CssAlignType.CENTER, clmForm.getLabelName()));
             // --col4--
+            clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_PAY_TYPE);
+            context  = clmForm.getLabelName();
+            headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, clmForm.getLabelName()));
+            // --col5--
             clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_CHECK_STATUS);
             context  = clmForm.getLabelName();
             headTr.addTh(th().get(CssGridsType.G2, CssAlignType.CENTER, clmForm.getLabelName()));
-            // --col5--
+            // --col6--
             clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_BILL_STATUS);
             context  = clmForm.getLabelName();
             headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, clmForm.getLabelName()));
-            // --col6--
+            // --col7--
             clmForm = T200MOrder.getColumnInfo(T200MOrder.COL_PAY_DATE);
             context  = clmForm.getLabelName();
             headTr.addTh(th().get(CssGridsType.G2, CssAlignType.CENTER, clmForm.getLabelName()));
-            // --col7--
+            // --col8--
             context         = getContext("common.page.do");
             headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, context));
         }
@@ -367,6 +371,10 @@ public class OrderSearchViewHelper extends HtmlViewHelper {
                         .context(orderInfo.getCheckStatusName())
                         .classType(CheckStatusType.keyOf(orderInfo.getOrder().getCheckStatus()).getClassType()).build().html();
                 
+                String payTypeName = PTextSet.builder()
+                        .context(orderInfo.getPayTypeName())
+                        .classType(PayType.keyOf(orderInfo.getOrder().getPayType()).getClassType()).build().html();
+                
                 String amount = formatCurrencyZH(orderInfo.getOrder().getOrderAmount());
                 String payDate = orderInfo.getOrder().getPayDate();
              // --col2--
@@ -395,16 +403,18 @@ public class OrderSearchViewHelper extends HtmlViewHelper {
                     // --col1--
                     tr.addTd(td().get(CssGridsType.G2, CssAlignType.LEFT, orderInfo.getId()));
                     // --col2--
-                    tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, amount));
+                    tr.addTd(td().get(CssGridsType.G1, CssAlignType.CENTER, amount));
                     // --col3--
                     tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, orderTypeName));
                     // --col4--
-                    tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, checkStatusName));
+                    tr.addTd(td().get(CssGridsType.G1, CssAlignType.CENTER, payTypeName));
                     // --col5--
-                    tr.addTd(td().get(CssGridsType.G1, CssAlignType.CENTER, billStatusName));
+                    tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, checkStatusName));
                     // --col6--
-                    tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, payDate));
+                    tr.addTd(td().get(CssGridsType.G1, CssAlignType.CENTER, billStatusName));
                     // --col7--
+                    tr.addTd(td().get(CssGridsType.G2, CssAlignType.CENTER, payDate));
+                    // --col8--
                     tr.addTd(td().get(CssGridsType.G1, CssAlignType.CENTER, btnContext));
                 }
                 bodyList.add(tr);

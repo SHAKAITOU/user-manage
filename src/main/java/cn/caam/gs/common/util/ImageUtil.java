@@ -148,12 +148,12 @@ public class ImageUtil {
 		}
 	}
 	
-	public static String resizeImageToBase64(byte[] bytes, int w, int h) throws IOException{
+	public static String resizeImageToBase64(byte[] bytes, int w, int h, String type) throws IOException{
 		if (bytes == null || bytes.length == 0) {
 			return null;
 		}
 		
-		return Base64.encodeBase64String(resizeImage(bytes, w, h));
+		return Base64.encodeBase64String(resizeImage(bytes, w, h, type));
 	}
 	
 	public static byte[] resize(byte[] bytes, int targetW, int targetH) throws IOException {
@@ -220,17 +220,17 @@ public class ImageUtil {
      * @param h					目标图像高度
      * @return BufferedImage
      */
-    public static byte[] resizeImage(byte[] bytes, int w, int h) throws IOException{
+    public static byte[] resizeImage(byte[] bytes, int w, int h, String type) throws IOException{
     	InputStream input = new ByteArrayInputStream(bytes);
-    	BufferedImage newImage = imageReSize(ImageIO.read(input), w, h, "jpg", true);
-    	input.close();
+    	BufferedImage newImage = imageReSize(ImageIO.read(input), w, h, type, true);
+//    	input.close();
     	
 //    	ByteArrayOutputStream os = new ByteArrayOutputStream();
 //    	ImageIO.write(newImage, "png", os);
 //    	return os.toByteArray();
     	
     	ByteArrayOutputStream os = new ByteArrayOutputStream();
-    	ImageIO.write(newImage, "jpg", os);
+    	ImageIO.write(newImage, type, os);
 //    	ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
 //    	ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 //    	

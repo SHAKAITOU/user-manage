@@ -90,6 +90,8 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
     public static final String HID_HIDE_SEARCH                = "hideSearch";
     public static final String HID_LIMIT                      = "limit";
     public static final String HID_OFFSET                     = "offset";
+    public static final String HID_SORTNAME                   = "sortName";
+    public static final String HID_SORTORDER                  = "sortOrder";
     public static final String HIDE_SELECTEDU_SER_ID          = "selectedUserId";
     public static final String HIDE_LOGIN_TYPE         		  = "loginType";
     public static final int    HEADER_HEIGHT                  = 450;
@@ -372,7 +374,7 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         cardBody.append(setHidden(pageForm));
         cardBody.append(setShowMore(request));
         cardBody.append(divRow().cellBlank(5));
-        cardBody.append(setUserListTable(request, userListOutput.getUserList()));
+        cardBody.append(setUserListTable(request, pageForm, userListOutput.getUserList()));
         String cardTitle = getContext("admin.userList.table.title");
         int startIndex = pageForm.getLimit()*(pageForm.getUserPageLinkIdPrefixIndex());
         int endIndex = startIndex + userListOutput.getUserList().size();
@@ -393,6 +395,8 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         sb.append(hidden().get(HID_HIDE_SEARCH,  String.valueOf(pageForm.isHideSearch())));
         sb.append(hidden().get(HID_LIMIT,  String.valueOf(pageForm.getLimit())));
         sb.append(hidden().get(HID_OFFSET, String.valueOf(pageForm.getOffset())));
+        sb.append(hidden().get(HID_SORTNAME, String.valueOf(pageForm.getSortName())));
+        sb.append(hidden().get(HID_SORTORDER, String.valueOf(pageForm.getSortOrder())));
 //        sb.append(hidden().get(HIDE_LOGIN_TYPE, LoginInfoHelper.getLoginAccountType(request).getKey()));
         sb.append(hidden().get(HIDE_SELECTEDU_SER_ID, ""));
         return sb.toString();
@@ -431,7 +435,7 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
         return HtmlPageLinkedHelper.getPageLinkedHtml(paginationHolder);
     }
     
-    private static String setUserListTable(HttpServletRequest request, 
+    private static String setUserListTable(HttpServletRequest request, UserSearchForm pageForm, 
             List<UserInfo> userList) {
         //head
         TrSet headTr = tr().head(CssClassType.INFO);
@@ -473,13 +477,13 @@ public class AdminUserSearchViewHelper extends HtmlViewHelper {
             headTr.addTh(th().get(CssGridsType.G2, CssAlignType.CENTER, context));
             // --col7--入会时间
             context         = T100MUser.getColumnInfo(T100MUser.COL_REGIST_DATE).getLabelName();
-            headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, context));
+            headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, true, T100MUser.getColumnInfo(T100MUser.COL_REGIST_DATE).getName(), pageForm.getSortName(), pageForm.getSortOrder(),  context));
             // --col8--会员有效期
             context         = T100MUser.getColumnInfo(T100MUser.COL_VALID_END_DATE).getLabelName();
-            headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, context));
+            headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, true, T100MUser.getColumnInfo(T100MUser.COL_VALID_END_DATE).getName(), pageForm.getSortName(), pageForm.getSortOrder(),  context));
             // --col9--有效状态
             context         = getContext("admin.userList.validStatus");
-            headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, context));
+            headTr.addTh(th().get(CssGridsType.G1, CssAlignType.CENTER, true, T100MUser.getColumnInfo(T100MUser.COL_VALID_STATUS).getName(), pageForm.getSortName(), pageForm.getSortOrder(),  context));
             // --col10--操作
             context         = getContext("common.page.do");
             headTr.addTh(th().get(CssGridsType.G2, CssAlignType.CENTER, context));

@@ -40,7 +40,7 @@ public class AdminUserReviewSearchController extends JcbcBaseController{
 			pageForm.setSearchMode(AdminUserReviewSearchViewHelper.SEARCH_MODE_WAIT_LIST);
 		}
 		 pageForm.setUserPageLinkIdPrefixIndex(0);
-	     UserListOutput userListOutput = userService.getUserList(pageForm);
+	     UserListOutput userListOutput = userService.getUserList(request, pageForm);
 
 		return ControllerHelper.getModelAndView(
 		        AdminUserReviewSearchViewHelper.getMainPage(request, pageForm, userListOutput));
@@ -57,7 +57,7 @@ public class AdminUserReviewSearchController extends JcbcBaseController{
 		}
 	    
         pageForm.setUserPageLinkIdPrefixIndex(0);
-        UserListOutput userListOutput = userService.getUserList(pageForm);
+        UserListOutput userListOutput = userService.getUserList(request, pageForm);
         return ControllerHelper.getModelAndView(
                 AdminUserReviewSearchViewHelper.refeshTable(request, pageForm, userListOutput));
     }
@@ -69,7 +69,7 @@ public class AdminUserReviewSearchController extends JcbcBaseController{
             HttpServletResponse response) {
 
 	    pageForm.setOffset(pageForm.getLimit()*pageForm.getUserPageLinkIdPrefixIndex());
-	    UserListOutput userListOutput = userService.getUserList(pageForm);
+	    UserListOutput userListOutput = userService.getUserList(request, pageForm);
         return ControllerHelper.getModelAndView(
                 AdminUserReviewSearchViewHelper.refeshTable(request, pageForm, userListOutput));
     }

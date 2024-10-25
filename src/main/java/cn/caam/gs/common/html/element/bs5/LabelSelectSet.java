@@ -93,7 +93,7 @@ public class LabelSelectSet {
     
     private String getMulti() {
         StringBuffer sb = new StringBuffer();
-        sb.append("<select multiple='' style='background-color:" + GlobalConstants.INPUT_BG_COLOER + "' class='form-control input-sm item-input-select' name='"+name+"'");
+        sb.append("<select multiple style='background-color:" + GlobalConstants.INPUT_BG_COLOER + "' class='selectpicker show-tick form-control' name='"+name+"' title='请选择"+labelName+"'");
         sb.append(" id='"+id+"'");
         if(size > 1) {
             sb.append(" size='"+size+"'");

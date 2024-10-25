@@ -50,6 +50,12 @@ RegistStep2.prototype.init = function(){
 	
 	self.initEvent();
 	
+	$(document).ready(function () {
+		    $('.selectpicker').selectpicker({
+			        "width":100, 'maxOptions':60
+			    });
+		});
+	
     //set init focus item when page loaded
 	self.initFocus();
 };

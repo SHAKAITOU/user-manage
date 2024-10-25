@@ -27,6 +27,7 @@ import cn.caam.gs.app.admin.userreview.view.AdminUserReviewViewHelper;
 import cn.caam.gs.app.admin.usersearch.view.AdminUserImportViewHelper;
 import cn.caam.gs.app.admin.usersearch.view.AdminUserSearchViewHelper;
 import cn.caam.gs.app.admin.usertypesettings.view.UserTypeSettingsViewHelper;
+import cn.caam.gs.app.common.view.BindPhoneChangeViewHelper;
 import cn.caam.gs.app.common.view.CommonViewHelper;
 import cn.caam.gs.app.common.view.MessageDetailViewHelper;
 import cn.caam.gs.app.common.view.OrderDetailViewHelper;
@@ -37,6 +38,7 @@ import cn.caam.gs.app.common.view.UserCertiCommonViewHelper;
 import cn.caam.gs.app.common.view.UserDetailViewHelper;
 import cn.caam.gs.app.user.login.view.LoginViewHelper;
 import cn.caam.gs.app.user.message.view.MessageSearchViewHelper;
+import cn.caam.gs.app.user.order.view.OrderPayInfoHelper;
 import cn.caam.gs.app.user.order.view.OrderSearchViewHelper;
 import cn.caam.gs.app.user.order.view.OrderViewHelper;
 import cn.caam.gs.app.user.userreview.view.UserReviewSearchViewHelper;
@@ -207,6 +209,7 @@ public class JavaScriptSet {
 
 		jsView.put("orderSearch",          OrderSearchViewHelper.getJsProperties());
 		jsView.put("order",                OrderViewHelper.getJsProperties());
+		jsView.put("orderPayInfo",         OrderPayInfoHelper.getJsProperties());
 		
 		jsView.put("userReviewSearch",     UserReviewSearchViewHelper.getJsProperties());
 		
@@ -215,6 +218,7 @@ public class JavaScriptSet {
 		jsView.put("passwordChange",       PasswordChangeViewHelper.getJsProperties());
 		jsView.put("passwordForget",       PasswordForgetViewHelper.getJsProperties());
 		jsView.put("passwordReset",        PasswordResetViewHelper.getJsProperties());
+		jsView.put("bindPhoneChange",        BindPhoneChangeViewHelper.getJsProperties());
 		
 		return jsView;
 	}

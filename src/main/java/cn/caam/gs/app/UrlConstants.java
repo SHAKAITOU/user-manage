@@ -75,6 +75,7 @@ public class UrlConstants {
     public static final String DOWNLOAD		= "/download";
     public static final String IMPORT		= "/import";
     public static final String EXPORT		= "/export";
+    public static final String PAY			= "/pay";
 	//BATCH
 	public static final String BATCH 			= "/batch";
 	/* ===================ADMIN ROLE URL========================= */

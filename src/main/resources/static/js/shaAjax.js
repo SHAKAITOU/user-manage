@@ -152,7 +152,7 @@ try{
 					    	ShaDialog.dialogs.progress(false);
 					    	ShaDialog.dialogs.alert(data.responseJSON.message);
 					    },
-						401: function(data) {
+						401: function(xhr, status) {
 							ShaDialog.dialogs.progress(false);
 							let location = xhr.getResponseHeader('Location') != "" ? xhr.getResponseHeader('Location'):"/login/logout";
 							ShaDialog.dialogs.alertWithCallBack(
@@ -243,7 +243,7 @@ try{
 					    	ShaDialog.dialogs.progress(false);
 					    	ShaDialog.dialogs.alert(data.responseJSON.message);
 					    },
-						401: function(data) {
+						401: function(xhr, status) {
 							ShaDialog.dialogs.progress(false);
 							let location = xhr.getResponseHeader('Location') != "" ? 
 								xhr.getResponseHeader('Location'):"/login/logout";
@@ -325,7 +325,7 @@ try{
 						    	ShaDialog.dialogs.progress(false);
 						    	ShaDialog.dialogs.alert(data.responseJSON.message);
 						    },
-							401: function(data) {
+							401: function(xhr, status) {
 								ShaDialog.dialogs.progress(false);
 								let location = xhr.getResponseHeader('Location') != "" ? 
 									xhr.getResponseHeader('Location'):"/login/logout";

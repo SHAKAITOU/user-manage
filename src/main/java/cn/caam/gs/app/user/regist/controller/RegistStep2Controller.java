@@ -4,6 +4,7 @@ package cn.caam.gs.app.user.regist.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
@@ -63,9 +64,12 @@ public class RegistStep2Controller extends ScreenBaseController{
             RegistForm pageForm,
             HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-	    RegistForm registForm = (RegistForm)request.getSession().getAttribute(SessionConstants.USER_REGIST.getValue());
+//	    RegistForm registForm = (RegistForm)request.getSession().getAttribute(SessionConstants.USER_REGIST.getValue());
+		if (Strings.isBlank(pageForm.getUser().getPhone())) {
+			return ExecuteReturnType.NG.getId();
+		}
 	    
-	    if (userService.isPhoneNumberExist(registForm.getUser().getPhone())) {
+	    if (userService.isPhoneNumberExist(pageForm.getUser().getPhone())) {
 	    	return ExecuteReturnType.NG.getId();
 	    }
 	    
@@ -73,8 +77,8 @@ public class RegistStep2Controller extends ScreenBaseController{
 //	    	return ExecuteReturnType.NG.getId();
 //	    }
 	    
-	    pageForm.getUser().setPhone(registForm.getUser().getPhone());
-	    pageForm.getUser().setMail(registForm.getUser().getMail());
+//	    pageForm.getUser().setPhone(registForm.getUser().getPhone());
+//	    pageForm.getUser().setMail(registForm.getUser().getMail());
 	    userService.insertUserInfo(pageForm);
 	    return ExecuteReturnType.OK.getId();
     }

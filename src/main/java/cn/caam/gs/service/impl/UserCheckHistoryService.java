@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cn.caam.gs.app.common.output.UserCheckHistoryListOutput;
 import cn.caam.gs.app.util.LoginInfoHelper;
+import cn.caam.gs.common.enums.DeleteType;
 import cn.caam.gs.common.enums.MsgType;
 import cn.caam.gs.common.enums.SexType;
 import cn.caam.gs.common.enums.SmsConfigType;
@@ -93,11 +94,11 @@ public class UserCheckHistoryService extends BaseService {
         user.setCheckStatus(mUserCheckHistory.getCheckStatus());
         user.setCheckDate(mUserCheckHistory.getCheckDate());
         userDb.setCheckStatus(mUserCheckHistory.getCheckStatus());
+        userDb.setCheckDate(mUserCheckHistory.getCheckDate());
         if (UserCheckStatusType.REFUSED.getKey().equals(user.getCheckStatus())) {//审核不通过
         	user.setValidStatus(ValidType.INVALID.getKey());
+//        	user.setDeleted(DeleteType.DELETED.getkey());
         }
-        userDb.setCheckDate(mUserCheckHistory.getCheckDate());
-        userMapper.updateByPrimaryKeySelective(user);
         
         if (UserCheckStatusType.PASS.getKey().equals(user.getCheckStatus())) {//审核通过
 			MUserCard userCard = new MUserCard();
@@ -111,7 +112,12 @@ public class UserCheckHistoryService extends BaseService {
 			userCard.setCreatedAt(LocalDateUtility.getCurrentDateTimeString(DateTimePattern.UUUUHMMHDDHHQMIQSS));
 			
 			userCardMapper.insert(userCard);
+			
+			user.setRegistDate(LocalDateUtility.getCurrentDateTimeString(DateTimePattern.UUUUHMMHDDHHQMIQSS));
+			user.setValidStatus(ValidType.VALID.getKey());
         }
+        
+        userMapper.updateByPrimaryKeySelective(user);
         
         MMessage message = new MMessage();
         /*

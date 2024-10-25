@@ -20,7 +20,7 @@
       <ul class="navbar-nav col-8 me-auto">
         <li class="nav-item dropdown">
 			<a class="nav-link dropdown-toggle label-16b" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-            	<i class="fas fa-stamp"></i>&nbsp;[[#{user.menu.group1}]]
+            	<i class="fas fa-user-check"></i>&nbsp;[[#{user.menu.group1}]]
 			</a>
       		<div class="dropdown-menu" style="min-width:200px">
 	            <!-- =================== group1 ================ -->
@@ -31,17 +31,19 @@
 						</a>
 	            	</div>
 	            </div>
+	            <th:block th:if="${session.loginInfo.user.validStatus == '1'}">
 	            <div class="row">
 					<div class="col-12">
 						<a class="dropdown-item label-16b menu1002" href="#">
-	 						<i class="fas fa-address-card"></i>&nbsp;[[#{user.menu.group1.button2}]]
+	 						<i class="fas fa-user-edit"></i>&nbsp;[[#{user.menu.group1.button2}]]
 	 					</a>
 	                </div>
 				</div>
+				</th:block>
 	            <!-- ========================================= -->
 			</div>
 		</li>
-
+		<th:block th:if="${session.loginInfo.user.validStatus == '1'}">
 		<li class="nav-item dropdown">
 			<a class="nav-link dropdown-toggle label-16b" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
 						<i class="fas fa-stamp"></i>&nbsp;[[#{user.menu.group2}]]
@@ -65,6 +67,7 @@
 		        <!-- ========================================= -->
 			</div>
 		</li>
+		</th:block>
 		<!--<li class="nav-item dropdown">
 			<a class="nav-link dropdown-toggle label-16b" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
 				<i class="fas fa-receipt"></i>&nbsp;[[#{user.menu.group3}]]
@@ -82,14 +85,14 @@
 		</li>-->
 		<li class="nav-item dropdown">
 			<a class="nav-link dropdown-toggle label-16b" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-				<i class="fas fa-thumbs-up"></i>&nbsp;[[#{user.menu.group4}]]
+				<i class="fas fa-user-edit"></i>&nbsp;[[#{user.menu.group4}]]
 			</a>
 			<div class="dropdown-menu" style="min-width:200px">
 				<!-- =================== group4 ================ -->
 				<div class="row">
 					<div class="col-12">
 						<a id="menu4001" class="dropdown-item label-16b menu4001" href="#">
-							<i class="fas fa-stamp"></i>&nbsp;[[#{user.menu.group4.button1}]]
+							<i class="fas fa-users"></i>&nbsp;[[#{user.menu.group4.button1}]]
 						</a>
 					</div>
 				</div>				
@@ -124,6 +127,13 @@
 					</div>
 					<div class="row">
 						<div class="col-12">
+							<a class="dropdown-item label-16b menu9004" href="#">
+								<i class="fas fa-link" aria-hidden="true"></i>&nbsp;[[#{user.menu.group9.button4}]]
+							</a>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12">
 							<a class="dropdown-item label-16b menu9003" href="#">
 								<i class="fa fa-sign-out-alt" aria-hidden="true"></i>&nbsp;[[#{user.menu.group9.button3}]]
 							</a>
@@ -150,7 +160,7 @@
 					<!-- =================== group1 ================ -->
 					<div class="row">
 						<div class="col-12 label-16">
-							<strong>&nbsp;<i class="fas fa-stamp"></i>&nbsp;&nbsp;[[#{user.menu.group1}]]</strong>
+							<strong>&nbsp;<i class="fas fa-user-check"></i>&nbsp;&nbsp;[[#{user.menu.group1}]]</strong>
 						</div>
 					</div>
 					<div class="dropdown-divider"></div>
@@ -160,15 +170,18 @@
 								<i class="fas fa-user"></i>&nbsp;&nbsp;[[#{user.menu.group1.button1}]]
 							</a>
 						</div>
+						<th:block th:if="${session.loginInfo.user.validStatus == '1'}">
 						<div class="col-6">
 							<a class="dropdown-item menu1002" href="#"> 
-								<i class="fas fa-address-card"></i>&nbsp;&nbsp;[[#{user.menu.group1.button2}]]
+								<i class="fas fa-user-edit"></i>&nbsp;&nbsp;[[#{user.menu.group1.button2}]]
 							</a>
 						</div>
+						</th:block>
 					</div>
 					<!-- ========================================= -->
 					
 					<!-- =================== group2 ================ -->
+					<th:block th:if="${session.loginInfo.user.validStatus == '1'}">
 					<div class="dropdown-divider"></div>
 					<div class="row">
 						<div class="col-12 label-16">
@@ -188,6 +201,7 @@
 							</a>
 						</div>-->
 					</div>
+					</th:block>
 					<!-- ========================================= -->
 					
 					<!-- =================== group3 ================ -->
@@ -215,13 +229,13 @@
 					<div class="dropdown-divider"></div>
 					<div class="row">
 						<div class="col-12 label-16">
-							<strong>&nbsp;<i class="fas fa-thumbs-up"></i>&nbsp;&nbsp;[[#{user.menu.group4}]]</strong>
+							<strong>&nbsp;<i class="fas fa-user-edit"></i>&nbsp;&nbsp;[[#{user.menu.group4}]]</strong>
 						</div>
 						</div>
 					<div class="row">
 						<div class="col-6">
 							<a class="dropdown-item menu4001" href="#"> 
-								<i class="fas fa-stamp"></i>&nbsp;&nbsp;[[#{user.menu.group4.button1}]]
+								<i class="fas fa-users"></i>&nbsp;&nbsp;[[#{user.menu.group4.button1}]]
 							</a>
 						</div>
 						<div class="col-6">
@@ -251,12 +265,14 @@
 					</div>
 					<div class="row">
 						<div class="col-6">
-							<a class="dropdown-item menu9003" href="#"> 
-								<i class="fa fa-sign-out-alt" aria-hidden="true"></i>&nbsp;[[#{user.menu.group9.button3}]]
+							<a class="dropdown-item menu9004" href="#"> 
+								<i class="fas fa-link"></i>&nbsp;[[#{user.menu.group9.button4}]]
 							</a>
 						</div>
 						<div class="col-6">
-							
+							<a class="dropdown-item menu9003" href="#"> 
+								<i class="fa fa-sign-out-alt" aria-hidden="true"></i>&nbsp;[[#{user.menu.group9.button3}]]
+							</a>
 						</div>
 					</div>
 					<!-- ========================================= -->

@@ -4,6 +4,7 @@ public enum AcceptFileType {
 
     IMAGE(EnumIndex.startIndex(0), ".jpg, .jpeg, .png"),
     PDF(EnumIndex.getNext(), ".pdf"),
+    IMAGE_PDF(EnumIndex.getNext(), ".jpg, .jpeg, .png, .pdf"),
 	EXCEL(EnumIndex.getNext(), ".xlsx");
     
     /** type. */

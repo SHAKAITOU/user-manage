@@ -19,6 +19,8 @@ ShaUtil.other.inherits(Order, BaseJsController);
 //------------properties define-------------[
 Order.prototype.ID = {
 	
+	BTN_PAY_QRCODE : "btnPayQrCode",
+	BTN_PAY_BANK : "btnPayBank",
 	BTN_CLOSE : "btnClose",
     BTN_ADD   : "btnAdd",
 	SEARCH_BTN_ID :"searchBtn",
@@ -26,6 +28,7 @@ Order.prototype.ID = {
     PREFIX_NAME                   : "order_",
     ITEM_ORDER_METHOD             : "orderMethod",
     ITEM_ORDER_TYPE               : "orderType",
+	ITEM_PAY_TYPE                 : "payType",
 	ITEM_ORDER_AMOUNT             : "orderAmount",
 	ITEM_INVOICE_TYPE             : "invoiceType",
 	ITEM_INVOICE_TITLE            : "invoiceTitle",
@@ -62,11 +65,13 @@ Order.prototype.initEvent = function(){
 	ShaInput.obj.readonly(selectObj);
 	selectObj.find('option:not(:selected)').attr('disabled', true);
 	
-	selectObj = self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_ORDER_TYPE);
-	ShaInput.obj.readonly(selectObj);
-	selectObj.find('option:not(:selected)').attr('disabled', true);
+	//selectObj = self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_ORDER_TYPE);
+	//ShaInput.obj.readonly(selectObj);
+	//selectObj.find('option:not(:selected)').attr('disabled', true);
 	
 	ShaInput.obj.disabled(self.getObject(self.ID.ITEM_ORDER_PHOTO_NAME));
+	
+	self.getObject(self.ID.BTN_PAY_BANK).hide();
 	
 	//init event to BTN_EDUCATIONAL_AT
 	ShaInput.button.onClick(self.getObject(self.ID.BTN_ORDER_PHOTO_OPEN), 
@@ -112,7 +117,36 @@ Order.prototype.initEvent = function(){
 	    }
 	);
 	
-	//init event to BTN_BACK
+	ShaInput.button.onChange(self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_PAY_TYPE), 
+		function(event) {
+			if (self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_PAY_TYPE).val() === '01') {//在线支付
+					self.getObject(self.ID.BTN_PAY_QRCODE).show();
+					self.getObject(self.ID.BTN_PAY_BANK).hide();
+			   } else {
+					self.getObject(self.ID.BTN_PAY_QRCODE).hide();
+					self.getObject(self.ID.BTN_PAY_BANK).show();
+			   }
+	    }
+	);
+	
+	//init event to BTN_PAY_QRCODE
+	ShaInput.button.onClick(self.getObject(self.ID.BTN_PAY_QRCODE), 
+		function(event) {
+			ShaAjax.pop.postSubDialogMiddleCenter(
+				self.i18n["order.payInfo.title"],
+				self.jsContext.jsView.orderPayInfo.url_init, 
+				[{name:"payType", value:self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_PAY_TYPE).val()}]);
+	    }
+	);
+	
+	//init event to BTN_PAY_BANK
+	ShaInput.button.onClick(self.getObject(self.ID.BTN_PAY_BANK), 
+		function(event) {
+			self.getObject(self.ID.BTN_PAY_QRCODE).click();
+	    }
+	);
+	
+	//init event to BTN_ADD
 	ShaInput.button.onClick(self.getObject(self.ID.BTN_ADD), 
 		function(event) {
 			if(self.check()) {
@@ -154,12 +188,12 @@ Order.prototype.check = function(){
     var inputCheckItemList = [
         [ self.i18n["m_order.order_amount"], 	self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_ORDER_AMOUNT)], 
         [ self.i18n["m_image.order_photo"], 	self.getObject(self.ID.ITEM_ORDER_PHOTO_NAME)], 
-		[ self.i18n["m_order.invoice_title"], 	self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_INVOICE_TITLE)], 
-		[ self.i18n["m_order.mail"], 	        self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_MAIL)], 
+		//[ self.i18n["m_order.invoice_title"], 	self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_INVOICE_TITLE)], 
+		//[ self.i18n["m_order.mail"], 	        self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_MAIL)], 
     ];
-	if (self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_INVOICE_TYPE).val() !== '01') {//个人
+	/*if (self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_INVOICE_TYPE).val() !== '01') {//个人
 		inputCheckItemList.push([ self.i18n["m_order.credit_code"], 	self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_CREDIT_CODE)]);
-	}
+	}*/
     
     if (ShaCheck.check.checkNotBlank(inputCheckItemList)) {
 		return true;
@@ -180,12 +214,27 @@ Order.prototype.check = function(){
 		return true;
 	}*/
 	
-	if (self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_INVOICE_TYPE).val() !== '01' &&
-		ShaCheck.check.checkCreditCode([[ self.i18n["m_order.credit_code"], self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_CREDIT_CODE)]])){
-		return true;
+	if (self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_INVOICE_TYPE).val() == '02'){
+		if (self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_INVOICE_TITLE).val() != '' && self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_CREDIT_CODE).val() == ''){
+			if (ShaCheck.check.checkNotBlank([[self.i18n["m_order.credit_code"], 	self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_CREDIT_CODE)]])) {
+				return true;
+			}
+		}
+		
+		if (self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_INVOICE_TITLE).val() == '' && self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_CREDIT_CODE).val() != ''){
+			if (ShaCheck.check.checkNotBlank([[self.i18n["m_order.invoice_title"], 	self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_INVOICE_TITLE)]])) {
+				return true;
+			}
+		}
+			
+		if(self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_CREDIT_CODE).val() != '' &&
+				ShaCheck.check.checkCreditCode([[ self.i18n["m_order.credit_code"], self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_CREDIT_CODE)]])){
+			return true;
+		}
 	}
 	
-	if (ShaCheck.check.checkEmail([[ self.i18n["m_order.mail"], self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_MAIL)]])){
+	if (self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_MAIL).val() != '' && 
+			ShaCheck.check.checkEmail([[ self.i18n["m_order.mail"], self.getObject(self.ID.PREFIX_NAME + self.ID.ITEM_MAIL)]])){
 		return true;
 	}
 		

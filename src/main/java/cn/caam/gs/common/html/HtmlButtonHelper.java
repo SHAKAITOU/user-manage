@@ -75,6 +75,15 @@ public class HtmlButtonHelper {
                 .build().html();
     }
     
+    public String getBorder(IconSetType icon, CssClassType classType, String id, String buttonName, String keyValue, String classDistinctName) {
+        return ButtonSet.builder().outPutType(ButtonSetType.NORMAL)
+                .isBorderOnly(true)
+                .classType(classType).id(id).keyValue(keyValue)
+                .buttonName(IconSet.builder().type(icon).css(IconSetCss.NOMAL_10).build().html()+ UtilConstants.HTML_SPACE  + buttonName)
+                .classDistinctName(classDistinctName)
+                .build().html();
+    }
+    
     public String get(IconSetType icon, CssClassType classType, String id, String keyValue, String classDistinctName) {
         return ButtonSet.builder().outPutType(ButtonSetType.NORMAL)
                 .classType(classType).id(id).keyValue(keyValue)

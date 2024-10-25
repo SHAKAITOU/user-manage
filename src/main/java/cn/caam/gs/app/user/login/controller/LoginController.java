@@ -202,7 +202,8 @@ public class LoginController extends ScreenBaseController{
 		    }
 		}else {//会员号登录
 			 userInfo = userService.getLoginUserInfo(loginForm.getUserCode());
-			 
+			// TODO auth check
+		     String authCode = (String)request.getSession().getAttribute(SessionConstants.VERIFY_CODE.getValue());
 			 String ePw = EncryptorUtil.encrypt(Optional.ofNullable(loginForm.getPassword()).orElse(""));
 			if (request.getSession().getAttribute(SessionConstants.VERIFY_CODE.getValue()) == null) {
 	            okFlag = false;
@@ -210,7 +211,10 @@ public class LoginController extends ScreenBaseController{
 	        } else if (userInfo == null) {
 			    loginForm.setErrorMsg(messageSourceUtil.getContext("login.fail.msg.notexist"));
 			    okFlag = false;
-			} else if(!userInfo.getUser().getPassword().equals(ePw)) {
+			} else if(!authCode.equals(loginForm.getAuthImgNumber())) {
+	            loginForm.setErrorMsg(messageSourceUtil.getContext("login.confirm.wrongAuthCode"));
+	            okFlag = false;
+	        } else if(!userInfo.getUser().getPassword().equals(ePw)) {
 			    loginForm.setErrorMsg(messageSourceUtil.getContext("login.fail.msg.wrongPw"));
 			    okFlag = false;
 			} else {
@@ -218,8 +222,6 @@ public class LoginController extends ScreenBaseController{
 			}
 		}
 		
-		// TODO auth check
-        String authCode = (String)request.getSession().getAttribute(SessionConstants.VERIFY_CODE.getValue());
 		
 		ModelAndView mav = new ModelAndView();
 		if(noSession) {

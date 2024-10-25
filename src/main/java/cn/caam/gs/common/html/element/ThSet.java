@@ -3,9 +3,12 @@ package cn.caam.gs.common.html.element;
 
 import java.util.Objects;
 
+import org.apache.logging.log4j.util.Strings;
+
 import cn.caam.gs.app.GlobalConstants;
 import cn.caam.gs.common.enums.CssAlignType;
 import cn.caam.gs.common.enums.CssFontSizeType;
+import cn.caam.gs.common.enums.SortOrderType;
 import cn.caam.gs.common.html.element.bs5.IconSet;
 import cn.caam.gs.common.html.element.bs5.IconSet.IconSetCss;
 import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
@@ -25,6 +28,10 @@ public class ThSet {
     private CssFontSizeType fontSize;
     private CssAlignType align;
     private ThSetType outPutType;
+    private boolean sort;
+    private String sortName;
+    private String selectedSortName;
+    private String selectedSortOrder;
     
     public String html() {
         if(outPutType == ThSetType.INDEX) {
@@ -91,6 +98,16 @@ public class ThSet {
         sb.append(" text-align: "+cssAlignType.getKey()+";'>");
         for (String context : contexts) {
             sb.append(context);
+            if (sort) {
+	            sb.append("<span style='display: -ms-inline-flexbox; display: inline-flex; -ms-flex-direction: column; flex-direction: column; -ms-flex-align: center; align-items: center;'>");
+	            
+	            boolean isSortUpSelected = !Strings.isBlank(selectedSortName) && selectedSortName.equalsIgnoreCase(sortName) && SortOrderType.ASC.getKey().equalsIgnoreCase(selectedSortOrder);
+	            boolean isSortDownSelected = !Strings.isBlank(selectedSortName) && (selectedSortName.equalsIgnoreCase(sortName) && SortOrderType.DESC.getKey().equalsIgnoreCase(selectedSortOrder));
+	            
+	            sb.append("<i class='fas fa-sort-up"+(isSortUpSelected ? "":" sort-object")+"' style='height: 3px;"+(isSortUpSelected ? "color: #8c8c8c;":" cursor: pointer;")+"' sort-name='"+sortName+"' sort-order='"+SortOrderType.ASC.getKey()+"'></i>");
+	            sb.append("<i class='fas fa-sort-down"+(isSortDownSelected ? "":" sort-object")+"' style='height: 3px;"+(isSortDownSelected ? "color: #8c8c8c;":" cursor: pointer;")+"' sort-name='"+sortName+"' sort-order='"+SortOrderType.DESC.getKey()+"'></i>");
+	            sb.append("</span>");
+            }
         }
         sb.append("</div>");
         sb.append("</div>");

@@ -119,8 +119,10 @@ public class OrderService extends BaseService {
 	    order.setPayDate(LocalDateUtility.getCurrentDateTimeString(DateTimePattern.UUUUHMMHDDHHQMIQSS));
 	    order.setCheckStatus(CheckStatusType.WAIT_FOR_REVIEW.getKey());
 	    order.setBillStatus(BillStatusType.TO_BE_INVOICED.getKey());
-	    order.setOrderType(OrderType.RENEWAL.getKey());
+//	    order.setOrderType(OrderType.RENEWAL.getKey());
 //	    order.setPayType(PayType.OFFLINE.getKey());
+	    order.setOrderType(pageForm.getOrder().getOrderType());
+	    order.setPayType(pageForm.getOrder().getPayType());
 	    mOrderMapper.insert(order);
 	    
 	    MImage image = new MImage();

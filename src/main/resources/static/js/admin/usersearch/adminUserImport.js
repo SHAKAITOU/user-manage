@@ -71,8 +71,8 @@ AdminUserImport.prototype.initEvent = function(){
 	            return;
 	        }
 	        ShaDialog.dialogs.confirm(
-				self.i18n["dialogs.confirm.upload.title"], 
-				self.i18n["dialogs.confirm.upload.msg"], 
+				self.i18n["dialogs.confirm.import.title"], 
+				self.i18n["dialogs.confirm.import.msg"], 
 				function () {
 	        		self.getObject(self.ID.BTN_CLOSE).click();
 					ShaAjax.ajax.postWithUploadFile(
@@ -81,10 +81,10 @@ AdminUserImport.prototype.initEvent = function(){
 						function (data) {
 							if (data.executeReturnType == Pos.constants.setInfo.common.executeReturnTypeOk){
 								ShaDialog.dialogs.success(self.i18n["userImport.success.msg"]+"\n"+data.result);
-								self.getObjectInForm(self.fatherForm, self.ID.SEARCH_BTN_ID).click();
 							}else{
 								ShaDialog.dialogs.alert(data.result);
 							}
+							self.getObjectInForm(self.fatherForm, self.ID.SEARCH_BTN_ID).click();
 						}
 					);
 				}

@@ -29,6 +29,8 @@ AdminUserSearch.prototype.ID = {
     HIDE_SEARCH_PANEL_BTN_ID : "hideSearchPanelBtn",
     HID_HIDE_SEARCH          : "hideSearch",
 	HID_SELECTED_USER_ID     : "selectedUserId",
+	HID_SORTNAME             : "sortName",
+	HID_SORTORDER            : "sortOrder",
 	
 	ADD_BTN_ID               : "addBtn",
 	EXPORT_BTN_ID            : "exportBtn",
@@ -36,6 +38,7 @@ AdminUserSearch.prototype.ID = {
     
     USER_LIST_CHECK_ALL_ID   : "user_check_all",
     USER_CHECK_PREF_ID       : ".user_check_",
+	TABLE_BTN_SORT           : ".sort-object",
     TABLE_BTN_RESETPW        : ".restPw",
     TABLE_BTN_DETAIL         : ".detail",
 	TABLE_BTN_DELETE         : ".delete",
@@ -80,7 +83,7 @@ AdminUserSearch.prototype.init = function(){
 	} else {
 		self.getObject(self.ID.SHOW_SEARCH_PANEL_BTN_ID).click();
 	}
-
+	document.body.style.zoom = 0;
 };
 
 // init event
@@ -209,7 +212,7 @@ AdminUserSearch.prototype.initEvent = function(){
     	function(event) {
 			ShaAjax.ajax.getWithDownloadFile(
 		       self.jsContext.adminJsView.adminUserSearch.url_user_export, 
-			   "userSearchForm",
+			   self.getForm().serialize(),
 		       function(data, filename){
 					if (data.size == 0){
 						ShaDialog.dialogs.alert(self.i18n["dialogs.fail.title"]);
@@ -244,6 +247,19 @@ AdminUserSearch.prototype.initEvent = function(){
     		self.doPageLink();
     	}
     ); 
+	
+	
+	$tableBtnList = self.getObject(self.ID.USER_LIST_TABLE_ID).find(self.ID.TABLE_BTN_SORT);
+	$tableBtnList.each(function(i, elem){
+		//check box init
+	   	ShaInput.button.onClick($(elem),
+	    	function(event) {
+				self.getObject(self.ID.HID_SORTNAME).val($(elem).attr("sort-name"));
+				self.getObject(self.ID.HID_SORTORDER).val($(elem).attr("sort-order"));
+				self.doPageLink();
+			}
+	    );
+	});
 	
 	$tableBtnList = self.getObject(self.ID.USER_LIST_TABLE_ID).find(self.ID.TABLE_BTN_DETAIL);
 	$tableBtnList.each(function(i, elem){

@@ -210,7 +210,7 @@ public class BillViewHelper extends HtmlViewHelper {
         placeholder = clmForm.getPlaceholder();
         contextList.add(LabelInputSet.builder()
                 .id(id).name(name).labelName(labelName).value(nonNull(orderInfo.getOrder().getInvoiceTitle()))
-                .notBlank(true).readonly(true)
+                .notBlank(true).readonly(false)
                 .maxlength(GlobalConstants.INVOICE_TITLE_MAX_L).placeholder(placeholder)
                 .fontSize(font).grids(CssGridsType.G12).build().html());
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
@@ -226,7 +226,7 @@ public class BillViewHelper extends HtmlViewHelper {
         placeholder = clmForm.getPlaceholder();
         contextList.add(LabelInputSet.builder()
                 .id(id).name(name).labelName(labelName).value(nonNull(orderInfo.getOrder().getCreditCode()))
-                .notBlank(true).readonly(true)
+                .notBlank(true).readonly(false)
                 .maxlength(GlobalConstants.INVOICE_TITLE_MAX_L).placeholder(placeholder)
                 .fontSize(font).grids(CssGridsType.G12).build().html());
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
@@ -296,7 +296,7 @@ public class BillViewHelper extends HtmlViewHelper {
         
         labelName   = getContext("common.page.File");
         contextList.add(LabelFileSet.builder()
-                .id(idFile).idLablel(idLbl).name(name).labelName(labelName).placeholder(placeholder).acceptFileType(AcceptFileType.PDF)
+                .id(idFile).idLablel(idLbl).name(name).labelName(labelName).placeholder(placeholder).acceptFileType(AcceptFileType.IMAGE_PDF)
                 .fontSize(font).grids(CssGridsType.G8).build().html());
 
         

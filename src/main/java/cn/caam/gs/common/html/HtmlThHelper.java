@@ -37,6 +37,11 @@ public class HtmlThHelper extends HtmlBaseHelper {
         return ThSet.builder().outPutType(ThSetType.NORMAL).grids(grids.getKey()).align(alignType).contexts(contexts).build();
     }
     
+    public ThSet get(CssGridsType grids, CssAlignType alignType, boolean sort, String sortName, String selectedSortName, String selectedSortOrder, String... contexts) {
+        return ThSet.builder().outPutType(ThSetType.NORMAL).grids(grids.getKey()).align(alignType)
+        		.sort(sort).sortName(sortName).selectedSortName(selectedSortName).selectedSortOrder(selectedSortOrder).contexts(contexts).build();
+    }
+    
     public ThSet get(int height, CssGridsType grids, CssAlignType alignType, String... contexts) {
         return ThSet.builder().outPutType(ThSetType.NORMAL)
                 .height(height).grids(grids.getKey()).align(alignType).contexts(contexts).build();

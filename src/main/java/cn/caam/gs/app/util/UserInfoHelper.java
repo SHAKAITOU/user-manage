@@ -17,8 +17,8 @@ import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
 
 import cn.caam.gs.app.common.view.UserDetailViewHelper;
-import cn.caam.gs.common.enums.CheckStatusType;
 import cn.caam.gs.common.enums.DownloadFileType;
+import cn.caam.gs.common.enums.UserCheckStatusType;
 import cn.caam.gs.common.enums.UserType;
 import cn.caam.gs.common.enums.ValidType;
 import cn.caam.gs.common.util.CertificateCreateUtil;
@@ -38,7 +38,7 @@ public class UserInfoHelper {
 	public static boolean isUserValid(MUser user) {
 		if (!Objects.isNull(user) && 
 				ValidType.VALID.getKey().equals(user.getValidStatus()) &&
-				(Strings.isBlank(user.getCheckStatus()) || CheckStatusType.PASS.getKey().equals(user.getCheckStatus()))) {
+				(Strings.isBlank(user.getCheckStatus()) || UserCheckStatusType.PASS.getKey().equals(user.getCheckStatus()))) {
 			return true;
 		}
 		
@@ -127,7 +127,8 @@ public class UserInfoHelper {
     	}else if (downloadFileType == DownloadFileType.USER_CHINA_CERTIFICATE_4 ||
     			downloadFileType == DownloadFileType.USER_GANSU_CERTIFICATE_4) {
     		String key = T100MUser.getColumnInfo(T100MUser.COL_VALID_START_DATE).getName();
-        	String value = LocalDateUtility.formatDateZH(nonNull(nonNull(userInfo.getUser().getValidStartDate())));
+//        	String value = LocalDateUtility.formatDateZH(nonNull(nonNull(userInfo.getUser().getValidStartDate())));
+    		String value = LocalDateUtility.formatDateZH(nonNull(nonNull(userInfo.getUser().getRegistDate())));
         	data.put(key, new CertificateCreateUtil.DrawOject(165, 430, 510, AligntType.LEFT, value));
         	
         	key = T100MUser.getColumnInfo(T100MUser.COL_VALID_END_DATE).getName();

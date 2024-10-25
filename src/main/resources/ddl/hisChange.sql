@@ -55,8 +55,8 @@ CREATE TABLE m_user_card
 	valid_status     VARCHAR(2)              COMMENT '有效状态(F0026)',
 	valid_start_date VARCHAR(20)             COMMENT '有效开始日期(yyyy-MM-dd HH:mm:ss)',
     valid_end_date   VARCHAR(20)             COMMENT '有效结束日期(yyyy-MM-dd HH:mm:ss)',
-    created_by       VARCHAR(20)    NOT NULL COMMENT '管理员号(AYYMMDDHHmmSSR2)',
-    created_at       VARCHAR(20)    NOT NULL COMMENT '创建时间(yyyy-MM-dd HH:mm:ss)',
+    created_by       VARCHAR(20)             COMMENT '管理员号(AYYMMDDHHmmSSR2)',
+    created_at       VARCHAR(20)             COMMENT '创建时间(yyyy-MM-dd HH:mm:ss)',
     updated_by       VARCHAR(20)    		 COMMENT '管理员号(AYYMMDDHHmmSSR2)',
     updated_at       VARCHAR(20)             COMMENT '更新时间(yyyy-MM-dd HH:mm:ss)',
 
@@ -90,7 +90,7 @@ ALTER TABLE m_admin add COLUMN mail VARCHAR(70);
 ALTER TABLE m_admin add COLUMN photo MEDIUMBLOB;
 ALTER TABLE m_admin add COLUMN photo_ext VARCHAR(10);
 ALTER TABLE m_admin add COLUMN created_by VARCHAR(20);
-ALTER TABLE m_admin add COLUMN created_at VARCHAR(20) NOT NULL;
+ALTER TABLE m_admin add COLUMN created_at VARCHAR(20);
 ALTER TABLE m_admin add COLUMN updated_by VARCHAR(20);
 ALTER TABLE m_admin add COLUMN updated_at VARCHAR(20);
 

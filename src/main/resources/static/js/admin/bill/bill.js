@@ -83,7 +83,7 @@ Bill.prototype.initEvent = function(){
 	ShaInput.button.onChange(self.getObject(self.ID.ITEM_BILL_PHOTO), 
 		function(event) {
     		var files = self.getObject(self.ID.ITEM_BILL_PHOTO).prop('files');
-    		var fileExtension = ['pdf'];
+    		var fileExtension = ['pdf','jpeg', 'jpg', 'png'];
 	        if ($.inArray(files[0].name.split('.').pop().toLowerCase(), fileExtension) == -1) {
 	            ShaDialog.dialogs.alert(self.i18n["common.check.file.wrongExt"]);
 	            self.getObject(self.ID.ITEM_BILL_PHOTO).val("");

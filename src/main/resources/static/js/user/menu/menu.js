@@ -27,6 +27,8 @@ Menu.prototype.ID = {
 	
 	CLASS_NM_PASSWORD_RESET   		: 'menu9002',
 	
+	CLASS_NM_PHONE_CHANGE   		: 'menu9004',
+	
 	CLASS_NM_LOGOUT      			: 'menu9003',
 	
 	BTN_LOGOUT						: 'menu7',
@@ -154,6 +156,19 @@ Menu.prototype.initEvent = function(){
 				ShaAjax.pop.postDialogMiddleCenter(
 	    			self.i18n["PasswordChange.title"],
 	    			self.jsContext.jsView.passwordChange.url_init, 
+	    			null); 
+			}
+	    );
+	});
+	
+	//手机绑定
+	$buttonList = self.getObjectList(self.ID.CLASS_NM_PHONE_CHANGE);
+    $buttonList.each(function(i, elem){
+	    ShaInput.button.onClick($(elem),
+	    	function(event) {
+				ShaAjax.pop.postDialogMiddleCenter(
+	    			self.i18n["BindPhoneChange.title"],
+	    			self.jsContext.jsView.bindPhoneChange.url_init, 
 	    			null); 
 			}
 	    );

@@ -53,6 +53,7 @@ import cn.caam.gs.common.enums.CheckStatusType;
 import cn.caam.gs.common.enums.DeleteType;
 import cn.caam.gs.common.enums.DownloadFileType;
 import cn.caam.gs.common.enums.ExecuteReturnType;
+import cn.caam.gs.common.enums.FixedValueType;
 import cn.caam.gs.common.enums.ImportUserUpdateType;
 import cn.caam.gs.common.enums.SexType;
 import cn.caam.gs.common.enums.SmsConfigType;
@@ -81,6 +82,7 @@ import cn.caam.gs.domain.db.base.mapper.MUserCardMapper;
 import cn.caam.gs.domain.db.base.mapper.MUserExtendMapper;
 import cn.caam.gs.domain.db.base.mapper.MUserMapper;
 import cn.caam.gs.domain.db.custom.entity.AdminUserInfo;
+import cn.caam.gs.domain.db.custom.entity.FixValueInfo;
 import cn.caam.gs.domain.db.custom.entity.UserInfo;
 import cn.caam.gs.domain.db.custom.mapper.OptionalAdminUserInfoMapper;
 import cn.caam.gs.domain.db.custom.mapper.OptionalUserInfoMapper;
@@ -127,13 +129,37 @@ public class UserService extends BaseService {
     	return userListOutput;
 	}
 
-	public UserListOutput getUserList(UserSearchForm pageForm) {
+	public UserListOutput getUserList(HttpServletRequest request, UserSearchForm pageForm) {
+		 @SuppressWarnings("unchecked")
+	        Map<FixedValueType, List<FixValueInfo>> fixedValueMap = 
+	                (Map<FixedValueType, List<FixValueInfo>>)request.getSession().getAttribute(SessionConstants.FIXED_VALUE.getValue());
+		 
 	    UserListOutput userListOutput = new UserListOutput();
 	    pageForm.setExpiredSoonDate(
 	            LocalDateUtility.addDate(LocalDateUtility.getCurrentDateString(), DatePattern.UUUUHMMHDD, 5));
 	    pageForm.setVaryExpiredDate(LocalDateUtility.addDate(LocalDateUtility.getCurrentDateString(), DatePattern.UUUUHMMHDD, -60));
 	    userListOutput.setCount(optionalUserInfoMapper.getUserListCount(pageForm));
 	    userListOutput.setUserList(optionalUserInfoMapper.getUserList(pageForm));
+	    if (userListOutput.getUserList() != null && userListOutput.getUserList().size() > 0) {
+	    	List<FixValueInfo> focusOnList = fixedValueMap.get(FixedValueType.MEMBERSHIP_PATH);
+	    	for(UserInfo userInfo:userListOutput.getUserList()) {
+	    		if (!Strings.isBlank(userInfo.getUser().getFocusOn())) {
+	    			String focusOnName = "";
+	    			String[] focusOns = userInfo.getUser().getFocusOn().split(",");
+	    			for(String focusOn:focusOns) {
+	    				for (FixValueInfo fValueInfo : focusOnList) {
+	    					if (fValueInfo.getValueObj().getValue().equals(focusOn)) {
+	    						if (!Strings.isBlank(focusOnName)) focusOnName += ",";
+	    						focusOnName += fValueInfo.getValueObj().getName();
+	    						break;
+	    					}
+	    		        }
+	    			}
+	    			userInfo.setFocusOnName(focusOnName);
+	    		}
+	    	}
+	    }
+	    
     	return userListOutput;
 	}
 	
@@ -327,6 +353,14 @@ public class UserService extends BaseService {
 	}
 	
 	@Transactional
+	public void updateUserPhone(HttpServletRequest request, String id, String phone) {
+		MUser mUser = new MUser();
+		mUser.setId(id);
+		mUser.setPhone(phone);
+		userMapper.updateByPrimaryKeySelective(mUser);
+	}
+	
+	@Transactional
 	public boolean resetUserPassword(HttpServletRequest request, String id) throws Exception{
 		MUser mUser = userMapper.selectByPrimaryKey(id);
 		if (mUser == null) {
@@ -489,6 +523,13 @@ public class UserService extends BaseService {
 					user.setValidEndDate(userInput.getValidEndDate()+" 00:00:00");
 				}
 			}
+			//入会申请表上传之后，审核返回-》等待审核
+			if (userDetailForm.getApplicationFormFile() != null && !StringUtils.isBlank(userDetailForm.getApplicationFormFile().getOriginalFilename())) {
+				if (UserCheckStatusType.NEW.getKey().equals(user.getCheckStatus()) || 
+						UserCheckStatusType.RETURN.getKey().equals(user.getCheckStatus())) {
+					user.setCheckStatus(UserCheckStatusType.WAIT_FOR_REVIEW.getKey());
+				}
+			}
 			
 			userMapper.updateByPrimaryKeySelective(user);
 			
@@ -593,15 +634,6 @@ public class UserService extends BaseService {
 			}
 		}
 		
-		//入会申请表上传之后，审核返回-》等待审核
-		if (userDetailForm.getApplicationFormFile() != null && !StringUtils.isBlank(userDetailForm.getApplicationFormFile().getOriginalFilename())) {
-			MUser user = userMapper.selectByPrimaryKey(userInfo.getUser().getId());
-			if (UserCheckStatusType.NEW.getKey().equals(user.getCheckStatus()) || 
-					UserCheckStatusType.RETURN.getKey().equals(user.getCheckStatus())) {
-				user.setCheckStatus(UserCheckStatusType.WAIT_FOR_REVIEW.getKey());
-				userMapper.updateByPrimaryKeySelective(user);
-			}
-		}
 	}
 	
 	@Transactional
@@ -615,7 +647,7 @@ public class UserService extends BaseService {
 			userInput.setName("");
 		}
 		//审核状态：审核通过
-		userInput.setCheckStatus(CheckStatusType.PASS.getKey());
+		userInput.setCheckStatus(UserCheckStatusType.PASS.getKey());
 		//申请时间
 		userInput.setApplicationDate(LocalDateUtility.getCurrentDateTimeString());
 		//有效状态
@@ -685,7 +717,7 @@ public class UserService extends BaseService {
 	
 	private  byte[] resizeImage(byte[] src, String ext) throws IOException{
 		if (!Strings.isBlank(ext) && ("jpg".equals(ext.toLowerCase()) || "jpeg".equals(ext.toLowerCase()))) {
-			return ImageUtil.resizeImage(src, GlobalConstants.IMAGE_RESIZE_WIDTH_SAVE, GlobalConstants.IMAGE_RESIZE_HEIGHT_SAVE);
+			return ImageUtil.resizeImage(src, GlobalConstants.IMAGE_RESIZE_WIDTH_SAVE, GlobalConstants.IMAGE_RESIZE_HEIGHT_SAVE, "jpg");
 		}
 		
 		return src;
@@ -745,7 +777,7 @@ public class UserService extends BaseService {
 			userInput.setId(UUID.randomUUID().toString());
 			userInput.setUserType(userInfo.getUserCode().startsWith("M") ? UserType.PERSON_CHINA.getKey():UserType.PERSON_GANSU.getKey());
 			//审核状态：审核通过
-			userInput.setCheckStatus(CheckStatusType.PASS.getKey());
+			userInput.setCheckStatus(UserCheckStatusType.PASS.getKey());
 			//申请时间
 			userInput.setApplicationDate(LocalDateUtility.getCurrentDateTimeString());
 			//有效状态
@@ -844,7 +876,7 @@ public class UserService extends BaseService {
 			 msg += getContext("userImport.existedCheck.msg", clmForm.getLabelName()) + "|";
 		 }
 		 
-		//审批日期（YYYY-MM-DD） 2013|2019/7/2|2022-03-01|2015.8.7|2014.12
+		//审批日期（YYYY-MM-DD） 2013|2019/7/2|2022-03-01|2015.8.7|2014.12|1905-07-05
 		 String registDate = userInfo.getUser().getRegistDate();
 		 userInfo.getUser().setRegistDate(null);
 		 if (!Strings.isBlank(registDate)) {
@@ -879,6 +911,9 @@ public class UserService extends BaseService {
 				 if (localDate != null) {
 					 userInfo.getUser().setValidStartDate(DateUtility.formatDate(localDate, DateFormat.UUUUHMMHDD.getFormat())+" 00:00:00");
 					 userInfo.getUser().setValidEndDate(DateUtility.formatDate(localDate.plusYears(5), DateFormat.UUUUHMMHDD.getFormat())+" 00:00:00");
+					 if (Strings.isBlank(userInfo.getUser().getRegistDate()) || userInfo.getUser().getRegistDate().startsWith("1905")) {
+						 userInfo.getUser().setRegistDate(DateUtility.formatDate(localDate.plusYears(-5), DateFormat.UUUUHMMHDD.getFormat())+" 00:00:00");
+					 }
 				 }
 			 }
 		 }
@@ -945,7 +980,7 @@ public class UserService extends BaseService {
 		adminMapper.insert(mAdmin);
 	}
 	
-	public void exportUserInfo(HttpServletResponse response, UserSearchForm pageForm) throws IOException{
+	public void exportUserInfo(HttpServletRequest request, HttpServletResponse response, UserSearchForm pageForm) throws IOException{
 		List<String> headerList = new ArrayList<String>();
 		headerList.add(T105MUserCard.getColumnInfo(T105MUserCard.COL_USER_CODE).getLabelName());
 		headerList.add(T100MUser.getColumnInfo(T100MUser.COL_USER_TYPE).getLabelName());
@@ -997,7 +1032,8 @@ public class UserService extends BaseService {
 //		headerList.add(T101MUserExtend.getColumnInfo(T101MUserExtend.COL_APPLICATION_FORM).getLabelName());
 //		headerList.add(T101MUserExtend.getColumnInfo(T101MUserExtend.COL_APPLICATION_FORM_EXT).getLabelName());
 
-	    List<UserInfo> userInfoList = optionalUserInfoMapper.getUserList(pageForm);
+		UserListOutput userListOutput = getUserList(request, pageForm);
+	    List<UserInfo> userInfoList = userListOutput.getUserList();
 	    List<List<String>> excelData = new ArrayList<List<String>>();
 	    excelData.add(headerList);
 	    

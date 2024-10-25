@@ -18,11 +18,8 @@ import cn.caam.gs.common.enums.CssClassType;
 import cn.caam.gs.common.enums.CssFontSizeType;
 import cn.caam.gs.common.enums.CssGridsType;
 import cn.caam.gs.common.html.HtmlViewBaseHelper;
-import cn.caam.gs.common.html.element.HtmlRadio;
-import cn.caam.gs.common.html.element.bs5.LabelInputSet;
-import cn.caam.gs.common.html.element.bs5.LabelSelectSet;
 import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
-import cn.caam.gs.common.html.element.bs5.LabelSelectSet.LabelSelectSetType;
+import cn.caam.gs.common.html.element.bs5.LabelInputSet;
 import cn.caam.gs.domain.tabledef.impl.T100MUser;
 
 /**
@@ -60,7 +57,8 @@ public class RegistStep1ViewHelper extends HtmlViewBaseHelper {
         String value = Objects.nonNull(registForm) ? registForm.getErrorMsg() : "";
         sb.append(hidden().get(name, value));
         name = "stepStatus";
-        sb.append(hidden().get(name, registForm.getStepStatus()));
+        sb.append(hidden().get(name, nonNull(registForm.getStepStatus())));
+        sb.append(hidden().get("authMethod", GET_AUTH_CODE_BY_PHONE));
         return sb.toString();
     }
 
@@ -121,7 +119,7 @@ public class RegistStep1ViewHelper extends HtmlViewBaseHelper {
         sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
         contextList = new ArrayList<String>();
 
-        //auth code 入力値
+        /*//auth code 入力値
         property  = "authMethod";
         name      = property;
         labelName = getContext("login.regist.selectAuthMethod");
@@ -133,7 +131,7 @@ public class RegistStep1ViewHelper extends HtmlViewBaseHelper {
         contextList.add(LabelSelectSet.builder()
                 .id(convertNameDotForId(name)).name(name).labelName(labelName)
                 .radios(radios).selectedValue(value)
-                .fontSize(font).grids(CssGridsType.G12).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
+                .fontSize(font).grids(CssGridsType.G12).outPutType(LabelSelectSetType.WITH_LABEL).build().html());*/
         
         sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
         

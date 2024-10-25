@@ -7,6 +7,7 @@ import java.util.Random;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -148,5 +149,13 @@ public class LoginInfoHelper {
 		}
 		
 		return "";
+	}
+	
+	public static String getAdminProfilePhoto(MAdmin userInfo) {
+		String profilePhoto = "/img/admin.png";
+		if (userInfo != null && userInfo.getPhoto() != null && userInfo.getPhoto().length > 0) {
+			profilePhoto = "data:image/"+userInfo.getPhotoExt()+";base64, "+Base64.encodeBase64String(userInfo.getPhoto());
+		}
+		return profilePhoto;
 	}
 }

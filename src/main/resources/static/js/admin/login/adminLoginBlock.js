@@ -21,6 +21,7 @@ AdminLoginBlock.prototype.ID = {
 	//item
 	ITEM_USER_CODE						: 'userCode',
 	ITEM_PASSWORD						: 'password',
+	ITEM_AUTHCODE						: 'authCode',
 	ITEM_LOGIN_FORM_RETURN_ERROR_FLAG	: 'login_form_return_error_flag',
 	ITEM_LOGIN_FORM_RETURN_ERROR_MSG	: 'login_form_return_error_msg',
 	ITEM_AUTH_IMG                       : 'imgPhoto',
@@ -95,6 +96,7 @@ AdminLoginBlock.prototype.checkValue = function(){
     var inputCheckItemList = [
         [ self.i18n["m_admin.id"], 			self.getObject(self.ID.ITEM_USER_CODE)], 
         [ self.i18n["m_admin.password"], 	self.getObject(self.ID.ITEM_PASSWORD)],
+		[ self.i18n["login.panel.authcode"], 	self.getObject(self.ID.ITEM_AUTHCODE)],
     ];
     
     return ShaCheck.check.checkNotBlank(inputCheckItemList);

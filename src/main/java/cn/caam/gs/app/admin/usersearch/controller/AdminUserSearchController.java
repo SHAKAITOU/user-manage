@@ -19,7 +19,9 @@ import cn.caam.gs.app.admin.usersearch.view.AdminUserSearchViewHelper;
 import cn.caam.gs.app.util.ControllerHelper;
 import cn.caam.gs.app.util.SessionConstants;
 import cn.caam.gs.common.controller.JcbcBaseController;
+import cn.caam.gs.common.enums.SortOrderType;
 import cn.caam.gs.domain.db.base.entity.MUser;
+import cn.caam.gs.domain.tabledef.impl.T100MUser;
 import cn.caam.gs.service.impl.UserService;
 import lombok.AllArgsConstructor;
 
@@ -44,8 +46,10 @@ public class AdminUserSearchController extends JcbcBaseController{
 			pageForm = new UserSearchForm();
 			pageForm.setUser(new MUser());
 		}
+		pageForm.setSortName(T100MUser.getColumnInfo(T100MUser.COL_REGIST_DATE).getName());
+		pageForm.setSortOrder(SortOrderType.DESC.getKey());
 		pageForm.setOffset(pageForm.getLimit()*pageForm.getUserPageLinkIdPrefixIndex());
-	    UserListOutput userListOutput = userService.getUserList(pageForm);
+	    UserListOutput userListOutput = userService.getUserList(request, pageForm);
 
 		return ControllerHelper.getModelAndView(
 		        AdminUserSearchViewHelper.getMainPage(request, pageForm, userListOutput));
@@ -63,7 +67,7 @@ public class AdminUserSearchController extends JcbcBaseController{
 	    pageForm.setUserPageLinkIdPrefixIndex(0);
 	    request.getSession().setAttribute(SessionConstants.USER_SEARCH_FORM.getValue(), null);
 	    
-        UserListOutput userListOutput = userService.getUserList(pageForm);
+        UserListOutput userListOutput = userService.getUserList(request, pageForm);
         return ControllerHelper.getModelAndView(
                 AdminUserSearchViewHelper.refeshTable(request, pageForm, userListOutput));
     }
@@ -75,7 +79,7 @@ public class AdminUserSearchController extends JcbcBaseController{
             HttpServletResponse response) {
 
 	    pageForm.setOffset(pageForm.getLimit()*pageForm.getUserPageLinkIdPrefixIndex());
-	    UserListOutput userListOutput = userService.getUserList(pageForm);
+	    UserListOutput userListOutput = userService.getUserList(request, pageForm);
         return ControllerHelper.getModelAndView(
                 AdminUserSearchViewHelper.refeshTable(request, pageForm, userListOutput));
     }
@@ -89,6 +93,6 @@ public class AdminUserSearchController extends JcbcBaseController{
 	    pageForm.setLimit(99999999);
 	    request.getSession().setAttribute(SessionConstants.USER_SEARCH_FORM.getValue(), null);
 	    
-        userService.exportUserInfo(response, pageForm);
+        userService.exportUserInfo(request, response, pageForm);
     }
 }

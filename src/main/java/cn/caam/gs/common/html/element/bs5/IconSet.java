@@ -237,6 +237,10 @@ public class IconSet {
         EXPORT             ("fa fa-file-export"),
         
         IMPORT             ("fa fa-file-import"),
+        
+        PAY_QRCODE             ("fa fa-qrcode"),
+        
+        PAY_BANK             ("fa fa-exchange-alt"),
         ;
         
         /** type. */

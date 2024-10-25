@@ -18,12 +18,9 @@ import cn.caam.gs.common.enums.CssClassType;
 import cn.caam.gs.common.enums.CssFontSizeType;
 import cn.caam.gs.common.enums.CssGridsType;
 import cn.caam.gs.common.html.HtmlViewBaseHelper;
-import cn.caam.gs.common.html.element.HtmlRadio;
 import cn.caam.gs.common.html.element.bs5.IconSet.IconSetType;
 import cn.caam.gs.common.html.element.bs5.LabelInputSet;
 import cn.caam.gs.common.html.element.bs5.LabelPasswordSet;
-import cn.caam.gs.common.html.element.bs5.LabelSelectSet;
-import cn.caam.gs.common.html.element.bs5.LabelSelectSet.LabelSelectSetType;
 
 /**
  * View helper.
@@ -74,7 +71,8 @@ public class PasswordForgetViewHelper extends HtmlViewBaseHelper {
         String value = Objects.nonNull(pageForm) ? pageForm.getErrorMsg() : "";
         sb.append(hidden().get(name, value));
         name = "stepStatus";
-        sb.append(hidden().get(name, pageForm.getStepStatus()));
+        sb.append(hidden().get(name, nonNull(pageForm.getStepStatus())));
+        sb.append(hidden().get("authMethod", GET_AUTH_CODE_BY_PHONE));
         return sb.toString();
     }
 
@@ -102,7 +100,7 @@ public class PasswordForgetViewHelper extends HtmlViewBaseHelper {
         // ----------hidden------]
         List<String> contextList = new ArrayList<String>();
         
-        //auth code 入力値
+        /*//auth code 入力値
         String property  = "authMethod";
         String name      = property;
         String labelName = getContext("login.regist.selectAuthMethod");
@@ -113,14 +111,14 @@ public class PasswordForgetViewHelper extends HtmlViewBaseHelper {
         contextList.add(LabelSelectSet.builder()
                 .id(convertNameDotForId(name)).name(name).labelName(labelName)
                 .radios(radios).selectedValue(value)
-                .fontSize(font).grids(CssGridsType.G12).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
+                .fontSize(font).grids(CssGridsType.G12).outPutType(LabelSelectSetType.WITH_LABEL).build().html());*/
 
         //phone入力値
-        property  = "phone";
-        name      = property;
-        labelName = getContext("m_user.phone");
+        String property  = "phone";
+        String name      = property;
+        String labelName = getContext("m_user.phone");
         String placeholder = getContext("m_user.phone.placeholder");
-        value      = Objects.nonNull(pageForm.getPhone()) ? pageForm.getPhone() : "";
+        String value      = Objects.nonNull(pageForm.getPhone()) ? pageForm.getPhone() : "";
         contextList.add(LabelInputSet.builder()
                 .id(convertNameDotForId(name)).name(name).labelName(labelName).value(value)
                 .notBlank(true).maxlength(GlobalConstants.PHONE_MAX_L).placeholder(placeholder)
@@ -154,12 +152,15 @@ public class PasswordForgetViewHelper extends HtmlViewBaseHelper {
                 .id(convertNameDotForId(name)).name(name).labelName(labelName)
                 .notBlank(true).maxlength(GlobalConstants.AUTH_CODE_MAX_L).placeholder(placeholder)
                 .fontSize(font).build().html();
+        contextList.add(comp1);
         
         aligs.add(CssAlignType.LEFT);
         String id = "btnSendAuthCode";
         String context = getContext("PasswordForget.step1.btn.sendAuthCode");
         String comp2 = button().getBorder(IconSetType.TO_RIGHT, CssClassType.SUCCESS, id, context);
-        sb.append(divRow().get(CellWidthType.TWO_9_3, aligs, comp1, comp2));
+        contextList.add(comp2);
+        sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+//        sb.append(divRow().get(CellWidthType.TWO_9_3, aligs, comp1, comp2));
         
         return borderCard().noTitleNoScroll("", CssClassType.WARNING, "", divContainer().get(sb.toString()));
     }
@@ -191,10 +192,10 @@ public class PasswordForgetViewHelper extends HtmlViewBaseHelper {
         String value = Objects.nonNull(pageForm) ? pageForm.getErrorMsg() : "";
         sb.append(hidden().get(name, value));
         name = "stepStatus";
-        sb.append(hidden().get(name, pageForm.getStepStatus()));
+        sb.append(hidden().get(name, nonNull(pageForm.getStepStatus())));
         
         sb.append(hidden().get("phone", pageForm.getPhone()));
-        sb.append(hidden().get("authMethod", pageForm.getAuthMethod())); 
+        sb.append(hidden().get("authMethod", GET_AUTH_CODE_BY_PHONE));
         
         return sb.toString();
     }

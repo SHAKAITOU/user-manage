@@ -127,10 +127,10 @@ public class UserCertiCommonViewHelper extends HtmlViewBaseHelper {
                 divContainer().get(sb.toString()));
     }
     
-    public static String resizeImageToBase64(HttpServletRequest request, byte[] bytes) {
+    public static String resizeImageToBase64(HttpServletRequest request, byte[] bytes, String type) {
     	try {
     		if (isPhoneMode(request)) {
-    			return ImageUtil.resizeImageToBase64(bytes, IMG_WIDTH, IMG_HEIGHT);
+    			return ImageUtil.resizeImageToBase64(bytes, IMG_WIDTH, IMG_HEIGHT, type);
     		}else {
     			return Base64.encodeBase64String(bytes);
     		}
@@ -184,7 +184,7 @@ public class UserCertiCommonViewHelper extends HtmlViewBaseHelper {
         	if (map.size() >= 0) {
         		byte[] bytes = UserInfoHelper.drawCertImage(downloadFileType.getFilePath(), map);
         		  context = CertiImgDivSet.builder().id(downloadFileType.getKey()).visible(true)
-        		        	.imgWidth(getImageWidth(request)).base64String(resizeImageToBase64(request, bytes))
+        		        	.imgWidth(getImageWidth(request)).base64String(resizeImageToBase64(request, bytes, "png"))
         		        	.extent(downloadFileType.getFileType().replace(".", "")).build().html();
         	}
         	

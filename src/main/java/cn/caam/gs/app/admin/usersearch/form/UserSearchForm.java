@@ -35,4 +35,8 @@ public class UserSearchForm {
     private String selectedUserId;
     //waitList:待审核列表 reviewedList:已审核列表
     private String searchMode;
+    
+    private String sortName;
+    
+    private String sortOrder;
 }

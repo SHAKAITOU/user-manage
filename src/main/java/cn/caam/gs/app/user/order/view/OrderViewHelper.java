@@ -52,14 +52,21 @@ public class OrderViewHelper extends HtmlViewHelper {
 	//init url
     public static final String URL_C_ADD = UrlConstants.ADD;
     
+    public static final String URL_C_PAY = UrlConstants.PAY;
+    
     public static final String PREFIX_NAME                  = "order.";
     public static final String PREFIX_IMAGE_NAME            = "image.";
 	
     public static final String MAIN_JS_CLASS                = "Order";
     public static final String FORM_NAME                    = MAIN_JS_CLASS + "Form";
     
+    public static final String BTN_PAY_QRCODE = "btnPayQrCode";
+    public static final String BTN_PAY_BANK = "btnPayBank";
     public static final String BTN_CLOSE = "btnClose";
     public static final String BTN_ADD   = "btnAdd";
+    
+    public static final int    IMG_WIDTH                     = 250;
+    public static final int    IMG_HEIGHT                    = 250;
 	
     public static final CssFontSizeType font = GlobalConstants.INPUT_FONT_SIZE;
     /**
@@ -89,7 +96,7 @@ public class OrderViewHelper extends HtmlViewHelper {
         sb.append(buildFooter());
         return getForm(FORM_NAME, sb.toString());
     }
-
+    
     //--------------------header Panel -----------------
     
     private static String setCardForOrderPanel(HttpServletRequest request, MUserTypeSettings mUserTypeSettings) {
@@ -151,7 +158,7 @@ public class OrderViewHelper extends HtmlViewHelper {
                 .id(id).name(name).labelName(labelName)
                 .radios(radios).selectedValue(OrderType.RENEWAL.getKey())
                 .fontSize(font).grids(CssGridsType.G12).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
-
+        
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
         //-----row 2-------------]
         
@@ -170,7 +177,7 @@ public class OrderViewHelper extends HtmlViewHelper {
         }
         contextList.add(LabelSelectSet.builder()
                 .id(id).name(name).labelName(labelName)
-                .radios(radios).selectedValue(userInfo.getUser().getMembershipPath())
+                .radios(radios).selectedValue(GlobalConstants.DFL_MEMBERSHIP_PATH_GANSU/*userInfo.getUser().getMembershipPath()*/)
                 .fontSize(font).grids(CssGridsType.G12).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
 
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
@@ -191,10 +198,25 @@ public class OrderViewHelper extends HtmlViewHelper {
         }
         contextList.add(LabelSelectSet.builder()
                 .id(id).name(name).labelName(labelName)
-                .radios(radios).selectedValue(PayType.OFFLINE.getKey())
-                .fontSize(font).grids(CssGridsType.G12).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
+                .radios(radios).selectedValue(PayType.ONLINE.getKey())
+                .fontSize(font).grids(CssGridsType.G8).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
 
+        id = BTN_PAY_QRCODE;
+        String context = getContext("order.pay.online");
+        String comp1 = button().getBorder(IconSetType.PAY_QRCODE, CssClassType.SUCCESS, id, context);
+//        contextList.add(comp1);
+        
+        id = BTN_PAY_BANK;
+        context = getContext("order.pay.offline");
+        comp1 += button().getBorder(IconSetType.PAY_BANK, CssClassType.SUCCESS, id, context);
+        contextList.add(comp1);
+        
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+        
+//        List<CssAlignType> aligs = new ArrayList<>();
+//        aligs.add(CssAlignType.LEFT);
+//        aligs.add(CssAlignType.LEFT);
+//        sbBody.append(divRow().get(CellWidthType.ONE, aligs, concactWithSpace(comp1, comp2)));
         //-----row 4-------------]
         
         //-----row 5-------------[
@@ -266,8 +288,8 @@ public class OrderViewHelper extends HtmlViewHelper {
                 .fontSize(font).grids(CssGridsType.G8).build().html());
 
         
-        String context = getContext("common.page.showImg");
-        String comp1 = button().getBorder(IconSetType.EYE, CssClassType.INFO, CssGridsType.G4, idFileOpen, context);
+        context = getContext("common.page.showImg");
+        comp1 = button().getBorder(IconSetType.EYE, CssClassType.INFO, CssGridsType.G4, idFileOpen, context);
         contextList.add(comp1);
     
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
@@ -303,7 +325,7 @@ public class OrderViewHelper extends HtmlViewHelper {
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
         contextList.add(LabelInputSet.builder()
-                .id(id).name(name).labelName(labelName).notBlank(true)
+                .id(id).name(name).labelName(labelName).notBlank(false)
                 .maxlength(GlobalConstants.INVOICE_TITLE_MAX_L).placeholder(placeholder)
                 .fontSize(font).grids(CssGridsType.G12).build().html());
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
@@ -318,7 +340,7 @@ public class OrderViewHelper extends HtmlViewHelper {
         labelName = clmForm.getLabelName();
         placeholder = clmForm.getPlaceholder();
         contextList.add(LabelInputSet.builder()
-                .id(id).name(name).labelName(labelName).notBlank(true)
+                .id(id).name(name).labelName(labelName).notBlank(false)
                 .maxlength(GlobalConstants.CREDIT_CODE_MAX_L).placeholder(placeholder)
                 .fontSize(font).grids(CssGridsType.G12).build().html());
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
@@ -334,7 +356,7 @@ public class OrderViewHelper extends HtmlViewHelper {
         placeholder = clmForm.getPlaceholder();
         contextList.add(LabelInputSet.builder()
                 .id(convertNameDotForId(name)).name(name).labelName(labelName).value(userInfo.getUser().getMail())
-                .notBlank(true).maxlength(GlobalConstants.MAIL_MAX_L).placeholder(placeholder)
+                .notBlank(false).maxlength(GlobalConstants.MAIL_MAX_L).placeholder(placeholder)
                 .fontSize(font).grids(CssGridsType.G12).build().html());
         
         sbBody.append(divRow().get(contextList.toArray(new String[contextList.size()])));
@@ -362,12 +384,13 @@ public class OrderViewHelper extends HtmlViewHelper {
         
         return sb.toString();
     }
-	
+  
 	public static Map<String, String> getJsProperties() {
 		Map<String, String> js = new HashMap<String, String>();
 		// url
 		js.put("url_init",       URL_BASE + URL_C_INIT);
 		js.put("url_order_add",  URL_BASE + URL_C_ADD);		
+		js.put("url_order_pay",  URL_BASE + URL_C_PAY);	
 		
 		return js;
 	}

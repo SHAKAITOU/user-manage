@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
@@ -137,12 +138,17 @@ public class AdminLoginController extends ScreenBaseController{
 		MAdmin userInfo = userService.getLoginAdminInfo(loginForm.getUserCode());
 		
 		String ePw = EncryptorUtil.encrypt(Optional.ofNullable(loginForm.getPassword()).orElse(""));
+		// TODO auth check
+        String authCode = (String)request.getSession().getAttribute(SessionConstants.VERIFY_CODE.getValue());
 		
 		if (request.getSession().getAttribute(SessionConstants.VERIFY_CODE.getValue()) == null) {
 		    okFlag = false;
 		    loginForm.setErrorMsg(messageSourceUtil.getContext("login.fail.msg.notRightLogin"));
 		} else if (userInfo == null) {
             loginForm.setErrorMsg(messageSourceUtil.getContext("login.fail.msg.notexist"));
+            okFlag = false;
+        } else if(!authCode.equals(loginForm.getAuthImgNumber())) {
+            loginForm.setErrorMsg(messageSourceUtil.getContext("login.confirm.wrongAuthCode"));
             okFlag = false;
         } else if(!userInfo.getPassword().equals(ePw)) {
             loginForm.setErrorMsg(messageSourceUtil.getContext("login.fail.msg.wrongPw"));
@@ -151,8 +157,6 @@ public class AdminLoginController extends ScreenBaseController{
             okFlag = true;
         }
 		
-		// TODO auth check
-        String authCode = (String)request.getSession().getAttribute(SessionConstants.VERIFY_CODE.getValue());
 		
 		ModelAndView mav = new ModelAndView();
 		if(noSession) {
@@ -171,6 +175,7 @@ public class AdminLoginController extends ScreenBaseController{
 		    request.getSession().setAttribute(SessionConstants.LOGIN_ERROR_MSG.getValue(), null);
 			loginForm.setReturnType(ExecuteReturnType.OK.getId());
 			request.getSession().setAttribute(SessionConstants.LOGIN_INFO.getValue(), userInfo);
+			request.getSession().setAttribute(SessionConstants.LOGIN_PROFILE_PHOTO.getValue(), LoginInfoHelper.getAdminProfilePhoto(userInfo));
 			JavaScriptSet javaScriptSetInfo = new JavaScriptSet(request, environment, messageSourceUtil);
 			request.getSession().setAttribute(SessionConstants.JAVASCRIPT_SET_INFO.getValue(), 
 					javaScriptSetInfo.loginAdminSet());

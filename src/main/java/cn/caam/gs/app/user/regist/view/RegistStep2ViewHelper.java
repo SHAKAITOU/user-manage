@@ -72,7 +72,9 @@ public class RegistStep2ViewHelper extends HtmlViewBaseHelper {
         String value = Objects.nonNull(registForm) ? registForm.getErrorMsg() : "";
         sb.append(hidden().get(name, value));
         name = "stepStatus";
-        sb.append(hidden().get(name, registForm.getStepStatus()));
+        sb.append(hidden().get(name, nonNull(registForm.getStepStatus())));
+        sb.append(hidden().get("user.phone", nonNull(registForm.getUser().getPhone())));
+        sb.append(hidden().get("user.mail", nonNull(registForm.getUser().getMail())));
         return sb.toString();
     }
 
@@ -343,7 +345,7 @@ public class RegistStep2ViewHelper extends HtmlViewBaseHelper {
         labelName = getContext(prefix_label + property);
         defaultValue = GlobalConstants.DFL_MEMBERSHIP_PATH_GANSU;
         radios = new ArrayList<>();
-        addDefaultHtmlRadio(radios, labelName);
+//        addDefaultHtmlRadio(radios, labelName);
         List<FixValueInfo> focusOnList = fixedValueMap.get(FixedValueType.MEMBERSHIP_PATH);
         for (FixValueInfo fValueInfo : focusOnList) {
             radios.add(new HtmlRadio(fValueInfo.getValueObj().getValue(), fValueInfo.getValueObj().getName()));
@@ -351,7 +353,7 @@ public class RegistStep2ViewHelper extends HtmlViewBaseHelper {
         contextList.add(LabelSelectSet.builder()
                 .id(convertNameDotForId(name)).name(name).labelName(labelName)
                 .radios(radios).selectedValue(defaultValue)
-                .fontSize(font).grids(CssGridsType.G12).outPutType(LabelSelectSetType.WITH_LABEL).build().html());
+                .fontSize(font).grids(CssGridsType.G12).outPutType(LabelSelectSetType.MULTI_SELECT_WITH_LABEL).build().html());
         
         sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
         
@@ -444,6 +446,6 @@ public class RegistStep2ViewHelper extends HtmlViewBaseHelper {
     }
     
     private static int calculateDlgHeight(HttpServletRequest request) {
-        return LoginInfoHelper.getMediaHeight(request) - 220;
+        return LoginInfoHelper.getMediaHeight(request) - 320;
     }
 }

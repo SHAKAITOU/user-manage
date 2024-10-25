@@ -177,6 +177,9 @@
 		<if test="searchMode != null and searchMode =='reviewedList'" >
 	        and mu.check_status IN ('03')
 		</if>
+		<if test="searchMode == null" >
+	        and (mu.check_status IN ('03') or mu.check_status is null)
+		</if>
 		and deleted = 0
     </sql>
     <sql id="baseSelect2">
@@ -208,6 +211,12 @@
 			<include refid="baseConition"/>	
 		<if test="searchMode != null" >
         ORDER BY application_date DESC
+		</if>
+		<if test="searchMode == null and sortName == null">
+        ORDER BY regist_date DESC
+		</if>
+		<if test="searchMode == null and sortName != null">
+        ORDER BY ${sortName} ${sortOrder}
 		</if>
 		LIMIT #{limit} OFFSET #{offset}
     </select>

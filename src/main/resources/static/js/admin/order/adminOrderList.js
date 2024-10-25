@@ -168,7 +168,7 @@ AdminOrderList.prototype.initEvent = function(){
 									self.menuForm, 
 									function(){
 										//refresh order list
-										ShaAjax.ajax.post(
+										ShaAjax.ajax.get(
 							                self.jsContext.adminJsView.adminOrderSearch.url_order_list_wait, 
 							                null, 
 							                function(data){

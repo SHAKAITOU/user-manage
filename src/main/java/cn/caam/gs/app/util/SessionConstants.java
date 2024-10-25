@@ -8,6 +8,8 @@ public enum SessionConstants {
 	
 	LOGIN_INFO("loginInfo", true),
 	
+	LOGIN_PROFILE_PHOTO("loginProfilePhoto", true),
+	
 	LOGIN_FORM("loginForm", false),
 	
 	JAVASCRIPT_SET_INFO("javaScriptSetInfo", true),

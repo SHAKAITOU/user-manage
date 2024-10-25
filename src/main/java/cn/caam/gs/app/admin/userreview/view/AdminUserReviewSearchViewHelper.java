@@ -200,7 +200,7 @@ public class AdminUserReviewSearchViewHelper extends HtmlViewHelper {
         labelName = getContext("common.page.search");
         contextList.add(ButtonSet.builder()
                 .id(SEARCH_BTN_ID).buttonName(labelName).isBorderOnly(true)
-                .grids(CssGridsType.G1).outPutType(ButtonSetType.GRID_STYLE).gridFlexType(GridFlexType.RIGHT)
+                .grids(CssGridsType.G1).outPutType(ButtonSetType.GRID_STYLE).gridFlexType(GridFlexType.LEFT)
                 .iconSet(IconSet.builder().type(IconSetType.SEARCH).css(IconSetCss.NOMAL_10).build())
                 .build().html());
 
@@ -294,8 +294,8 @@ public class AdminUserReviewSearchViewHelper extends HtmlViewHelper {
 	            List<CssAlignType> aligs = new ArrayList<>();
 	            aligs.add(CssAlignType.CENTER);
 	            aligs.add(CssAlignType.LEFT);
-	            aligs.add(CssAlignType.CENTER);
-	            String subRow1 = divRow().get(CellWidthType.THREE_1_8_3, aligs, 
+	            aligs.add(CssAlignType.RIGHT);
+	            String subRow1 = divRow().get(CellWidthType.THREE_2_6_4, aligs, 
 	            		context,
 	                    T100MUser.getColumnInfo(T100MUser.COL_NAME).getLabelName(), 
 	                    T100MUser.getColumnInfo(T100MUser.COL_USER_TYPE).getLabelName()
@@ -305,7 +305,7 @@ public class AdminUserReviewSearchViewHelper extends HtmlViewHelper {
 	            aligs.add(CssAlignType.CENTER);
 	            aligs.add(CssAlignType.LEFT);
 	            aligs.add(CssAlignType.CENTER);
-	            String subRow2 = divRow().get(CellWidthType.THREE_1_9_2, aligs, 
+	            String subRow2 = divRow().get(CellWidthType.THREE_2_8_2, aligs, 
 	            		"",
 	            		T100MUser.getColumnInfo(T100MUser.COL_EMPLOYER).getLabelName(),
 	                    getContext("common.page.do"));
@@ -412,14 +412,14 @@ public class AdminUserReviewSearchViewHelper extends HtmlViewHelper {
                     aligs.add(CssAlignType.CENTER);
                     aligs.add(CssAlignType.LEFT);
                     aligs.add(CssAlignType.CENTER);
-                    String subRow1 = divRow().get(CellWidthType.THREE_1_8_3, aligs, 
+                    String subRow1 = divRow().get(CellWidthType.THREE_2_6_4, aligs, 
                     		context, userName, userTypeName);
                     
                     aligs = new ArrayList<>();
                     aligs.add(CssAlignType.CENTER);
                     aligs.add(CssAlignType.LEFT);
                     aligs.add(CssAlignType.CENTER);
-                    String subRow2 = divRow().get(CellWidthType.THREE_1_9_2, aligs,
+                    String subRow2 = divRow().get(CellWidthType.THREE_2_8_2, aligs,
                     		"", employer, button);
                     tr.addTd(td().get(PHONE_TD_HEIGHT, CssGridsType.G12, CssAlignType.LEFT, subRow1, subRow2));
                 	}else {

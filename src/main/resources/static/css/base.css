@@ -1230,6 +1230,25 @@ html {
 	}
 }
 
+@media (min-width: 577px) {
+	.table-fixed th div div {
+	  white-space: nowrap;
+	 /* overflow: hidden;*/
+	  text-overflow: ellipsis;
+	  max-width: 100px; /* 你可以根据需要设置最大宽度 */
+	}
+}
+
+
+@media (max-width: 576px) {
+	.table-fixed th div div div div {
+	  white-space: nowrap;
+	 /* overflow: hidden;*/
+	  text-overflow: ellipsis;
+	  max-width: 100%;  /*你可以根据需要设置最大宽度 */
+	}
+}
+
 
 @media (max-width: 576px) {
   .tooltip-inner {
@@ -1274,4 +1293,31 @@ html {
 .tooltip.bs-tooltip-auto[x-placement^=left] .tooltip-arrow,
 .tooltip.bs-tooltip-auto[x-placement^=left] .tooltip-inner {
   margin-right: 0;
+}
+
+
+
+.bootstrap-select .dropdown-menu {
+    font-size: 16px;
+}
+
+.bootstrap-select button span{
+    font-size: 16px;
+    font-weight: 400;
+}
+
+input[type=search]::-webkit-search-cancel-button {
+    -webkit-appearance: searchfield-cancel-button;
+}
+
+.img-thumbnail {
+display: inline-block;
+max-width: 100%;
+height: auto;
+padding: 4px;
+line-height: 1.42857143;
+background-color: #FFF;
+border: 1px solid #DDD;
+border-radius: 4px;
+transition: all 0.2s ease-in-out;
 }

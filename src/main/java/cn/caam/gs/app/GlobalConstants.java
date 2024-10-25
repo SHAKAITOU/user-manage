@@ -99,4 +99,6 @@ public class GlobalConstants {
     public static final String GANSU_CERTI_IMAGE4 = "static/img/certi/chinaCertiPage4.png";
     
     public static final String UPLODA_FILE_SAVE_PATH = System.getProperty("user.dir") + "/upload";
+    
+    public static final String M_SYSTEM_CONFIG_PRIMARY_KEY = "360b8bda-8856-11ef-9994-900f0c240974";
 }

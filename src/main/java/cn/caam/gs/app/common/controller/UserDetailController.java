@@ -26,7 +26,6 @@ import cn.caam.gs.app.common.form.OrderSearchForm;
 import cn.caam.gs.app.common.form.UserDetailForm;
 import cn.caam.gs.app.common.output.OrderListOutput;
 import cn.caam.gs.app.common.view.UserDetailViewHelper;
-import cn.caam.gs.app.user.login.view.LoginViewHelper;
 import cn.caam.gs.app.util.ControllerHelper;
 import cn.caam.gs.app.util.LoginInfoHelper;
 import cn.caam.gs.app.util.SessionConstants;

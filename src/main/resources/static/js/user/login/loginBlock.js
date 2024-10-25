@@ -38,6 +38,7 @@ LoginBlock.prototype.ID = {
 	ITEM_PHONE_USER_CODE			    : 'phoneUserCode',
 	ITEM_PHONE_AUTH_CODE				: 'phoneAuthCode',
 	ITEM_HIDDEN_LOGIN_BY				: 'loginBy',
+	ITEM_AUTHCODE						: 'authCode',
 		
 	ITEM_LOGIN_FORM_RETURN_ERROR_FLAG	: 'login_form_return_error_flag',
 	ITEM_LOGIN_FORM_RETURN_ERROR_MSG	: 'login_form_return_error_msg',
@@ -217,6 +218,7 @@ LoginBlock.prototype.checkValue = function(){
 	    	[ self.getJsContext().jsView.login.label_storeCode, 	self.getObject(self.ID.ITEM_STORE_CODE)], 
 	        [ self.getJsContext().jsView.login.label_user, 			self.getObject(self.ID.ITEM_USER_CODE)], 
 	        [ self.getJsContext().jsView.login.label_pw, 			self.getObject(self.ID.ITEM_PASSWORD)],
+			[ self.i18n["login.panel.authcode"], 			self.getObject(self.ID.ITEM_AUTHCODE)],
 	    ];
 		result = ShaCheck.check.checkNotBlank(inputCheckItemList);
 	}else{
