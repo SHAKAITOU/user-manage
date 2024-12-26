@@ -16,6 +16,8 @@ public class InterceptorConfig implements WebMvcConfigurer {
 		.addPathPatterns("/**")
 		.excludePathPatterns("/error", "/favicon.ico")
 		.excludePathPatterns("/static/**","/i18n/**","/templates/**")
+		.excludePathPatterns("/static/tencent10567153301284460929.txt")
+		.excludePathPatterns("/tencent10567153301284460929.txt")
 		.excludePathPatterns("/css/**","/img/**","/js/**","/sound/**","/template/**","/ttl/**","/webfonts/**")
 		.excludePathPatterns("/admin","/admin/init","/admin/userLogin","/admin/logout","/admin/refeshImg")
 		.excludePathPatterns("/admin/*.js.map")

@@ -87,6 +87,8 @@ public class GlobalConstants {
 
     public static final String APPLICATION_FORM_TEMPLATE_FILE = "static/template/甘肃针灸学会普通会员入会申请表.docx";
     public static final String APPLICATION_FORM_NAME = "甘肃针灸学会普通会员入会申请表";
+    public static final String APPLICATION_FORM_NAME1 = APPLICATION_FORM_NAME+"1";
+    public static final String APPLICATION_FORM_NAME2 = APPLICATION_FORM_NAME+"2";
     
     public static final String CHINA_CERTI_IMAGE1 = "static/img/certi/chinaCertiPage1.png";
     public static final String CHINA_CERTI_IMAGE2 = "static/img/certi/chinaCertiPage2.png";

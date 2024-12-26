@@ -30,6 +30,7 @@
     <result column="postal_code" property="postalCode" jdbcType="VARCHAR" />
     <result column="phone" property="phone" jdbcType="VARCHAR" />
     <result column="mail" property="mail" jdbcType="VARCHAR" />
+    <result column="application_date" property="applicationDate" jdbcType="VARCHAR" />
     <result column="check_date" property="checkDate" jdbcType="VARCHAR" />
     <result column="check_status" property="checkStatus" jdbcType="VARCHAR" />
     <result column="valid_status" property="validStatus" jdbcType="VARCHAR" />
@@ -38,9 +39,8 @@
     <result column="valid_end_date" property="validEndDate" jdbcType="VARCHAR" />
     <result column="society_type" property="societyType" jdbcType="VARCHAR" />
     <result column="group_name" property="groupName" jdbcType="VARCHAR" />
-    <result column="credit_code" property="creditCode" jdbcType="VARCHAR" />
-    <result column="application_date" property="applicationDate" jdbcType="VARCHAR" />
     <result column="deleted" property="deleted" jdbcType="INTEGER" />
+    <result column="credit_code" property="creditCode" jdbcType="VARCHAR" />
     <result column="created_by" property="createdBy" jdbcType="VARCHAR" />
     <result column="created_at" property="createdAt" jdbcType="VARCHAR" />
     <result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
@@ -53,9 +53,9 @@
     -->
     id, name, user_type, password, membership_path, focus_on, sex, birth, nationality, 
     political, edu_degree, bachelor, position, employer, employer_type, job_title, certificate_type, 
-    certificate_code, area, area_sub, address, postal_code, phone, mail, check_date, 
-    check_status, valid_status, regist_date, valid_start_date, valid_end_date, society_type, 
-    group_name, credit_code, application_date, deleted, created_by, created_at, updated_by, 
+    certificate_code, area, area_sub, address, postal_code, phone, mail, application_date, 
+    check_date, check_status, valid_status, regist_date, valid_start_date, valid_end_date, 
+    society_type, group_name, deleted, credit_code, created_by, created_at, updated_by, 
     updated_at
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -89,10 +89,10 @@
       job_title, certificate_type, certificate_code, 
       area, area_sub, address, 
       postal_code, phone, mail, 
-      check_date, check_status, valid_status, 
-      regist_date, valid_start_date, valid_end_date, 
-      society_type, group_name, credit_code, 
-      application_date, deleted, created_by, 
+      application_date, check_date, check_status, 
+      valid_status, regist_date, valid_start_date, 
+      valid_end_date, society_type, group_name, 
+      deleted, credit_code, created_by, 
       created_at, updated_by, updated_at
       )
     values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{userType,jdbcType=VARCHAR}, 
@@ -103,10 +103,10 @@
       #{jobTitle,jdbcType=VARCHAR}, #{certificateType,jdbcType=VARCHAR}, #{certificateCode,jdbcType=VARCHAR}, 
       #{area,jdbcType=VARCHAR}, #{areaSub,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
       #{postalCode,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{mail,jdbcType=VARCHAR}, 
-      #{checkDate,jdbcType=VARCHAR}, #{checkStatus,jdbcType=VARCHAR}, #{validStatus,jdbcType=VARCHAR}, 
-      #{registDate,jdbcType=VARCHAR}, #{validStartDate,jdbcType=VARCHAR}, #{validEndDate,jdbcType=VARCHAR}, 
-      #{societyType,jdbcType=VARCHAR}, #{groupName,jdbcType=VARCHAR}, #{creditCode,jdbcType=VARCHAR}, 
-      #{applicationDate,jdbcType=VARCHAR}, #{deleted,jdbcType=INTEGER}, #{createdBy,jdbcType=VARCHAR}, 
+      #{applicationDate,jdbcType=VARCHAR}, #{checkDate,jdbcType=VARCHAR}, #{checkStatus,jdbcType=VARCHAR}, 
+      #{validStatus,jdbcType=VARCHAR}, #{registDate,jdbcType=VARCHAR}, #{validStartDate,jdbcType=VARCHAR}, 
+      #{validEndDate,jdbcType=VARCHAR}, #{societyType,jdbcType=VARCHAR}, #{groupName,jdbcType=VARCHAR}, 
+      #{deleted,jdbcType=INTEGER}, #{creditCode,jdbcType=VARCHAR}, #{createdBy,jdbcType=VARCHAR}, 
       #{createdAt,jdbcType=VARCHAR}, #{updatedBy,jdbcType=VARCHAR}, #{updatedAt,jdbcType=VARCHAR}
       )
   </insert>
@@ -189,6 +189,9 @@
       <if test="mail != null" >
         mail,
       </if>
+      <if test="applicationDate != null" >
+        application_date,
+      </if>
       <if test="checkDate != null" >
         check_date,
       </if>
@@ -213,14 +216,11 @@
       <if test="groupName != null" >
         group_name,
       </if>
-      <if test="creditCode != null" >
-        credit_code,
-      </if>
-      <if test="applicationDate != null" >
-        application_date,
-      </if>
       <if test="deleted != null" >
         deleted,
+      </if>
+      <if test="creditCode != null" >
+        credit_code,
       </if>
       <if test="createdBy != null" >
         created_by,
@@ -308,6 +308,9 @@
       <if test="mail != null" >
         #{mail,jdbcType=VARCHAR},
       </if>
+      <if test="applicationDate != null" >
+        #{applicationDate,jdbcType=VARCHAR},
+      </if>
       <if test="checkDate != null" >
         #{checkDate,jdbcType=VARCHAR},
       </if>
@@ -332,14 +335,11 @@
       <if test="groupName != null" >
         #{groupName,jdbcType=VARCHAR},
       </if>
-      <if test="creditCode != null" >
-        #{creditCode,jdbcType=VARCHAR},
-      </if>
-      <if test="applicationDate != null" >
-        #{applicationDate,jdbcType=VARCHAR},
-      </if>
       <if test="deleted != null" >
         #{deleted,jdbcType=INTEGER},
+      </if>
+      <if test="creditCode != null" >
+        #{creditCode,jdbcType=VARCHAR},
       </if>
       <if test="createdBy != null" >
         #{createdBy,jdbcType=VARCHAR},
@@ -431,6 +431,9 @@
       <if test="mail != null" >
         mail = #{mail,jdbcType=VARCHAR},
       </if>
+      <if test="applicationDate != null" >
+        application_date = #{applicationDate,jdbcType=VARCHAR},
+      </if>
       <if test="checkDate != null" >
         check_date = #{checkDate,jdbcType=VARCHAR},
       </if>
@@ -455,14 +458,11 @@
       <if test="groupName != null" >
         group_name = #{groupName,jdbcType=VARCHAR},
       </if>
-      <if test="creditCode != null" >
-        credit_code = #{creditCode,jdbcType=VARCHAR},
-      </if>
-      <if test="applicationDate != null" >
-        application_date = #{applicationDate,jdbcType=VARCHAR},
-      </if>
       <if test="deleted != null" >
         deleted = #{deleted,jdbcType=INTEGER},
+      </if>
+      <if test="creditCode != null" >
+        credit_code = #{creditCode,jdbcType=VARCHAR},
       </if>
       <if test="createdBy != null" >
         created_by = #{createdBy,jdbcType=VARCHAR},
@@ -508,6 +508,7 @@
       postal_code = #{postalCode,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
       mail = #{mail,jdbcType=VARCHAR},
+      application_date = #{applicationDate,jdbcType=VARCHAR},
       check_date = #{checkDate,jdbcType=VARCHAR},
       check_status = #{checkStatus,jdbcType=VARCHAR},
       valid_status = #{validStatus,jdbcType=VARCHAR},
@@ -516,9 +517,8 @@
       valid_end_date = #{validEndDate,jdbcType=VARCHAR},
       society_type = #{societyType,jdbcType=VARCHAR},
       group_name = #{groupName,jdbcType=VARCHAR},
-      credit_code = #{creditCode,jdbcType=VARCHAR},
-      application_date = #{applicationDate,jdbcType=VARCHAR},
       deleted = #{deleted,jdbcType=INTEGER},
+      credit_code = #{creditCode,jdbcType=VARCHAR},
       created_by = #{createdBy,jdbcType=VARCHAR},
       created_at = #{createdAt,jdbcType=VARCHAR},
       updated_by = #{updatedBy,jdbcType=VARCHAR},

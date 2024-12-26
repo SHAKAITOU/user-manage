@@ -95,6 +95,13 @@ UserDetail.prototype.ID = {
 	ITEM_APPLICATION_FORM_NAME    : "applicationFormFileName",
 	IMG_APPLICATION_FORM_OLD      : "applicationFormFileOld",
 	
+	ITEM_APPLICATION_FORM2         : "applicationForm2File",
+	BTN_APPLICATION_FORM2_OPEN     : "applicationForm2FileOpen",
+	BTN_APPLICATION_FORM2_DOWNLOAD : "applicationForm2FileDownload",
+	ITEM_APPLICATION_FORM2_LBL     : "applicationForm2FileLbl",
+	ITEM_APPLICATION_FORM2_NAME    : "applicationForm2FileName",
+	IMG_APPLICATION_FORM2_OLD      : "applicationForm2FileOld",
+	
 	PREFIX_USER_CARD_ID           : "userInfo_userCard_",
 	ITEM_USER_CODE                : "userCode",
 	
@@ -406,6 +413,22 @@ UserDetail.prototype.initEvent = function(){
 	    }
 	);
 	
+	//init event to BTN_APPLICATION_FORM2_OPEN
+		ShaInput.button.onClick(self.getObject(self.ID.BTN_APPLICATION_FORM2_OPEN), 
+			function(event) {
+				var newImg = new Image();
+			    newImg.onload = function() {
+			    	var imgH = newImg.height;
+			    	var imgW = newImg.width;
+			    	var title = self.i18n["m_user_extend.application_form2"];
+					var html = ShaInput.img.previewOrigImgCardHtml(770, 450, imgW, imgH,
+						"ShaDialog.dialogs.subSubDialogClose();", self.getObject(self.ID.IMG_APPLICATION_FORM2_OLD).attr("src"));
+					ShaDialog.dialogs.subSubDialogLargeCenter(title,html);
+			    }
+				newImg.src = self.getObject(self.ID.IMG_APPLICATION_FORM2_OLD).attr("src");
+		    }
+		);
+	
 	//init event to BTN_APPLICATION_FORM_PRINT
 	ShaInput.button.onClick(self.getObject(self.ID.BTN_APPLICATION_FORM_PRINT), 
 		function(event) {
@@ -419,6 +442,13 @@ UserDetail.prototype.initEvent = function(){
 			self.download("application_form");
 	    }
 	);
+	
+	//init event to BTN_APPLICATION_FORM2_DOWNLOAD
+		ShaInput.button.onClick(self.getObject(self.ID.BTN_APPLICATION_FORM2_DOWNLOAD), 
+			function(event) {
+				self.download("application_form2");
+		    }
+		);
 	
 	//init event to BTN_DOWNLOAD_CERT
 	ShaInput.button.onClick(self.getObject(self.ID.BTN_DOWNLOAD_CERT), 
@@ -549,6 +579,31 @@ UserDetail.prototype.initEvent = function(){
 				    // 转换完成执行 this.result 就表示 转换成的结果
 				    reader.onload = function () {
 					self.getObject(self.ID.IMG_APPLICATION_FORM_OLD).attr("src",this.result);
+				    }
+				}
+		    }
+		);
+		
+		ShaInput.button.onChange(self.getObject(self.ID.ITEM_APPLICATION_FORM2), 
+			function(event) {
+	    		var files = self.getObject(self.ID.ITEM_APPLICATION_FORM2).prop('files');
+	    		var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
+		        if ($.inArray(files[0].name.split('.').pop().toLowerCase(), fileExtension) == -1) {
+		            ShaDialog.dialogs.alert(self.i18n["common.check.file.wrongExt"]);
+		            self.getObject(self.ID.ITEM_APPLICATION_FORM2).val("");
+		        } else if(files[0].size > (1024*1024*5)) {
+					ShaDialog.dialogs.alert(self.i18n["common.check.file.wrongSize"]);
+		            self.getObject(self.ID.ITEM_APPLICATION_FORM2).val("");
+				} else {
+					self.getObject(self.ID.ITEM_APPLICATION_FORM2_NAME).val(files[0].name);
+					const file = files[0];
+					// 使用fileReader对象可以读取文件信息 ---- 将图片转换为 base64
+				    const reader = new FileReader();
+				    // 将选中的文件转换为base64 --- 异步操作
+				    reader.readAsDataURL(file);
+				    // 转换完成执行 this.result 就表示 转换成的结果
+				    reader.onload = function () {
+					self.getObject(self.ID.IMG_APPLICATION_FORM2_OLD).attr("src",this.result);
 				    }
 				}
 		    }
@@ -785,6 +840,9 @@ UserDetail.prototype.setEditableExtendDetail = function(){
 	ShaInput.obj.enabled(self.getObject(self.ID.ITEM_APPLICATION_FORM));
 	ShaInput.obj.enabled(self.getObject(self.ID.ITEM_APPLICATION_FORM_LBL));	
 	ShaInput.obj.enabledBtn(self.getObject(self.ID.BTN_APPLICATION_FORM_OPEN));
+	ShaInput.obj.enabled(self.getObject(self.ID.ITEM_APPLICATION_FORM2));
+		ShaInput.obj.enabled(self.getObject(self.ID.ITEM_APPLICATION_FORM2_LBL));	
+		ShaInput.obj.enabledBtn(self.getObject(self.ID.BTN_APPLICATION_FORM2_OPEN));
 	//ShaInput.obj.enabledBtn(self.getObject(self.ID.BTN_APPLICATION_FORM_PRINT));
 
 	self.changeOkButtonEnable();
@@ -820,6 +878,10 @@ UserDetail.prototype.setReadonlyExtendDetail = function(){
 	ShaInput.obj.disabled(self.getObject(self.ID.ITEM_APPLICATION_FORM_LBL));
 	ShaInput.obj.disabled(self.getObject(self.ID.ITEM_APPLICATION_FORM_NAME));
 	ShaInput.obj.disabledBtn(self.getObject(self.ID.BTN_APPLICATION_FORM_OPEN));
+	ShaInput.obj.disabled(self.getObject(self.ID.ITEM_APPLICATION_FORM2));
+		ShaInput.obj.disabled(self.getObject(self.ID.ITEM_APPLICATION_FORM2_LBL));
+		ShaInput.obj.disabled(self.getObject(self.ID.ITEM_APPLICATION_FORM2_NAME));
+		ShaInput.obj.disabledBtn(self.getObject(self.ID.BTN_APPLICATION_FORM2_OPEN));
 	//ShaInput.obj.disabledBtn(self.getObject(self.ID.BTN_APPLICATION_FORM_PRINT));
 
 	self.changeOkButtonEnable();		

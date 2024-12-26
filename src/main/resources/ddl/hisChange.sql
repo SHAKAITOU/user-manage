@@ -195,3 +195,8 @@ INSERT INTO m_fixed_value VALUES ('F0024', '02', '等待审核',		2);
 INSERT INTO m_fixed_value VALUES ('F0024', '03', '审核通过',		3);
 INSERT INTO m_fixed_value VALUES ('F0024', '04', '审核不通过',	4);
 INSERT INTO m_fixed_value VALUES ('F0024', '05', '返回修改',		5);
+
+
+ALTER TABLE m_user_extend modify COLUMN  research_dir  VARCHAR(64), ALGORITHM=INPLACE, LOCK=NONE;
+ALTER TABLE m_user_extend add COLUMN  application_form2  MEDIUMBLOB, ALGORITHM=INPLACE, LOCK=NONE;
+ALTER TABLE m_user_extend add COLUMN  application_form_ext2  VARCHAR(10), ALGORITHM=INPLACE, LOCK=NONE;

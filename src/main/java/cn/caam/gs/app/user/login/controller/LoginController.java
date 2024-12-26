@@ -122,8 +122,8 @@ public class LoginController extends ScreenBaseController{
 		LoginForm loginForm = (LoginForm)request.getSession().getAttribute(SessionConstants.LOGIN_FORM.getValue());
 		if (loginForm == null ) {
 			loginForm = new LoginForm();
-			loginForm.setUserCode("M24060914330223");
-			loginForm.setPassword("1");
+//			loginForm.setUserCode("M24060914330223");
+//			loginForm.setPassword("1");
 		}
 		
 		loginForm.setAuthImg(EncryptorUtil.generateAuthImgStr(request));

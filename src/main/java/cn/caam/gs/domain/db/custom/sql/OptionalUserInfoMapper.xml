@@ -53,6 +53,8 @@
 	    <result column="vocational_at" property="vocationalAt" jdbcType="BLOB" />
 	    <result column="application_form" property="applicationForm" jdbcType="BLOB" />
 	    <result column="application_form_ext" property="applicationFormExt" jdbcType="VARCHAR" />
+	    <result column="application_form2" property="applicationForm2" jdbcType="BLOB" />
+	    <result column="application_form_ext2" property="applicationFormExt2" jdbcType="VARCHAR" />
     </resultMap>
     
     <resultMap id="UserCardForm" type="cn.caam.gs.domain.db.base.entity.MUserCard">
@@ -278,7 +280,9 @@
 			mue.vocational_at,
 			mue.vocational_at_ext,
 			mue.application_form,
-			mue.application_form_ext
+			mue.application_form_ext,
+			mue.application_form2,
+			mue.application_form_ext2
 		FROM
 		    m_user mu 
 		    LEFT JOIN m_user_extend mue ON mu.id = mue.id

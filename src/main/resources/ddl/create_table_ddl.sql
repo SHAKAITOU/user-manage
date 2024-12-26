@@ -1,6 +1,6 @@
-CREATE DATABASE shatest DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+CREATE DATABASE gansuzhenjiu DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
-USE shatest;
+USE gansuzhenjiu;
 
 -- 管理员信息 --
 -- DROP TABLE IF EXISTS m_admin;
@@ -577,13 +577,15 @@ CREATE TABLE m_user_extend
     bachelor_at_ext    VARCHAR(10)           COMMENT '学位证书附件文件扩展名',
     vocational_at      MEDIUMBLOB            COMMENT '职业证书附件',
     vocational_at_ext  VARCHAR(10)           COMMENT '职业证书附件文件扩展名',
-    research_dir     VARCHAR(40)             COMMENT '研究方向(max36)',
+    research_dir     VARCHAR(64)             COMMENT '研究方向(max36)',
     learn_experience VARCHAR(255)            COMMENT '主要学习经历(max250)',
     work_experience  VARCHAR(255)            COMMENT '主要工作经历(max250)',
     papers           VARCHAR(255)            COMMENT '代表性论文及著作(max250)',
     honors           VARCHAR(255)            COMMENT '获得科技奖励及荣誉情况(max250)',
     application_form MEDIUMBLOB              COMMENT '入会申请表',
     application_form_ext VARCHAR(10)         COMMENT '入会申请表文件扩展名',
+    application_form2 MEDIUMBLOB              COMMENT '入会申请表',
+    application_form_ext2 VARCHAR(10)         COMMENT '入会申请表文件扩展名',
 
     PRIMARY KEY (id)
 ) COMMENT='会员扩展信息' ENGINE=InnoDB DEFAULT CHARSET=utf8;

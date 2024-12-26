@@ -199,12 +199,12 @@ public class UserService extends BaseService {
 		return optionalUserInfoMapper.isUserCodeExist(userCode);
 	}
 	
-	public void downloadAppliactionForm(String userId, OutputStream  outputStream) throws Exception{
-		 UserInfo userInfo = this.getUserInfo(userId);
-		 if (userInfo.getUserExtend().getApplicationForm() != null && userInfo.getUserExtend().getApplicationForm().length > 0){
-			IOUtils.copy(new ByteArrayInputStream(userInfo.getUserExtend().getApplicationForm()), outputStream);
-		 }
-	}
+//	public void downloadAppliactionForm(String userId, OutputStream  outputStream) throws Exception{
+//		 UserInfo userInfo = this.getUserInfo(userId);
+//		 if (userInfo.getUserExtend().getApplicationForm() != null && userInfo.getUserExtend().getApplicationForm().length > 0){
+//			IOUtils.copy(new ByteArrayInputStream(userInfo.getUserExtend().getApplicationForm()), outputStream);
+//		 }
+//	}
 	
 	private String createDownloadImageFileName(String userCode, String name, String ext)  throws Exception{
 		if (Strings.isBlank(ext)) {
@@ -258,11 +258,19 @@ public class UserService extends BaseService {
 //				IOUtils.copy(new ByteArrayInputStream(userInfo.getUserExtend().getApplicationForm()), response.getOutputStream());
 //			 }
 			 String ext = Strings.isBlank(userInfo.getUserExtend().getApplicationFormExt()) ? "jpg":userInfo.getUserExtend().getApplicationFormExt();
-				String filename = createDownloadImageFileName(userInfo.getUser().getName(), GlobalConstants.APPLICATION_FORM_NAME, ext);
+				String filename = createDownloadImageFileName(userInfo.getUser().getName(), GlobalConstants.APPLICATION_FORM_NAME1, ext);
 				response.setHeader("Content-Disposition", "attachment; filename="+filename+";"+"filename*=utf-8''"+filename);
 				response.setContentType("application/"+ext+";charset=UTF-8");
 				if (userInfo.getUserExtend().getApplicationForm()!= null && userInfo.getUserExtend().getApplicationForm().length > 0){
 					IOUtils.copy(new ByteArrayInputStream(userInfo.getUserExtend().getApplicationForm()), response.getOutputStream());
+				 }
+		 }else if (fileType == DownloadFileType.APPLICATION_FORM2) {//申请资料pdf
+			 String ext = Strings.isBlank(userInfo.getUserExtend().getApplicationFormExt2()) ? "jpg":userInfo.getUserExtend().getApplicationFormExt2();
+				String filename = createDownloadImageFileName(userInfo.getUser().getName(), GlobalConstants.APPLICATION_FORM_NAME2, ext);
+				response.setHeader("Content-Disposition", "attachment; filename="+filename+";"+"filename*=utf-8''"+filename);
+				response.setContentType("application/"+ext+";charset=UTF-8");
+				if (userInfo.getUserExtend().getApplicationForm2()!= null && userInfo.getUserExtend().getApplicationForm2().length > 0){
+					IOUtils.copy(new ByteArrayInputStream(userInfo.getUserExtend().getApplicationForm2()), response.getOutputStream());
 				 }
 		 }else if (fileType == DownloadFileType.APPLICATION_FORM_TEMPLATE) {//申请资料模版word
 			 response.setHeader(HttpHeaders.PRAGMA, "No-cache");
@@ -625,6 +633,11 @@ public class UserService extends BaseService {
 				userExtend.setApplicationFormExt(userDetailForm.getApplicationFormFile().getOriginalFilename().split("\\.")[1]);
 				userExtend.setApplicationForm(resizeImage(userDetailForm.getApplicationFormFile().getBytes(), userExtend.getApplicationFormExt()));
 			}
+			//入会申请表2
+			if (userDetailForm.getApplicationForm2File() != null && !StringUtils.isBlank(userDetailForm.getApplicationForm2File().getOriginalFilename())) {
+				userExtend.setApplicationFormExt2(userDetailForm.getApplicationForm2File().getOriginalFilename().split("\\.")[1]);
+				userExtend.setApplicationForm2(resizeImage(userDetailForm.getApplicationForm2File().getBytes(), userExtend.getApplicationFormExt2()));
+			}
 			
 			if (isUpdate) {
 //				userExtendMapper.updateByPrimaryKeyWithBLOBs(userExtend);
@@ -694,6 +707,11 @@ public class UserService extends BaseService {
 		if (userDetailForm.getApplicationFormFile() != null && !StringUtils.isBlank(userDetailForm.getApplicationFormFile().getOriginalFilename())) {
 			userExtendInput.setApplicationFormExt(userDetailForm.getApplicationFormFile().getOriginalFilename().split("\\.")[1]);
 			userExtendInput.setApplicationForm(resizeImage(userDetailForm.getApplicationFormFile().getBytes(), userExtendInput.getApplicationFormExt()));
+		}
+		//入会申请表2
+		if (userDetailForm.getApplicationForm2File() != null && !StringUtils.isBlank(userDetailForm.getApplicationForm2File().getOriginalFilename())) {
+			userExtendInput.setApplicationFormExt2(userDetailForm.getApplicationForm2File().getOriginalFilename().split("\\.")[1]);
+			userExtendInput.setApplicationForm2(resizeImage(userDetailForm.getApplicationForm2File().getBytes(), userExtendInput.getApplicationFormExt2()));
 		}
 		
 		userExtendMapper.insert(userExtendInput);

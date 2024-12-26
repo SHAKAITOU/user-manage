@@ -108,8 +108,8 @@ public class AdminLoginController extends ScreenBaseController{
 		request.getSession().setAttribute(SessionConstants.IS_MOBILE.getValue(), indexForm.getMobileDisplay());
 		ModelAndView mav = new ModelAndView();
 		LoginForm loginForm = new LoginForm();
-		loginForm.setUserCode("A24060914330223");
-		loginForm.setPassword("1");
+//		loginForm.setUserCode("A24060914330223");
+//		loginForm.setPassword("1");
 		loginForm.setAuthImg(EncryptorUtil.generateAuthImgStr(request));
 		if(!StringUtils.isEmpty(indexForm.getLoginFormJson())) {
 			loginForm = JsonUtility.toObject(indexForm.getLoginFormJson(), LoginForm.class);

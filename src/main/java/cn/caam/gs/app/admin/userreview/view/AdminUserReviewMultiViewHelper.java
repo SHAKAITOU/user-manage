@@ -118,7 +118,8 @@ public class AdminUserReviewMultiViewHelper extends HtmlViewHelper {
         List<FixValueInfo> checkStatusList = fixedValueMap.get(FixedValueType.USER_CHECK_STATUS);
         radios = new ArrayList<>();
         for (FixValueInfo fValueInfo : checkStatusList) {
-        	if (!UserCheckStatusType.WAIT_FOR_REVIEW.getKey().equals(fValueInfo.getValueObj().getValue())) {
+        	if (!UserCheckStatusType.NEW.getKey().equals(fValueInfo.getValueObj().getValue()) &&
+        			!UserCheckStatusType.WAIT_FOR_REVIEW.getKey().equals(fValueInfo.getValueObj().getValue())) {
         		radios.add(new HtmlRadio(fValueInfo.getValueObj().getValue(), fValueInfo.getValueObj().getName()));
         	}
         }

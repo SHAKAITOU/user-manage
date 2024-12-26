@@ -20,5 +20,6 @@ public class UserDetailForm {
     private MultipartFile bachelorAtFile;
     private MultipartFile vocationalAtFile;
     private MultipartFile applicationFormFile;
+    private MultipartFile applicationForm2File;
     private UserInfo userInfo;	
 }

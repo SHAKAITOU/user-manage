@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 
 import cn.caam.gs.app.GlobalConstants;
@@ -128,7 +129,11 @@ public class ReviewOkViewHelper extends HtmlViewHelper {
         contextList = new ArrayList<String>();
         
         //旧的有效结束日期(yyyy-MM-dd HH選択
-        String oldValidDt = LocalDateUtility.formatDateZH(userInfo.getUser().getValidEndDate());
+        String validEndDate = userInfo.getUser().getValidEndDate();
+        if(Strings.isBlank(userInfo.getUser().getValidEndDate())) {
+        	validEndDate = LocalDateUtility.getCurrentDateTimeString();
+        }
+        String oldValidDt = LocalDateUtility.formatDateZH(validEndDate);
         String newValidDt = addVlidDate(oldValidDt, mUserTypeSettings);
         labelName = T100MUser.getColumnInfo(T100MUser.COL_VALID_END_DATE).getLabelName() + UtilConstants.COLON;
         context   = oldValidDt;

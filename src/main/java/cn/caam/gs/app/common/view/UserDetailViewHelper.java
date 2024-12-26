@@ -1202,7 +1202,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
         String idFilePrint = idFile + "Print";
         
         src = resizeImageToBase64(request, userDetailForm.getUserInfo().getUserExtend().getApplicationForm(), userDetailForm.getUserInfo().getUserExtend().getApplicationFormExt());//Base64.encodeBase64String(userDetailForm.getUserInfo().getUserExtend().getApplicationForm());
-        ext = userDetailForm.getUserInfo().getUserExtend().getVocationalAtExt();
+        ext = userDetailForm.getUserInfo().getUserExtend().getApplicationFormExt();
         
         value       = "";
         labelName   = clmForm.getLabelName();
@@ -1229,6 +1229,7 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
     
         sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
         
+        
         //------row8----------]
         //------row9----------[
 
@@ -1243,6 +1244,60 @@ public class UserDetailViewHelper extends HtmlViewBaseHelper {
                 .grids(CssGridsType.G6)
                 .base64String(src).extent(ext).build().html();
         contextList.add(context);
+        sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+        sb.append(divRow().cellBlank(5));
+        
+        contextList = new ArrayList<String>();
+        clmForm     = T101MUserExtend.getColumnInfo(T101MUserExtend.COL_APPLICATION_FORM2);
+        name        = clmForm.getPageName("") + "File";
+        idFile      = convertNameDotForId(name);
+        idFileOpen  = idFile + "Open";
+        idLbl       = idFile + "Lbl";
+        idFileName  = idFile + "Name";
+        idOldFile   = idFile + "Old";
+        idFileDownload   = idFile + "Download";
+//        idFilePrint = idFile + "Print";
+        
+        src = resizeImageToBase64(request, userDetailForm.getUserInfo().getUserExtend().getApplicationForm2(), userDetailForm.getUserInfo().getUserExtend().getApplicationFormExt2());//Base64.encodeBase64String(userDetailForm.getUserInfo().getUserExtend().getApplicationForm());
+        ext = userDetailForm.getUserInfo().getUserExtend().getApplicationFormExt2();
+        
+        value       = "";
+        labelName   = clmForm.getLabelName();
+        placeholder = clmForm.getPlaceholder();
+        contextList.add(LabelInputSet.builder()
+                .id(idFileName).labelName(labelName).placeholder(placeholder).disabled(disabled)
+                .fontSize(font).grids(CssGridsType.G6).build().html());
+        
+        labelName   = getContext("common.page.File");
+        value       = "";
+        contextList.add(LabelFileSet.builder()
+                .id(idFile).idLablel(idLbl).name(name).labelName(labelName).placeholder(placeholder).disabled(disabled).acceptFileType(AcceptFileType.IMAGE)
+                .fontSize(font).grids(CssGridsType.G4).build().html());
+
+        
+        context = getContext("common.page.showImg");
+        comp1 = button().getBorder(IconSetType.EYE, CssClassType.INFO, idFileOpen, context);
+        comp2 = "";
+        if (!Strings.isBlank(src)) {
+	        context = getContext("common.page.download");
+	        comp2 = button().getBorder(IconSetType.DOWNLOAD, CssClassType.INFO, idFileDownload, context);
+        }
+        contextList.add(concactWithSpace(comp1, comp2));
+    
+        sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
+        
+        contextList = new ArrayList<String>();
+        if (src == null) {
+            src = getNoImgDataString();
+            ext = "jpeg";
+        }
+        context = LabelImageSet.builder()
+                .id(idOldFile)
+                .imgWidth(IMG_WIDTH).imgHeight(IMG_HEIGHT)
+                .grids(CssGridsType.G6)
+                .base64String(src).extent(ext).build().html();
+        contextList.add(context);
+        
         
         sb.append(divRow().get(contextList.toArray(new String[contextList.size()])));
         sb.append(divRow().cellBlank(5));
